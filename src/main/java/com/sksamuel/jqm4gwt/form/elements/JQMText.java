@@ -26,6 +26,8 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
+import com.sksamuel.jqm4gwt.HasMini;
+import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
@@ -36,7 +38,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * 
  */
 public class JQMText extends JQMWidget implements HasText, HasFocusHandlers, HasClickHandlers, HasChangeHandlers, HasValue<String>,
-		JQMFormWidget, HasKeyDownHandlers, HasKeyUpHandlers, HasMouseOverHandlers, HasMouseOutHandlers, HasPreventFocusZoom {
+		JQMFormWidget, HasKeyDownHandlers, HasKeyUpHandlers, HasMouseOverHandlers, HasMouseOutHandlers, HasPreventFocusZoom, HasMini {
 
 	/**
 	 * The widget used for the label
@@ -169,8 +171,21 @@ public class JQMText extends JQMWidget implements HasText, HasFocusHandlers, Has
 	}
 
 	@Override
+	public boolean isMini() {
+		return "true".equals(getAttribute("data-mini"));
+	}
+
+	@Override
 	public boolean isPreventFocusZoom() {
 		return "true".equals(input.getElement().getAttribute("data-prevent-focus-zoom"));
+	}
+
+	/**
+	 * If set to true then renders a smaller version of the standard-sized element.
+	 */
+	@Override
+	public void setMini(boolean mini) {
+		setAttribute("data-mini", String.valueOf(mini));
 	}
 
 	/**

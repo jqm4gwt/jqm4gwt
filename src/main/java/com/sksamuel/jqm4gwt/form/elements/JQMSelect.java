@@ -17,9 +17,13 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.sksamuel.jqm4gwt.DataIcon;
+import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasIcon;
 import com.sksamuel.jqm4gwt.HasInline;
+import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasNative;
+import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
+import com.sksamuel.jqm4gwt.HasShadow;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.html.FormLabel;
@@ -33,7 +37,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * 
  */
 public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocusHandlers, HasChangeHandlers, HasClickHandlers,
-		HasValue<String>, JQMFormWidget, HasIcon, HasInline, HasPreventFocusZoom {
+		HasValue<String>, JQMFormWidget, HasIcon, HasInline, HasPreventFocusZoom, HasCorners, HasShadow, HasMini {
 
 	private static final String	SELECT_STYLENAME	= "jqm4gwt-select";
 
@@ -189,10 +193,12 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 		return -1;
 	}
 
+	@Override
 	public boolean isCorners() {
 		return "true".equals(getAttribute("data-corners"));
 	}
 
+	@Override
 	public boolean isIconShadow() {
 		return "true".equals(getAttribute("data-iconshadow"));
 	}
@@ -200,6 +206,11 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 	@Override
 	public boolean isInline() {
 		return "true".equals(select.getElement().getAttribute("data-inline"));
+	}
+
+	@Override
+	public boolean isMini() {
+		return "true".equals(getAttribute("data-mini"));
 	}
 
 	public boolean isMultiple() {
@@ -262,6 +273,7 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 			select.removeItem(indexOf);
 	}
 
+	@Override
 	public void setCorners(boolean corners) {
 		setAttribute("data-corners", String.valueOf(corners));
 	}
@@ -310,6 +322,14 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 			getElement().setAttribute("data-inline", "true");
 		else
 			getElement().removeAttribute("data-inline");
+	}
+
+	/**
+	 * If set to true then renders a smaller version of the standard-sized element.
+	 */
+	@Override
+	public void setMini(boolean mini) {
+		setAttribute("data-mini", String.valueOf(mini));
 	}
 
 	/**
@@ -381,6 +401,7 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 	/**
 	 * Applies the drop shadow style to the select button if set to true.
 	 */
+	@Override
 	public void setShadow(boolean shadow) {
 		setAttribute("data-shadow", String.valueOf(shadow));
 	}

@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasIconPos;
+import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.html.Heading;
@@ -20,7 +21,7 @@ import com.sksamuel.jqm4gwt.html.Heading;
  *       collapsible.html
  * 
  */
-public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos {
+public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos, HasMini {
 
 	/**
 	 * The container for the elements of the collapsible.
@@ -110,6 +111,11 @@ public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos {
 		return "true".equals(getElement().getAttribute("data-collapsed"));
 	}
 
+	@Override
+	public boolean isMini() {
+		return "true".equals(getAttribute("data-mini"));
+	}
+
 	/**
 	 * Removes a widget from the content part of this {@link JQMCollapsible}
 	 * instance.
@@ -140,6 +146,14 @@ public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos {
 			getElement().removeAttribute("data-iconpos");
 		else
 			getElement().setAttribute("data-iconpos", pos.getJqmValue());
+	}
+
+	/**
+	 * If set to true then renders a smaller version of the standard-sized element.
+	 */
+	@Override
+	public void setMini(boolean mini) {
+		setAttribute("data-mini", String.valueOf(mini));
 	}
 
 	/**

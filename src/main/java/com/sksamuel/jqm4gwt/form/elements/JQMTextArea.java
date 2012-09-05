@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextArea;
 import com.sksamuel.jqm4gwt.HasGridDimensions;
+import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
@@ -16,7 +17,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *         An implementation of a standard HTML Textarea
  * 
  */
-public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions, HasText, HasValue<String> {
+public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions, HasText, HasValue<String>, HasMini {
 
 	private final FormLabel	label	= new FormLabel();
 
@@ -68,6 +69,11 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions,
 	}
 
 	@Override
+	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
+		return input.addValueChangeHandler(handler);
+	}
+
+	@Override
 	public int getColumns() {
 		return Integer.parseInt(input.getElement().getAttribute("cols"));
 	}
@@ -83,8 +89,26 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions,
 	}
 
 	@Override
+	public String getValue() {
+		return input.getValue();
+	}
+
+	@Override
+	public boolean isMini() {
+		return "true".equals(getAttribute("data-mini"));
+	}
+
+	@Override
 	public void setColumns(int cols) {
 		input.getElement().setAttribute("cols", String.valueOf(cols));
+	}
+
+	/**
+	 * If set to true then renders a smaller version of the standard-sized element.
+	 */
+	@Override
+	public void setMini(boolean mini) {
+		setAttribute("data-mini", String.valueOf(mini));
 	}
 
 	@Override
@@ -98,11 +122,6 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions,
 	}
 
 	@Override
-	public String getValue() {
-		return input.getValue();
-	}
-	
-	@Override
 	public void setValue(String value) {
 		setValue(value, false);
 	}
@@ -110,10 +129,5 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions,
 	@Override
 	public void setValue(String value, boolean fireEvents) {
 		input.setValue(value, fireEvents);
-	}
-
-	@Override
-	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
-		return input.addValueChangeHandler(handler);
 	}
 }

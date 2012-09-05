@@ -6,6 +6,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextBox;
+import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
@@ -18,7 +19,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * @link http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/forms/forms-slider.html
  * 
  */
-public class JQMSlider extends JQMFieldContainer implements HasValue<Integer> {
+public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, HasMini {
 
 	private final FormLabel	label	= new FormLabel();
 
@@ -124,6 +125,11 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer> {
 									return $wnd.$("#" + name).attr("value");
 									}-*/;
 
+	@Override
+	public boolean isMini() {
+		return "true".equals(getAttribute("data-mini"));
+	}
+
 	private native void refresh(String id, int value) /*-{
 										$wnd.$("#" + name).val(value).slider("refresh");
 										}-*/;
@@ -146,6 +152,14 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer> {
 	 */
 	public void setMin(int min) {
 		input.getElement().setAttribute("min", String.valueOf(min));
+	}
+
+	/**
+	 * If set to true then renders a smaller version of the standard-sized element.
+	 */
+	@Override
+	public void setMini(boolean mini) {
+		setAttribute("data-mini", String.valueOf(mini));
 	}
 
 	/**

@@ -7,9 +7,12 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HasText;
 import com.sksamuel.jqm4gwt.DataIcon;
+import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasIcon;
 import com.sksamuel.jqm4gwt.HasInline;
+import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasRel;
+import com.sksamuel.jqm4gwt.HasShadow;
 import com.sksamuel.jqm4gwt.HasTransition;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMPage;
@@ -26,8 +29,8 @@ import com.sksamuel.jqm4gwt.Transition;
  *       .html
  * 
  */
-public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransition, HasClickHandlers, HasInline,
-		HasIcon {
+public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransition, HasClickHandlers, HasInline, HasIcon, HasCorners,
+		HasShadow, HasMini {
 
 	protected Anchor	a;
 
@@ -133,6 +136,7 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 		setTransition(t);
 	}
 
+	@Override
 	public HandlerRegistration addClickHandler(ClickHandler handler) {
 		return a.addClickHandler(handler);
 	}
@@ -154,11 +158,17 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 		return innerText;
 	}
 
+	@Override
 	public Transition getTransition() {
 		String attr = getElement().getAttribute("data-transition");
 		if (attr == null)
 			return null;
 		return Transition.valueOf(attr);
+	}
+
+	@Override
+	public boolean isCorners() {
+		return "true".equals(getAttribute("data-corners"));
 	}
 
 	/**
@@ -171,12 +181,22 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 		return "true".equals(getAttribute("data-rel"));
 	}
 
+	@Override
+	public boolean isIconShadow() {
+		return "true".equals(getAttribute("data-iconshadow"));
+	}
+
 	/**
 	 * @return true if this button is set to inline
 	 */
 	@Override
 	public boolean isInline() {
 		return "true".equals(getAttribute("data-line"));
+	}
+
+	@Override
+	public boolean isMini() {
+		return "true".equals(getAttribute("data-mini"));
 	}
 
 	@Override
@@ -193,6 +213,11 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 			getElement().setAttribute("data-rel", "back");
 		else
 			getElement().removeAttribute("data-rel");
+	}
+
+	@Override
+	public void setCorners(boolean corners) {
+		setAttribute("data-corners", String.valueOf(corners));
 	}
 
 	/**
@@ -262,12 +287,28 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 			removeAttribute("data-inline");
 	}
 
+	/**
+	 * If set to true then renders a smaller version of the standard-sized element.
+	 */
+	@Override
+	public void setMini(boolean mini) {
+		setAttribute("data-mini", String.valueOf(mini));
+	}
+
 	@Override
 	public void setRel(String rel) {
 		if (rel == null)
 			getElement().removeAttribute("rel");
 		else
 			getElement().setAttribute("rel", rel);
+	}
+
+	/**
+	 * Applies the drop shadow style to the select button if set to true.
+	 */
+	@Override
+	public void setShadow(boolean shadow) {
+		setAttribute("data-shadow", String.valueOf(shadow));
 	}
 
 	@Override
@@ -285,6 +326,7 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 	/**
 	 * Sets the transition to be used by this button when loading the URL.
 	 */
+	@Override
 	public void setTransition(Transition transition) {
 		getElement().setAttribute("data-transition", transition.getJQMValue());
 	}

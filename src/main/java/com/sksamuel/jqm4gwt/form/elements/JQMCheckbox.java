@@ -6,6 +6,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
+import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
@@ -13,7 +14,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * 
  * 
  */
-public class JQMCheckbox implements HasText, IsChecked, HasValue<Boolean> {
+public class JQMCheckbox implements HasText, IsChecked, HasValue<Boolean>, HasMini {
 
 	private final InputElement	input;
 
@@ -55,6 +56,11 @@ public class JQMCheckbox implements HasText, IsChecked, HasValue<Boolean> {
 	}
 
 	@Override
+	public boolean isMini() {
+		return "true".equals(input.getAttribute("data-mini"));
+	}
+
+	@Override
 	public boolean isSelected() {
 		String style = label.getStyleName();
 		if (style == null)
@@ -65,6 +71,14 @@ public class JQMCheckbox implements HasText, IsChecked, HasValue<Boolean> {
 			return style.contains("ui-checkbox-on");
 		}
 
+	}
+
+	/**
+	 * If set to true then renders a smaller version of the standard-sized element.
+	 */
+	@Override
+	public void setMini(boolean mini) {
+		input.setAttribute("data-mini", String.valueOf(mini));
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.panel;
 
 import com.google.gwt.dom.client.Element;
+import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasOrientation;
 
 /**
@@ -9,7 +10,7 @@ import com.sksamuel.jqm4gwt.HasOrientation;
  *         An implementation of {@link JQMPanel} for control groups.
  * 
  */
-public class JQMControlGroup extends JQMPanel implements HasOrientation {
+public class JQMControlGroup extends JQMPanel implements HasOrientation, HasMini {
 
 	protected JQMControlGroup(Element element, String styleName) {
 		super(element, "controlgroup", styleName);
@@ -21,6 +22,11 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation {
 	}
 
 	@Override
+	public boolean isMini() {
+		return "true".equals(getAttribute("data-mini"));
+	}
+
+	@Override
 	public boolean isVertical() {
 		return !isHorizontal();
 	}
@@ -28,6 +34,14 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation {
 	@Override
 	public void setHorizontal() {
 		setAttribute("data-type", "horizontal");
+	}
+
+	/**
+	 * If set to true then renders a smaller version of the standard-sized element.
+	 */
+	@Override
+	public void setMini(boolean mini) {
+		setAttribute("data-mini", String.valueOf(mini));
 	}
 
 	@Override
