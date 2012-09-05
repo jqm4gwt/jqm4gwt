@@ -29,13 +29,11 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * 
  *         An implementation of a jQuery mobile select element.
  * 
- * @link http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/forms/forms
- *       -selects.html
+ * @link http://jquerymobile.com/demos/1.1.1/docs/forms/selects/options.html
  * 
  */
-public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocusHandlers,
-		HasChangeHandlers, HasClickHandlers, HasValue<String>, JQMFormWidget, HasIcon,
-		HasInline {
+public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocusHandlers, HasChangeHandlers, HasClickHandlers,
+		HasValue<String>, JQMFormWidget, HasIcon, HasInline {
 
 	private static final String	SELECT_STYLENAME	= "jqm4gwt-select";
 
@@ -134,8 +132,8 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 	}
 
 	private native void close(String id) /*-{
-		$wnd.$("#" + id).selectmenu('close');
-	}-*/;
+								$wnd.$("#" + id).selectmenu('close');
+								}-*/;
 
 	@Override
 	public IconPos getIconPos() {
@@ -151,9 +149,9 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 	}
 
 	private native int getSelectedIndex(String id) /*-{
-		var select = $wnd.$("select#" + id);
-		return select[0].selectedIndex;
-	}-*/;
+									var select = $wnd.$("select#" + id);
+									return select[0].selectedIndex;
+									}-*/;
 
 	public String getSelectedValue() {
 		return getValue();
@@ -191,6 +189,14 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 		return -1;
 	}
 
+	public boolean isCorners() {
+		return "true".equals(getAttribute("data-corners"));
+	}
+
+	public boolean isIconShadow() {
+		return "true".equals(getAttribute("data-iconshadow"));
+	}
+
 	@Override
 	public boolean isInline() {
 		return "true".equals(select.getElement().getAttribute("data-inline"));
@@ -210,6 +216,10 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 		return !"false".equals(select.getElement().getAttribute("data-native-menu"));
 	}
 
+	public boolean isShadow() {
+		return "true".equals(getAttribute("data-shadow"));
+	}
+
 	/**
 	 * Programatically open a select menu
 	 */
@@ -218,8 +228,8 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 	}
 
 	private native void open(String id) /*-{
-		$wnd.$("#" + id).selectmenu('open');
-	}-*/;
+							$wnd.$("#" + id).selectmenu('open');
+							}-*/;
 
 	/**
 	 * Refreshes the select after a programatic change has taken place.
@@ -229,9 +239,9 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 	}
 
 	private native void refresh(String id) /*-{
-		var select = $wnd.$("select#" + id);
-		select.selectmenu("refresh");
-	}-*/;
+								var select = $wnd.$("select#" + id);
+								select.selectmenu("refresh");
+								}-*/;
 
 	@Override
 	public void removeIcon() {
@@ -245,6 +255,10 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 		int indexOf = indexOf(value);
 		if (indexOf >= 0)
 			select.removeItem(indexOf);
+	}
+
+	public void setCorners(boolean corners) {
+		setAttribute("data-corners", String.valueOf(corners));
 	}
 
 	/**
@@ -276,6 +290,13 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 			getElement().removeAttribute("data-iconpos");
 		else
 			getElement().setAttribute("data-iconpos", pos.getJqmValue());
+	}
+
+	/**
+	 * Applies the theme shadow to the select button if set to true.
+	 */
+	public void setIconShadow(boolean iconShadow) {
+		setAttribute("data-iconshadow", String.valueOf(iconShadow));
 	}
 
 	@Override
@@ -325,11 +346,11 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 	}
 
 	private native void setSelectedIndex(String id, int index) /*-{
-		$wnd.$("#" + id).attr('selectedIndex', index);
-		var select = $wnd.$("select#" + id);
-		select.selectedIndex = index;
-		select.selectmenu("refresh");
-	}-*/;
+											$wnd.$("#" + id).attr('selectedIndex', index);
+											var select = $wnd.$("select#" + id);
+											select.selectedIndex = index;
+											select.selectmenu("refresh");
+											}-*/;
 
 	/**
 	 * 
@@ -341,6 +362,13 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 				return;
 			}
 		}
+	}
+
+	/**
+	 * Applies the drop shadow style to the select button if set to true.
+	 */
+	public void setShadow(boolean shadow) {
+		setAttribute("data-shadow", String.valueOf(shadow));
 	}
 
 	/**
