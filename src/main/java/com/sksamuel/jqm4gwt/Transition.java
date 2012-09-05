@@ -8,7 +8,8 @@ package com.sksamuel.jqm4gwt;
  */
 public enum Transition {
 
-	POP("pop"), SLIDE_UP("slideup"), SLIDE_DOWN("slidedown"), FLIP("flip"), FADE("fade"), SLIDE("slide"), NONE("none");
+	POP("pop"), SLIDE_UP("slideup"), SLIDE_DOWN("slidedown"), FLIP("flip"), FADE("fade"), SLIDE("slide"), NONE("none"), TURN("turn"), FLOW(
+			"flow"), SLIDE_FADE("slidefade");
 
 	private final String	jqmValue;
 
