@@ -4,15 +4,7 @@ package com.sksamuel.jqm4gwt;
  * @author Stephen K Samuel samspade79@gmail.com 13 Jul 2011 23:08:58
  * 
  */
-public interface HasIcon {
-
-	/**
-	 * Returns the current position of the icon
-	 * 
-	 * 
-	 * @return the IconPos enum representing the location of the icon
-	 */
-	IconPos getIconPos();
+public interface HasIcon extends HasIconPos {
 
 	/**
 	 * Removes any icon set on the implementing class. If no icon has been set
@@ -35,10 +27,5 @@ public interface HasIcon {
 	 *              the src of the custom icon
 	 */
 	void setIcon(String src);
-
-	/**
-	 * Sets the position of the icon
-	 */
-	void setIconPos(IconPos pos);
 
 }

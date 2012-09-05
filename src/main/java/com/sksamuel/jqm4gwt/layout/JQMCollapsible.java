@@ -25,7 +25,7 @@ public class JQMCollapsible extends JQMWidget implements HasText {
 	 */
 	private final FlowPanel	flow;
 
-	private final Heading		header;
+	private final Heading	header;
 
 	/**
 	 * Creates a new {@link JQMCollapsible} with the given header text and
