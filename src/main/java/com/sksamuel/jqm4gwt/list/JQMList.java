@@ -35,17 +35,17 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 	 * <ul>
 	 * widget
 	 */
-	private ListWidget		list;
+	private final ListWidget		list;
 
 	/**
 	 * The index of the last click
 	 */
-	private int				clickIndex;
+	private int					clickIndex;
 
 	/**
 	 * The collection of items added to this list
 	 */
-	private List<JQMListItem>	items	= new ArrayList();
+	private final List<JQMListItem>	items	= new ArrayList();
 
 	/**
 	 * Create a new unordered {@link JQMList}
@@ -204,6 +204,10 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 		return getAttribute("data-dividertheme");
 	}
 
+	public String getFilterPlaceholder() {
+		return getAttribute("data-filter-placeholder");
+	}
+
 	/**
 	 * Returns the {@link JQMListItem} at the given position
 	 * 
@@ -318,9 +322,16 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 	@Override
 	public void setFilterable(boolean filterable) {
 		if (filterable)
-			getElement().setAttribute("data-filter", "true");
+			setAttribute("data-filter", "true");
 		else
-			getElement().removeAttribute("data-filter");
+			removeAttribute("data-filter");
+	}
+
+	public void setFilterPlaceholder(String placeholderText) {
+		if (placeholderText == null)
+			removeAttribute("data-filter-placeholder");
+		else
+			setAttribute("data-filter-placeholder", "true");
 	}
 
 	@Override
