@@ -195,6 +195,10 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 		return items.get(getClickIndex());
 	}
 
+	public String getCountTheme() {
+		return getAttribute("data-count-theme");
+	}
+
 	/**
 	 * Returns the currently set theme for dividers
 	 * 
@@ -313,6 +317,14 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 	}
 
 	/**
+	* Sets the color scheme (swatch) for list item count bubbles. 
+	* It accepts a single letter from a-z that maps to the swatches included in your theme. 
+	*/
+	public void setCountTheme(String theme) {
+		setAttribute("data-count-theme", theme);
+	}
+
+	/**
 	 * Sets the theme attribute for the data dividers
 	 */
 	public void setDividerTheme(String theme) {
@@ -328,10 +340,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 	}
 
 	public void setFilterPlaceholder(String placeholderText) {
-		if (placeholderText == null)
-			removeAttribute("data-filter-placeholder");
-		else
-			setAttribute("data-filter-placeholder", "true");
+		setAttribute("data-filter-placeholder", placeholderText);
 	}
 
 	@Override
