@@ -212,6 +212,10 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 		return getAttribute("data-filter-placeholder");
 	}
 
+	public String getFilterTheme() {
+		return getAttribute("data-filter-theme");
+	}
+
 	/**
 	 * Returns the {@link JQMListItem} at the given position
 	 * 
@@ -341,6 +345,14 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 
 	public void setFilterPlaceholder(String placeholderText) {
 		setAttribute("data-filter-placeholder", placeholderText);
+	}
+
+	/**
+	 * Sets the color scheme (swatch) for the search filter bar. 
+	 * It accepts a single letter from a-z that maps to the swatches included in your theme. 
+	 */
+	public void setFilterTheme(String theme) {
+		setAttribute("data-filter-theme", theme);
 	}
 
 	@Override
