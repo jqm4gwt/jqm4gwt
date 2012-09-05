@@ -35,9 +35,8 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *         An implementation of a standard HTML text input.
  * 
  */
-public class JQMText extends JQMWidget implements HasText, HasFocusHandlers, HasClickHandlers,
-		HasChangeHandlers, HasValue<String>, JQMFormWidget, HasKeyDownHandlers,
-		HasKeyUpHandlers, HasMouseOverHandlers, HasMouseOutHandlers {
+public class JQMText extends JQMWidget implements HasText, HasFocusHandlers, HasClickHandlers, HasChangeHandlers, HasValue<String>,
+		JQMFormWidget, HasKeyDownHandlers, HasKeyUpHandlers, HasMouseOverHandlers, HasMouseOutHandlers, HasPreventFocusZoom {
 
 	/**
 	 * The widget used for the label
@@ -85,6 +84,7 @@ public class JQMText extends JQMWidget implements HasText, HasFocusHandlers, Has
 		addStyleName("jqm4gwt-fieldcontain");
 	}
 
+	@Override
 	public HandlerRegistration addBlurHandler(BlurHandler handler) {
 		return input.addBlurHandler(handler);
 	}
@@ -139,16 +139,16 @@ public class JQMText extends JQMWidget implements HasText, HasFocusHandlers, Has
 	}
 
 	private native void disable(String id)/*-{
-		$("#" + id).textinput('disable');
-	}-*/;
+								$("#" + id).textinput('disable');
+								}-*/;
 
 	public void enable() {
 		enable(input.getElement().getId());
 	}
 
 	private native void enable(String id) /*-{
-		$("#" + id).textinput('enable');
-	}-*/;
+								$("#" + id).textinput('enable');
+								}-*/;
 
 	@Override
 	public String getId() {
@@ -166,6 +166,20 @@ public class JQMText extends JQMWidget implements HasText, HasFocusHandlers, Has
 	@Override
 	public String getValue() {
 		return input.getValue();
+	}
+
+	@Override
+	public boolean isPreventFocusZoom() {
+		return "true".equals(input.getElement().getAttribute("data-prevent-focus-zoom"));
+	}
+
+	/**
+	*This option disables page zoom temporarily when a custom select is focused, which prevents iOS devices from zooming the page into the select. 
+	*By default, iOS often zooms into form controls, and the behavior is often unnecessary and intrusive in mobile-optimized layouts.
+	*/
+	@Override
+	public void setPreventFocusZoom(boolean b) {
+		setAttribute("data-prevent-focus-zoom", String.valueOf(b));
 	}
 
 	/**

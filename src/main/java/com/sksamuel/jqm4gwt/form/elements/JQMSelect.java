@@ -33,7 +33,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * 
  */
 public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocusHandlers, HasChangeHandlers, HasClickHandlers,
-		HasValue<String>, JQMFormWidget, HasIcon, HasInline {
+		HasValue<String>, JQMFormWidget, HasIcon, HasInline, HasPreventFocusZoom {
 
 	private static final String	SELECT_STYLENAME	= "jqm4gwt-select";
 
@@ -216,6 +216,7 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 		return !"false".equals(select.getElement().getAttribute("data-native-menu"));
 	}
 
+	@Override
 	public boolean isPreventFocusZoom() {
 		return "true".equals(select.getElement().getAttribute("data-prevent-focus-zoom"));
 	}
@@ -346,6 +347,7 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 	*This option disables page zoom temporarily when a custom select is focused, which prevents iOS devices from zooming the page into the select. 
 	*By default, iOS often zooms into form controls, and the behavior is often unnecessary and intrusive in mobile-optimized layouts.
 	*/
+	@Override
 	public void setPreventFocusZoom(boolean b) {
 		setAttribute("data-prevent-focus-zoom", String.valueOf(b));
 	}
