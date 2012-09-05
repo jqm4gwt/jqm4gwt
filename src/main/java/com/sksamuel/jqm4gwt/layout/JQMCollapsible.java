@@ -4,6 +4,8 @@ import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.HasIconPos;
+import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.html.Heading;
 
@@ -18,7 +20,7 @@ import com.sksamuel.jqm4gwt.html.Heading;
  *       collapsible.html
  * 
  */
-public class JQMCollapsible extends JQMWidget implements HasText {
+public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos {
 
 	/**
 	 * The container for the elements of the collapsible.
@@ -87,6 +89,12 @@ public class JQMCollapsible extends JQMWidget implements HasText {
 		flow.clear();
 	}
 
+	@Override
+	public IconPos getIconPos() {
+		String string = getAttribute("data-iconpos");
+		return string == null ? null : IconPos.valueOf(string);
+	}
+
 	/**
 	 * Returns the text on the header element
 	 */
@@ -120,6 +128,18 @@ public class JQMCollapsible extends JQMWidget implements HasText {
 			getElement().setAttribute("data-collapsed", "true");
 		else
 			getElement().removeAttribute("data-collapsed");
+	}
+
+	/**
+	 * Sets the position of the icon. If you desire an icon only button then
+	 * set the position to {@link IconPos.NOTEXT}
+	 */
+	@Override
+	public void setIconPos(IconPos pos) {
+		if (pos == null)
+			getElement().removeAttribute("data-iconpos");
+		else
+			getElement().setAttribute("data-iconpos", pos.getJqmValue());
 	}
 
 	/**
