@@ -13,11 +13,9 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * @author Stephen K Samuel samspade79@gmail.com 10 May 2011 00:24:06
  * 
  *         An implementation of a jquery mobile "slider" widget.
- * 
- *         For further info see
- * @link 
- *       http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/forms/forms-slider
- *       .html
+ *                 
+ * For further info see
+ * @link http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/forms/forms-slider.html
  * 
  */
 public class JQMSlider extends JQMFieldContainer implements HasValue<Integer> {
@@ -110,6 +108,10 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer> {
 		return Integer.parseInt(input.getElement().getAttribute("min"));
 	}
 
+	public String getTrackTheme() {
+		return input.getElement().getAttribute("data-theme");
+	}
+
 	/**
 	 * returns the current value of the slider
 	 */
@@ -144,6 +146,13 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer> {
 	 */
 	public void setMin(int min) {
 		input.getElement().setAttribute("min", String.valueOf(min));
+	}
+
+	/**
+	 * Sets the theme swatch for the slider
+	 */
+	public void setTrackTheme(String theme) {
+		input.getElement().setAttribute("data-theme", theme);
 	}
 
 	/**
