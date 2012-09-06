@@ -33,10 +33,6 @@ public class JQMContext {
 		changePage(page, Transition.POP);
 	}
 
-	public native static void initializePage() /*-{
-									$wnd.$.mobile.initializePage();
-									}-*/;
-
 	/**
 	 * Change the displayed page to the given {@link JQMPage} instance using
 	 * the supplied transition.
@@ -69,17 +65,22 @@ public class JQMContext {
 									return $wnd.$("#" + id).offset().top;
 									}-*/;
 
+	public native static void initializePage() /*-{
+									$wnd.$.mobile.initializePage();
+									}-*/;
+
 	/**
 	 * Ask JQuery Mobile to "render" the element with the given id.
 	 */
-	public static void render(String id)
-	{
-		if (id == null || "".equals(id)) throw new IllegalArgumentException("render for empty id not possible");
+	public static void render(String id) {
+		if (id == null || "".equals(id))
+			throw new IllegalArgumentException("render for empty id not possible");
 		renderImpl(id);
 	}
+
 	private static native void renderImpl(String id) /*-{
-									$wnd.$("#" + id).page();
-									}-*/;
+										$wnd.$("#" + id).page();
+										}-*/;
 
 	/**
 	 * Scroll the page to the y-position of the given element. The element

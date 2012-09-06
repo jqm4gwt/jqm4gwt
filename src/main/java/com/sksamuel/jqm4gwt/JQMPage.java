@@ -34,7 +34,13 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 	/**
 	 * The primary content div
 	 */
-	private JQMContent	content;
+	private final JQMContent	content;
+
+	public boolean			firstShow	= false;
+
+	protected JQMHeader		header;
+
+	protected JQMFooter		footer;
 
 	/**
 	 * Create a new {@link JQMPage} with an automatically assigned page id.
@@ -120,6 +126,7 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 	 * @param widget
 	 *              the widget to add to the primary content
 	 */
+	@Override
 	public void add(Widget widget) {
 		if (widget instanceof JQMContent)
 			throw new RuntimeException("Do not add content widgets here, call createContent instead");
@@ -164,8 +171,7 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 
 	@Override
 	public void clear() {
-		throw new RuntimeException(
-				"You called clear on the page, you probably wanted to call clear on a content panel");
+		throw new RuntimeException("You called clear on the page, you probably wanted to call clear on a content panel");
 	}
 
 	/**
@@ -220,6 +226,17 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		return getAttribute("data-theme");
 	}
 
+	private Element getToolBar(String role) {
+		Element element = getElement().getFirstChildElement();
+		while (element != null) {
+			if (role.equals(element.getAttribute("data-role"))) {
+				return element;
+			}
+			element = element.getNextSiblingElement();
+		}
+		return null;
+	}
+
 	public boolean hasCookie(String name) {
 		return getCookie(name) != null;
 	}
@@ -262,16 +279,15 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 
 	}
 
-	public boolean firstShow = false;
 	/**
 	 * Triggered on the page being shown, after its transition completes.
 	 */
 	protected void onPageShow() {
-		//workarround clickhandler removal by jquery
-		if (!firstShow)
-		{
+		// workarround clickhandler removal by jquery
+		if (!firstShow) {
 			firstShow = true;
-			if (header != null) header.doFixHandlers();
+			if (header != null)
+				header.doFixHandlers();
 		}
 	}
 
@@ -292,20 +308,10 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 	public void removeFooter() {
 		footer = null;
 		Element element = getToolBar("footer");
-		if (element != null) getElement().removeChild(element);
+		if (element != null)
+			getElement().removeChild(element);
 	}
 
-	private Element getToolBar(String role)
-	{
-		Element element = getElement().getFirstChildElement();
-		while (element != null) {
-			if (role.equals(element.getAttribute("data-role"))) {
-				return element;
-			}
-			element = element.getNextSiblingElement();
-		}
-		return null;
-	}
 	/**
 	 * Removes the header element set on this page. If no header is set then
 	 * this has no effect.
@@ -313,7 +319,8 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 	public void removeHeader() {
 		header = null;
 		Element element = getToolBar("header");
-		if (element != null) getElement().removeChild(element);
+		if (element != null)
+			getElement().removeChild(element);
 	}
 
 	/**
@@ -359,7 +366,6 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		this.footer = footer;
 		getElement().appendChild(footer.getElement());
 	}
-
 	@Override
 	public void setFullScreen(boolean fs) {
 		if (fs) {
@@ -369,9 +375,6 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		}
 	}
 
-	protected JQMHeader header;
-	protected JQMFooter footer;
-	
 	/**
 	 * Sets the header element, overriding an existing header if any.
 	 */
@@ -396,6 +399,7 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 	 * Sets the title of this page, which will be used as the contents of the
 	 * title tag when this page is the visible page.
 	 */
+	@Override
 	public void setTitle(String title) {
 		setAttribute("data-title", title);
 	}

@@ -10,5 +10,8 @@ public interface HasRel {
 
 	String getRel();
 
+	/**
+	 * Set to dialog for a dialog page.
+	 */
 	void setRel(String rel);
 }
