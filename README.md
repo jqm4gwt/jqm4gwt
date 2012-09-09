@@ -28,5 +28,6 @@ If you like jqm4gwt then cheer on ohloh
 Related Projects
 ================
 
-If you are looking for a GWT wrapper for the desktop [http://jqueryui.com/ jQuery UI] then [http://code.google.com/p/gwtquery-ui/ gwtquery-ui] is where to look.<br/>
-For a GWT wrapper of JQuery then [http://code.google.com/p/gwtquery/ gwtquery] is where to go.
+If you are looking for a GWT wrapper for the desktop [jQuery UI](http://jqueryui.com) then [gwtquery-ui](http://code.google.com/p/gwtquery-ui/) is where to look.
+
+For a GWT wrapper of JQuery then [gwtquery](http://code.google.com/p/gwtquery) is where to go.
