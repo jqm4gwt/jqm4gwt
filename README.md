@@ -23,7 +23,7 @@ Spread the word
 ================
 
 If you like jqm4gwt then cheer on ohloh
-<wiki:gadget url="http://www.ohloh.net/p/584985/widgets/project_partner_badge.xml" height="53" border="0"/>
+<script type="text/javascript" src="http://www.ohloh.net/p/584985/widgets/project_partner_badge.js"></script>
 
 Related Projects
 ================
