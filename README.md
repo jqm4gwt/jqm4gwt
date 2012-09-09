@@ -17,7 +17,7 @@ These include the typical hello world and a show case of JQuery Mobile widgets
 Getting Started
 ========
 
-Read the [http://code.google.com/p/jqm4gwt/wiki/GettingStarted quick start guide]. You will need to be familiar with GWT already.
+Read the [quick start guide](https://github.com/sksamuel/jqm4gwt/wiki/Getting-Started). You will need to be familiar with GWT already.
 
 pread the word
 ================
