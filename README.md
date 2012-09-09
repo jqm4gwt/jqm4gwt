@@ -6,3 +6,27 @@ JQuery Mobile wrapper for GWT is a project that wraps the JQuery Mobile framewor
 This project is currently in beta release. The project does work and can be used, but the feature set is incomplete and there will likely be some public API changes.
 
 Jqm4gwt also provides a useful form framework that enables rapid prototyping of form pages, including ajax submission and validation. See http://code.google.com/p/jqm4gwt/wiki/FormFramework
+
+Examples
+========
+
+Examples and demos are hosted on a google app engine instance here: http://jqm4gwt.appspot.com/examples.html
+
+These include the typical hello world and a show case of JQuery Mobile widgets
+
+Getting Started
+========
+
+Read the [http://code.google.com/p/jqm4gwt/wiki/GettingStarted quick start guide]. You will need to be familiar with GWT already.
+
+pread the word
+================
+
+If you like jqm4gwt then cheer on ohloh
+<wiki:gadget url="http://www.ohloh.net/p/584985/widgets/project_partner_badge.xml" height="53" border="0"/>
+
+Related Projects
+================
+
+If you are looking for a GWT wrapper for the desktop [http://jqueryui.com/ jQuery UI] then [http://code.google.com/p/gwtquery-ui/ gwtquery-ui] is where to look.<br/>
+For a GWT wrapper of JQuery then [http://code.google.com/p/gwtquery/ gwtquery] is where to go.
