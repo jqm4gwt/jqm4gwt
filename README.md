@@ -19,7 +19,7 @@ Getting Started
 
 Read the [quick start guide](https://github.com/sksamuel/jqm4gwt/wiki/Getting-Started). You will need to be familiar with GWT already.
 
-pread the word
+Spread the word
 ================
 
 If you like jqm4gwt then cheer on ohloh
