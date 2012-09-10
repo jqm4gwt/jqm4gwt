@@ -15,7 +15,7 @@ public class Mobile {
 	 * Invokes the $.mobile.changePage method
 	 */
 	private static native void changePage(String url, String t, boolean r, boolean ch) /*-{
-															$wnd.$.mobile.changePage(url, { reverse: r, changeHash: ch });
+															$wnd.$.mobile.changePage(url, { transition: t, changeHash: false, reverse: r} );
 															}-*/;
 
 	/**

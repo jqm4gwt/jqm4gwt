@@ -13,6 +13,8 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class JQMContext {
 
+	private static Transition	defaultTransition	= Transition.POP;
+
 	/**
 	 * Appends the given {@link JQMPage} to the DOM so that JQueryMobile is
 	 * able to manipulate it and render it. This should only be done once per
@@ -30,7 +32,7 @@ public class JQMContext {
 	 * instance. This uses the default transition which is Transition.POP
 	 */
 	public static void changePage(JQMPage page) {
-		changePage(page, Transition.POP);
+		changePage(page, defaultTransition);
 	}
 
 	/**
@@ -39,6 +41,10 @@ public class JQMContext {
 	 */
 	public static void changePage(JQMPage page, Transition transition) {
 		Mobile.changePage("#" + page.getId(), transition, false, true);
+	}
+
+	public static Transition getDefaultTransition() {
+		return defaultTransition;
 	}
 
 	/**
@@ -81,6 +87,10 @@ public class JQMContext {
 	private static native void renderImpl(String id) /*-{
 										$wnd.$("#" + id).page();
 										}-*/;
+
+	public static void setDefaultTransition(Transition defaultTransition) {
+		JQMContext.defaultTransition = defaultTransition;
+	}
 
 	/**
 	 * Scroll the page to the y-position of the given element. The element

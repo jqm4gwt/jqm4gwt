@@ -25,8 +25,11 @@ public class JQMActivityManager extends ActivityManager {
 
 		@Override
 		public void setWidget(IsWidget w) {
+			// instead of setting the widget on the underlying display, we
+			// will tell JQM to show it
 			JQMPage page = (JQMPage) w;
-			JQMContext.changePage(page);
+			if (w != null)
+				JQMContext.changePage(page);
 		}
 	}
 
@@ -36,7 +39,14 @@ public class JQMActivityManager extends ActivityManager {
 
 	public JQMActivityManager(ActivityMapper mapper, EventBus eventBus) {
 		super(mapper, eventBus);
-		setDisplay(new JQMAwareDisplay());
+		super.setDisplay(new JQMAwareDisplay());
+		// GWT will monitor the hashes for us
 		disableHashListening();
+	}
+
+	@Override
+	public void setDisplay(AcceptsOneWidget display) {
+		throw new RuntimeException(
+				"JQMActivityMapper does not support custom displays. All JQM pages must be added to the RootPanel and this will be done automatically");
 	}
 }
