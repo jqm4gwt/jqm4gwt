@@ -101,8 +101,8 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 		return d;
 	}
 
-	protected void addItem(final JQMListItem item) {
-		list.add(item);
+	protected void addItem(int index, final JQMListItem item) {
+		list.insert(item, index);
 		items.add(item);
 		item.setList(this);
 		item.addDomHandler(new ClickHandler() {
@@ -112,6 +112,16 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 				setClickIndex(list.getWidgetIndex(item));
 			}
 		}, ClickEvent.getType());
+	}
+
+	public JQMListItem addItem(int index, String text) {
+		return addItem(index, text, (String) null);
+	}
+
+	public JQMListItem addItem(int index, String text, String url) {
+		JQMListItem item = new JQMListItem(text, url);
+		addItem(index, item);
+		return item;
 	}
 
 	/**
@@ -144,7 +154,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 	 */
 	public JQMListItem addItem(String text, String url) {
 		JQMListItem item = new JQMListItem(text, url);
-		addItem(item);
+		addItem(items.size(), item);
 		return item;
 	}
 
