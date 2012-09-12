@@ -19,6 +19,14 @@ Getting Started
 
 Read the [quick start guide](https://github.com/sksamuel/jqm4gwt/wiki/Getting-Started). You will need to be familiar with GWT already.
 
+Dependancies are available from maven central:
+
+  	<dependency>
+			<groupId>com.sksamuel.jqm4gwt</groupId>
+			<artifactId>jqm4gwt</artifactId>
+			<version>1.1.0</version>
+  	</dependency>
+
 Spread the word
 ================
 
