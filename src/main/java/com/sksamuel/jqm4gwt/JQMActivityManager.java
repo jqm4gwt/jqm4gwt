@@ -12,11 +12,9 @@ import com.google.gwt.user.client.ui.IsWidget;
  * When using the {@link JQMActivityManager} you must disable jQuery Mobile hash listening, 
  * otherwise jQuery Mobile will intercept hash changes, and so they will not propgate to the GWT activity manager.
  * 
- * Add this override to your HTML page. 
+ * By using this class, the default ajax listening from jquery mobile is disabled, and all hash changes will be intercepted by the GWT MVP history manager. 
  * 
- * 	$(document).bind("mobileinit", function(){
- * 		$.mobile.hashListeningEnabled = false;
- * 	});
+ * 
  *
  */
 public class JQMActivityManager extends ActivityManager {

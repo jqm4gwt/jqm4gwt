@@ -24,12 +24,12 @@ import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
  */
 public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 
-	static int			counter	= 1;
+	static int				counter	= 1;
 
 	/**
 	 * id of the page
 	 */
-	private final String	id;
+	private final String		id;
 
 	/**
 	 * The primary content div
@@ -94,6 +94,11 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		this();
 		if (widgets != null)
 			add(widgets);
+	}
+
+	@Override
+	public String toString() {
+		return "JQMPage [id=" + id + "]";
 	}
 
 	/**
@@ -366,6 +371,7 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		this.footer = footer;
 		getElement().appendChild(footer.getElement());
 	}
+
 	@Override
 	public void setFullScreen(boolean fs) {
 		if (fs) {

@@ -363,9 +363,10 @@ public class JQMHeader extends JQMToolbar {
 	/**
 	 * Internal API for workarround, do not call 
 	 */
-	public void doFixHandlers() 
-	{
-		if (left != null) left.doFixHandlers();
-		if (right != null) right.doFixHandlers();
+	public void doFixHandlers() {
+		// if (left != null)
+		// left.doFixHandlers();
+		// if (right != null)
+		// right.doFixHandlers();
 	}
 }

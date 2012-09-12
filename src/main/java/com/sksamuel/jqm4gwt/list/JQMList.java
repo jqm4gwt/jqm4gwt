@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasInset;
@@ -22,8 +25,8 @@ import com.sksamuel.jqm4gwt.html.ListWidget;
  *         An implementation of a jquery mobile list view as seen here:
  * @link http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/lists/index.html
  * 
- *       This list can be ordered or unordered (which must be set at constructor
- *       time). The list can be dynamically modified with random access.
+ *       This list can be ordered or unordered (which must be set at constructor time). The list can be dynamically
+ *       modified with random access.
  * 
  * 
  * 
@@ -55,8 +58,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 	}
 
 	/**
-	 * Create a new {@link JQMList} that is unordered or ordered depending on
-	 * the given boolean.
+	 * Create a new {@link JQMList} that is unordered or ordered depending on the given boolean.
 	 * 
 	 * @param ordered
 	 *              true if you want an ordered list, false otherwise.
@@ -75,9 +77,8 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 	/**
 	 * Registers a new {@link ClickHandler} on this list.
 	 * 
-	 * When a click event has been fired, you can get a reference to the
-	 * position that was clicked by getClickIndex() and a reference to the
-	 * item that was clicked with getClickItem()
+	 * When a click event has been fired, you can get a reference to the position that was clicked by getClickIndex()
+	 * and a reference to the item that was clicked with getClickItem()
 	 */
 	@Override
 	public HandlerRegistration addClickHandler(ClickHandler handler) {
@@ -91,9 +92,8 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 	/**
 	 * Add a new divider with the given text and an automatically assigned id.
 	 * 
-	 * @return the created {@link JQMListDivider} which can be used to change
-	 *         the text dynamically. Changes to that instance write back to
-	 *         this list.
+	 * @return the created {@link JQMListDivider} which can be used to change the text dynamically. Changes to that
+	 *         instance write back to this list.
 	 */
 	public JQMListDivider addDivider(String text) {
 		JQMListDivider d = new JQMListDivider(text);
@@ -132,8 +132,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 	}
 
 	/**
-	 * Adds a new {@link JQMListItem} that contains the given @param text as
-	 * the heading element.
+	 * Adds a new {@link JQMListItem} that contains the given @param text as the heading element.
 	 * 
 	 * The list item is made linkable to the given page
 	 * 
@@ -146,9 +145,17 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 		return addItem(text, "#" + page.getId());
 	}
 
+	public <T extends Place> JQMListItem addItem(String text, T place, PlaceTokenizer<T> tokenizer) {
+		String url = GWT.getTypeName(place) + ":" + tokenizer.getToken(place);
+		return addItem(text, url);
+	}
+
 	/**
-	 * Adds a new {@link JQMListItem} that contains the given @param text as
-	 * the content.
+	 * Adds a new {@link JQMListItem} that contains the given @param text as the content. Note that if you want to
+	 * navigate to an internal url (ie, another JQM Page) then you must prefix the url with a hash. IE, the hash is
+	 * not added automatically. This allows you to navigate to external urls as well.
+	 * 
+	 * If you add an item after the page has been created then you must call .refresh() to update the layout.
 	 * 
 	 * The list item is made linkable to the @param url
 	 */
@@ -185,8 +192,8 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 	}
 
 	/**
-	 * Returns the index of the last click. This is useful in event handlers
-	 * when one wants to get a reference to which item was clicked.
+	 * Returns the index of the last click. This is useful in event handlers when one wants to get a reference to
+	 * which item was clicked.
 	 * 
 	 * @return the index of the last clicked item
 	 */
@@ -195,9 +202,8 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 	}
 
 	/**
-	 * Returns the JQMListItem that was last clicked on. This is useful in
-	 * event handlers when one wants to get a reference to which item was
-	 * clicked.
+	 * Returns the JQMListItem that was last clicked on. This is useful in event handlers when one wants to get a
+	 * reference to which item was clicked.
 	 * 
 	 * @return the last clicked item
 	 */
@@ -273,12 +279,11 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 								}-*/;
 
 	/**
-	 * Remove the divider with the given text. This method will search all the
-	 * dividers and remove the first divider found with the given text.
+	 * Remove the divider with the given text. This method will search all the dividers and remove the first divider
+	 * found with the given text.
 	 * 
 	 * 
-	 * @return true if a divider with the given text was found and removed,
-	 *         otherwise false.
+	 * @return true if a divider with the given text was found and removed, otherwise false.
 	 */
 	public boolean removeDivider(String text) {
 		for (int k = 0; k < list.getWidgetCount(); k++) {
@@ -314,8 +319,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 	}
 
 	/**
-	 * Removes all the given items. Conveniece method for calling
-	 * removeItem(JQMListItem)multiple times.
+	 * Removes all the given items. Conveniece method for calling removeItem(JQMListItem)multiple times.
 	 */
 	public void removeItems(List<JQMListItem> items) {
 		for (JQMListItem item : items)
@@ -331,9 +335,9 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 	}
 
 	/**
-	* Sets the color scheme (swatch) for list item count bubbles. 
-	* It accepts a single letter from a-z that maps to the swatches included in your theme. 
-	*/
+	 * Sets the color scheme (swatch) for list item count bubbles. It accepts a single letter from a-z that maps to
+	 * the swatches included in your theme.
+	 */
 	public void setCountTheme(String theme) {
 		setAttribute("data-count-theme", theme);
 	}
@@ -358,8 +362,8 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 	}
 
 	/**
-	 * Sets the color scheme (swatch) for the search filter bar. 
-	 * It accepts a single letter from a-z that maps to the swatches included in your theme. 
+	 * Sets the color scheme (swatch) for the search filter bar. It accepts a single letter from a-z that maps to the
+	 * swatches included in your theme.
 	 */
 	public void setFilterTheme(String theme) {
 		setAttribute("data-filter-theme", theme);

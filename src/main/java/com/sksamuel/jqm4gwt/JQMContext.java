@@ -40,6 +40,7 @@ public class JQMContext {
 	 * the supplied transition.
 	 */
 	public static void changePage(JQMPage page, Transition transition) {
+		System.out.println("Changing page to " + page);
 		Mobile.changePage("#" + page.getId(), transition, false, true);
 	}
 

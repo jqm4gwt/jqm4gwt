@@ -74,6 +74,7 @@ public class JQMListItem extends Widget implements HasText, HasClickHandlers {
 
 	@Override
 	public HandlerRegistration addClickHandler(ClickHandler handler) {
+		setUrl("#");
 		return addDomHandler(handler, ClickEvent.getType());
 	}
 
@@ -216,8 +217,7 @@ public class JQMListItem extends Widget implements HasText, HasClickHandlers {
 	 */
 	public void setAside(String text) {
 		if (text == null)
-			throw new RuntimeException(
-					"Cannot set aside to null. Call removeAside() if you wanted to remove the aside text");
+			throw new RuntimeException("Cannot set aside to null. Call removeAside() if you wanted to remove the aside text");
 
 		if (asideElem == null)
 			createAndAttachAsideElem();
@@ -230,8 +230,7 @@ public class JQMListItem extends Widget implements HasText, HasClickHandlers {
 	 */
 	public JQMListItem setCount(Integer count) {
 		if (count == null)
-			throw new RuntimeException(
-					"Cannot set count to null. Call removeCount() if you wanted to remove the bubble");
+			throw new RuntimeException("Cannot set count to null. Call removeCount() if you wanted to remove the bubble");
 
 		if (countElem == null)
 			createAndAttachCountElement();
@@ -259,8 +258,7 @@ public class JQMListItem extends Widget implements HasText, HasClickHandlers {
 	 */
 	public void setImage(String src, boolean icon) {
 		if (src == null)
-			throw new RuntimeException(
-					"Cannot set image to null. Call removeImage() if you wanted to remove the image");
+			throw new RuntimeException("Cannot set image to null. Call removeImage() if you wanted to remove the image");
 
 		if (imageElem == null) {
 			imageElem = Document.get().createImageElement();
@@ -305,7 +303,6 @@ public class JQMListItem extends Widget implements HasText, HasClickHandlers {
 	public void setUrl(String url) {
 		if (url == null)
 			throw new RuntimeException("Cannot set URL to null. Call removeUrl() if you wanted to remove the URL");
-
 		if (anchor == null) {
 			// need to make anchor and move children to it
 			anchor = Document.get().createAnchorElement();
@@ -313,7 +310,5 @@ public class JQMListItem extends Widget implements HasText, HasClickHandlers {
 			getElement().appendChild(anchor);
 		}
 		anchor.setAttribute("href", url);
-
 	}
-
 }
