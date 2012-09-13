@@ -26,6 +26,17 @@ public class Mobile {
 	}
 
 	/**
+	 * Trigger the create event on the given page
+	 */
+	public static void create(JQMPage page) {
+		create(page.getId());
+	}
+
+	private static native void create(String id) /*-{
+									$wnd.$("#"+id).trigger( "create" );
+									}-*/;
+
+	/**
 	 * Hide the page loading dialog and set the global loading message back to
 	 * the default "Loading"
 	 */
