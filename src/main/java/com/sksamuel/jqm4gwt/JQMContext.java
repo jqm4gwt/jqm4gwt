@@ -24,7 +24,12 @@ public class JQMContext {
 	 */
 	static void appendPage(JQMPage page) {
 		RootPanel.get().add(page);
+		enhance(page);
+	}
+
+	private static void enhance(JQMPage page) {
 		render(page.getId());
+		page.setEnhanced(true);
 	}
 
 	/**
@@ -82,6 +87,7 @@ public class JQMContext {
 	public static void render(String id) {
 		if (id == null || "".equals(id))
 			throw new IllegalArgumentException("render for empty id not possible");
+		System.out.println("Enhancing " + id);
 		renderImpl(id);
 	}
 

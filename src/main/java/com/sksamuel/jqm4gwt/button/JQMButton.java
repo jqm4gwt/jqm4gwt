@@ -49,6 +49,8 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 
 		setStyleName("jqm4gwt-button");
 		setDataRole("button");
+
+		setId();
 	}
 
 	/**

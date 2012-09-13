@@ -24,7 +24,11 @@ import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
  */
 public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 
-	static int				counter	= 1;
+	static int	counter	= 1;
+
+	public static native void triggerCreate() /*-{
+										$wnd.$('body').trigger('create');
+										}-*/;
 
 	/**
 	 * id of the page
@@ -88,7 +92,6 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		content = createContent();
 
 		JQMContext.appendPage(this);
-		enhanced = true;
 		bindLifecycleEvents(this, getId());
 	}
 
@@ -138,8 +141,18 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 			throw new RuntimeException("Do not add content widgets here, call createContent instead");
 		getPrimaryContent().add(widget);
 		// if page is already enhanced then we need to enhance the content manually
-		if (enhanced)
-			Mobile.create(this);
+		// if (enhanced)
+		// triggerCreate();
+	}
+
+	@Override
+	public boolean remove(Widget w) {
+		return getPrimaryContent().remove(w);
+	}
+
+	@Override
+	public boolean remove(int index) {
+		return getPrimaryContent().remove(index);
 	}
 
 	/**

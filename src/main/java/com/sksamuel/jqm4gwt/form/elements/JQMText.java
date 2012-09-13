@@ -84,6 +84,8 @@ public class JQMText extends JQMWidget implements HasText, HasFocusHandlers, Has
 		setText(text);
 		setDataRole("fieldcontain");
 		addStyleName("jqm4gwt-fieldcontain");
+
+		setId();
 	}
 
 	@Override

@@ -48,7 +48,7 @@
 
 	<properties>
 		<maven.plugin.resources.version>2.5</maven.plugin.resources.version>
-		<gwt.version>2.3.0</gwt.version>
+		<gwt.version>2.4.0</gwt.version>
 	</properties>
 
 	<dependencies>
@@ -56,7 +56,7 @@
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
 			<version>${gwt.version}</version>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>

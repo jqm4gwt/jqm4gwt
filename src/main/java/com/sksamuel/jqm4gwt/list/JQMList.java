@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -64,14 +63,14 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 	 *              true if you want an ordered list, false otherwise.
 	 */
 	public JQMList(boolean ordered) {
-		String id = Document.get().createUniqueId();
 
 		list = new ListWidget(ordered);
 		initWidget(list);
-		setId(id);
 
 		setStyleName("jqm4gwt-list");
 		setDataRole("listview");
+
+		setId();
 	}
 
 	/**
