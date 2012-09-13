@@ -38,6 +38,11 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 
 	public boolean			firstShow	= false;
 
+	/**
+	 * Set to true once the page has been enhanced by jQuery Mobile.
+	 */
+	private boolean			enhanced;
+
 	protected JQMHeader		header;
 
 	protected JQMFooter		footer;
@@ -83,6 +88,7 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		content = createContent();
 
 		JQMContext.appendPage(this);
+		enhanced = true;
 		bindLifecycleEvents(this, getId());
 	}
 
@@ -94,11 +100,6 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		this();
 		if (widgets != null)
 			add(widgets);
-	}
-
-	@Override
-	public String toString() {
-		return "JQMPage [id=" + id + "]";
 	}
 
 	/**
@@ -136,6 +137,9 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		if (widget instanceof JQMContent)
 			throw new RuntimeException("Do not add content widgets here, call createContent instead");
 		getPrimaryContent().add(widget);
+		// if page is already enhanced then we need to enhance the content manually
+		if (enhanced)
+			Mobile.create(this);
 	}
 
 	/**
@@ -260,6 +264,10 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		return "true".equals(getAttribute("data-add-back-btn"));
 	}
 
+	public boolean isEnhanced() {
+		return enhanced;
+	}
+
 	@Override
 	public boolean isFullScreen() {
 		return "true".equals(getAttribute("data-fullscreen"));
@@ -363,6 +371,10 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		setAttribute("data-role", value);
 	}
 
+	public void setEnhanced(boolean enchanced) {
+		this.enhanced = enchanced;
+	}
+
 	/**
 	 * Sets the footer element, overriding an existing footer if any.
 	 */
@@ -408,6 +420,11 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 	@Override
 	public void setTitle(String title) {
 		setAttribute("data-title", title);
+	}
+
+	@Override
+	public String toString() {
+		return "JQMPage [id=" + id + "]";
 	}
 
 }
