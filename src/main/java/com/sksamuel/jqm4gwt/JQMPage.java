@@ -179,12 +179,12 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 												p.@com.sksamuel.jqm4gwt.JQMPage::onPageHide()();
 												});
 												
-																								$wnd.$('div[data-url="' + id + '"]').bind("pagebeforehide",
+												$wnd.$('div[data-url="' + id + '"]').bind("pagebeforehide",
 												function(event, ui) {
 												p.@com.sksamuel.jqm4gwt.JQMPage::onPageBeforeHide()();
 												});
 												
-																								$wnd.$('div[data-url="' + id + '"]').bind("pagebeforeshow",
+												$wnd.$('div[data-url="' + id + '"]').bind("pagebeforeshow",
 												function(event, ui) {
 												p.@com.sksamuel.jqm4gwt.JQMPage::onPageBeforeShow()();
 												});
