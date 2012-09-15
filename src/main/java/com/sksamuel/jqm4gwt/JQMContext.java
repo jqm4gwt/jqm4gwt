@@ -22,31 +22,30 @@ public class JQMContext {
 	 * result in elements with overlapping IDs.
 	 * 
 	 */
-	static void appendPage(JQMPage page) {
-		RootPanel.get().add(page);
-		enhance(page);
-	}
-
-	private static void enhance(JQMPage page) {
-		render(page.getId());
-		page.setEnhanced(true);
+	public static void attachAndEnhance(JQMContainer container) {
+		RootPanel.get().add(container);
+		enhance(container);
+		container.setEnhanced(true);
 	}
 
 	/**
 	 * Programatically change the displayed page to the given {@link JQMPage}
 	 * instance. This uses the default transition which is Transition.POP
 	 */
-	public static void changePage(JQMPage page) {
-		changePage(page, defaultTransition);
+	public static void changePage(JQMContainer container) {
+		changePage(container, defaultTransition);
 	}
 
 	/**
 	 * Change the displayed page to the given {@link JQMPage} instance using
 	 * the supplied transition.
 	 */
-	public static void changePage(JQMPage page, Transition transition) {
-		System.out.println("Changing page to " + page);
-		Mobile.changePage("#" + page.getId(), transition, false, true);
+	public static void changePage(JQMContainer container, Transition transition) {
+		Mobile.changePage("#" + container.getId(), transition, false, true);
+	}
+
+	private static void enhance(JQMContainer c) {
+		render(c.getId());
 	}
 
 	public static Transition getDefaultTransition() {
@@ -119,4 +118,5 @@ public class JQMContext {
 	public static void silentScroll(Widget widget) {
 		silentScroll(widget.getElement());
 	}
+
 }

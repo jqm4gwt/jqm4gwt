@@ -2,11 +2,9 @@ package com.sksamuel.jqm4gwt;
 
 import java.util.Collection;
 
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.toolbar.JQMFooter;
 import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
@@ -22,18 +20,9 @@ import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
  *         methods are available.
  * 
  */
-public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
+public class JQMPage extends JQMContainer implements HasFullScreen, HasTheme, HasId {
 
-	static int	counter	= 1;
-
-	public static native void triggerCreate() /*-{
-										$wnd.$('body').trigger('create');
-										}-*/;
-
-	/**
-	 * id of the page
-	 */
-	private final String		id;
+	static int				counter	= 1;
 
 	/**
 	 * The primary content div
@@ -41,11 +30,6 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 	private final JQMContent	content;
 
 	public boolean			firstShow	= false;
-
-	/**
-	 * Set to true once the page has been enhanced by jQuery Mobile.
-	 */
-	private boolean			enhanced;
 
 	protected JQMHeader		header;
 
@@ -76,22 +60,15 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 	 *              the id to use as this page's id
 	 */
 	public JQMPage(String id) {
-		if (id == null)
-			throw new RuntimeException("id for page cannot be null");
-		if (id.contains(" "))
-			throw new RuntimeException("id for page cannot contain space");
-		this.id = id;
-
-		setElement(Document.get().createDivElement());
+		super(id, "page");
 		setStyleName("jqm4gwt-page");
-		setDataRole("page");
-		setAttribute("data-url", id);
+		setAttribute("data-role", "page");
 
 		// create the primary content div and add this to the super class
 		// containing widget
 		content = createContent();
 
-		JQMContext.appendPage(this);
+		JQMContext.attachAndEnhance(this);
 		bindLifecycleEvents(this, getId());
 	}
 
@@ -103,14 +80,6 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		this();
 		if (widgets != null)
 			add(widgets);
-	}
-
-	/**
-	 * Adds the given collection of widgets to the primary content panel
-	 */
-	public void add(Collection<Widget> widgets) {
-		for (Widget widget : widgets)
-			add(widget);
 	}
 
 	/**
@@ -140,31 +109,10 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		if (widget instanceof JQMContent)
 			throw new RuntimeException("Do not add content widgets here, call createContent instead");
 		getPrimaryContent().add(widget);
-		// if page is already enhanced then we need to enhance the content manually
+		// if page is already enhanced then we need to enhance the content
+		// manually
 		// if (enhanced)
 		// triggerCreate();
-	}
-
-	@Override
-	public boolean remove(Widget w) {
-		return getPrimaryContent().remove(w);
-	}
-
-	@Override
-	public boolean remove(int index) {
-		return getPrimaryContent().remove(index);
-	}
-
-	/**
-	 * Adds the given array of widgets to the primary content container of
-	 * this page.
-	 * 
-	 * @param widgets
-	 *              the widgets to add to the primary content
-	 */
-	public void add(Widget[] widgets) {
-		for (Widget widget : widgets)
-			add(widget);
 	}
 
 	private native void bindLifecycleEvents(JQMPage p, String id) /*-{
@@ -207,27 +155,12 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		return content;
 	}
 
-	/**
-	 * Returns the value of the attribute with the given name
-	 */
-	protected String getAttribute(String name) {
-		return getElement().getAttribute(name);
-	}
-
 	public String getCookie(String name) {
 		return Cookies.getCookie(name);
 	}
 
 	protected int getCookieInteger(String value) {
 		return Integer.parseInt(value);
-	}
-
-	public String getDataUrl() {
-		return getAttribute("data-url");
-	}
-
-	public String getId() {
-		return id;
 	}
 
 	public String getParameter(String name) {
@@ -241,11 +174,6 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 	 */
 	public JQMContent getPrimaryContent() {
 		return content;
-	}
-
-	@Override
-	public String getTheme() {
-		return getAttribute("data-theme");
 	}
 
 	private Element getToolBar(String role) {
@@ -275,10 +203,6 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 	 */
 	public boolean isBackButton() {
 		return "true".equals(getAttribute("data-add-back-btn"));
-	}
-
-	public boolean isEnhanced() {
-		return enhanced;
 	}
 
 	@Override
@@ -317,14 +241,14 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		}
 	}
 
-	/**
-	 * Removes the attribute with the given name
-	 * 
-	 * @param name
-	 *              the name of the attribute to remove
-	 */
-	protected void removeAttribute(String name) {
-		getElement().removeAttribute(name);
+	@Override
+	public boolean remove(int index) {
+		return getPrimaryContent().remove(index);
+	}
+
+	@Override
+	public boolean remove(Widget w) {
+		return getPrimaryContent().remove(w);
 	}
 
 	/**
@@ -350,14 +274,6 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 	}
 
 	/**
-	 * Sets the value of the attribute with the given name to the given value.
-	 * 
-	 */
-	protected void setAttribute(String name, String value) {
-		getElement().setAttribute(name, value);
-	}
-
-	/**
 	 * Sets whether or not this page should have an auto generated back
 	 * button. If so, it will be placed in the left slot and override any left
 	 * button already there.
@@ -372,20 +288,6 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		} else {
 			getElement().removeAttribute("data-add-back-btn");
 		}
-	}
-
-	/**
-	 * Sets the data-role attribute to the given value.
-	 * 
-	 * @param value
-	 *              the value to set the data-role attribute to
-	 */
-	protected void setDataRole(String value) {
-		setAttribute("data-role", value);
-	}
-
-	public void setEnhanced(boolean enchanced) {
-		this.enhanced = enchanced;
 	}
 
 	/**
@@ -421,11 +323,6 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 		return header;
 	}
 
-	@Override
-	public void setTheme(String themeName) {
-		setAttribute("data-theme", themeName);
-	}
-
 	/**
 	 * Sets the title of this page, which will be used as the contents of the
 	 * title tag when this page is the visible page.
@@ -439,5 +336,4 @@ public class JQMPage extends ComplexPanel implements HasFullScreen, HasTheme {
 	public String toString() {
 		return "JQMPage [id=" + id + "]";
 	}
-
 }
