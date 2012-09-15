@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.layout;
 
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasIconPos;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.IconPos;
@@ -52,6 +53,28 @@ public class JQMCollapsibleSet extends JQMWidget implements HasIconPos, HasMini 
 	 */
 	public void remove(JQMCollapsible c) {
 		flow.remove(c);
+	}
+
+	public void removeCollapsedIcon() {
+		getElement().removeAttribute("data-collapsed-icon");
+	}
+
+	public void removeExpandedIcon() {
+		getElement().removeAttribute("data-expanded-icon");
+	}
+
+	public void setCollapsedIcon(DataIcon icon) {
+		if (icon == null)
+			removeCollapsedIcon();
+		else
+			getElement().setAttribute("data-collapsed-icon", icon.getJqmValue());
+	}
+
+	public void setExpandedIcon(DataIcon icon) {
+		if (icon == null)
+			removeCollapsedIcon();
+		else
+			getElement().setAttribute("data-expanded-icon", icon.getJqmValue());
 	}
 
 	/**

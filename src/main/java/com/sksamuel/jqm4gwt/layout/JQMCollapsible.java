@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasIconPos;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.IconPos;
@@ -126,6 +127,14 @@ public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos, Ha
 		return flow.remove(widget);
 	}
 
+	public void removeCollapsedIcon() {
+		getElement().removeAttribute("data-collapsed-icon");
+	}
+
+	public void removeExpandedIcon() {
+		getElement().removeAttribute("data-expanded-icon");
+	}
+
 	/**
 	 * Programatically set the collapsed state of this widget.
 	 */
@@ -134,6 +143,20 @@ public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos, Ha
 			getElement().setAttribute("data-collapsed", "true");
 		else
 			getElement().removeAttribute("data-collapsed");
+	}
+
+	public void setCollapsedIcon(DataIcon icon) {
+		if (icon == null)
+			removeCollapsedIcon();
+		else
+			getElement().setAttribute("data-collapsed-icon", icon.getJqmValue());
+	}
+
+	public void setExpandedIcon(DataIcon icon) {
+		if (icon == null)
+			removeCollapsedIcon();
+		else
+			getElement().setAttribute("data-expanded-icon", icon.getJqmValue());
 	}
 
 	/**
