@@ -19,7 +19,7 @@ public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedP
 	/**
 	 * The header contains the text, it can be null
 	 */
-	private Heading			header;
+	private Heading		header;
 
 	/**
 	 * Creates a new toolbar with a header element for the given text
@@ -85,6 +85,13 @@ public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedP
 	}
 
 	/**
+	 *  Ability to toggle toolbar-visibility on user tap/click
+	 */
+	public void setTapToggle(boolean toggle) {
+		setAttribute("data-tap-toggle", String.valueOf(toggle));
+	}
+
+	/**
 	 * Sets the value of the Hn element
 	 */
 	@Override
@@ -94,5 +101,13 @@ public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedP
 			flow.add(header);
 		}
 		header.setText(text);
+	}
+
+	/**
+	 *  Have the page top and bottom padding updated on resize, transition, "updatelayout" events 
+	 *  (the framework always updates the padding on the "pageshow" event).
+	 */
+	public void setUpdatePagePadding(boolean toggle) {
+		setAttribute("data-update-page-padding", String.valueOf(toggle));
 	}
 }

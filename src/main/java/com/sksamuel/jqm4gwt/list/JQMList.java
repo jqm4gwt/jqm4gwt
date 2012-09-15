@@ -144,11 +144,6 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 		return addItem(text, "#" + page.getId());
 	}
 
-	public <T extends Place> JQMListItem addItem(String text, T place, PlaceTokenizer<T> tokenizer) {
-		String url = GWT.getTypeName(place) + ":" + tokenizer.getToken(place);
-		return addItem(text, url);
-	}
-
 	/**
 	 * Adds a new {@link JQMListItem} that contains the given @param text as the content. Note that if you want to
 	 * navigate to an internal url (ie, another JQM Page) then you must prefix the url with a hash. IE, the hash is
@@ -162,6 +157,11 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 		JQMListItem item = new JQMListItem(text, url);
 		addItem(items.size(), item);
 		return item;
+	}
+
+	public <T extends Place> JQMListItem addItem(String text, T place, PlaceTokenizer<T> tokenizer) {
+		String url = GWT.getTypeName(place) + ":" + tokenizer.getToken(place);
+		return addItem(text, url);
 	}
 
 	/**
@@ -325,6 +325,10 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 			removeItem(item);
 	}
 
+	public void setAutoDividers(boolean auto) {
+		getElement().setAttribute("data-autodividers", String.valueOf(auto));
+	}
+
 	protected void setClickIndex(int clickIndex) {
 		this.clickIndex = clickIndex;
 	}
@@ -368,11 +372,19 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 		setAttribute("data-filter-theme", theme);
 	}
 
+	public void setHeaderTheme(String theme) {
+		setAttribute("data-header-theme", theme);
+	}
+
 	@Override
 	public void setInset(boolean inset) {
 		if (inset)
 			getElement().setAttribute("data-inset", "true");
 		else
 			getElement().removeAttribute("data-inset");
+	}
+
+	public void setSplitTheme(String theme) {
+		setAttribute("data-split-theme", theme);
 	}
 }

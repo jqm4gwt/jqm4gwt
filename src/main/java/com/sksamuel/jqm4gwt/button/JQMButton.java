@@ -271,6 +271,10 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 			getElement().setAttribute("data-iconpos", pos.getJqmValue());
 	}
 
+	public void setIconShadow(boolean shadow) {
+		getElement().setAttribute("data-iconshadow", String.valueOf(shadow));
+	}
+
 	/**
 	 * Sets this button to be inline.
 	 * 

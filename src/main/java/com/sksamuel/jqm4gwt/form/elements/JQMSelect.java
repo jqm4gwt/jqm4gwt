@@ -350,6 +350,11 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 			getElement().setAttribute("data-menu-native", "false");
 	}
 
+	public void setOverlayTheme(String theme) {
+		getElement().setAttribute("data-overlay-theme", theme);
+
+	}
+
 	/**
 	 * Set the placeholder option value.
 	 * 
