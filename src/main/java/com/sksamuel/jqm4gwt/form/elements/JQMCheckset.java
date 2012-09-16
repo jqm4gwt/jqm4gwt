@@ -34,16 +34,16 @@ import com.sksamuel.jqm4gwt.html.Legend;
  *       checkboxes.html
  * 
  */
-public class JQMCheckset extends JQMFieldContainer implements HasText,
-		HasSelectionHandlers<String>, HasOrientation, HasClickHandlers, JQMFormWidget {
+public class JQMCheckset extends JQMFieldContainer implements HasText, HasSelectionHandlers<String>, HasOrientation<JQMCheckset>,
+		HasClickHandlers, JQMFormWidget {
 
-	private JQMFieldset		fieldset;
+	private final JQMFieldset		fieldset;
 
-	private Legend			legend;
+	private final Legend			legend;
 
-	private List<TextBox>		inputs	= new ArrayList<TextBox>();
-	private List<FormLabel>		labels	= new ArrayList<FormLabel>();
-	private List<JQMCheckbox>	checks	= new ArrayList<JQMCheckbox>();
+	private final List<TextBox>		inputs	= new ArrayList<TextBox>();
+	private final List<FormLabel>		labels	= new ArrayList<FormLabel>();
+	private final List<JQMCheckbox>	checks	= new ArrayList<JQMCheckbox>();
 
 	/**
 	 * Creates a new {@link JQMCheckset} with no label text
@@ -162,8 +162,8 @@ public class JQMCheckset extends JQMFieldContainer implements HasText,
 		while (element != null) {
 			if ("label".equalsIgnoreCase(element.getTagName())
 					&& element.getAttribute("class") != null
-					&& (element.getAttribute("class").contains("ui-btn-active") || element
-							.getAttribute("class").contains("ui-btn-down")))
+					&& (element.getAttribute("class").contains("ui-btn-active") || element.getAttribute("class")
+							.contains("ui-btn-down")))
 				return element.getAttribute("for");
 			String value = getValue(element.getFirstChildElement());
 			if (value != null)
@@ -174,8 +174,8 @@ public class JQMCheckset extends JQMFieldContainer implements HasText,
 	}
 
 	private native void getValueC(String id) /*-{
-		alert($wnd.$('#' + id).is(':checked'));
-	}-*/;
+								alert($wnd.$('#' + id).is(':checked'));
+								}-*/;
 
 	/**
 	 * Returns true if at least one checkbox in this checkset is selected.
@@ -195,7 +195,7 @@ public class JQMCheckset extends JQMFieldContainer implements HasText,
 	 * @param id
 	 *              the id of the checkbox to test
 	 */
-	public boolean isSelected(String id) { 
+	public boolean isSelected(String id) {
 		for (JQMCheckbox box : checks) {
 			if (id.equals(box.getId()))
 				return box.getValue();
@@ -214,8 +214,9 @@ public class JQMCheckset extends JQMFieldContainer implements HasText,
 	}
 
 	@Override
-	public void setHorizontal() {
+	public JQMCheckset setHorizontal() {
 		fieldset.setHorizontal();
+		return this;
 	}
 
 	/**
@@ -249,7 +250,8 @@ public class JQMCheckset extends JQMFieldContainer implements HasText,
 	}
 
 	@Override
-	public void setVertical() {
+	public JQMCheckset setVertical() {
 		fieldset.setVertical();
+		return this;
 	}
 }

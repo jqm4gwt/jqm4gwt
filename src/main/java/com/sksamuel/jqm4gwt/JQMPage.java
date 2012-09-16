@@ -61,8 +61,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen, HasTheme, Ha
 	 */
 	public JQMPage(String id) {
 		super(id, "page");
-		setStyleName("jqm4gwt-page");
-		setAttribute("data-role", "page");
+		JQMContext.attachAndEnhance(this);
 
 		// create the primary content div and add this to the super class
 		// containing widget

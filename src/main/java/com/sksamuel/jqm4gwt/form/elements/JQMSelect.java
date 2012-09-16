@@ -37,7 +37,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * 
  */
 public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocusHandlers, HasChangeHandlers, HasClickHandlers,
-		HasValue<String>, JQMFormWidget, HasIcon, HasInline, HasPreventFocusZoom, HasCorners, HasShadow, HasMini {
+		HasValue<String>, JQMFormWidget, HasIcon<JQMSelect>, HasInline, HasPreventFocusZoom, HasCorners, HasShadow, HasMini {
 
 	private static final String	SELECT_STYLENAME	= "jqm4gwt-select";
 
@@ -260,8 +260,9 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 								}-*/;
 
 	@Override
-	public void removeIcon() {
+	public JQMSelect removeIcon() {
 		getElement().removeAttribute("data-icon");
+		return this;
 	}
 
 	/**
@@ -280,21 +281,24 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 
 	/**
 	 * Sets the icon used by this button. See {@link DataIcon}.
+	 * @return 
 	 */
 	@Override
-	public void setIcon(DataIcon icon) {
+	public JQMSelect setIcon(DataIcon icon) {
 		if (icon == null)
 			removeIcon();
 		else
 			getElement().setAttribute("data-icon", icon.getJqmValue());
+		return this;
 	}
 
 	@Override
-	public void setIcon(String src) {
+	public JQMSelect setIcon(String src) {
 		if (src == null)
 			removeIcon();
 		else
 			getElement().setAttribute("data-icon", src);
+		return this;
 	}
 
 	/**

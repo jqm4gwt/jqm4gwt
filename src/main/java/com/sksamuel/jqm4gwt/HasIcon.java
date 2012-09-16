@@ -4,13 +4,13 @@ package com.sksamuel.jqm4gwt;
  * @author Stephen K Samuel samspade79@gmail.com 13 Jul 2011 23:08:58
  * 
  */
-public interface HasIcon extends HasIconPos {
+public interface HasIcon<T> extends HasIconPos {
 
 	/**
 	 * Removes any icon set on the implementing class. If no icon has been set
 	 * then this has no effect.
 	 */
-	void removeIcon();
+	T removeIcon();
 
 	/**
 	 * Sets the data icon to use
@@ -18,7 +18,7 @@ public interface HasIcon extends HasIconPos {
 	 * @param icon
 	 *              of the standard built in icon types
 	 */
-	void setIcon(DataIcon icon);
+	T setIcon(DataIcon icon);
 
 	/**
 	 * Sets the icon to be a custom URL.
@@ -26,6 +26,6 @@ public interface HasIcon extends HasIconPos {
 	 * @param src
 	 *              the src of the custom icon
 	 */
-	void setIcon(String src);
+	T setIcon(String src);
 
 }

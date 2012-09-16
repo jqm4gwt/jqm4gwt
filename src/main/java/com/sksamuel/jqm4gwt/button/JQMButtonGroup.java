@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.button;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasInline;
 import com.sksamuel.jqm4gwt.panel.JQMControlGroup;
 
@@ -17,6 +18,21 @@ public class JQMButtonGroup extends JQMControlGroup implements HasInline {
 
 	public JQMButtonGroup() {
 		super(Document.get().createDivElement(), "jqm4gwt-buttongroup");
+	}
+
+	public JQMButtonGroup(JQMButton... buttons) {
+		this();
+		for (JQMButton button : buttons)
+			add(button);
+	}
+
+	public void add(JQMButton button) {
+		super.add(button);
+	}
+
+	@Override
+	public void add(Widget w) {
+		throw new UnsupportedOperationException();
 	}
 
 	/**

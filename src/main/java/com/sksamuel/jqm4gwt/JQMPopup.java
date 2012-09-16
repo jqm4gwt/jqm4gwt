@@ -17,6 +17,8 @@ public class JQMPopup extends JQMContainer implements HasId, HasTransition, HasT
 
 	public JQMPopup(String id) {
 		super(id, "popup");
+		getElement().setId(getId());
+		removeAttribute("data-url");
 	}
 
 	private native void _close(String id) /*-{
@@ -31,13 +33,17 @@ public class JQMPopup extends JQMContainer implements HasId, HasTransition, HasT
 		_close(id);
 	}
 
+	@Override
+	public String getRelType() {
+		return "popup";
+	}
+
 	public void open() {
 		_open(id);
 	}
 
-	@Override
-	public String toString() {
-		return "JQMPopup [id=" + id + "]";
+	public void setOverlayTheme(String theme) {
+		setAttribute("data-overlay-theme", theme);
 	}
 
 	public void setPadding(boolean padding) {
@@ -51,7 +57,12 @@ public class JQMPopup extends JQMContainer implements HasId, HasTransition, HasT
 	public void setPosition(String pos) {
 		if (!pos.startsWith("#") && !pos.equals("window") && !pos.equals("origin"))
 			throw new IllegalArgumentException("Position must be origin, window, or an id selector");
-		getElement().setAttribute("data-position-to", pos);
+		setAttribute("data-position-to", pos);
+	}
+
+	@Override
+	public String toString() {
+		return "JQMPopup [id=" + id + "]";
 	}
 
 }

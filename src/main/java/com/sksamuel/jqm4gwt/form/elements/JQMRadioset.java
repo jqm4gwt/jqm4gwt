@@ -39,8 +39,8 @@ import com.sksamuel.jqm4gwt.html.Legend;
  * @author Stephen K Samuel samspade79@gmail.com 24 Jul 2011 13:22:16
  * 
  */
-public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandlers<String>,
-		HasOrientation, HasValue<String>, JQMFormWidget, HasClickHandlers {
+public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandlers<String>, HasOrientation<JQMRadioset>, HasValue<String>,
+		JQMFormWidget, HasClickHandlers {
 
 	/**
 	 * The panel that is used for the controlgroup container
@@ -241,16 +241,14 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 		for (int k = 0; k < fieldset.getWidgetCount(); k++) {
 			Widget widget = fieldset.getWidget(k);
 			Element element = widget.getElement();
-			if (element.getAttribute("class") != null
-					&& element.getAttribute("class").contains("ui-btn-hover")) {
+			if (element.getAttribute("class") != null && element.getAttribute("class").contains("ui-btn-hover")) {
 				return getValueForId(element.getAttribute("for"));
 			}
 		}
 		for (int k = 0; k < fieldset.getWidgetCount(); k++) {
 			Widget widget = fieldset.getWidget(k);
 			Element element = widget.getElement();
-			if (element.getAttribute("class") != null
-					&& element.getAttribute("class").contains("ui-btn-active")) {
+			if (element.getAttribute("class") != null && element.getAttribute("class").contains("ui-btn-active")) {
 				return getValueForId(element.getAttribute("for"));
 			}
 		}
@@ -258,8 +256,7 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 
 			Element element = radio.getElement();
 			System.out.println(element.getAttribute("checked"));
-			if (element.getAttribute("checked") != null
-					&& element.getAttribute("checked").equals("checked")) {
+			if (element.getAttribute("checked") != null && element.getAttribute("checked").equals("checked")) {
 				return getValueForId(element.getAttribute("value"));
 			}
 		}
@@ -300,8 +297,8 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 	}
 
 	protected native void refresh() /*-{
-		$wnd.$("input[type='radio']").checkboxradio("refresh");
-	}-*/;
+							$wnd.$("input[type='radio']").checkboxradio("refresh");
+							}-*/;
 
 	/**
 	 * Removes the given {@link JQMRadio} from this radioset
@@ -322,8 +319,9 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 	}
 
 	@Override
-	public void setHorizontal() {
+	public JQMRadioset setHorizontal() {
 		fieldset.setHorizontal();
+		return this;
 	}
 
 	/**
@@ -364,8 +362,9 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 	}
 
 	@Override
-	public void setVertical() {
+	public JQMRadioset setVertical() {
 		fieldset.setVertical();
+		return this;
 	}
 
 	/**

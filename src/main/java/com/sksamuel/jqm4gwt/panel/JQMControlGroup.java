@@ -10,7 +10,7 @@ import com.sksamuel.jqm4gwt.HasOrientation;
  *         An implementation of {@link JQMPanel} for control groups.
  * 
  */
-public class JQMControlGroup extends JQMPanel implements HasOrientation, HasMini {
+public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMControlGroup>, HasMini {
 
 	protected JQMControlGroup(Element element, String styleName) {
 		super(element, "controlgroup", styleName);
@@ -32,8 +32,9 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation, HasMini
 	}
 
 	@Override
-	public void setHorizontal() {
+	public JQMControlGroup setHorizontal() {
 		setAttribute("data-type", "horizontal");
+		return this;
 	}
 
 	/**
@@ -45,7 +46,8 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation, HasMini
 	}
 
 	@Override
-	public void setVertical() {
+	public JQMControlGroup setVertical() {
 		removeAttribute("data-type");
+		return this;
 	}
 }

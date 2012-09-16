@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.place.shared.Place;
-import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasInset;
@@ -157,11 +154,6 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 		JQMListItem item = new JQMListItem(text, url);
 		addItem(items.size(), item);
 		return item;
-	}
-
-	public <T extends Place> JQMListItem addItem(String text, T place, PlaceTokenizer<T> tokenizer) {
-		String url = GWT.getTypeName(place) + ":" + tokenizer.getToken(place);
-		return addItem(text, url);
 	}
 
 	/**

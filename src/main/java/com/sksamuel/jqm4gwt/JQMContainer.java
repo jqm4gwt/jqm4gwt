@@ -36,7 +36,6 @@ public abstract class JQMContainer extends ComplexPanel implements HasId, HasThe
 		setAttribute("data-url", id);
 		setAttribute("data-role", role);
 		setStyleName("jqm4gwt-" + role);
-		JQMContext.attachAndEnhance(this);
 	}
 
 	/**
@@ -45,6 +44,11 @@ public abstract class JQMContainer extends ComplexPanel implements HasId, HasThe
 	public void add(Collection<Widget> widgets) {
 		for (Widget widget : widgets)
 			add(widget);
+	}
+
+	@Override
+	public void add(Widget w) {
+		add(w, getElement());
 	}
 
 	/**
@@ -73,6 +77,10 @@ public abstract class JQMContainer extends ComplexPanel implements HasId, HasThe
 	@Override
 	public String getId() {
 		return id;
+	}
+
+	public String getRelType() {
+		return null;
 	}
 
 	@Override

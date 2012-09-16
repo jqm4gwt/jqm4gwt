@@ -23,8 +23,6 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class JQMWidget extends Composite implements HasTheme, HasId, HasDataRole {
 
-	static int	counter	= 1;
-
 	/**
 	 * Returns the value of the attribute with the given name
 	 */

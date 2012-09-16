@@ -15,6 +15,7 @@ import com.sksamuel.jqm4gwt.HasRel;
 import com.sksamuel.jqm4gwt.HasShadow;
 import com.sksamuel.jqm4gwt.HasTransition;
 import com.sksamuel.jqm4gwt.IconPos;
+import com.sksamuel.jqm4gwt.JQMContainer;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.Transition;
@@ -29,8 +30,8 @@ import com.sksamuel.jqm4gwt.Transition;
  *       .html
  * 
  */
-public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransition, HasClickHandlers, HasInline, HasIcon, HasCorners,
-		HasShadow, HasMini {
+public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransition, HasClickHandlers, HasInline, HasIcon<JQMButton>,
+		HasCorners, HasShadow, HasMini {
 
 	protected Anchor	a;
 
@@ -68,8 +69,8 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 	 *              the {@link JQMPage} to create a link to
 	 * 
 	 */
-	public JQMButton(String text, final JQMPage page) {
-		this(text, page, Transition.POP);
+	public JQMButton(String text, final JQMContainer c) {
+		this(text, c, Transition.POP);
 	}
 
 	/**
@@ -89,8 +90,9 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 	 * @param t
 	 *              the transition type to use
 	 */
-	public JQMButton(String text, final JQMPage page, final Transition t) {
-		this(text, "#" + page.getId(), t);
+	public JQMButton(String text, final JQMContainer c, final Transition t) {
+		this(text, "#" + c.getId(), t);
+		setRel(c.getRelType());
 	}
 
 	/**
@@ -202,8 +204,9 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 	}
 
 	@Override
-	public void removeIcon() {
+	public JQMButton removeIcon() {
 		getElement().removeAttribute("data-icon");
+		return this;
 	}
 
 	/**
@@ -236,27 +239,31 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 	/**
 	 * Short cut for setRel("external");
 	 */
-	public void setExternal() {
+	public JQMButton setExternal() {
 		setRel("external");
+		return this;
 	}
 
 	/**
 	 * Sets the icon used by this button. See {@link DataIcon}.
+	 * @return 
 	 */
 	@Override
-	public void setIcon(DataIcon icon) {
+	public JQMButton setIcon(DataIcon icon) {
 		if (icon == null)
 			removeIcon();
 		else
 			getElement().setAttribute("data-icon", icon.getJqmValue());
+		return this;
 	}
 
 	@Override
-	public void setIcon(String src) {
+	public JQMButton setIcon(String src) {
 		if (src == null)
 			removeIcon();
 		else
 			getElement().setAttribute("data-icon", src);
+		return this;
 	}
 
 	/**
@@ -304,9 +311,9 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 	@Override
 	public void setRel(String rel) {
 		if (rel == null)
-			getElement().removeAttribute("rel");
+			getElement().removeAttribute("data-rel");
 		else
-			getElement().setAttribute("rel", rel);
+			getElement().setAttribute("data-rel", rel);
 	}
 
 	/**
@@ -337,11 +344,12 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 		getElement().setAttribute("data-transition", transition.getJQMValue());
 	}
 
-	public void setTransitionReverse(boolean reverse) {
+	public JQMButton setTransitionReverse(boolean reverse) {
 		if (reverse)
 			setAttribute("data-direction", "reverse");
 		else
 			removeAttribute("data-direction");
+		return this;
 	}
 
 }
