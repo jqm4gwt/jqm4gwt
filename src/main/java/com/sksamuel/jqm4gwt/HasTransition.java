@@ -5,7 +5,7 @@ package com.sksamuel.jqm4gwt;
  * 
  *         Interface for elements that accept a {@link Transition} parameter.
  */
-public interface HasTransition {
+public interface HasTransition<T> {
 
 	/**
 	 * Returns the currently set {@link Transition} or null if no transition
@@ -16,5 +16,5 @@ public interface HasTransition {
 	/**
 	 * Sets the {@link Transition} replacing any existing value.
 	 */
-	void setTransition(Transition transition);
+	T setTransition(Transition transition);
 }

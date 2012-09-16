@@ -31,15 +31,11 @@ public class JQMActivityManager extends ActivityManager {
 		}
 	}
 
-	private static native void disableHashListening() /*-{
-										$wnd.$.mobile.hashListeningEnabled = false;
-										}-*/;
-
 	public JQMActivityManager(ActivityMapper mapper, EventBus eventBus) {
 		super(mapper, eventBus);
 		super.setDisplay(new JQMAwareDisplay());
 		// GWT will monitor the hashes for us
-		disableHashListening();
+		JQMContext.disableHashListening();
 	}
 
 	@Override

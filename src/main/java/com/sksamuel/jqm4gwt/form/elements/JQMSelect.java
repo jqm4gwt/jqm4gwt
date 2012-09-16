@@ -37,7 +37,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * 
  */
 public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocusHandlers, HasChangeHandlers, HasClickHandlers,
-		HasValue<String>, JQMFormWidget, HasIcon<JQMSelect>, HasInline, HasPreventFocusZoom, HasCorners, HasShadow, HasMini {
+		HasValue<String>, JQMFormWidget, HasIcon<JQMSelect>, HasInline<JQMSelect>, HasPreventFocusZoom, HasCorners, HasShadow, HasMini {
 
 	private static final String	SELECT_STYLENAME	= "jqm4gwt-select";
 
@@ -321,11 +321,12 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 	}
 
 	@Override
-	public void setInline(boolean inline) {
+	public JQMSelect setInline(boolean inline) {
 		if (inline)
 			getElement().setAttribute("data-inline", "true");
 		else
 			getElement().removeAttribute("data-inline");
+		return this;
 	}
 
 	/**

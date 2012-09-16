@@ -14,7 +14,7 @@ import com.sksamuel.jqm4gwt.panel.JQMControlGroup;
  *       grouped.html
  * 
  */
-public class JQMButtonGroup extends JQMControlGroup implements HasInline {
+public class JQMButtonGroup extends JQMControlGroup implements HasInline<JQMButtonGroup> {
 
 	public JQMButtonGroup() {
 		super(Document.get().createDivElement(), "jqm4gwt-buttongroup");
@@ -49,13 +49,15 @@ public class JQMButtonGroup extends JQMControlGroup implements HasInline {
 	 * 
 	 * If the buttons are in a group then it is best to call this method
 	 * instead of setInline on each button
+	 * @return 
 	 */
 	@Override
-	public void setInline(boolean inline) {
+	public JQMButtonGroup setInline(boolean inline) {
 		getElement().setAttribute("data-inline", "true");
 		for (int k = 0; k < getWidgetCount(); k++) {
 			JQMButton button = (JQMButton) getWidget(k);
 			button.setInline(inline);
 		}
+		return this;
 	}
 }

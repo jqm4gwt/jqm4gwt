@@ -30,8 +30,8 @@ import com.sksamuel.jqm4gwt.Transition;
  *       .html
  * 
  */
-public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransition, HasClickHandlers, HasInline, HasIcon<JQMButton>,
-		HasCorners, HasShadow, HasMini {
+public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransition<JQMButton>, HasClickHandlers, HasInline<JQMButton>,
+		HasIcon<JQMButton>, HasCorners, HasShadow, HasMini {
 
 	protected Anchor	a;
 
@@ -70,7 +70,7 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 	 * 
 	 */
 	public JQMButton(String text, final JQMContainer c) {
-		this(text, c, Transition.POP);
+		this(text, c, null);
 	}
 
 	/**
@@ -137,7 +137,8 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 		this(text);
 		if (url != null)
 			setAttribute("href", url);
-		setTransition(t);
+		if (t != null)
+			setTransition(t);
 	}
 
 	@Override
@@ -291,13 +292,15 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 	 * 
 	 * @param inline
 	 *              true to change to line or false to switch to full width
+	 * @return 
 	 */
 	@Override
-	public void setInline(boolean inline) {
+	public JQMButton setInline(boolean inline) {
 		if (inline)
 			setAttribute("data-inline", "true");
 		else
 			removeAttribute("data-inline");
+		return this;
 	}
 
 	/**
@@ -340,8 +343,12 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 	 * Sets the transition to be used by this button when loading the URL.
 	 */
 	@Override
-	public void setTransition(Transition transition) {
-		getElement().setAttribute("data-transition", transition.getJQMValue());
+	public JQMButton setTransition(Transition transition) {
+		if (transition != null)
+			setAttribute("data-transition", transition.getJQMValue());
+		else
+			removeAttribute("data-transition");
+		return this;
 	}
 
 	public JQMButton setTransitionReverse(boolean reverse) {

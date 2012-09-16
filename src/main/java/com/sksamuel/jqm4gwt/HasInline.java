@@ -6,7 +6,7 @@ package com.sksamuel.jqm4gwt;
  *         This interface is implemented by widgets that can be rendered inline.
  * 
  */
-public interface HasInline {
+public interface HasInline<T> {
 
 	/**
 	 * Returns true if this widget is currently rendering inline
@@ -20,6 +20,6 @@ public interface HasInline {
 	 *              if true then this set widget will render inline or if
 	 *              false then it will expand to full
 	 */
-	void setInline(boolean inline);
+	T setInline(boolean inline);
 
 }

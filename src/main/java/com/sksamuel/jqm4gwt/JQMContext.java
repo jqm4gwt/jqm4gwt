@@ -15,6 +15,10 @@ public class JQMContext {
 
 	private static Transition	defaultTransition	= Transition.POP;
 
+	public static native void disableHashListening() /*-{
+										$wnd.$.mobile.hashListeningEnabled = false;
+										}-*/;
+
 	/**
 	 * Appends the given {@link JQMPage} to the DOM so that JQueryMobile is
 	 * able to manipulate it and render it. This should only be done once per

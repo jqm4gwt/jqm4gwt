@@ -131,7 +131,8 @@ public abstract class JQMContainer extends ComplexPanel implements HasId, HasThe
 	}
 
 	@Override
-	public void setTransition(Transition transition) {
+	public JQMContainer setTransition(Transition transition) {
 		getElement().setAttribute("data-transition", transition.getJQMValue());
+		return this;
 	}
 }

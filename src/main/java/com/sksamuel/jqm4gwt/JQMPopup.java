@@ -1,5 +1,7 @@
 package com.sksamuel.jqm4gwt;
 
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * @author Stephen K Samuel samspade79@gmail.com 16 Sep 2012 00:26:35
  *
@@ -21,6 +23,11 @@ public class JQMPopup extends JQMContainer implements HasId, HasTransition, HasT
 		removeAttribute("data-url");
 	}
 
+	public JQMPopup(Widget... widgets) {
+		this();
+		add(widgets);
+	}
+
 	private native void _close(String id) /*-{
 								$('#' + id).popup("close")
 								}-*/;
@@ -29,8 +36,9 @@ public class JQMPopup extends JQMContainer implements HasId, HasTransition, HasT
 								$('#' + id).popup("open")
 								}-*/;
 
-	public void close() {
+	public JQMPopup close() {
 		_close(id);
+		return this;
 	}
 
 	@Override
@@ -38,20 +46,23 @@ public class JQMPopup extends JQMContainer implements HasId, HasTransition, HasT
 		return "popup";
 	}
 
-	public void open() {
+	public JQMPopup open() {
 		_open(id);
+		return this;
 	}
 
-	public void setOverlayTheme(String theme) {
+	public JQMPopup setOverlayTheme(String theme) {
 		setAttribute("data-overlay-theme", theme);
+		return this;
 	}
 
-	public void setPadding(boolean padding) {
+	public JQMPopup setPadding(boolean padding) {
 		if (padding) {
 			addStyleName("ui-content");
 		} else {
 			removeStyleName("ui-content");
 		}
+		return this;
 	}
 
 	public void setPosition(String pos) {
