@@ -40,8 +40,11 @@ public class JQMToolBarButton extends JQMButton
 	}
 	void doFixHandlers() 
 	{
-		a = Anchor.wrap(Document.get().getElementById(getId()));
-		hr.setDelegate(a.addClickHandler(handler));
+		if (handler != null)
+		{
+			a = Anchor.wrap(Document.get().getElementById(getId()));
+			hr.setDelegate(a.addClickHandler(handler));
+		}
 	}
 	private static class DelegatingHandlerRegistration implements HandlerRegistration
 	{
