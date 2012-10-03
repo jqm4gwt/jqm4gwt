@@ -25,9 +25,9 @@ public class EqualValueValidator implements Validator {
 	public String validate() {
 		String value1 = hasValue1.getValue();
 		String value2 = hasValue2.getValue();
-		if (value1 == null || value1.trim().isEmpty())
+		if (value1 == null || value1.trim().length() == 0)
 			return null;
-		if (value2 == null || value2.trim().isEmpty())
+		if (value2 == null || value2.trim().length() == 0)
 			return null;
 		if (value1.equals(value2))
 			return null;
