@@ -97,7 +97,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset, Ha
 		return d;
 	}
 
-	protected void addItem(int index, final JQMListItem item) {
+	public void addItem(int index, final JQMListItem item) {
 		list.insert(item, index);
 		items.add(item);
 		item.setList(this);
