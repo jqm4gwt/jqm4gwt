@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt.form.elements;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextArea;
@@ -17,7 +18,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *         An implementation of a standard HTML Textarea
  * 
  */
-public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions, HasText, HasValue<String>, HasMini {
+public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions, HasText, HasValue<String>, HasMini, Focusable {
 
 	private final FormLabel	label	= new FormLabel();
 
@@ -129,5 +130,25 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions,
 	@Override
 	public void setValue(String value, boolean fireEvents) {
 		input.setValue(value, fireEvents);
+	}
+
+	@Override
+	public int getTabIndex() {
+		return input.getTabIndex();
+	}
+
+	@Override
+	public void setAccessKey(char key) {
+		input.setAccessKey(key);
+	}
+
+	@Override
+	public void setFocus(boolean focused) {
+		input.setFocus(focused);		
+	}
+
+	@Override
+	public void setTabIndex(int index) {
+		input.setTabIndex(index);
 	}
 }
