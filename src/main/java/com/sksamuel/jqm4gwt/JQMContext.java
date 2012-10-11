@@ -90,7 +90,6 @@ public class JQMContext {
 	public static void render(String id) {
 		if (id == null || "".equals(id))
 			throw new IllegalArgumentException("render for empty id not possible");
-		System.out.println("Enhancing " + id);
 		renderImpl(id);
 	}
 
