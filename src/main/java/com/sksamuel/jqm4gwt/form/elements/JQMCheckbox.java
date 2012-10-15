@@ -1,6 +1,8 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -22,11 +24,22 @@ public class JQMCheckbox implements HasText, IsChecked, HasValue<Boolean>, HasMi
 
 	private final String		id;
 
+	private boolean isSelected;
+	
 	JQMCheckbox(InputElement input, FormLabel label, String id) {
 		this.input = input;
 		this.label = label;
 		this.id = id;
-	}
+		
+		label.addDomHandler(new ClickHandler()
+		{
+			@Override
+			public void onClick(ClickEvent arg0)
+			{
+				isSelected = !isSelected;
+			}
+		}, ClickEvent.getType());		
+	};
 
 	@Override
 	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Boolean> handler) {
@@ -62,15 +75,7 @@ public class JQMCheckbox implements HasText, IsChecked, HasValue<Boolean>, HasMi
 
 	@Override
 	public boolean isSelected() {
-		String style = label.getStyleName();
-		if (style == null)
-			return false;
-		if (style.contains("ui-btn-down")) {
-			return !style.contains("ui-checkbox-on");
-		} else {
-			return style.contains("ui-checkbox-on");
-		}
-
+		return isSelected;
 	}
 
 	/**
@@ -95,5 +100,6 @@ public class JQMCheckbox implements HasText, IsChecked, HasValue<Boolean>, HasMi
 	public void setValue(Boolean value, boolean ignored) {
 		input.setChecked(value);
 		input.setDefaultChecked(value);
+		isSelected = value;
 	}
 }
