@@ -30,14 +30,6 @@
 		<url>it@github.com:sksamuel/jqm4gwt.git</url>
 	</scm>
 
-	<distributionManagement>
-		<repository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>github.sksamuel.repo</id>
-			<url>file://C:/development/workspace/repo/repo</url>
-		</repository>
-	</distributionManagement>
-
 	<developers>
 		<developer>
 			<name>Stephen Samuel</name>
