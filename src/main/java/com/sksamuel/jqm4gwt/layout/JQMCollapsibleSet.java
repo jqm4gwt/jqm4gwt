@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt.layout;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasIconPos;
+import com.sksamuel.jqm4gwt.HasInset;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMWidget;
@@ -16,10 +17,10 @@ import com.sksamuel.jqm4gwt.JQMWidget;
  *         is only one can be open at any time. If a user opens another
  *         collapsible panel, then any others will be closed automatically.
  * 
- * @link http://jquerymobile.com/demos/1.1.1/docs/content/content-collapsible-set.html
+ * @link http://jquerymobile.com/demos/1.2.0/docs/content/content-collapsible-set.html
  * 
  */
-public class JQMCollapsibleSet extends JQMWidget implements HasIconPos, HasMini {
+public class JQMCollapsibleSet extends JQMWidget implements HasIconPos, HasMini, HasInset {
 
 	private final FlowPanel	flow;
 
@@ -37,10 +38,27 @@ public class JQMCollapsibleSet extends JQMWidget implements HasIconPos, HasMini 
 		flow.add(c);
 	}
 
+	public String getCollapsedIcon() {
+		return getAttribute("data-collapsed-icon");
+	}
+
+	public String getContentTheme() {
+		return getAttribute("data-content-theme");
+	}
+
+	public String getExpandedIcon() {
+		return getAttribute("data-expanded-icon");
+	}
+
 	@Override
 	public IconPos getIconPos() {
 		String string = getAttribute("data-iconpos");
 		return string == null ? null : IconPos.valueOf(string);
+	}
+
+	@Override
+	public boolean isInset() {
+		return getAttributeBoolean("data-inset");
 	}
 
 	@Override
@@ -64,17 +82,15 @@ public class JQMCollapsibleSet extends JQMWidget implements HasIconPos, HasMini 
 	}
 
 	public void setCollapsedIcon(DataIcon icon) {
-		if (icon == null)
-			removeCollapsedIcon();
-		else
-			getElement().setAttribute("data-collapsed-icon", icon.getJqmValue());
+		setAttribute("data-collapsed-icon", icon.getJqmValue());
+	}
+
+	public void setContentTheme(String theme) {
+		setAttribute("data-content-theme", theme);
 	}
 
 	public void setExpandedIcon(DataIcon icon) {
-		if (icon == null)
-			removeCollapsedIcon();
-		else
-			getElement().setAttribute("data-expanded-icon", icon.getJqmValue());
+		getElement().setAttribute("data-expanded-icon", icon.getJqmValue());
 	}
 
 	/**
@@ -87,6 +103,11 @@ public class JQMCollapsibleSet extends JQMWidget implements HasIconPos, HasMini 
 			getElement().removeAttribute("data-iconpos");
 		else
 			getElement().setAttribute("data-iconpos", pos.getJqmValue());
+	}
+
+	@Override
+	public void setInset(boolean inset) {
+		setAttribute("data-inset", String.valueOf(inset));
 	}
 
 	/**
