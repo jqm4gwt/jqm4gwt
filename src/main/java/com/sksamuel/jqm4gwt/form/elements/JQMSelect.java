@@ -23,7 +23,6 @@ import com.sksamuel.jqm4gwt.HasInline;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasNative;
 import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
-import com.sksamuel.jqm4gwt.HasShadow;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.html.FormLabel;
@@ -37,7 +36,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * 
  */
 public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocusHandlers, HasChangeHandlers, HasClickHandlers,
-		HasValue<String>, JQMFormWidget, HasIcon<JQMSelect>, HasInline<JQMSelect>, HasPreventFocusZoom, HasCorners, HasShadow, HasMini {
+		HasValue<String>, JQMFormWidget, HasIcon<JQMSelect>, HasInline<JQMSelect>, HasPreventFocusZoom, HasCorners, HasMini {
 
 	private static final String	SELECT_STYLENAME	= "jqm4gwt-select";
 
@@ -145,6 +144,10 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 		return string == null ? null : IconPos.valueOf(string);
 	}
 
+	public String getPlaceholder() {
+		return getAttribute("data-placeholder");
+	}
+
 	/**
 	 * Returns the index of the currently selected option
 	 */
@@ -196,11 +199,6 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 	@Override
 	public boolean isCorners() {
 		return "true".equals(getAttribute("data-corners"));
-	}
-
-	@Override
-	public boolean isIconShadow() {
-		return "true".equals(getAttribute("data-iconshadow"));
 	}
 
 	@Override
@@ -313,13 +311,6 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 			getElement().setAttribute("data-iconpos", pos.getJqmValue());
 	}
 
-	/**
-	 * Applies the theme shadow to the select button if set to true.
-	 */
-	public void setIconShadow(boolean iconShadow) {
-		setAttribute("data-iconshadow", String.valueOf(iconShadow));
-	}
-
 	@Override
 	public JQMSelect setInline(boolean inline) {
 		if (inline)
@@ -370,7 +361,7 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 	 * placeholder text inside the menu as a header.
 	 */
 	public void setPlaceholder(String placeholder) {
-		addOption(null, placeholder);
+		setAttribute("data-placeholder", placeholder);
 	}
 
 	/**
@@ -406,14 +397,6 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 				return;
 			}
 		}
-	}
-
-	/**
-	 * Applies the drop shadow style to the select button if set to true.
-	 */
-	@Override
-	public void setShadow(boolean shadow) {
-		setAttribute("data-shadow", String.valueOf(shadow));
 	}
 
 	/**

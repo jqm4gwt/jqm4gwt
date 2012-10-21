@@ -35,10 +35,6 @@ import com.sksamuel.jqm4gwt.html.Legend;
  *         grouped and styled together.
  * 
  */
-/**
- * @author Stephen K Samuel samspade79@gmail.com 24 Jul 2011 13:22:16
- * 
- */
 public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandlers<String>, HasOrientation<JQMRadioset>, HasValue<String>,
 		JQMFormWidget, HasClickHandlers {
 

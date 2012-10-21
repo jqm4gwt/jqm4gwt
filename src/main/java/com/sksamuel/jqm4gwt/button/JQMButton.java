@@ -11,10 +11,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasIcon;
+import com.sksamuel.jqm4gwt.HasIconShadow;
 import com.sksamuel.jqm4gwt.HasInline;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasRel;
-import com.sksamuel.jqm4gwt.HasShadow;
 import com.sksamuel.jqm4gwt.HasTransition;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMContainer;
@@ -28,12 +28,11 @@ import com.sksamuel.jqm4gwt.Transition;
  *         An implementation of a Jquery mobile button
  * 
  * @link 
- *       http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/buttons/buttons-types
- *       .html
+ *       http://jquerymobile.com/demos/1.2.0/docs/buttons/buttons-types.html
  * 
  */
 public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransition<JQMButton>, HasClickHandlers, HasInline<JQMButton>,
-		HasIcon<JQMButton>, HasCorners, HasShadow, HasMini {
+		HasIcon<JQMButton>, HasCorners, HasIconShadow, HasMini {
 
 	/**
 	 * Create a {@link JQMButton} with the given text that does not link to
@@ -282,8 +281,12 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 			getElement().setAttribute("data-iconpos", pos.getJqmValue());
 	}
 
+	/**
+	 * Applies the drop shadow style to the select button if set to true.
+	 */
+	@Override
 	public void setIconShadow(boolean shadow) {
-		getElement().setAttribute("data-iconshadow", String.valueOf(shadow));
+		setAttribute("data-iconshadow", String.valueOf(shadow));
 	}
 
 	/**
@@ -320,14 +323,6 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 			getElement().removeAttribute("data-rel");
 		else
 			getElement().setAttribute("data-rel", rel);
-	}
-
-	/**
-	 * Applies the drop shadow style to the select button if set to true.
-	 */
-	@Override
-	public void setShadow(boolean shadow) {
-		setAttribute("data-shadow", String.valueOf(shadow));
 	}
 
 	@Override

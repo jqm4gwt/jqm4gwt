@@ -109,8 +109,13 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
 		return Integer.parseInt(input.getElement().getAttribute("min"));
 	}
 
-	public String getTrackTheme() {
+	@Override
+	public String getTheme() {
 		return input.getElement().getAttribute("data-theme");
+	}
+
+	public String getTrackTheme() {
+		return input.getElement().getAttribute("data-tracktheme");
 	}
 
 	/**
@@ -125,6 +130,10 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
 									return $wnd.$("#" + name).attr("value");
 									}-*/;
 
+	public boolean isHighlight() {
+		return "true".equals(getAttribute("data-highligh"));
+	}
+
 	@Override
 	public boolean isMini() {
 		return "true".equals(getAttribute("data-mini"));
@@ -133,6 +142,10 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
 	private native void refresh(String id, int value) /*-{
 										$wnd.$("#" + name).val(value).slider("refresh");
 										}-*/;
+
+	public void setHighlight(boolean highlight) {
+		setAttribute("data-highlight", String.valueOf(highlight));
+	}
 
 	/**
 	 * Sets the new max range for the slider.
@@ -165,8 +178,16 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
 	/**
 	 * Sets the theme swatch for the slider
 	 */
-	public void setTrackTheme(String theme) {
+	@Override
+	public void setTheme(String theme) {
 		input.getElement().setAttribute("data-theme", theme);
+	}
+
+	/**
+	 * Sets the theme swatch for the slider
+	 */
+	public void setTrackTheme(String theme) {
+		input.getElement().setAttribute("data-track-theme", theme);
 	}
 
 	/**
