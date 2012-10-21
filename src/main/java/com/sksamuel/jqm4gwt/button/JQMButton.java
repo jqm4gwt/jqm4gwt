@@ -1,11 +1,13 @@
 package com.sksamuel.jqm4gwt.button;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasIcon;
@@ -33,8 +35,6 @@ import com.sksamuel.jqm4gwt.Transition;
 public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransition<JQMButton>, HasClickHandlers, HasInline<JQMButton>,
 		HasIcon<JQMButton>, HasCorners, HasShadow, HasMini {
 
-	protected Anchor	a;
-
 	/**
 	 * Create a {@link JQMButton} with the given text that does not link to
 	 * anything. This button would only react to events if a link is added or
@@ -44,13 +44,9 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 	 *              the text to display on the button
 	 */
 	public JQMButton(String text) {
-
-		a = new Anchor(text);
-		initWidget(a);
-
+		initWidget(new Anchor(text));
 		setStyleName("jqm4gwt-button");
 		setDataRole("button");
-
 		setId();
 	}
 
@@ -141,9 +137,16 @@ public class JQMButton extends JQMWidget implements HasText, HasRel, HasTransiti
 			setTransition(t);
 	}
 
+	protected JQMButton(Widget widget) {
+		initWidget(widget);
+		setStyleName("jqm4gwt-button");
+		setDataRole("button");
+		setId();
+	}
+
 	@Override
 	public HandlerRegistration addClickHandler(ClickHandler handler) {
-		return a.addClickHandler(handler);
+		return addDomHandler(handler, ClickEvent.getType());
 	}
 
 	@Override

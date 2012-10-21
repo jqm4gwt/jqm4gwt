@@ -20,12 +20,12 @@ public class JQMHeader extends JQMToolbar {
 	/**
 	 * Left button, keep reference so we can replace
 	 */
-	private JQMToolBarButton	left;
+	private JQMButton	left;
 
 	/**
 	 * Right button, keep reference so we can replace
 	 */
-	private JQMToolBarButton	right;
+	private JQMButton	right;
 
 	/**
 	 * Create a new {@link JQMHeader} with the given text and no automatic
@@ -47,7 +47,7 @@ public class JQMHeader extends JQMToolbar {
 	 * Create a new {@link JQMHeader} with the given text and left and right
 	 * buttons
 	 */
-	public JQMHeader(String text, JQMToolBarButton left, JQMToolBarButton right) {
+	public JQMHeader(String text, JQMButton left, JQMButton right) {
 		this(text, false);
 		setLeftButton(left);
 		setRightButton(right);
@@ -56,11 +56,29 @@ public class JQMHeader extends JQMToolbar {
 	/**
 	 * Internal method for creating a button
 	 */
-	protected JQMToolBarButton createButton(String text, String url, DataIcon icon) {
-		JQMToolBarButton button = new JQMToolBarButton(text, url);
+	protected JQMButton createButton(String text, String url, DataIcon icon) {
+		JQMButton button = new JQMButton(text, url);
 		if (icon != null)
 			button.setIcon(icon);
 		return button;
+	}
+
+	/**
+	 * Internal API for workarround, do not call 
+	 */
+	public void doFixHandlers() {
+		// if (left != null)
+		// left.doFixHandlers();
+		// if (right != null)
+		// right.doFixHandlers();
+	}
+
+	public JQMButton getLeft() {
+		return left;
+	}
+
+	public JQMButton getRight() {
+		return right;
 	}
 
 	/**
@@ -70,7 +88,7 @@ public class JQMHeader extends JQMToolbar {
 	 * @param button
 	 *              the new back button
 	 */
-	public void setBackButton(JQMToolBarButton button) {
+	public void setBackButton(JQMButton button) {
 		button.setRel("back");
 		setLeftButton(button);
 	}
@@ -84,8 +102,8 @@ public class JQMHeader extends JQMToolbar {
 	 * 
 	 * @return the created {@link JQMButton}
 	 */
-	public JQMToolBarButton setBackButton(String text) {
-		JQMToolBarButton button = new JQMToolBarButton(text);
+	public JQMButton setBackButton(String text) {
+		JQMButton button = new JQMButton(text);
 		button.setIcon(DataIcon.LEFT);
 		button.setBack(true);
 		setBackButton(button);
@@ -111,7 +129,7 @@ public class JQMHeader extends JQMToolbar {
 	 * @param button
 	 *              the button to set on the left slot
 	 */
-	public void setLeftButton(JQMToolBarButton button) {
+	public void setLeftButton(JQMButton button) {
 		if (left != null)
 			remove(left);
 		button.setStyleName("ui-btn-left");
@@ -228,7 +246,7 @@ public class JQMHeader extends JQMToolbar {
 	 * @return the created button
 	 */
 	public JQMButton setLeftButton(String text, String url, DataIcon icon) {
-		JQMToolBarButton button = createButton(text, url, icon);
+		JQMButton button = createButton(text, url, icon);
 		setLeftButton(button);
 		return button;
 	}
@@ -240,7 +258,7 @@ public class JQMHeader extends JQMToolbar {
 	 * @param button
 	 *              the button to set on the right slot
 	 */
-	public void setRightButton(JQMToolBarButton button) {
+	public void setRightButton(JQMButton button) {
 		if (right != null)
 			remove(right);
 		button.setStyleName("ui-btn-right");
@@ -355,18 +373,8 @@ public class JQMHeader extends JQMToolbar {
 	 * @return the created button
 	 */
 	public JQMButton setRightButton(String text, String url, DataIcon icon) {
-		JQMToolBarButton button = createButton(text, url, icon);
+		JQMButton button = createButton(text, url, icon);
 		setRightButton(button);
 		return button;
-	}
-
-	/**
-	 * Internal API for workarround, do not call 
-	 */
-	public void doFixHandlers() {
-		// if (left != null)
-		// left.doFixHandlers();
-		// if (right != null)
-		// right.doFixHandlers();
 	}
 }

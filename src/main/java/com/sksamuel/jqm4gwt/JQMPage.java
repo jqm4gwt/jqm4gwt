@@ -3,6 +3,10 @@ package com.sksamuel.jqm4gwt;
 import java.util.Collection;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,6 +38,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen, HasTheme, Ha
 	protected JQMHeader		header;
 
 	protected JQMFooter		footer;
+
+	private HandlerRegistration	headerHandlerRegistration;
 
 	/**
 	 * Create a new {@link JQMPage} with an automatically assigned page id.
@@ -95,6 +101,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen, HasTheme, Ha
 	 */
 	public void add(JQMHeader header) {
 		setHeader(header);
+		bindHeaderEvents();
 	}
 
 	/**
@@ -112,6 +119,25 @@ public class JQMPage extends JQMContainer implements HasFullScreen, HasTheme, Ha
 		// manually
 		// if (enhanced)
 		// triggerCreate();
+	}
+
+	void bindHeaderEvents() {
+		if (headerHandlerRegistration != null)
+			headerHandlerRegistration.removeHandler();
+		headerHandlerRegistration = addDomHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				EventTarget target = event.getNativeEvent().getEventTarget();
+				Element element = Element.as(target);
+				if (header.getLeft() != null && header.getLeft().getElement().isOrHasChild(element)) {
+					header.getLeft().fireEvent(event);
+				} else if (header.getRight() != null && header.getRight().getElement().isOrHasChild(element)) {
+					header.getRight().fireEvent(event);
+				}
+
+			}
+		}, ClickEvent.getType());
 	}
 
 	private native void bindLifecycleEvents(JQMPage p, String id) /*-{
