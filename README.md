@@ -3,16 +3,18 @@ jqm4gwt
 
 JQuery Mobile wrapper for GWT is a project that wraps the JQuery Mobile framework into a library that can be used in a GWT application. This allows GWT developers to develop mobile web pages with all the benefits of jQuery Mobile without having to hand code javascript. In addition, projects that currently leverage GWT can add a mobile channel with ease.
 
-This project is currently in beta release. The project does work and can be used, but the feature set is incomplete and there will likely be some public API changes.
+The project mirrors the release cycle of JQuery Mobile. That is, when version x.y is released of JQM we try to then release version x.y of jqm4gwt to match. Bug fixes in our code are released as x.y.z.
 
 Jqm4gwt also provides a useful form framework that enables rapid prototyping of form pages, including ajax submission and validation. See http://code.google.com/p/jqm4gwt/wiki/FormFramework
+
+Please contribute with pull requests!
 
 Examples
 ========
 
-Examples and demos are hosted on a google app engine instance here: http://jqm4gwt.appspot.com/examples.html
+Examples and demos are hosted on a google app engine instance here: http://jqm4gwt.appspot.com/examples.html (This is quite out of date now - best off checking out the jqm4gwt-examples project and running locally).
 
-These include the typical hello world and a show case of JQuery Mobile widgets
+These include the typical hello world and a show case of JQuery Mobile widgets and events.
 
 Getting Started
 ========
@@ -24,7 +26,7 @@ Dependancies are available from maven central:
   	<dependency>
 			<groupId>com.sksamuel.jqm4gwt</groupId>
 			<artifactId>jqm4gwt</artifactId>
-			<version>1.1.0</version>
+			<version>1.2.0</version>
   	</dependency>
 
 Spread the word
