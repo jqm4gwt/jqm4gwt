@@ -12,6 +12,7 @@ import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
@@ -36,7 +37,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * 
  */
 public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocusHandlers, HasChangeHandlers, HasClickHandlers,
-		HasValue<String>, JQMFormWidget, HasIcon<JQMSelect>, HasInline<JQMSelect>, HasPreventFocusZoom, HasCorners, HasMini {
+		HasValue<String>, JQMFormWidget, HasIcon<JQMSelect>, HasInline<JQMSelect>, HasPreventFocusZoom, HasCorners, HasMini, Focusable {
 
 	private static final String	SELECT_STYLENAME	= "jqm4gwt-select";
 
@@ -165,6 +166,11 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 	}
 
 	@Override
+	public int getTabIndex() {
+		return select.getTabIndex();
+	}
+
+	@Override
 	public String getText() {
 		return label.getText();
 	}
@@ -273,8 +279,18 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 	}
 
 	@Override
+	public void setAccessKey(char key) {
+		select.setAccessKey(key);
+	}
+
+	@Override
 	public void setCorners(boolean corners) {
 		setAttribute("data-corners", String.valueOf(corners));
+	}
+
+	@Override
+	public void setFocus(boolean focused) {
+		select.setFocus(focused);
 	}
 
 	/**
@@ -397,6 +413,11 @@ public class JQMSelect extends JQMWidget implements HasNative, HasText, HasFocus
 				return;
 			}
 		}
+	}
+
+	@Override
+	public void setTabIndex(int index) {
+		select.setTabIndex(index);
 	}
 
 	/**

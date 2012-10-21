@@ -85,6 +85,11 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions,
 	}
 
 	@Override
+	public int getTabIndex() {
+		return input.getTabIndex();
+	}
+
+	@Override
 	public String getText() {
 		return label.getText();
 	}
@@ -100,8 +105,18 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions,
 	}
 
 	@Override
+	public void setAccessKey(char key) {
+		input.setAccessKey(key);
+	}
+
+	@Override
 	public void setColumns(int cols) {
 		input.getElement().setAttribute("cols", String.valueOf(cols));
+	}
+
+	@Override
+	public void setFocus(boolean focused) {
+		input.setFocus(focused);
 	}
 
 	/**
@@ -118,6 +133,11 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions,
 	}
 
 	@Override
+	public void setTabIndex(int index) {
+		input.setTabIndex(index);
+	}
+
+	@Override
 	public void setText(String text) {
 		label.setText(text);
 	}
@@ -130,25 +150,5 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions,
 	@Override
 	public void setValue(String value, boolean fireEvents) {
 		input.setValue(value, fireEvents);
-	}
-
-	@Override
-	public int getTabIndex() {
-		return input.getTabIndex();
-	}
-
-	@Override
-	public void setAccessKey(char key) {
-		input.setAccessKey(key);
-	}
-
-	@Override
-	public void setFocus(boolean focused) {
-		input.setFocus(focused);		
-	}
-
-	@Override
-	public void setTabIndex(int index) {
-		input.setTabIndex(index);
 	}
 }

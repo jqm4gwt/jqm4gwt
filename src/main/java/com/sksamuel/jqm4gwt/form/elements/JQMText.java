@@ -22,6 +22,7 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
@@ -38,7 +39,8 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * 
  */
 public class JQMText extends JQMWidget implements HasText, HasFocusHandlers, HasClickHandlers, HasChangeHandlers, HasValue<String>,
-		JQMFormWidget, HasKeyDownHandlers, HasKeyUpHandlers, HasMouseOverHandlers, HasMouseOutHandlers, HasPreventFocusZoom, HasMini {
+		JQMFormWidget, HasKeyDownHandlers, HasKeyUpHandlers, HasMouseOverHandlers, HasMouseOutHandlers, HasPreventFocusZoom, HasMini,
+		Focusable {
 
 	/**
 	 * The widget used for the label
@@ -159,6 +161,11 @@ public class JQMText extends JQMWidget implements HasText, HasFocusHandlers, Has
 		return input.getElement().getId();
 	}
 
+	@Override
+	public int getTabIndex() {
+		return input.getTabIndex();
+	}
+
 	/**
 	 * Returns the text of the label
 	 */
@@ -182,6 +189,16 @@ public class JQMText extends JQMWidget implements HasText, HasFocusHandlers, Has
 		return "true".equals(input.getElement().getAttribute("data-prevent-focus-zoom"));
 	}
 
+	@Override
+	public void setAccessKey(char key) {
+		input.setAccessKey(key);
+	}
+
+	@Override
+	public void setFocus(boolean focused) {
+		input.setFocus(focused);
+	}
+
 	/**
 	 * If set to true then renders a smaller version of the standard-sized element.
 	 */
@@ -197,6 +214,11 @@ public class JQMText extends JQMWidget implements HasText, HasFocusHandlers, Has
 	@Override
 	public void setPreventFocusZoom(boolean b) {
 		setAttribute("data-prevent-focus-zoom", String.valueOf(b));
+	}
+
+	@Override
+	public void setTabIndex(int index) {
+		input.setTabIndex(index);
 	}
 
 	/**
