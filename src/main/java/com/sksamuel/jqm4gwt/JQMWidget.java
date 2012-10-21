@@ -30,6 +30,10 @@ public abstract class JQMWidget extends Composite implements HasTheme, HasId, Ha
 		return getElement().getAttribute(name);
 	}
 
+	public boolean getAttributeBoolean(String name) {
+		return "true".equalsIgnoreCase(getAttribute(name));
+	}
+
 	@Override
 	public String getDataRole() {
 		return getAttribute("data-role");
@@ -67,7 +71,10 @@ public abstract class JQMWidget extends Composite implements HasTheme, HasId, Ha
 	 * 
 	 */
 	public void setAttribute(String name, String value) {
-		getElement().setAttribute(name, value);
+		if (value == null)
+			getElement().removeAttribute(name);
+		else
+			getElement().setAttribute(name, value);
 	}
 
 	/**

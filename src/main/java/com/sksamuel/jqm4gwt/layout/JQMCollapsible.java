@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasIconPos;
+import com.sksamuel.jqm4gwt.HasInset;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMWidget;
@@ -22,7 +23,7 @@ import com.sksamuel.jqm4gwt.html.Heading;
  *       collapsible.html
  * 
  */
-public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos, HasMini {
+public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos, HasMini, HasInset {
 
 	/**
 	 * The container for the elements of the collapsible.
@@ -91,6 +92,18 @@ public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos, Ha
 		flow.clear();
 	}
 
+	public String getCollapsedIcon() {
+		return getAttribute("data-collapsed-icon");
+	}
+
+	public String getContentTheme() {
+		return getAttribute("data-content-theme");
+	}
+
+	public String getExpandedIcon() {
+		return getAttribute("data-expanded-icon");
+	}
+
 	@Override
 	public IconPos getIconPos() {
 		String string = getAttribute("data-iconpos");
@@ -109,12 +122,17 @@ public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos, Ha
 	 * Returns true if this {@link JQMCollapsible} is currently collapsed.
 	 */
 	public boolean isCollapsed() {
-		return "true".equals(getElement().getAttribute("data-collapsed"));
+		return getAttributeBoolean("data-collapsed");
+	}
+
+	@Override
+	public boolean isInset() {
+		return getAttributeBoolean("data-inset");
 	}
 
 	@Override
 	public boolean isMini() {
-		return "true".equals(getAttribute("data-mini"));
+		return getAttributeBoolean("data-mini");
 	}
 
 	/**
@@ -128,35 +146,30 @@ public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos, Ha
 	}
 
 	public void removeCollapsedIcon() {
-		getElement().removeAttribute("data-collapsed-icon");
+		removeAttribute("data-collapsed-icon");
 	}
 
 	public void removeExpandedIcon() {
-		getElement().removeAttribute("data-expanded-icon");
+		removeAttribute("data-expanded-icon");
 	}
 
 	/**
 	 * Programatically set the collapsed state of this widget.
 	 */
 	public void setCollapsed(boolean collapsed) {
-		if (collapsed)
-			getElement().setAttribute("data-collapsed", "true");
-		else
-			getElement().removeAttribute("data-collapsed");
+		removeAttribute("data-collapsed");
 	}
 
 	public void setCollapsedIcon(DataIcon icon) {
-		if (icon == null)
-			removeCollapsedIcon();
-		else
-			getElement().setAttribute("data-collapsed-icon", icon.getJqmValue());
+		setAttribute("data-collapsed-icon", icon.getJqmValue());
+	}
+
+	public void setContentTheme(String theme) {
+		setAttribute("data-content-theme", theme);
 	}
 
 	public void setExpandedIcon(DataIcon icon) {
-		if (icon == null)
-			removeCollapsedIcon();
-		else
-			getElement().setAttribute("data-expanded-icon", icon.getJqmValue());
+		getElement().setAttribute("data-expanded-icon", icon.getJqmValue());
 	}
 
 	/**
@@ -165,10 +178,12 @@ public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos, Ha
 	 */
 	@Override
 	public void setIconPos(IconPos pos) {
-		if (pos == null)
-			getElement().removeAttribute("data-iconpos");
-		else
-			getElement().setAttribute("data-iconpos", pos.getJqmValue());
+		setAttribute("data-iconpos", pos.getJqmValue());
+	}
+
+	@Override
+	public void setInset(boolean inset) {
+		setAttribute("data-inset", String.valueOf(inset));
 	}
 
 	/**
