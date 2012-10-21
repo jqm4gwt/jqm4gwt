@@ -29,12 +29,10 @@ import com.sksamuel.jqm4gwt.form.validators.Validator;
  *         A {@link JQMForm} is a standard GWT panel that offers extra
  *         functionality for quick building of input forms. The framework offers
  *         built in validation and error reporting and simplified submission
- *         processing.<br/>
- * <br/>
+ *         processing.
  * 
  *         All widgets for the form should be added in the implementing classes
- *         implementation of fieldAttach();<br/>
- * <br/>
+ *         implementation of fieldAttach();
  * 
  *         Any {@link JQMSubmit} widgets that are added will be automatically
  *         wired to submit this form. Alternatively, any widget can be set to
@@ -56,9 +54,9 @@ public abstract class JQMForm extends FlowPanel {
 
 	private static final String					STYLE_ERROR_TYPE			= "jqm4gwt-errortype-";
 
-	private FlowPanel							generalErrors			= new FlowPanel();
+	private final FlowPanel							generalErrors			= new FlowPanel();
 
-	private List<Label>						errors				= new ArrayList();
+	private final List<Label>						errors				= new ArrayList();
 
 	/**
 	 * The SubmissionHandler is invoked when the form is successfully
@@ -69,19 +67,19 @@ public abstract class JQMForm extends FlowPanel {
 	/**
 	 * A mapping between the validators and the labels they use to show errors
 	 */
-	private Map<Validator, Label>					validatorLabels			= new HashMap();
+	private final Map<Validator, Label>					validatorLabels			= new HashMap();
 
 	/**
 	 * A map containing the widgets and the validators that should be invoked
 	 * on those
 	 */
-	private Map<JQMFormWidget, Collection<Validator>>	widgetValidators			= new HashMap();
+	private final Map<JQMFormWidget, Collection<Validator>>	widgetValidators			= new HashMap();
 
 	/**
 	 * A map containing the validators and the elements/widgets that should
 	 * have the class changed depending on the result of the validation
 	 */
-	private Map<Validator, Widget>				notifiedWidgets			= new HashMap();
+	private final Map<Validator, Widget>				notifiedWidgets			= new HashMap();
 
 	protected JQMForm(SubmissionHandler handler) {
 		add(generalErrors);
@@ -199,8 +197,7 @@ public abstract class JQMForm extends FlowPanel {
 		addValidator(validator, (JQMFormWidget) null);
 	}
 
-	public void addValidator(Validator validator, boolean immediate,
-			JQMFormWidget... firingWidgets) {
+	public void addValidator(Validator validator, boolean immediate, JQMFormWidget... firingWidgets) {
 		addValidator(null, validator, immediate, firingWidgets);
 	}
 
@@ -220,8 +217,7 @@ public abstract class JQMForm extends FlowPanel {
 	 * @param firingWidgets
 	 *              the list of widgets that will fire the validator
 	 */
-	public void addValidator(Widget notifiedWidget, Validator validator, boolean immediate,
-			JQMFormWidget... firingWidgets) {
+	public void addValidator(Widget notifiedWidget, Validator validator, boolean immediate, JQMFormWidget... firingWidgets) {
 
 		// create a label that will show the validation error
 		Label label = new InlineLabel();
@@ -284,8 +280,7 @@ public abstract class JQMForm extends FlowPanel {
 		Mobile.hideLoadingDialog();
 	}
 
-	private void registerValidatorWithFiringWidget(final JQMFormWidget widget,
-			Validator validator, boolean immediate) {
+	private void registerValidatorWithFiringWidget(final JQMFormWidget widget, Validator validator, boolean immediate) {
 		// add a blur handler to call validate on this widget but only if
 		// this is the first time this widget has been registered with a
 		// validator
@@ -304,8 +299,7 @@ public abstract class JQMForm extends FlowPanel {
 		widgetValidators.get(widget).add(validator);
 	}
 
-	private void registerValidatorWithFiringWidgets(Validator validator, JQMFormWidget[] widgets,
-			boolean immediate) {
+	private void registerValidatorWithFiringWidgets(Validator validator, JQMFormWidget[] widgets, boolean immediate) {
 		if (widgets != null)
 			for (JQMFormWidget widget : widgets) {
 				registerValidatorWithFiringWidget(widget, validator, immediate);

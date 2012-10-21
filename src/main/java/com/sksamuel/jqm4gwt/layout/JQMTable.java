@@ -21,7 +21,10 @@ import com.sksamuel.jqm4gwt.JQMWidget;
  *         setColumns(int). That can be an expensive operation, see the javadoc
  *         for the setColumns(int) method for more information on why.
  * 
- *         Tables must have at least 2 and at most 5 columns.
+ *         Tables must have at least 2 and at most 5 columns
+ *         
+ *         @link
+ *         http://jquerymobile.com/demos/1.2.0/docs/content/content-grids.html
  * 
  */
 public class JQMTable extends JQMWidget {

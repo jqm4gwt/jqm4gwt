@@ -10,8 +10,7 @@ import com.sksamuel.jqm4gwt.panel.JQMControlGroup;
  * 
  *         Groups a collection of {@link JQMButton} instances together
  * 
- * @link http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/buttons/buttons-
- *       grouped.html
+ * @link http://jquerymobile.com/demos/1.2.0/docs/buttons/buttons-grouped.html
  * 
  */
 public class JQMButtonGroup extends JQMControlGroup implements HasInline<JQMButtonGroup> {
