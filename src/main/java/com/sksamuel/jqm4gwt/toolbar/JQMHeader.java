@@ -11,8 +11,7 @@ import com.sksamuel.jqm4gwt.button.JQMButton;
  *         text, and two optional buttons, one left and one right.
  * 
  * @link 
- *       http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/toolbars/docs-headers
- *       .html
+ *       http://jquerymobile.com/demos/1.2.0/docs/toolbars/docs-headers.html
  * 
  */
 public class JQMHeader extends JQMToolbar {
@@ -61,16 +60,6 @@ public class JQMHeader extends JQMToolbar {
 		if (icon != null)
 			button.setIcon(icon);
 		return button;
-	}
-
-	/**
-	 * Internal API for workarround, do not call 
-	 */
-	public void doFixHandlers() {
-		// if (left != null)
-		// left.doFixHandlers();
-		// if (right != null)
-		// right.doFixHandlers();
 	}
 
 	public JQMButton getLeft() {

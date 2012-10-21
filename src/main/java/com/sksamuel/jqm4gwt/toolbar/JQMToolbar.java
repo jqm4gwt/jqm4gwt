@@ -10,6 +10,9 @@ import com.sksamuel.jqm4gwt.html.Heading;
  * @author Stephen K Samuel samspade79@gmail.com 10 Jul 2011 13:27:36
  * 
  *         Superclass for toolbars - {@link JQMHeader} and {@link JQMFooter}
+ *         
+ * @link
+ *         http://jquerymobile.com/demos/1.2.0/docs/toolbars/docs-footers.html
  * 
  */
 public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedPosition {

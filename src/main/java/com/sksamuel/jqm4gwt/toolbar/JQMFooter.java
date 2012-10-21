@@ -9,8 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
  *         number of other widgets.
  * 
  * @link 
- *       http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/toolbars/docs-footers
- *       .html
+ *       http://jquerymobile.com/demos/1.2.0/docs/toolbars/docs-footers.html
  * 
  */
 public class JQMFooter extends JQMToolbar {

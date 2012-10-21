@@ -254,18 +254,6 @@ public class JQMPage extends JQMContainer implements HasFullScreen, HasTheme, Ha
 
 	}
 
-	/**
-	 * Triggered on the page being shown, after its transition completes.
-	 */
-	protected void onPageShow() {
-		// workarround clickhandler removal by jquery
-		if (!firstShow) {
-			firstShow = true;
-			if (header != null)
-				header.doFixHandlers();
-		}
-	}
-
 	@Override
 	public boolean remove(int index) {
 		return getPrimaryContent().remove(index);
