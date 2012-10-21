@@ -32,8 +32,7 @@ Dependancies are available from maven central:
 Spread the word
 ================
 
-If you like jqm4gwt then cheer on ohloh
-<script type="text/javascript" src="http://www.ohloh.net/p/584985/widgets/project_partner_badge.js"></script>
+If you like jqm4gwt then [cheer on ohloh](https://www.ohloh.net/stack_entries/new?project_id=jqm4gwt&ref=sample) ![ohloh logo](https://www.ohloh.net/images/stack/iusethis/static_logo.png)
 
 Related Projects
 ================
