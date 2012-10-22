@@ -26,20 +26,22 @@ import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
  */
 public class JQMPage extends JQMContainer implements HasFullScreen, HasTheme, HasId {
 
-	static int				counter	= 1;
+	static int										counter	= 1;
 
 	/**
 	 * The primary content div
 	 */
-	private final JQMContent	content;
+	private final JQMContent							content;
 
-	public boolean			firstShow	= false;
+	public boolean									firstShow	= false;
 
-	protected JQMHeader		header;
+	protected JQMHeader								header;
 
-	protected JQMFooter		footer;
+	protected JQMFooter								footer;
 
-	private HandlerRegistration	headerHandlerRegistration;
+	private HandlerRegistration							headerHandlerRegistration;
+
+	private com.google.web.bindery.event.shared.HandlerRegistration	footerHandlerRegistration;
 
 	/**
 	 * Create a new {@link JQMPage} with an automatically assigned page id.
@@ -93,6 +95,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen, HasTheme, Ha
 	 */
 	public void add(JQMFooter footer) {
 		setFooter(footer);
+		bindFooterEvents();
 	}
 
 	/**
@@ -119,6 +122,25 @@ public class JQMPage extends JQMContainer implements HasFullScreen, HasTheme, Ha
 		// manually
 		// if (enhanced)
 		// triggerCreate();
+	}
+
+	void bindFooterEvents() {
+		if (footerHandlerRegistration != null)
+			footerHandlerRegistration.removeHandler();
+		footerHandlerRegistration = addDomHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				EventTarget target = event.getNativeEvent().getEventTarget();
+				Element element = Element.as(target);
+				for (Widget widget : footer.getWidgets()) {
+					if (widget.getElement().isOrHasChild(element)) {
+						widget.fireEvent(event);
+						break;
+					}
+				}
+			}
+		}, ClickEvent.getType());
 	}
 
 	void bindHeaderEvents() {

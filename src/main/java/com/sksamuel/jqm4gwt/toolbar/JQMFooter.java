@@ -40,8 +40,9 @@ public class JQMFooter extends JQMToolbar {
 	 */
 	public JQMFooter(Widget... widgets) {
 		this((String) null);
-		for (Widget widget : widgets)
+		for (Widget widget : widgets) {
 			add(widget);
+		}
 	}
 
 }

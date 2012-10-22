@@ -53,6 +53,14 @@ public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedP
 		return header == null ? null : header.getText();
 	}
 
+	public Widget[] getWidgets() {
+		Widget[] widgets = new Widget[flow.getWidgetCount()];
+		for (int k = 0; k < flow.getWidgetCount(); k++) {
+			widgets[k] = flow.getWidget(k);
+		}
+		return widgets;
+	}
+
 	public void insert(Widget left, int i) {
 		flow.insert(left, i);
 	}
@@ -99,11 +107,16 @@ public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedP
 	 */
 	@Override
 	public void setText(String text) {
-		if (header == null) {
-			header = new Heading(1);
-			flow.add(header);
+		if (text == null) {
+			if (header != null)
+				flow.remove(header);
+		} else {
+			if (header == null) {
+				header = new Heading(1);
+				flow.add(header);
+			}
+			header.setText(text);
 		}
-		header.setText(text);
 	}
 
 	/**
