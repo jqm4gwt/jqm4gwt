@@ -28,6 +28,9 @@ Getting Started
 
 Read the [quick start guide](https://github.com/sksamuel/jqm4gwt/wiki/Getting-Started). You will need to be familiar with GWT already.
 
+Latest Release 1.2.0
+========
+
 Dependencies are available from maven central:
 
   	<dependency>
