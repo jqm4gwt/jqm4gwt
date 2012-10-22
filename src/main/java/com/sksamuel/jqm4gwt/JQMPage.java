@@ -254,6 +254,13 @@ public class JQMPage extends JQMContainer implements HasFullScreen, HasTheme, Ha
 
 	}
 
+	/**
+	* Triggered on the page being hidden, after its transition completes.
+	*/
+	protected void onPageShow() {
+
+	}
+
 	@Override
 	public boolean remove(int index) {
 		return getPrimaryContent().remove(index);
