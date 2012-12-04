@@ -31,6 +31,8 @@ Read the [quick start guide](https://github.com/sksamuel/jqm4gwt/wiki/Getting-St
 Latest Release 1.2.0
 ========
 
+Released 21-Oct-2012
+
 Dependencies are available from maven central:
 
   	<dependency>
