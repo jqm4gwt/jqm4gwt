@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class JQMWidget extends Composite implements HasTheme, HasId, HasDataRole, HasEnabled {
 
 	private static final String STYLE_UI_DISABLED = "ui-disabled";
-	protected boolean isEnabled = true;
 	
 	/**
 	 * Returns the value of the attribute with the given name
@@ -112,16 +111,15 @@ public abstract class JQMWidget extends Composite implements HasTheme, HasId, Ha
 
 	public void setEnabled(boolean b)
 	{
-		if(isEnabled != b)
+		if(isEnabled() != b)
 		{
-			isEnabled = b;
-			if(isEnabled) removeStyleName(STYLE_UI_DISABLED);
+			if(b) removeStyleName(STYLE_UI_DISABLED);
 			else addStyleName(STYLE_UI_DISABLED);
 		}
 	}
 	
 	public boolean isEnabled()
 	{
-		return isEnabled;
+		return !getStyleName().contains(STYLE_UI_DISABLED);
 	}
 }
