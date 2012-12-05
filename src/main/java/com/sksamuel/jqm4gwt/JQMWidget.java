@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -21,8 +22,10 @@ import com.google.gwt.user.client.ui.Widget;
  *         compose and thus call initWidget() themselves.
  * 
  */
-public abstract class JQMWidget extends Composite implements HasTheme, HasId, HasDataRole {
+public abstract class JQMWidget extends Composite implements HasTheme, HasId, HasDataRole, HasEnabled {
 
+	private static final String STYLE_UI_DISABLED = "ui-disabled";
+	
 	/**
 	 * Returns the value of the attribute with the given name
 	 */
@@ -106,4 +109,18 @@ public abstract class JQMWidget extends Composite implements HasTheme, HasId, Ha
 		setAttribute("data-theme", themeName);
 	}
 
+	public void setEnabled(boolean b)
+	{
+		if(isEnabled() != b)
+		{
+			if(b) removeStyleName(STYLE_UI_DISABLED);
+			else addStyleName(STYLE_UI_DISABLED);
+		}
+	}
+	
+	public boolean isEnabled()
+	{
+		String styleName = getStyleName();
+		return styleName != null ? !styleName.contains(STYLE_UI_DISABLED) : true;
+	}
 }
