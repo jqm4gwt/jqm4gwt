@@ -120,6 +120,7 @@ public abstract class JQMWidget extends Composite implements HasTheme, HasId, Ha
 	
 	public boolean isEnabled()
 	{
-		return !getStyleName().contains(STYLE_UI_DISABLED);
+		String styleName = getStyleName();
+		return styleName != null ? !styleName.contains(STYLE_UI_DISABLED) : true;
 	}
 }
