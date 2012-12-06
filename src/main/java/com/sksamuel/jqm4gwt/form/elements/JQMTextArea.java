@@ -3,7 +3,6 @@ package com.sksamuel.jqm4gwt.form.elements;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.HasAllFocusHandlers;
 import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
@@ -27,7 +26,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *         An implementation of a standard HTML Textarea
  * 
  */
-public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions, HasText, HasValue<String>, HasMini, HasKeyDownHandlers, HasKeyUpHandlers, HasAllFocusHandlers, Focusable {
+public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions, HasText, HasValue<String>, HasMini, HasKeyDownHandlers, HasKeyUpHandlers, HasFocusHandlers, HasBlurHandlers, Focusable {
 
 	private final FormLabel	label	= new FormLabel();
 
