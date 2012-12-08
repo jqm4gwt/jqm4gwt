@@ -4,7 +4,7 @@ package com.sksamuel.jqm4gwt;
  * @author Stephen K Samuel samspade79@gmail.com 6 Sep 2012 00:04:52
  *
  */
-public interface HasIconPos {
+public interface HasIconPos<T> {
 
 	/**
 	 * Returns the current position of the icon
@@ -17,5 +17,5 @@ public interface HasIconPos {
 	/**
 	 * Sets the position of the icon
 	 */
-	void setIconPos(IconPos pos);
+	T setIconPos(IconPos pos);
 }

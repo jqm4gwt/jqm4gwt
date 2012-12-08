@@ -13,93 +13,91 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 12 Jul 2011 15:42:39
- * 
- * 
  */
-public class JQMCheckbox implements HasText, IsChecked, HasValue<Boolean>, HasMini {
+public class JQMCheckbox implements HasText, IsChecked, HasValue<Boolean>, HasMini<JQMCheckbox> {
 
-	private final InputElement	input;
+    private final InputElement input;
 
-	private final FormLabel		label;
+    private final FormLabel label;
 
-	private final String		id;
+    private final String id;
 
-	private boolean isSelected;
-	
-	JQMCheckbox(InputElement input, FormLabel label, String id) {
-		this.input = input;
-		this.label = label;
-		this.id = id;
-		
-		label.addDomHandler(new ClickHandler()
-		{
-			@Override
-			public void onClick(ClickEvent arg0)
-			{
-				isSelected = !isSelected;
-			}
-		}, ClickEvent.getType());		
-	};
+    private boolean isSelected;
 
-	@Override
-	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Boolean> handler) {
-		return null;
-	}
+    JQMCheckbox(InputElement input, FormLabel label, String id) {
+        this.input = input;
+        this.label = label;
+        this.id = id;
 
-	@Override
-	public void fireEvent(GwtEvent<?> event) {
-	}
+        label.addDomHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent arg0) {
+                isSelected = !isSelected;
+            }
+        }, ClickEvent.getType());
+    }
 
-	public String getId() {
-		return id;
-	}
+    ;
+    @Override
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Boolean> handler) {
+        return null;
+    }
 
-	public InputElement getInput() {
-		return input;
-	}
+    @Override
+    public void fireEvent(GwtEvent<?> event) {
+    }
 
-	@Override
-	public String getText() {
-		return label.getText();
-	}
+    public String getId() {
+        return id;
+    }
 
-	@Override
-	public Boolean getValue() {
-		return isSelected();
-	}
+    public InputElement getInput() {
+        return input;
+    }
 
-	@Override
-	public boolean isMini() {
-		return "true".equals(input.getAttribute("data-mini"));
-	}
+    @Override
+    public String getText() {
+        return label.getText();
+    }
 
-	@Override
-	public boolean isSelected() {
-		return isSelected;
-	}
+    @Override
+    public Boolean getValue() {
+        return isSelected();
+    }
 
-	/**
-	 * If set to true then renders a smaller version of the standard-sized element.
-	 */
-	@Override
-	public void setMini(boolean mini) {
-		input.setAttribute("data-mini", String.valueOf(mini));
-	}
+    @Override
+    public boolean isMini() {
+        return "true".equals(input.getAttribute("data-mini"));
+    }
 
-	@Override
-	public void setText(String text) {
-		label.setText(text);
-	}
+    @Override
+    public boolean isSelected() {
+        return isSelected;
+    }
 
-	@Override
-	public void setValue(Boolean value) {
-		setValue(value, false);
-	}
+    /**
+     * If set to true then renders a smaller version of the standard-sized element.
+     */
+    @Override
+    public JQMCheckbox setMini(boolean mini) {
+        input.setAttribute("data-mini", String.valueOf(mini));
+        return this;
+    }
 
-	@Override
-	public void setValue(Boolean value, boolean ignored) {
-		input.setChecked(value);
-		input.setDefaultChecked(value);
-		isSelected = value;
-	}
+    @Override
+    public void setText(String text) {
+        label.setText(text);
+    }
+
+    @Override
+    public void setValue(Boolean value) {
+        setValue(value, false);
+    }
+
+    @Override
+    public void setValue(Boolean value, boolean ignored) {
+        input.setChecked(value);
+        input.setDefaultChecked(value);
+        isSelected = value;
+    }
 }

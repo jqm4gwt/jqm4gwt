@@ -6,9 +6,9 @@ package com.sksamuel.jqm4gwt;
  * For widgets that can be rendered in normal or mini mode
  *
  */
-public interface HasMini {
+public interface HasMini<T> {
 
 	boolean isMini();
 
-	void setMini(boolean mini);
+	T setMini(boolean mini);
 }

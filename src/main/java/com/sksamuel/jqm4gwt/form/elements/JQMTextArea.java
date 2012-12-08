@@ -14,141 +14,138 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 11 May 2011 13:49:09
- * 
+ *         <p/>
  *         An implementation of a standard HTML Textarea
- * 
  */
-public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions, HasText, HasValue<String>, HasMini, Focusable {
+public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<JQMTextArea>, HasText, HasValue<String>, HasMini, Focusable {
 
-	private final FormLabel	label	= new FormLabel();
+    private final FormLabel label = new FormLabel();
 
-	private final TextArea	input	= new TextArea();
+    private final TextArea input = new TextArea();
 
-	/**
-	 * Create a new {@link JQMTextArea} with no label text
-	 */
-	public JQMTextArea() {
-		this(null);
-	}
+    /**
+     * Create a new {@link JQMTextArea} with no label text
+     */
+    public JQMTextArea() {
+        this(null);
+    }
 
-	/**
-	 * Create a new {@link JQMTextArea} with the given label text and with the
-	 * default size
-	 * 
-	 * @param text
-	 *              the display text for the label
-	 */
-	public JQMTextArea(String text) {
-		String id = Document.get().createUniqueId();
+    /**
+     * Create a new {@link JQMTextArea} with the given label text and with the
+     * default size
+     *
+     * @param text the display text for the label
+     */
+    public JQMTextArea(String text) {
+        String id = Document.get().createUniqueId();
 
-		setText(text);
-		label.setFor(id);
+        setText(text);
+        label.setFor(id);
 
-		input.getElement().setId(id);
-		input.setName(id);
+        input.getElement().setId(id);
+        input.setName(id);
 
-		add(label);
-		add(input);
-	}
+        add(label);
+        add(input);
+    }
 
-	/**
-	 * Create a new {@link JQMTextArea} with the given label text and with the
-	 * specified number of columns and rows.
-	 * 
-	 * @param text
-	 *              the display text for the label
-	 * 
-	 * @param cols
-	 *              the number of cols to display
-	 * @param rows
-	 *              the number of rows to display.
-	 */
-	public JQMTextArea(String text, int cols, int rows) {
-		this(text);
-		setColumns(cols);
-		setRows(rows);
-	}
+    /**
+     * Create a new {@link JQMTextArea} with the given label text and with the
+     * specified number of columns and rows.
+     *
+     * @param text the display text for the label
+     * @param cols the number of cols to display
+     * @param rows the number of rows to display.
+     */
+    public JQMTextArea(String text, int cols, int rows) {
+        this(text);
+        setColumns(cols);
+        setRows(rows);
+    }
 
-	@Override
-	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
-		return input.addValueChangeHandler(handler);
-	}
+    @Override
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
+        return input.addValueChangeHandler(handler);
+    }
 
-	@Override
-	public int getColumns() {
-		return Integer.parseInt(input.getElement().getAttribute("cols"));
-	}
+    @Override
+    public int getColumns() {
+        return Integer.parseInt(input.getElement().getAttribute("cols"));
+    }
 
-	@Override
-	public int getRows() {
-		return Integer.parseInt(input.getElement().getAttribute("rows"));
-	}
+    @Override
+    public int getRows() {
+        return Integer.parseInt(input.getElement().getAttribute("rows"));
+    }
 
-	@Override
-	public int getTabIndex() {
-		return input.getTabIndex();
-	}
+    @Override
+    public int getTabIndex() {
+        return input.getTabIndex();
+    }
 
-	@Override
-	public String getText() {
-		return label.getText();
-	}
+    @Override
+    public String getText() {
+        return label.getText();
+    }
 
-	@Override
-	public String getValue() {
-		return input.getValue();
-	}
+    @Override
+    public String getValue() {
+        return input.getValue();
+    }
 
-	@Override
-	public boolean isMini() {
-		return "true".equals(getAttribute("data-mini"));
-	}
+    @Override
+    public boolean isMini() {
+        return "true".equals(getAttribute("data-mini"));
+    }
 
-	@Override
-	public void setAccessKey(char key) {
-		input.setAccessKey(key);
-	}
+    @Override
+    public void setAccessKey(char key) {
+        input.setAccessKey(key);
+    }
 
-	@Override
-	public void setColumns(int cols) {
-		input.getElement().setAttribute("cols", String.valueOf(cols));
-	}
+    @Override
+    public JQMTextArea setColumns(int cols) {
+        input.getElement().setAttribute("cols", String.valueOf(cols));
+        return this;
+    }
 
-	@Override
-	public void setFocus(boolean focused) {
-		input.setFocus(focused);
-	}
+    @Override
+    public void setFocus(boolean focused) {
+        input.setFocus(focused);
+    }
 
-	/**
-	 * If set to true then renders a smaller version of the standard-sized element.
-	 */
-	@Override
-	public void setMini(boolean mini) {
-		setAttribute("data-mini", String.valueOf(mini));
-	}
+    /**
+     * If set to true then renders a smaller version of the standard-sized element.
+     */
+    @Override
+    public JQMTextArea setMini(boolean mini) {
+        setAttribute("data-mini", String.valueOf(mini));
+        return this;
+    }
 
-	@Override
-	public void setRows(int rows) {
-		input.getElement().setAttribute("rows", String.valueOf(rows));
-	}
+    @Override
+    public JQMTextArea setRows(int rows) {
+        input.getElement().setAttribute("rows", String.valueOf(rows));
+        return this;
+    }
 
-	@Override
-	public void setTabIndex(int index) {
-		input.setTabIndex(index);
-	}
+    @Override
+    public void setTabIndex(int index) {
+        input.setTabIndex(index);
+    }
 
-	@Override
-	public void setText(String text) {
-		label.setText(text);
-	}
+    @Override
+    public void setText(String text) {
+        label.setText(text);
+    }
 
-	@Override
-	public void setValue(String value) {
-		setValue(value, false);
-	}
+    @Override
+    public void setValue(String value) {
+        setValue(value, false);
+    }
 
-	@Override
-	public void setValue(String value, boolean fireEvents) {
-		input.setValue(value, fireEvents);
-	}
+    @Override
+    public void setValue(String value, boolean fireEvents) {
+        input.setValue(value, fireEvents);
+    }
 }

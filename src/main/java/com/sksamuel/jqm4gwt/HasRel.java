@@ -6,12 +6,12 @@ package com.sksamuel.jqm4gwt;
  *         Interface for elements that accept a rel attribute for determing how a link is processed.
  * 
  */
-public interface HasRel {
+public interface HasRel<T> {
 
 	String getRel();
 
 	/**
 	 * Set to dialog for a dialog page.
 	 */
-	void setRel(String rel);
+    T setRel(String rel);
 }
