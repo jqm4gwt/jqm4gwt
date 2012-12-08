@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -20,7 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
  *         composition in use. Implementating subclasses must decide how to
  *         compose and thus call initWidget() themselves.
  */
-public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>, HasId<JQMWidget>, HasDataRole {
+public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>, HasId<JQMWidget>, HasDataRole, HasEnabled {
 
     /**
      * Returns the value of the attribute with the given name
@@ -28,6 +29,10 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
     protected String getAttribute(String name) {
         return getElement().getAttribute(name);
     }
+
+
+    private static final String STYLE_UI_DISABLED = "ui-disabled";
+
 
     public boolean getAttributeBoolean(String name) {
         return "true".equalsIgnoreCase(getAttribute(name));
@@ -104,4 +109,15 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
         return this;
     }
 
+    public void setEnabled(boolean b) {
+        if (isEnabled() != b) {
+            if (b) removeStyleName(STYLE_UI_DISABLED);
+            else addStyleName(STYLE_UI_DISABLED);
+        }
+    }
+
+    public boolean isEnabled() {
+        String styleName = getStyleName();
+        return styleName != null ? !styleName.contains(STYLE_UI_DISABLED) : true;
+    }
 }

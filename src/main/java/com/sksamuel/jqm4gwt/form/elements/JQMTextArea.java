@@ -1,6 +1,14 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasBlurHandlers;
+import com.google.gwt.event.dom.client.HasFocusHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.HasKeyUpHandlers;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Focusable;
@@ -17,7 +25,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *         <p/>
  *         An implementation of a standard HTML Textarea
  */
-public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<JQMTextArea>, HasText, HasValue<String>, HasMini, Focusable {
+public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<JQMTextArea>, HasText, HasValue<String>, HasMini<JQMTextArea>, HasKeyDownHandlers, HasKeyUpHandlers, HasFocusHandlers, HasBlurHandlers, Focusable {
 
     private final FormLabel label = new FormLabel();
 
@@ -68,6 +76,7 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
         return input.addValueChangeHandler(handler);
     }
 
+
     @Override
     public int getColumns() {
         return Integer.parseInt(input.getElement().getAttribute("cols"));
@@ -114,20 +123,6 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
         input.setFocus(focused);
     }
 
-    /**
-     * If set to true then renders a smaller version of the standard-sized element.
-     */
-    @Override
-    public JQMTextArea setMini(boolean mini) {
-        setAttribute("data-mini", String.valueOf(mini));
-        return this;
-    }
-
-    @Override
-    public JQMTextArea setRows(int rows) {
-        input.getElement().setAttribute("rows", String.valueOf(rows));
-        return this;
-    }
 
     @Override
     public void setTabIndex(int index) {
@@ -140,12 +135,50 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
     }
 
     @Override
-    public void setValue(String value) {
-        setValue(value, false);
+    public JQMTextArea setRows(int rows) {
+        input.getElement().setAttribute("rows", String.valueOf(rows));
+        return this;
+    }
+
+    /**
+     * If set to true then renders a smaller version of the standard-sized element.
+     */
+    @Override
+    public JQMTextArea setMini(boolean mini) {
+        setAttribute("data-mini", String.valueOf(mini));
+        return this;
     }
 
     @Override
     public void setValue(String value, boolean fireEvents) {
         input.setValue(value, fireEvents);
     }
+
+    @Override
+    public void setValue(String value) {
+        setValue(value, false);
+    }
+
+
+    @Override
+    public HandlerRegistration addBlurHandler(BlurHandler handler) {
+        return input.addBlurHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addFocusHandler(FocusHandler handler) {
+        return input.addFocusHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addKeyUpHandler(KeyUpHandler handler) {
+        return input.addKeyUpHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
+        return input.addKeyDownHandler(handler);
+    }
+
+
 }
