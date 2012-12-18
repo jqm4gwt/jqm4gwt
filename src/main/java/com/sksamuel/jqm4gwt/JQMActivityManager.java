@@ -36,6 +36,8 @@ public class JQMActivityManager extends ActivityManager {
 		super.setDisplay(new JQMAwareDisplay());
 		// GWT will monitor the hashes for us
 		JQMContext.disableHashListening();
+		// disable page hash changes
+		JQMContext.setDefaultChangeHash(false);
 	}
 
 	@Override
