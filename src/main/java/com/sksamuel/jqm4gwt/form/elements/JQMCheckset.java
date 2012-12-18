@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.sksamuel.jqm4gwt.HasOrientation;
+import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.form.JQMFieldset;
 import com.sksamuel.jqm4gwt.html.FormLabel;
@@ -37,9 +38,9 @@ import com.sksamuel.jqm4gwt.html.Legend;
 public class JQMCheckset extends JQMFieldContainer implements HasText, HasSelectionHandlers<String>, HasOrientation<JQMCheckset>,
 		HasClickHandlers, JQMFormWidget {
 
-	private final JQMFieldset		fieldset;
+	private JQMFieldset		fieldset;
 
-	private final Legend			legend;
+	private Legend			legend;
 
 	private final List<TextBox>		inputs	= new ArrayList<TextBox>();
 	private final List<FormLabel>		labels	= new ArrayList<FormLabel>();
@@ -59,16 +60,20 @@ public class JQMCheckset extends JQMFieldContainer implements HasText, HasSelect
 	 *              the display text for the label
 	 */
 	public JQMCheckset(String text) {
+		setupFieldset(text);
+	}
 
+	private void setupFieldset(String labelText) {
+		if(fieldset != null) remove(fieldset);
 		fieldset = new JQMFieldset();
 		add(fieldset);
 
 		legend = new Legend();
 		fieldset.add(legend);
 
-		setText(text);
+		setText(labelText);
 	}
-
+	
 	@Override
 	public HandlerRegistration addBlurHandler(final BlurHandler handler) {
 		for (FormLabel label : labels)
@@ -115,6 +120,20 @@ public class JQMCheckset extends JQMFieldContainer implements HasText, HasSelect
 		return check;
 	}
 
+	public void clear() {
+		inputs.clear();
+		labels.clear();
+		checks.clear();
+		setupFieldset(getText());
+	}
+	
+    @Override
+    public JQMWidget setTheme(String themeName) {
+    	super.setTheme(themeName);
+    	for(TextBox checkInput : inputs) applyTheme(checkInput, themeName);
+        return this;
+    }
+	
 	@Override
 	public HandlerRegistration addClickHandler(ClickHandler handler) {
 		return addDomHandler(handler, ClickEvent.getType());
