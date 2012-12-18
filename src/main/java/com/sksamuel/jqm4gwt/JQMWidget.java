@@ -120,4 +120,11 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
         String styleName = getStyleName();
         return styleName != null ? !styleName.contains(STYLE_UI_DISABLED) : true;
     }
+    
+    public static void applyTheme(Widget w, String themeName) {
+        if (themeName == null)
+            w.getElement().removeAttribute("data-theme");
+        else
+            w.getElement().setAttribute("data-theme", themeName);
+    }
 }

@@ -276,6 +276,17 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
             select.removeItem(indexOf);
     }
 
+    public void clear() {
+    	select.clear();
+    }
+    
+    @Override
+    public JQMWidget setTheme(String themeName) {
+    	super.setTheme(themeName);
+    	applyTheme(select, themeName);
+        return this;
+    }
+ 
     @Override
     public void setAccessKey(char key) {
         select.setAccessKey(key);
