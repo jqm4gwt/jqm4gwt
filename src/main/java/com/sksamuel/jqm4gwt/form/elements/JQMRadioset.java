@@ -41,9 +41,9 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 	/**
 	 * The panel that is used for the controlgroup container
 	 */
-	private final JQMFieldset	fieldset;
+	private JQMFieldset	fieldset;
 
-	private final Legend		legend;
+	private Legend		legend;
 
 	/**
 	 * The panel that acts as the fieldcontain container
@@ -81,7 +81,11 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 		flow.getElement().setId(Document.get().createUniqueId());
 		initWidget(flow);
 		setDataRole("fieldcontain");
+		setupFieldset(text);
+	}
 
+	private void setupFieldset(String labelText) {
+		if(fieldset != null) flow.remove(fieldset);
 		// the fieldset is the inner container and is contained inside the
 		// flow
 		fieldset = new JQMFieldset();
@@ -90,10 +94,10 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 
 		// the legend must be added to the fieldset
 		legend = new Legend();
-		legend.setText(text);
-		fieldset.add(legend);
+		legend.setText(labelText);
+		fieldset.add(legend);		
 	}
-
+	
 	/**
 	 * no-op implementation required for {@link JQMFormWidget}
 	 */
@@ -187,6 +191,18 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 		return new JQMRadio(label);
 	}
 
+	public void clear() {
+		radios.clear();
+		setupFieldset(getText());
+	}
+	
+    @Override
+    public JQMWidget setTheme(String themeName) {
+    	super.setTheme(themeName);
+    	for(TextBox radio : radios) applyTheme(radio, themeName);
+        return this;
+    }
+	
 	@Override
 	public HandlerRegistration addSelectionHandler(SelectionHandler<String> handler) {
 		return null;
