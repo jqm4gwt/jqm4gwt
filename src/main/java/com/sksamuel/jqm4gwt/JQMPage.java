@@ -335,6 +335,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         removeFooter();
         this.footer = footer;
         getElement().appendChild(footer.getElement());
+		bindFooterEvents();
     }
 
     @Override
@@ -354,6 +355,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         removeHeader();
         this.header = header;
         getElement().insertBefore(header.getElement(), getElement().getFirstChild());
+		bindHeaderEvents();
     }
 
     public JQMHeader setHeader(String text) {

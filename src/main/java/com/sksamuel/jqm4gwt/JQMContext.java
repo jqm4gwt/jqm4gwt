@@ -14,6 +14,8 @@ import com.google.gwt.user.client.ui.Widget;
 public class JQMContext {
 
 	private static Transition	defaultTransition	= Transition.POP;
+	private static boolean 		defaultTransistionDirection = false;
+	private static boolean		defaultChangeHash = true;
 
 	public static native void disableHashListening() /*-{
 										$wnd.$.mobile.hashListeningEnabled = false;
@@ -45,7 +47,7 @@ public class JQMContext {
 	 * the supplied transition.
 	 */
 	public static void changePage(JQMContainer container, Transition transition) {
-		Mobile.changePage("#" + container.getId(), transition, false, true);
+		Mobile.changePage("#" + container.getId(), transition, defaultTransistionDirection, defaultChangeHash);
 	}
 
 	private static void enhance(JQMContainer c) {
@@ -55,6 +57,7 @@ public class JQMContext {
 	public static Transition getDefaultTransition() {
 		return defaultTransition;
 	}
+	
 
 	/**
 	 * Return the pixel offset of an element from the left of the document.
@@ -99,6 +102,14 @@ public class JQMContext {
 
 	public static void setDefaultTransition(Transition defaultTransition) {
 		JQMContext.defaultTransition = defaultTransition;
+	}
+	public static void setDefaultTransition(Transition defaultTransition, boolean direction) {
+		JQMContext.defaultTransition = defaultTransition;
+		defaultTransistionDirection = direction;
+	}
+	
+	public static void setDefaultChangeHash(boolean defaultChangeHash) {
+		JQMContext.defaultChangeHash = defaultChangeHash;
 	}
 
 	/**
