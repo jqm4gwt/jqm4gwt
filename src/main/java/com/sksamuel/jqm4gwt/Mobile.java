@@ -45,9 +45,10 @@ public class Mobile {
 	/**
 	 * Ask JQuery Mobile to "render" the element with the given id.
 	 */
-	public static native void render(String id) /*-{
-									$wnd.$("#" + id).page();
-									}-*/;
+	public static void render(String id)
+	{
+		JQMContext.render(id);
+	}
 
 	/**
 	 * 
