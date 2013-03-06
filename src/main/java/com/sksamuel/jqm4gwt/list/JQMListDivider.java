@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
  *         An implementation of a list divider.
  * 
  */
-public class JQMListDivider extends Widget implements HasText {
+class JQMListDivider extends Widget implements HasText {
 
 	JQMListDivider(String text) {
 		setElement(Document.get().createLIElement());

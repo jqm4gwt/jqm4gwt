@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasInset;
 import com.sksamuel.jqm4gwt.JQMPage;
@@ -41,7 +42,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
     /**
      * The collection of items added to this list
      */
-    private final List<JQMListItem> items = new ArrayList();
+    private final List<JQMListItem> items = new ArrayList<JQMListItem>();
 
     /**
      * Create a new unordered {@link JQMList}
@@ -79,15 +80,16 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
 
     protected void addDivider(JQMListDivider d) {
         list.add(d);
+        items.add(null);//to keep the list and items in sync
     }
 
     /**
      * Add a new divider with the given text and an automatically assigned id.
      *
-     * @return the created {@link JQMListDivider} which can be used to change the text dynamically. Changes to that
+     * @return the created divider which can be used to change the text dynamically. Changes to that
      *         instance write back to this list.
      */
-    public JQMListDivider addDivider(String text) {
+    public HasText addDivider(String text) {
         JQMListDivider d = new JQMListDivider(text);
         addDivider(d);
         return d;
@@ -95,7 +97,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
 
     public void addItem(int index, final JQMListItem item) {
         list.insert(item, index);
-        items.add(item);
+        items.add(index,item);
         item.setList(this);
         item.addDomHandler(new ClickHandler() {
 
@@ -226,6 +228,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
 
     /**
      * Returns a List of {@link JQMListItem}s currently set on this list.
+     * @return the items, null values for divider locations!
      */
     public List<JQMListItem> getItems() {
         return items;
@@ -272,6 +275,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
             Widget w = list.getWidget(k);
             if ("list-divider".equals(w.getElement().getAttribute("data-role"))) {
                 list.remove(k);
+                items.remove(k);
                 return true;
             }
         }
@@ -284,8 +288,8 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
      * @param pos the integer position, 0 indexed
      */
     public void removeItem(int pos) {
-        JQMListItem item = items.remove(pos);
-        list.remove(item);
+        items.remove(pos);
+        list.remove(pos);
     }
 
     /**
@@ -294,9 +298,10 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
      * @param item the item to remove
      */
     public void removeItem(JQMListItem item) {
-        items.remove(item);
-        list.remove(item);
-
+    	if (item != null) {
+	        items.remove(item);
+	        list.remove(item);
+    	}
     }
 
     /**
