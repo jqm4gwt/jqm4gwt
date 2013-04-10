@@ -56,7 +56,20 @@
 			<version>${gwt.version}</version>
 			<scope>provided</scope>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.7</version>
+            <scope>provided</scope><!-- should be 'test' but gwt-maven-plugin is not seeing at compile-test time -->
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.7</version>
+            <classifier>sources</classifier>
+            <scope>provided</scope><!-- should be 'test' but gwt-maven-plugin is not seeing at compile-test time -->
+        </dependency>
+    </dependencies>
 
 	<profiles>
 		<profile>
@@ -83,6 +96,7 @@
 	</profiles>
 
 	<build>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -125,6 +139,86 @@
 					</execution>
 				</executions>
 			</plugin>
+
+            <!-- Use the GWT compiler to verify UiBinder test sources compile -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>${gwt.version}</version>
+                <configuration>
+                    <gwtSdkFirstInClasspath>true</gwtSdkFirstInClasspath>
+                    <buildOutputDirectory>${project.build.testOutputDirectory}</buildOutputDirectory>
+                    <runTarget>com.sksamuel.Jqm4gwtJUnit/index.html</runTarget>
+                    <hostedWebapp>${project.build.directory}/preview</hostedWebapp>
+                    <module>com.sksamuel.Jqm4gwt</module>
+                    <extraJvmArgs>-Xmx768m -Dgwt.usearchives=false</extraJvmArgs> <!-- Bypass GWT Shortcomings with IBM JVM -->
+                    <extraParam>true</extraParam>
+                    <style>OBF</style>
+                    <optimizationLevel>9</optimizationLevel>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>compile-uibinder-files</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <module>com.sksamuel.Jqm4gwtJUnit</module>
+                            <logLevel>INFO</logLevel>
+                            <style>DETAILED</style>
+                            <optimizationLevel>-1</optimizationLevel>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.google.gwt</groupId>
+                        <artifactId>gwt-user</artifactId>
+                        <version>${gwt.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.google.gwt</groupId>
+                        <artifactId>gwt-dev</artifactId>
+                        <version>${gwt.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+              <!-- because the gwt-maven-plugin doesn't natively understand the test-compile phase which would
+                   add the following to the compilation path, we must do it manually with build-helper -->
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>build-helper-maven-plugin</artifactId>
+              <version>1.8</version>
+              <executions>
+                <execution>
+                  <id>add-test-sources-for-gwt-compiler-shortcoming</id>
+                  <phase>process-test-sources</phase>
+                  <goals>
+                    <goal>add-source</goal>
+                  </goals>
+                  <configuration>
+                    <sources>
+                      <source>src/test/java</source>
+                    </sources>
+                  </configuration>
+                </execution>
+                  <execution>
+                    <id>add-test-resources-for-gwt-compiler-shortcoming</id>
+                    <phase>process-test-resources</phase>
+                    <goals>
+                      <goal>add-resource</goal>
+                    </goals>
+                    <configuration>
+                      <resources>
+                        <resource>
+                            <directory>src/test/resources</directory>
+                        </resource>
+                      </resources>
+                    </configuration>
+                  </execution>
+              </executions>
+            </plugin>
 		</plugins>
 		<resources>
 			<resource>
@@ -138,5 +232,14 @@
 				</includes>
 			</resource>
 		</resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>**/*.html</include>
+                    <include>**/*.gwt.xml</include>
+                </includes>
+            </testResource>
+        </testResources>
 	</build>
 </project>

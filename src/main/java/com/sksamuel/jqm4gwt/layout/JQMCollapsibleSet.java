@@ -1,5 +1,6 @@
 package com.sksamuel.jqm4gwt.layout;
 
+import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasIconPos;
@@ -32,6 +33,7 @@ public class JQMCollapsibleSet extends JQMWidget implements HasIconPos, HasMini,
     /**
      * Adds the given collapsible to the end of this set
      */
+    @UiChild(tagname = "collapsible")
     public void add(JQMCollapsible c) {
         flow.add(c);
     }

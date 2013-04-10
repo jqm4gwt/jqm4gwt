@@ -39,10 +39,7 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
      * @param text the text to display on the button
      */
     public JQMButton(String text) {
-        initWidget(new Anchor(text));
-        setStyleName("jqm4gwt-button");
-        setDataRole("button");
-        setId();
+        this(new Anchor(text));
     }
 
     /**
@@ -89,9 +86,7 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
      * @param url  the HTTP url to create a link to
      */
     public JQMButton(String text, String url) {
-        this(text);
-        if (url != null)
-            setAttribute("href", url);
+        this(text, url, null);
     }
 
     /**
@@ -112,6 +107,14 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
             setAttribute("href", url);
         if (t != null)
             setTransition(t);
+    }
+
+    /**
+     * Nullary constructor used by tools such as UiBinder that make subsequent
+     * property instantiation calls.
+     */
+    public JQMButton() {
+        this("");
     }
 
     protected JQMButton(Widget widget) {
@@ -181,6 +184,14 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
     @Override
     public boolean isMini() {
         return "true".equals(getAttribute("data-mini"));
+    }
+
+    public String getHref() {
+        return getAttribute("href");
+    }
+
+    public void setHref(String url) {
+         setAttribute("href", url);
     }
 
     @Override

@@ -26,6 +26,14 @@ public class JQMHeader extends JQMToolbar {
 	 */
 	private JQMButton	right;
 
+    /**
+   	 * Creates a new {@link JQMHeader} with no text and no automatic
+   	 * back button.
+   	 */
+   	public JQMHeader() {
+   		this(null, false);
+   	}
+
 	/**
 	 * Create a new {@link JQMHeader} with the given text and no automatic
 	 * back button.

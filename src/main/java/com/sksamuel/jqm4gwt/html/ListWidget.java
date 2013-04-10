@@ -17,6 +17,18 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class ListWidget extends ComplexPanel {
 
+    public static class Ordered extends ListWidget {
+        public Ordered() {
+            super(true);
+        }
+    }
+
+    public static class Unordered extends ListWidget {
+        public Unordered() {
+            super(false);
+        }
+    }
+
 	/**
 	 * Create a new ListWidget. It will have element type UL if ordered is
 	 * false, and OL if ordered is true

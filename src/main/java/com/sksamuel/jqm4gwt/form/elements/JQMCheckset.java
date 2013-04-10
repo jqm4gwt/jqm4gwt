@@ -13,6 +13,7 @@ import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
@@ -33,6 +34,18 @@ import com.sksamuel.jqm4gwt.html.Legend;
  * 
  * @link http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/forms/forms-
  *       checkboxes.html
+ *
+ *       * <h3>Use in UiBinder Templates</h3>
+ *
+ * When working with JQMCheckset in
+ * {@link com.google.gwt.uibinder.client.UiBinder UiBinder} templates, you
+ * can add Checkboes via child elements. For example:
+ * <pre>
+ * &lt;jqm:form.elements.JQMCheckset>
+ *    &lt;jqm:check id="checkId#1" text="Checkbox #1"/>
+ *    &lt;jqm:check id="checkId#1" text="Checkbox #2"/>
+ * &lt;/jqm:form.elements.JQMCheckset>
+ * </pre>
  * 
  */
 public class JQMCheckset extends JQMFieldContainer implements HasText, HasSelectionHandlers<String>, HasOrientation<JQMCheckset>,
@@ -98,6 +111,7 @@ public class JQMCheckset extends JQMFieldContainer implements HasText, HasSelect
 	 * @return the {@link JQMCheckbox} instance used to control the added
 	 *         checkbox
 	 */
+    @UiChild(tagname = "check")
 	public JQMCheckbox addCheck(String id, String text) {
 
 		TextBox input = new TextBox();
@@ -119,6 +133,11 @@ public class JQMCheckset extends JQMFieldContainer implements HasText, HasSelect
 		checks.add(check);
 		return check;
 	}
+
+//    @UiChild
+//    public void addCheckbox(JQMCheckbox checkbox) {
+//       checks.add(checkbox);
+//    }
 
 	public void clear() {
 		inputs.clear();

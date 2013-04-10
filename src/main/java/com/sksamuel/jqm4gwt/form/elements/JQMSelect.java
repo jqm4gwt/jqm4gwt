@@ -11,12 +11,8 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Focusable;
-import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.uibinder.client.UiChild;
+import com.google.gwt.user.client.ui.*;
 import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasIcon;
@@ -36,6 +32,29 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  */
 public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasText, HasFocusHandlers, HasChangeHandlers, HasClickHandlers,
         HasValue<String>, JQMFormWidget, HasIcon<JQMSelect>, HasInline<JQMSelect>, HasPreventFocusZoom, HasCorners<JQMSelect>, HasMini<JQMSelect>, Focusable {
+
+
+    public static class Option {
+        private String value;
+        private String text;
+        public Option() {}
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+    }
 
     private static final String SELECT_STYLENAME = "jqm4gwt-select";
 
@@ -102,6 +121,10 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
         return addDomHandler(handler, FocusEvent.getType());
     }
 
+    @UiChild
+    public void addOption(Option option) {
+        addOption(option.value, option.text);
+    }
     /**
      * Adds an option with the given text. The text is also used as the value.
      * The option is added at the end of the list of options.

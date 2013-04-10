@@ -28,17 +28,17 @@ Getting Started
 
 Read the [quick start guide](https://github.com/sksamuel/jqm4gwt/wiki/Getting-Started). You will need to be familiar with GWT already.
 
-Latest Release 1.2.0
+Latest Release 1.2.1
 ========
 
-Released 21-Oct-2012
+Released 22-Dec-2012
 
 Dependencies are available from maven central:
 
   	<dependency>
 			<groupId>com.sksamuel.jqm4gwt</groupId>
 			<artifactId>jqm4gwt</artifactId>
-			<version>1.2.0</version>
+			<version>1.2.1</version>
   	</dependency>
 
 Spread the word
