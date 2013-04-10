@@ -1,5 +1,6 @@
 package com.sksamuel.jqm4gwt.layout;
 
+import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasText;
@@ -29,6 +30,14 @@ public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos<JQM
     private final FlowPanel flow;
 
     private final Heading header;
+
+    /**
+     * Creates a new {@link JQMCollapsible} with the no header text and
+     * preset to collapsed.
+     */
+    public JQMCollapsible() {
+        this(null, true);
+    }
 
     /**
      * Creates a new {@link JQMCollapsible} with the given header text and
@@ -77,6 +86,7 @@ public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos<JQM
      * Add a widget to the content part of this {@link JQMCollapsible}
      * instance
      */
+    @UiChild(tagname="widget")
     public void add(Widget widget) {
         flow.add(widget);
     }

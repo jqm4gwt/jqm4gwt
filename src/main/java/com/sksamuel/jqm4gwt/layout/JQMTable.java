@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.layout;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMContext;
@@ -39,6 +40,13 @@ public class JQMTable extends JQMWidget {
 	 */
 	private final FlowPanel	flow;
 
+    /**
+   	 * Create a new table with initial number of columns as 2.
+   	 */
+   	public JQMTable() {
+   		this(2);
+   	}
+
 	/**
 	 * Create a new table with the given number of columns.
 	 */
@@ -60,6 +68,7 @@ public class JQMTable extends JQMWidget {
 	 * 
 	 * @return the widget that was created to wrap the given content
 	 */
+    @UiChild(tagname = "cell")
 	public Widget add(Widget widget) {
 
 		int size = getElement().getChildCount();

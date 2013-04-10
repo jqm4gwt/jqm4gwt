@@ -19,6 +19,13 @@ public class JQMSubmit extends JQMWidget implements HasText, HasClickHandlers {
 
 	private final SubmitButton	submit;
 
+    /**
+     * Nullary constructor.
+     */
+    public JQMSubmit() {
+        this(null);
+    }
+
 	/**
 	 * Create a {@link JQMSubmit} with the given label
 	 */

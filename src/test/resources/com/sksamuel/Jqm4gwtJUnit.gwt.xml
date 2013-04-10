@@ -4,6 +4,6 @@
     <inherits name='com.sksamuel.Jqm4gwt'/>
     <inherits name='com.google.gwt.junit.JUnit' />
     <source path='jqm4gwt/uibinder/client' />
-    <entry-point class='com.sksamuel.jqm4gwt.UiBinderTest'/>
+    <entry-point class='com.sksamuel.jqm4gwt.GWTTestUiBinder'/>
 
 </module>

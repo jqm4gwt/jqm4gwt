@@ -17,19 +17,47 @@ public class ImageLink extends Widget {
 	private ImageElement	img;
 	private AnchorElement	a;
 
-	public ImageLink(String href, String src) {
+	public ImageLink() {
 		a = Document.get().createAnchorElement();
 		a.setAttribute("data-role", "none");
 		setElement(a);
-		a.setAttribute("href", href);
 		a.setAttribute("rel", "external");
 		a.setAttribute("data-rel", "external");
 		img = Document.get().createImageElement();
-		img.setAttribute("src", src);
 		a.appendChild(img);
 	}
 
-	/**
+    public ImageLink(String href, String src) {
+        this();
+        setHref(href);
+        setSrc(src);
+   	}
+
+    public String getSrc() {
+        return img.getAttribute("src");
+    }
+
+    public String getHref() {
+        return a.getAttribute("href");
+    }
+
+    /**
+     * The URL of the source image
+     * @param src
+     */
+    public void setSrc(String src) {
+        img.setAttribute("src", src);
+    }
+
+    /**
+     * The destination URL of the link
+     * @param href
+     */
+    public void setHref(String href) {
+        a.setAttribute("href", href);
+    }
+
+    /**
 	 * Set the width of the image
 	 */
 	public void setWidth(String width) {

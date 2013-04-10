@@ -30,4 +30,40 @@ public class Heading extends Widget implements HasText {
 	public void setText(String text) {
 		getElement().setInnerText(text);
 	}
+
+    public static class H1 extends Heading {
+        public H1() {
+            super(1);
+        }
+    }
+
+    public static class H2 extends Heading {
+        public H2() {
+            super(2);
+        }
+    }
+
+    public static class H3 extends Heading {
+        public H3() {
+            super(3);
+        }
+    }
+
+    public static class H4 extends Heading {
+        public H4() {
+            super(4);
+        }
+    }
+
+    public static class H5 extends Heading {
+        public H5() {
+            super(5);
+        }
+    }
+
+    public static class H6 extends Heading {
+        public H6() {
+            super(6);
+        }
+    }
 }
