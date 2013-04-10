@@ -15,6 +15,7 @@ import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
@@ -34,6 +35,18 @@ import com.sksamuel.jqm4gwt.html.Legend;
  *         buttons must belong to a radioset. All radio buttons in a set are
  *         grouped and styled together.
  * 
+ *       * <h3>Use in UiBinder Templates</h3>
+ *
+ * When working with JQMRadioset in
+ * {@link com.google.gwt.uibinder.client.UiBinder UiBinder} templates, you
+ * can add Radio buttons via child elements. For example:
+ * <pre>
+ * &lt;jqm:form.elements.JQMRadioset>
+ *    &lt;jqm:check id="checkId#1" text="Checkbox #1"/>
+ *    &lt;jqm:check id="checkId#1" text="Checkbox #2"/>
+ * &lt;/jqm:form.elements.JQMRadioset>
+ * </pre>
+ *
  */
 public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandlers<String>, HasOrientation<JQMRadioset>, HasValue<String>,
 		JQMFormWidget, HasClickHandlers {
@@ -159,6 +172,7 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 	 * 
 	 * @return a JQMRadio instance to adjust the added radio button
 	 */
+    @UiChild(tagname = "radio")
 	public JQMRadio addRadio(String value, String text) {
 
 		String id = Document.get().createUniqueId();

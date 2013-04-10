@@ -27,6 +27,23 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
      */
     private final TextBox input = new TextBox();
 
+
+    /**
+     * Create a new {@link JQMSlider} with no label and default values
+     * for the min and max
+     */
+    public JQMSlider() {
+        String id = Document.get().createUniqueId();
+        label.setFor(id);
+        input.getElement().setId(id);
+        input.getElement().setAttribute("type", "range");
+        input.getElement().setAttribute("value", "0");
+        input.getElement().setAttribute("min", "0");
+        input.getElement().setAttribute("max", "100");
+        add(label);
+        add(input);
+    }
+
     /**
      * Create a new {@link JQMSlider} with the given label and default values
      * for the min and max
@@ -34,19 +51,8 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
      * @param text the label text
      */
     public JQMSlider(String text) {
-        String id = Document.get().createUniqueId();
-
-        label.setFor(id);
+        this();
         label.setText(text);
-
-        input.getElement().setId(id);
-        input.getElement().setAttribute("type", "range");
-        input.getElement().setAttribute("value", "0");
-        input.getElement().setAttribute("min", "0");
-        input.getElement().setAttribute("max", "100");
-
-        add(label);
-        add(input);
     }
 
     /**
@@ -89,6 +95,14 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
     private native void enable(String id) /*-{
                                 $("#"+id).slider('enable');
 								}-*/;
+
+    /**
+     * Returns the text of the label
+     * @return
+     */
+    public String getLabelText() {
+        return label.getText();
+    }
 
     /**
      * Returns the max value of the slider
@@ -138,8 +152,19 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
 										$wnd.$("#" + name).val(value).slider("refresh");
 										}-*/;
 
+
+
     public void setHighlight(boolean highlight) {
         setAttribute("data-highlight", String.valueOf(highlight));
+    }
+
+    /**
+     * Sets the text of the label
+     *
+     * @param text is the new text to display
+     */
+    public void setLabelText(String text) {
+        label.setText(text);
     }
 
     /**

@@ -32,6 +32,13 @@ public class JQMMonth extends JQMSelect {
 
 	}
 
+    /**
+     * Nullary constructor used by UiBinder - defaults to numbers for month names.
+     */
+    public JQMMonth() {
+        this(null);
+    }
+
 	/**
 	 * Creates a new select widget populated with the 12 months with the
 	 * values 01 to 12, and using the names for the months taken from the

@@ -16,18 +16,33 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  */
 public class JQMCheckbox implements HasText, IsChecked, HasValue<Boolean>, HasMini<JQMCheckbox> {
 
-    private final InputElement input;
+    private InputElement input;
 
-    private final FormLabel label;
+    private FormLabel label;
 
-    private final String id;
+    private String id;
 
     private boolean isSelected;
 
     JQMCheckbox(InputElement input, FormLabel label, String id) {
-        this.input = input;
+        setInput(input);
+        setLabel(label);
+        setId(id);
+    }
+
+    /**
+     * Constructor used by UiBinder. Should be followed by calls to set InputElement, Label and Id)
+     */
+    public JQMCheckbox() {
+
+    }
+
+    public FormLabel getLabel() {
+        return label;
+    }
+
+    public void setLabel(FormLabel label) {
         this.label = label;
-        this.id = id;
 
         label.addDomHandler(new ClickHandler() {
             @Override
@@ -37,7 +52,6 @@ public class JQMCheckbox implements HasText, IsChecked, HasValue<Boolean>, HasMi
         }, ClickEvent.getType());
     }
 
-    ;
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Boolean> handler) {
         return null;
@@ -99,5 +113,13 @@ public class JQMCheckbox implements HasText, IsChecked, HasValue<Boolean>, HasMi
         input.setChecked(value);
         input.setDefaultChecked(value);
         isSelected = value;
+    }
+
+    public void setInput(InputElement input) {
+        this.input = input;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

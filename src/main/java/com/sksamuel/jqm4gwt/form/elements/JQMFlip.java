@@ -79,25 +79,47 @@ public class JQMFlip extends JQMFieldContainer implements HasText, HasValue<Stri
 	 * 
 	 */
 	public JQMFlip(String text, String value1, String label1, String value2, String label2) {
-		String id = Document.get().createUniqueId();
-
-		label.setFor(id);
+        this();
 		setText(text);
-
-		select.setName(id);
-		select.getElement().setId(id);
-		select.getElement().setAttribute("data-role", "slider");
 		select.addItem(label1, value1);
 		select.addItem(label2, value2);
-
-		this.value1 = value1;
-		this.value2 = value2;
-
-		add(label);
-		add(select);
+		setValue1(value1);
+		setValue2(value2);
 	}
 
-	@Override
+    public JQMFlip() {
+        String id = Document.get().createUniqueId();
+        label.setFor(id);
+        select.setName(id);
+        select.getElement().setId(id);
+        select.getElement().setAttribute("data-role", "slider");
+        add(label);
+        add(select);
+    }
+
+    public String getLabel1() {
+        return select.getItemText(0);
+    }
+
+    public void setLabel1(String label1) {
+        if (select.getItemCount() > 1)
+           select.setItemText(0, label1);
+        else
+            select.addItem(label1, getValue1());
+    }
+
+    public String getLabel2() {
+        return select.getItemText(0);
+    }
+
+    public void setLabel2(String label2) {
+        if (select.getItemCount() > 2)
+           select.setItemText(1, label2);
+        else
+            select.addItem(label2, getValue2());
+    }
+
+    @Override
 	public HandlerRegistration addChangeHandler(ChangeHandler handler) {
 		return select.addChangeHandler(handler);
 	}
@@ -132,9 +154,9 @@ public class JQMFlip extends JQMFieldContainer implements HasText, HasValue<Stri
 	public String getValue() {
 		switch (getSelectedIndex()) {
 		case 0:
-			return value1;
+			return getValue1();
 		case 1:
-			return value2;
+			return getValue2();
 		default:
 			return null;
 		}
@@ -177,9 +199,9 @@ public class JQMFlip extends JQMFieldContainer implements HasText, HasValue<Stri
 	 */
 	@Override
 	public void setValue(String value, boolean ignored) {
-		if (value1.equals(value))
+		if (getValue1().equals(value))
 			setSelectedIndex(0);
-		else if (value2.equals(value))
+		else if (getValue2().equals(value))
 			setSelectedIndex(0);
 	}
 
@@ -196,4 +218,12 @@ public class JQMFlip extends JQMFieldContainer implements HasText, HasValue<Stri
 	public void setValue2(String newValue) {
 		value2 = newValue;
 	}
+
+    public String getValue2() {
+        return value2;
+    }
+
+    public String getValue1() {
+        return value1;
+    }
 }

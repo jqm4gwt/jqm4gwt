@@ -4,6 +4,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
@@ -24,8 +25,39 @@ import java.util.List;
  * <p/>
  * This list can be ordered or unordered (which must be set at constructor time). The list can be dynamically
  * modified with random access.
+ *
+ *       * <h3>Use in UiBinder Templates</h3>
+ *
+ * When working with JQMList in
+ * {@link com.google.gwt.uibinder.client.UiBinder UiBinder} templates, you
+ * can set the List Items and Separators via child elements. For example:
+ * <pre>
+ * &lt;jqm:list.JQMList>
+ *    &lt;jqm:item text="Item text here..."/>
+ *    &lt;jqm:divider text="-- Divider Text Here --"/>
+ *    &lt;jqm:item text="...more item text Here"/>
+ * &lt;/jqm:list.JQMList>
+ * </pre>
  */
 public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQMList>, HasFilter<JQMList> {
+
+    /**
+     * An ordered JQMList
+     */
+    public static class Ordered extends JQMList {
+        public Ordered() {
+           super(true);
+        }
+    }
+
+    /**
+     * An unordered JQMList
+     */
+    public static class Unordered extends JQMList {
+        public Unordered() {
+           super(false);
+        }
+    }
 
     /**
      * The underlying <li>or
@@ -95,6 +127,16 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
         return d;
     }
 
+    /**
+     * This is simply addDivider(String text) but returning void to work with UiBinder.
+     * @see #addDivider(String)
+     * @param text
+     */
+    @UiChild(tagname = "divider")
+    public void appendDivider(String text) {
+        addDivider(text);
+    }
+
     public void addItem(int index, final JQMListItem item) {
         list.insert(item, index);
         items.add(index,item);
@@ -124,6 +166,17 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
     public JQMListItem addItem(String text) {
         return addItem(text, (String) null);
     }
+
+    /**
+     * This is simply addItem(String text) but returning void to work with UiBinder.
+     * @see #addItem(String)
+     * @param text
+     */
+    @UiChild(tagname = "item")
+    public void appendItem(String text) {
+        addItem(text);
+    }
+
 
     /**
      * Adds a new {@link JQMListItem} that contains the given @param text as the heading element.
