@@ -1,245 +1,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
+    <parent>
+        <groupId>com.sksamuel.jqm4gwt</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.2.2-SNAPSHOT</version>
+        <relativePath>parent</relativePath>
+    </parent>
 
-	<groupId>com.sksamuel.jqm4gwt</groupId>
-	<artifactId>jqm4gwt</artifactId>
-	<version>1.2.2-SNAPSHOT</version>
+    <artifactId>jqm4gwt-modules</artifactId>
+    <name>jqm4gwt: JQuery Mobile For GWT</name>
+    <description>GWT Wrapper for the JQuery Mobile Framework</description>
+    <packaging>pom</packaging>
 
-	<name>jqm4gwt</name>
-	<description>GWT Wrapper for the JQuery Mobile Framework</description>
-	<url>https://github.com/sksamuel/jqm4gwt</url>
+    <scm>
+        <connection>scm:git:git@github.com:sksamuel/jqm4gwt.git</connection>
+        <developerConnection>scm:git:git@github.com:sksamuel/jqm4gwt.git</developerConnection>
+        <url>it@github.com:sksamuel/jqm4gwt.git</url>
+    </scm>
 
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
+    <modules>
+        <module>parent</module>
+        <module>library</module>
+        <module>examples</module>
+    </modules>
 
-	<scm>
-		<connection>scm:git:git@github.com:sksamuel/jqm4gwt.git</connection>
-		<developerConnection>scm:git:git@github.com:sksamuel/jqm4gwt.git</developerConnection>
-		<url>it@github.com:sksamuel/jqm4gwt.git</url>
-	</scm>
-
-	<developers>
-		<developer>
-			<name>Stephen Samuel</name>
-			<email>samspade79@gmail.com</email>
-			<timezone>GMT</timezone>
-		</developer>
-	</developers>
-
-	<properties>
-		<maven.plugin.resources.version>2.5</maven.plugin.resources.version>
-		<gwt.version>2.4.0</gwt.version>
-	</properties>
-
-	<dependencies>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-servlet</artifactId>
-			<version>${gwt.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-user</artifactId>
-			<version>${gwt.version}</version>
-			<scope>provided</scope>
-		</dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.7</version>
-            <scope>provided</scope><!-- should be 'test' but gwt-maven-plugin is not seeing at compile-test time -->
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.7</version>
-            <classifier>sources</classifier>
-            <scope>provided</scope><!-- should be 'test' but gwt-maven-plugin is not seeing at compile-test time -->
-        </dependency>
-    </dependencies>
-
-	<profiles>
-		<profile>
-			<id>release</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.1</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-
-	<build>
-
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>${maven.plugin.resources.version}</version>
-				<configuration>
-					<encoding>UTF-8</encoding>
-					<outputDirectory />
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-            <!-- Use the GWT compiler to verify UiBinder test sources compile -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <version>${gwt.version}</version>
-                <configuration>
-                    <gwtSdkFirstInClasspath>true</gwtSdkFirstInClasspath>
-                    <buildOutputDirectory>${project.build.testOutputDirectory}</buildOutputDirectory>
-                    <runTarget>com.sksamuel.Jqm4gwtJUnit/index.html</runTarget>
-                    <hostedWebapp>${project.build.directory}/preview</hostedWebapp>
-                    <module>com.sksamuel.Jqm4gwt</module>
-                    <extraJvmArgs>-Xmx768m -Dgwt.usearchives=false</extraJvmArgs> <!-- Bypass GWT Shortcomings with IBM JVM -->
-                    <extraParam>true</extraParam>
-                    <style>OBF</style>
-                    <optimizationLevel>9</optimizationLevel>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>compile-uibinder-files</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <module>com.sksamuel.Jqm4gwtJUnit</module>
-                            <logLevel>INFO</logLevel>
-                            <style>DETAILED</style>
-                            <optimizationLevel>-1</optimizationLevel>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.google.gwt</groupId>
-                        <artifactId>gwt-user</artifactId>
-                        <version>${gwt.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.google.gwt</groupId>
-                        <artifactId>gwt-dev</artifactId>
-                        <version>${gwt.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-              <!-- because the gwt-maven-plugin doesn't natively understand the test-compile phase which would
-                   add the following to the compilation path, we must do it manually with build-helper -->
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>build-helper-maven-plugin</artifactId>
-              <version>1.8</version>
-              <executions>
-                <execution>
-                  <id>add-test-sources-for-gwt-compiler-shortcoming</id>
-                  <phase>process-test-sources</phase>
-                  <goals>
-                    <goal>add-source</goal>
-                  </goals>
-                  <configuration>
-                    <sources>
-                      <source>src/test/java</source>
-                    </sources>
-                  </configuration>
-                </execution>
-                  <execution>
-                    <id>add-test-resources-for-gwt-compiler-shortcoming</id>
-                    <phase>process-test-resources</phase>
-                    <goals>
-                      <goal>add-resource</goal>
-                    </goals>
-                    <configuration>
-                      <resources>
-                        <resource>
-                            <directory>src/test/resources</directory>
-                        </resource>
-                      </resources>
-                    </configuration>
-                  </execution>
-              </executions>
-            </plugin>
-		</plugins>
-		<resources>
-			<resource>
-				<directory>src/main/java</directory>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-					<include>**/*.java</include>
-					<include>**/*.gwt.xml</include>
-				</includes>
-			</resource>
-		</resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <includes>
-                    <include>**/*.html</include>
-                    <include>**/*.gwt.xml</include>
-                </includes>
-            </testResource>
-        </testResources>
-	</build>
 </project>
