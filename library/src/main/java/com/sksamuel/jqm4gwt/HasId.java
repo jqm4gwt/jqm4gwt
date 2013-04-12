@@ -15,5 +15,10 @@ public interface HasId<T> {
     /**
      * Change the ID to the given value
      */
-    T setId(String id);
+    void setId(String id);
+
+    /**
+     * Change the ID to the given value
+     */
+    T withId(String id);
 }

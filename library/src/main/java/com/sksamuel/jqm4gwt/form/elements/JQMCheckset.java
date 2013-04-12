@@ -147,12 +147,17 @@ public class JQMCheckset extends JQMFieldContainer implements HasText, HasSelect
 	}
 	
     @Override
-    public JQMWidget setTheme(String themeName) {
-    	super.setTheme(themeName);
+    public void setTheme(String themeName) {
+    	super.withTheme(themeName);
     	for(TextBox checkInput : inputs) applyTheme(checkInput, themeName);
-        return this;
     }
 	
+    @Override
+    public JQMWidget withTheme(String themeName) {
+    	setTheme(themeName);
+        return this;
+    }
+
 	@Override
 	public HandlerRegistration addClickHandler(ClickHandler handler) {
 		return addDomHandler(handler, ClickEvent.getType());
@@ -252,10 +257,15 @@ public class JQMCheckset extends JQMFieldContainer implements HasText, HasSelect
 	}
 
 	@Override
-	public JQMCheckset setHorizontal() {
-		fieldset.setHorizontal();
-		return this;
+	public void setHorizontal() {
+		fieldset.withHorizontal();
 	}
+
+    @Override
+   	public JQMCheckset withHorizontal() {
+        setHorizontal();
+        return this;
+   	}
 
 	/**
 	 * Sets the value of the legend text.
@@ -288,8 +298,13 @@ public class JQMCheckset extends JQMFieldContainer implements HasText, HasSelect
 	}
 
 	@Override
-	public JQMCheckset setVertical() {
-		fieldset.setVertical();
-		return this;
+	public void setVertical() {
+		fieldset.withVertical();
 	}
+
+    @Override
+   	public JQMCheckset withVertical() {
+   		setVertical();
+   		return this;
+   	}
 }

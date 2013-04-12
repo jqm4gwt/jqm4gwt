@@ -8,6 +8,8 @@ public interface HasFilter<T> {
 
 	String isFilterable();
 
-	T setFilterable(boolean filterable);
+    void setFilterable(boolean filterable);
+
+	T withFilterable(boolean filterable);
 
 }

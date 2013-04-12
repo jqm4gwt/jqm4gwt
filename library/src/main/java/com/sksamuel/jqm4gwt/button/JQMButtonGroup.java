@@ -41,22 +41,37 @@ public class JQMButtonGroup extends JQMControlGroup implements HasInline<JQMButt
         return "true".equals(getElement().getAttribute("data-inline"));
     }
 
+
     /**
      * If inline is true then sets all the buttons in this group to inline,
      * otherwise sets them to not-inline.
      * <p/>
      * If the buttons are in a group then it is best to call this method
-     * instead of setInline on each button
+     * instead of withInline on each button
      *
      * @return
      */
     @Override
-    public JQMButtonGroup setInline(boolean inline) {
+    public void setInline(boolean inline) {
         getElement().setAttribute("data-inline", "true");
         for (int k = 0; k < getWidgetCount(); k++) {
             JQMButton button = (JQMButton) getWidget(k);
-            button.setInline(inline);
+            button.withInline(inline);
         }
+    }
+
+    /**
+     * If inline is true then sets all the buttons in this group to inline,
+     * otherwise sets them to not-inline.
+     * <p/>
+     * If the buttons are in a group then it is best to call this method
+     * instead of withInline on each button
+     *
+     * @return
+     */
+    @Override
+    public JQMButtonGroup withInline(boolean inline) {
+        setInline(inline);
         return this;
     }
 }

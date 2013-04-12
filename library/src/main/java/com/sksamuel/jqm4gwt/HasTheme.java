@@ -20,5 +20,14 @@ public interface HasTheme<T> {
      * JQM by default defines styles A-E. User styles will typically be
      * defined as F onwards.
      */
-    T setTheme(String themeName);
+    void setTheme(String themeName);
+
+    /**
+     * Sets the value of the data-theme attribute. Should be a value definined
+     * by the accompanying CSS stylesheet.
+     * <p/>
+     * JQM by default defines styles A-E. User styles will typically be
+     * defined as F onwards.
+     */
+    T withTheme(String themeName);
 }

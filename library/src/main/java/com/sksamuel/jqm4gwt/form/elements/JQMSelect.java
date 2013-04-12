@@ -304,20 +304,30 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
     }
     
     @Override
-    public JQMWidget setTheme(String themeName) {
-    	super.setTheme(themeName);
+    public void setTheme(String themeName) {
+    	super.withTheme(themeName);
     	applyTheme(select, themeName);
+    }
+
+    @Override
+    public JQMWidget withTheme(String themeName) {
+        setTheme(themeName);
         return this;
     }
- 
+
     @Override
     public void setAccessKey(char key) {
         select.setAccessKey(key);
     }
 
     @Override
-    public JQMSelect setCorners(boolean corners) {
+    public void setCorners(boolean corners) {
         setAttribute("data-corners", String.valueOf(corners));
+    }
+
+    @Override
+    public JQMSelect withCorners(boolean corners) {
+        setCorners(corners);
         return this;
     }
 
@@ -352,20 +362,34 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
      * set the position to IconPos.NOTEXT
      */
     @Override
-    public JQMSelect setIconPos(IconPos pos) {
+    public void setIconPos(IconPos pos) {
         if (pos == null)
             getElement().removeAttribute("data-iconpos");
         else
             getElement().setAttribute("data-iconpos", pos.getJqmValue());
+    }
+
+    /**
+     * Sets the position of the icon. If you desire an icon only button then
+     * set the position to IconPos.NOTEXT
+     */
+    @Override
+    public JQMSelect withIconPos(IconPos pos) {
+        setIconPos(pos);
         return this;
     }
 
     @Override
-    public JQMSelect setInline(boolean inline) {
+    public void setInline(boolean inline) {
         if (inline)
             getElement().setAttribute("data-inline", "true");
         else
             getElement().removeAttribute("data-inline");
+    }
+
+    @Override
+    public JQMSelect withInline(boolean inline) {
+        setInline(inline);
         return this;
     }
 
@@ -373,8 +397,16 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
      * If set to true then renders a smaller version of the standard-sized element.
      */
     @Override
-    public JQMSelect setMini(boolean mini) {
+    public void setMini(boolean mini) {
         setAttribute("data-mini", String.valueOf(mini));
+    }
+
+    /**
+     * If set to true then renders a smaller version of the standard-sized element.
+     */
+    @Override
+    public JQMSelect withMini(boolean mini) {
+        setMini(mini);
         return this;
     }
 
@@ -389,11 +421,16 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
     }
 
     @Override
-    public JQMSelect setNative(boolean b) {
+    public void setNative(boolean b) {
         if (b)
             getElement().removeAttribute("data-menu-native");
         else
             getElement().setAttribute("data-menu-native", "false");
+    }
+
+    @Override
+    public JQMSelect withNative(boolean b) {
+        setNative(b);
         return this;
     }
 

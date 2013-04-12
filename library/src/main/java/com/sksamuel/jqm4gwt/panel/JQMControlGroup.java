@@ -31,8 +31,13 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
     }
 
     @Override
-    public JQMControlGroup setHorizontal() {
+    public void setHorizontal() {
         setAttribute("data-type", "horizontal");
+    }
+
+    @Override
+    public JQMControlGroup withHorizontal() {
+        setHorizontal();
         return this;
     }
 
@@ -40,14 +45,27 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
      * If set to true then renders a smaller version of the standard-sized element.
      */
     @Override
-    public JQMControlGroup setMini(boolean mini) {
+    public void setMini(boolean mini) {
         setAttribute("data-mini", String.valueOf(mini));
+    }
+
+    /**
+     * If set to true then renders a smaller version of the standard-sized element.
+     */
+    @Override
+    public JQMControlGroup withMini(boolean mini) {
+        setMini(mini);
         return this;
     }
 
     @Override
-    public JQMControlGroup setVertical() {
+    public void setVertical() {
         removeAttribute("data-type");
-        return this;
+    }
+
+    @Override
+    public JQMControlGroup withVertical() {
+        setVertical();
+      	return this;
     }
 }

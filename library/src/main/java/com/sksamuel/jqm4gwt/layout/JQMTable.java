@@ -19,8 +19,8 @@ import com.sksamuel.jqm4gwt.JQMWidget;
  *         div element.
  * 
  *         The table can be resized after being created by calling
- *         setColumns(int). That can be an expensive operation, see the javadoc
- *         for the setColumns(int) method for more information on why.
+ *         withColumns(int). That can be an expensive operation, see the javadoc
+ *         for the withColumns(int) method for more information on why.
  * 
  *         Tables must have at least 2 and at most 5 columns
  *         

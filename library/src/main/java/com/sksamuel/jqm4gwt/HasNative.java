@@ -10,5 +10,7 @@ public interface HasNative<T> {
 
     boolean isNative();
 
-    T setNative(boolean b);
+    void setNative(boolean b);
+
+    T withNative(boolean b);
 }

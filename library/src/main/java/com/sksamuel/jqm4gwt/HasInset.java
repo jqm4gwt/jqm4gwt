@@ -19,6 +19,14 @@ public interface HasInset<T> {
      * @param inset if true then this widget is set to inset, if false then
      *              inset mode is disabled
      */
-    T setInset(boolean inset);
+    void setInset(boolean inset);
+
+    /**
+     * Sets the widget to inset mode or not.
+     *
+     * @param inset if true then this widget is set to inset, if false then
+     *              inset mode is disabled
+     */
+    T withInset(boolean inset);
 
 }

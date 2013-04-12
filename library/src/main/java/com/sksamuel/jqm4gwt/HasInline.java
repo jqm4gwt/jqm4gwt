@@ -13,6 +13,16 @@ public interface HasInline<T> {
 	 */
 	boolean isInline();
 
+
+    /**
+   	 * Sets whether this widget should render inline.
+   	 *
+   	 * @param inline
+   	 *              if true then this set widget will render inline or if
+   	 *              false then it will expand to full
+   	 */
+   	void setInline(boolean inline);
+
 	/**
 	 * Sets whether this widget should render inline.
 	 * 
@@ -20,6 +30,6 @@ public interface HasInline<T> {
 	 *              if true then this set widget will render inline or if
 	 *              false then it will expand to full
 	 */
-	T setInline(boolean inline);
+	T withInline(boolean inline);
 
 }

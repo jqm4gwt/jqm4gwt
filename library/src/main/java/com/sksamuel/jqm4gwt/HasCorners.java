@@ -7,6 +7,7 @@ public interface HasCorners<T> {
 
     boolean isCorners();
 
-    T setCorners(boolean corners);
+    void setCorners(boolean corners);
 
+    T withCorners(boolean corners);
 }

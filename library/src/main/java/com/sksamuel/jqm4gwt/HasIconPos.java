@@ -17,5 +17,10 @@ public interface HasIconPos<T> {
 	/**
 	 * Sets the position of the icon
 	 */
-	T setIconPos(IconPos pos);
+	void setIconPos(IconPos pos);
+
+    /**
+   	 * Sets the position of the icon
+   	 */
+   	T withIconPos(IconPos pos);
 }

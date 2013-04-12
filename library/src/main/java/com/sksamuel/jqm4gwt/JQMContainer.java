@@ -117,19 +117,35 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
     }
 
     @Override
-    public JQMContainer setId(String id) {
+    public void setId(String id) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public JQMContainer setTheme(String themeName) {
-        getElement().setAttribute("data-theme", themeName);
+    public JQMContainer withId(String id) {
+        setId(id);
         return this;
     }
 
     @Override
-    public JQMContainer setTransition(Transition transition) {
+    public void setTheme(String themeName) {
+        getElement().setAttribute("data-theme", themeName);
+    }
+
+    @Override
+    public JQMContainer withTheme(String themeName) {
+        setTheme(themeName);
+           return this;
+    }
+
+    @Override
+    public void setTransition(Transition transition) {
         getElement().setAttribute("data-transition", transition.getJQMValue());
+    }
+
+    @Override
+    public JQMContainer withTransition(Transition transition) {
+        setTransition(transition);
         return this;
     }
 }

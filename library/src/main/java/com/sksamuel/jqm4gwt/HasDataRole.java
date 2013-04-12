@@ -5,8 +5,8 @@ package com.sksamuel.jqm4gwt;
  */
 public interface HasDataRole {
 
-    void setDataRole(String value);
-
     String getDataRole();
+
+    void setDataRole(String value);
 
 }

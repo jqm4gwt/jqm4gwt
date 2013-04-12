@@ -139,18 +139,28 @@ public class JQMPanel extends ComplexPanel implements HasId<JQMPanel>, HasTheme<
      * Assign an automatically generated id
      */
     protected void setId() {
-        setId(Document.get().createUniqueId());
+        withId(Document.get().createUniqueId());
     }
 
     @Override
-    public final JQMPanel setId(String id) {
+    public void setId(String id) {
         getElement().setId(id);
+    }
+
+    @Override
+    public final JQMPanel withId(String id) {
+        setId(id);
         return this;
     }
 
     @Override
-    public final JQMPanel setTheme(String themeName) {
+    public final void setTheme(String themeName) {
         setAttribute("data-theme", themeName);
+    }
+
+    @Override
+    public final JQMPanel withTheme(String themeName) {
+        setTheme(themeName);
         return this;
     }
 

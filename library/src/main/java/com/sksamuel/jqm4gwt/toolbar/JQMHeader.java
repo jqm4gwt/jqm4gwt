@@ -86,7 +86,7 @@ public class JQMHeader extends JQMToolbar {
 	 *              the new back button
 	 */
 	public void setBackButton(JQMButton button) {
-		button.setRel("back");
+		button.withRel("back");
 		setLeftButton(button);
 	}
 

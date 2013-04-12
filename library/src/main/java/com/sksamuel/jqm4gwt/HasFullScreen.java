@@ -16,5 +16,14 @@ public interface HasFullScreen<T> {
      * @param fs if true then the page will render in full screen, if false
      *           then in normal mode
      */
-    T setFullScreen(boolean fs);
+    void setFullScreen(boolean fs);
+
+
+    /**
+     * Sets this page to render in full screen.
+     *
+     * @param fs if true then the page will render in full screen, if false
+     *           then in normal mode
+     */
+    T withFullScreen(boolean fs);
 }

@@ -21,15 +21,27 @@ public interface HasOrientation<T> {
 	 */
 	boolean isVertical();
 
+    /**
+   	 * Set this widget to be rendered horizontally. If already set to
+   	 * horizontal then this has no effect.
+   	 */
+   	void setHorizontal();
+
+   	/**
+   	 * Set this widget to be rendered vertically. If already set to vertical
+   	 * then this has no effect.
+   	 */
+   	void setVertical();
+
 	/**
 	 * Set this widget to be rendered horizontally. If already set to
 	 * horizontal then this has no effect.
 	 */
-	T setHorizontal();
+	T withHorizontal();
 
 	/**
 	 * Set this widget to be rendered vertically. If already set to vertical
 	 * then this has no effect.
 	 */
-	T setVertical();
+	T withVertical();
 }

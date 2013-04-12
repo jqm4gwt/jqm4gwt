@@ -93,8 +93,16 @@ public class JQMCheckbox implements HasText, IsChecked, HasValue<Boolean>, HasMi
      * If set to true then renders a smaller version of the standard-sized element.
      */
     @Override
-    public JQMCheckbox setMini(boolean mini) {
+    public void setMini(boolean mini) {
         input.setAttribute("data-mini", String.valueOf(mini));
+    }
+
+    /**
+     * If set to true then renders a smaller version of the standard-sized element.
+     */
+    @Override
+    public JQMCheckbox withMini(boolean mini) {
+        setMini(mini);
         return this;
     }
 

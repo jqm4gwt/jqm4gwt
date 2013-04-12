@@ -44,8 +44,16 @@ public class JQMRadio implements HasText, HasMini<JQMRadio>, HasTheme<JQMRadio> 
      * If set to true then renders a smaller version of the standard-sized element.
      */
     @Override
-    public JQMRadio setMini(boolean mini) {
+    public void setMini(boolean mini) {
         label.getElement().setAttribute("data-mini", String.valueOf(mini));
+    }
+
+    /**
+     * If set to true then renders a smaller version of the standard-sized element.
+     */
+    @Override
+    public JQMRadio withMini(boolean mini) {
+        setMini(mini);
         return this;
     }
 
@@ -58,8 +66,13 @@ public class JQMRadio implements HasText, HasMini<JQMRadio>, HasTheme<JQMRadio> 
     }
 
     @Override
-    public JQMRadio setTheme(String theme) {
+    public void setTheme(String theme) {
         label.getElement().setAttribute("theme", String.valueOf(theme));
+    }
+
+    @Override
+    public JQMRadio withTheme(String theme) {
+        setTheme(theme);
         return this;
     }
 

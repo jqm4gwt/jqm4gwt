@@ -98,17 +98,31 @@ public class JQMCollapsibleSet extends JQMWidget implements HasIconPos, HasMini,
      * set the position to IconPos.NOTEXT
      */
     @Override
-    public JQMCollapsibleSet setIconPos(IconPos pos) {
+    public void setIconPos(IconPos pos) {
         if (pos == null)
             getElement().removeAttribute("data-iconpos");
         else
             getElement().setAttribute("data-iconpos", pos.getJqmValue());
+    }
+
+    /**
+     * Sets the position of the icon. If you desire an icon only button then
+     * set the position to IconPos.NOTEXT
+     */
+    @Override
+    public JQMCollapsibleSet withIconPos(IconPos pos) {
+        setIconPos(pos);
         return this;
     }
 
     @Override
-    public JQMCollapsibleSet setInset(boolean inset) {
+    public void setInset(boolean inset) {
         setAttribute("data-inset", String.valueOf(inset));
+    }
+
+    @Override
+    public JQMCollapsibleSet withInset(boolean inset) {
+        setInset(inset);
         return this;
     }
 
@@ -116,8 +130,16 @@ public class JQMCollapsibleSet extends JQMWidget implements HasIconPos, HasMini,
      * If set to true then renders a smaller version of the standard-sized element.
      */
     @Override
-    public JQMCollapsibleSet setMini(boolean mini) {
+    public void setMini(boolean mini) {
         setAttribute("data-mini", String.valueOf(mini));
+    }
+
+    /**
+     * If set to true then renders a smaller version of the standard-sized element.
+     */
+    @Override
+    public JQMCollapsibleSet withMini(boolean mini) {
+        setMini(mini);
         return this;
     }
 

@@ -339,12 +339,17 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     @Override
-    public JQMPage setFullScreen(boolean fs) {
+    public void setFullScreen(boolean fs) {
         if (fs) {
             setAttribute("data-fullscreen", "true");
         } else {
             removeAttribute("data-fullscreen");
         }
+    }
+
+    @Override
+    public JQMPage withFullScreen(boolean fs) {
+        setFullScreen(fs);
         return this;
     }
 

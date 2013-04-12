@@ -94,18 +94,28 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
      * the default GWT id creation methods in Document.get().createUniqueId()
      */
     protected void setId() {
-        setId(Document.get().createUniqueId());
+        withId(Document.get().createUniqueId());
     }
 
     @Override
-    public final JQMWidget setId(String id) {
+    public final void setId(String id) {
         getElement().setId(id);
+    }
+
+    @Override
+    public final JQMWidget withId(String id) {
+        setId(id);
         return this;
     }
 
     @Override
-    public JQMWidget setTheme(String themeName) {
+    public void setTheme(String themeName) {
         setAttribute("data-theme", themeName);
+    }
+
+    @Override
+    public JQMWidget withTheme(String themeName) {
+        setTheme(themeName);
         return this;
     }
 

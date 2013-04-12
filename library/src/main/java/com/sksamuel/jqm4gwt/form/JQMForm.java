@@ -161,7 +161,7 @@ public class JQMForm extends FlowPanel {
 
     // final ValidationTuple tuple = new ValidationTuple();
     // tuple.label = new InlineLabel();
-    // tuple.label.getElement().setId(Document.get().createUniqueId());
+    // tuple.label.getElement().withId(Document.get().createUniqueId());
     // tuple.label.setStyleName(JQM4GWT_ERROR_STYLENAME);
     // tuple.validator = validator;
     //

@@ -34,7 +34,7 @@ public class PopupExamplePage extends JQMPage {
 			popup.add(new Label("I am positioned over the origin."));
 			JQMButton button2 = new JQMButton("Position to origin", popup);
 
-			add(new JQMButtonGroup(button1, button2).setHorizontal());
+			add(new JQMButtonGroup(button1, button2).withHorizontal());
 			add(popup);
 
 		}
@@ -43,13 +43,13 @@ public class PopupExamplePage extends JQMPage {
 
 			popup = new JQMPopup(new Label("No transition")).setPadding(true);
 			add(popup);
-			add(new JQMButton("No transition", popup).setInline(true));
+			add(new JQMButton("No transition", popup).withInline(true));
 
 			for (Transition t : Transition.values()) {
 
 				popup = new JQMPopup(new Label("I am a " + t.getJQMValue() + " transition")).setPadding(true);
-				add(popup.setTransition(t));
-				add(new JQMButton(t.getJQMValue(), popup).setInline(true));
+				add(popup.withTransition(t));
+				add(new JQMButton(t.getJQMValue(), popup).withInline(true));
 
 			}
 		}

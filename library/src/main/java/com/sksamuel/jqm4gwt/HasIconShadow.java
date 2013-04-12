@@ -8,6 +8,8 @@ public interface HasIconShadow<T> {
 
 	boolean isIconShadow();
 
-	T setIconShadow(boolean shadow);
+    void setIconShadow(boolean shadow);
+
+	T withIconShadow(boolean shadow);
 
 }

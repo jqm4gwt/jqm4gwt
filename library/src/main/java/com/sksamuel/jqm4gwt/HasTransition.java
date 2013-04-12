@@ -13,8 +13,13 @@ public interface HasTransition<T> {
 	 */
 	Transition getTransition();
 
+    /**
+   	 * Sets the {@link Transition} replacing any existing value.
+   	 */
+   	void setTransition(Transition transition);
+
 	/**
 	 * Sets the {@link Transition} replacing any existing value.
 	 */
-	T setTransition(Transition transition);
+	T withTransition(Transition transition);
 }

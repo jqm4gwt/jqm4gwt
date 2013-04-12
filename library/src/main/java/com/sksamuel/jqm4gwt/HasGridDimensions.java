@@ -20,7 +20,11 @@ public interface HasGridDimensions<T> {
      */
     int getRows();
 
-    T setColumns(int columns);
+    void setColumns(int columns);
 
-    T setRows(int rows);
+    T withColumns(int columns);
+
+    void setRows(int rows);
+
+    T withRows(int rows);
 }

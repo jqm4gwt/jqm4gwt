@@ -10,5 +10,7 @@ public interface HasMini<T> {
 
 	boolean isMini();
 
-	T setMini(boolean mini);
+    void setMini(boolean mini);
+
+    T withMini(boolean mini);
 }

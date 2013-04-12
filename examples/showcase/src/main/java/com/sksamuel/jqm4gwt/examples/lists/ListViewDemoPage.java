@@ -37,7 +37,7 @@ public class ListViewDemoPage extends JQMPage {
 				"The first list demo shows how we can dynamically change the elements at runtime using event handlers"));
 
 		final JQMList reversingList = new JQMList();
-		reversingList.setInset(true);
+		reversingList.withInset(true);
 
 		reversingList.addDivider("Countries");
 		reversingList.addItems(items);
@@ -63,7 +63,7 @@ public class ListViewDemoPage extends JQMPage {
 
 		final JQMList formattedList = new JQMList();
 		formattedList.addDivider("Favourite Albums");
-		formattedList.setInset(true);
+		formattedList.withInset(true);
 		add(formattedList);
 
 		JQMListItem item = formattedList.addItem("Coldplay");

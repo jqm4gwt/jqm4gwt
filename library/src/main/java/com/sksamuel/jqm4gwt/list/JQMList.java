@@ -398,11 +398,16 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
     }
 
     @Override
-    public JQMList setFilterable(boolean filterable) {
+    public void setFilterable(boolean filterable) {
         if (filterable)
             setAttribute("data-filter", "true");
         else
             removeAttribute("data-filter");
+    }
+
+    @Override
+    public JQMList withFilterable(boolean filterable) {
+        setFilterable(filterable);
         return this;
     }
 
@@ -426,11 +431,16 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
     }
 
     @Override
-    public JQMList setInset(boolean inset) {
+    public void setInset(boolean inset) {
         if (inset)
             getElement().setAttribute("data-inset", "true");
         else
             getElement().removeAttribute("data-inset");
+    }
+
+    @Override
+    public JQMList withInset(boolean inset) {
+        setInset(inset);
         return this;
     }
 

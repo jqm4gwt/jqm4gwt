@@ -111,7 +111,7 @@ public class EventsDemoPage extends JQMPage {
 		add(new Paragraph("Selects fire the usual change event. Try changing the selection below"));
 
 		final JQMSelect select = new JQMSelect("A select box with onChange event");
-		select.setNative(false);
+		select.withNative(false);
 		for (Transition t : Transition.values()) {
 			select.addOption(t.name());
 		}

@@ -71,7 +71,7 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
      */
     public JQMButton(String text, final JQMContainer c, final Transition t) {
         this(text, "#" + c.getId(), t);
-        setRel(c.getRelType());
+        withRel(c.getRelType());
     }
 
     /**
@@ -106,7 +106,7 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
         if (url != null)
             setAttribute("href", url);
         if (t != null)
-            setTransition(t);
+            withTransition(t);
     }
 
     /**
@@ -213,8 +213,13 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
     }
 
     @Override
-    public JQMButton setCorners(boolean corners) {
+    public void setCorners(boolean corners) {
         setAttribute("data-corners", String.valueOf(corners));
+    }
+
+    @Override
+    public JQMButton withCorners(boolean corners) {
+        setCorners(corners);
         return this;
     }
 
@@ -231,10 +236,10 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
     }
 
     /**
-     * Short cut for setRel("external");
+     * Short cut for withRel("external");
      */
     public JQMButton setExternal() {
-        setRel("external");
+        withRel("external");
         return this;
     }
 
@@ -264,11 +269,20 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
      * set the position to IconPos.NOTEXT
      */
     @Override
-    public JQMButton setIconPos(IconPos pos) {
+    public void setIconPos(IconPos pos) {
         if (pos == null)
             getElement().removeAttribute("data-iconpos");
         else
             getElement().setAttribute("data-iconpos", pos.getJqmValue());
+    }
+
+    /**
+     * Sets the position of the icon. If you desire an icon only button then
+     * set the position to IconPos.NOTEXT
+     */
+    @Override
+    public JQMButton withIconPos(IconPos pos) {
+        setIconPos(pos);
         return this;
     }
 
@@ -276,26 +290,49 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
      * Applies the drop shadow style to the select button if set to true.
      */
     @Override
-    public JQMButton setIconShadow(boolean shadow) {
+    public void setIconShadow(boolean shadow) {
         setAttribute("data-iconshadow", String.valueOf(shadow));
+    }
+
+    /**
+     * Applies the drop shadow style to the select button if set to true.
+     */
+    @Override
+    public JQMButton withIconShadow(boolean shadow) {
+        setIconShadow(shadow);
         return this;
+    }
+
+
+    /**
+     * Sets this button to be inline.
+     * <p/>
+     * NOTE: If this button is inside a {@link JQMButtonGroup} then you must
+     * call withInline(boolean) on the button group itself and not each button
+     * individually.
+     *
+     * @param inline true to change to line or false to switch to full width
+     */
+    @Override
+    public void setInline(boolean inline) {
+        if (inline)
+            setAttribute("data-inline", "true");
+        else
+            removeAttribute("data-inline");
     }
 
     /**
      * Sets this button to be inline.
      * <p/>
      * NOTE: If this button is inside a {@link JQMButtonGroup} then you must
-     * call setInline(boolean) on the button group itself and not each button
+     * call withInline(boolean) on the button group itself and not each button
      * individually.
      *
      * @param inline true to change to line or false to switch to full width
      */
     @Override
-    public JQMButton setInline(boolean inline) {
-        if (inline)
-            setAttribute("data-inline", "true");
-        else
-            removeAttribute("data-inline");
+    public JQMButton withInline(boolean inline) {
+        setInline(inline);
         return this;
     }
 
@@ -303,17 +340,30 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
      * If set to true then renders a smaller version of the standard-sized element.
      */
     @Override
-    public JQMButton setMini(boolean mini) {
+    public void setMini(boolean mini) {
         setAttribute("data-mini", String.valueOf(mini));
+    }
+
+    /**
+     * If set to true then renders a smaller version of the standard-sized element.
+     */
+    @Override
+    public JQMButton withMini(boolean mini) {
+        setMini(mini);
         return this;
     }
 
     @Override
-    public JQMButton setRel(String rel) {
+    public void setRel(String rel) {
         if (rel == null)
             getElement().removeAttribute("data-rel");
         else
             getElement().setAttribute("data-rel", rel);
+    }
+
+    @Override
+    public JQMButton withRel(String rel) {
+        setRel(rel);
         return this;
     }
 
@@ -333,11 +383,19 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
      * Sets the transition to be used by this button when loading the URL.
      */
     @Override
-    public JQMButton setTransition(Transition transition) {
+    public void setTransition(Transition transition) {
         if (transition != null)
             setAttribute("data-transition", transition.getJQMValue());
         else
             removeAttribute("data-transition");
+    }
+
+    /**
+     * Sets the transition to be used by this button when loading the URL.
+     */
+    @Override
+    public JQMButton withTransition(Transition transition) {
+        setTransition(transition);
         return this;
     }
 

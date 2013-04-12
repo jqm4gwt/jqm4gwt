@@ -189,11 +189,18 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
      * If set to true then renders a smaller version of the standard-sized element.
      */
     @Override
-    public JQMSlider setMini(boolean mini) {
+    public void setMini(boolean mini) {
         setAttribute("data-mini", String.valueOf(mini));
-        return this;
     }
 
+    /**
+     * If set to true then renders a smaller version of the standard-sized element.
+     */
+    @Override
+    public JQMSlider withMini(boolean mini) {
+        setMini(mini);
+        return this;
+    }
 
     /**
      * Sets the theme swatch for the slider

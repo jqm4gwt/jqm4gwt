@@ -67,8 +67,8 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
      */
     public JQMTextArea(String text, int cols, int rows) {
         this(text);
-        setColumns(cols);
-        setRows(rows);
+        withColumns(cols);
+        withRows(rows);
     }
 
     @Override
@@ -113,8 +113,13 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
     }
 
     @Override
-    public JQMTextArea setColumns(int cols) {
+    public void setColumns(int cols) {
         input.getElement().setAttribute("cols", String.valueOf(cols));
+    }
+
+    @Override
+    public JQMTextArea withColumns(int cols) {
+        setColumns(cols);
         return this;
     }
 
@@ -135,8 +140,13 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
     }
 
     @Override
-    public JQMTextArea setRows(int rows) {
+    public void setRows(int rows) {
         input.getElement().setAttribute("rows", String.valueOf(rows));
+    }
+
+    @Override
+    public JQMTextArea withRows(int rows) {
+        setRows(rows);
         return this;
     }
 
@@ -144,8 +154,16 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
      * If set to true then renders a smaller version of the standard-sized element.
      */
     @Override
-    public JQMTextArea setMini(boolean mini) {
+    public void setMini(boolean mini) {
         setAttribute("data-mini", String.valueOf(mini));
+    }
+
+    /**
+     * If set to true then renders a smaller version of the standard-sized element.
+     */
+    @Override
+    public JQMTextArea withMini(boolean mini) {
+        setMini(mini);
         return this;
     }
 

@@ -211,12 +211,17 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 	}
 	
     @Override
-    public JQMWidget setTheme(String themeName) {
-    	super.setTheme(themeName);
+    public void setTheme(String themeName) {
+    	super.withTheme(themeName);
     	for(TextBox radio : radios) applyTheme(radio, themeName);
-        return this;
     }
 	
+    @Override
+    public JQMWidget withTheme(String themeName) {
+        setTheme(themeName);
+        return this;
+    }
+
 	@Override
 	public HandlerRegistration addSelectionHandler(SelectionHandler<String> handler) {
 		return null;
@@ -345,10 +350,15 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 	}
 
 	@Override
-	public JQMRadioset setHorizontal() {
-		fieldset.setHorizontal();
-		return this;
+	public void setHorizontal() {
+		fieldset.withHorizontal();
 	}
+
+    @Override
+   	public JQMRadioset withHorizontal() {
+        setHorizontal();
+        return this;
+   	}
 
 	/**
 	 * Sets the selected value. This is an alias for setValue(String)
@@ -388,10 +398,15 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 	}
 
 	@Override
-	public JQMRadioset setVertical() {
-		fieldset.setVertical();
-		return this;
+	public void setVertical() {
+		fieldset.withVertical();
 	}
+
+    @Override
+   	public JQMRadioset withVertical() {
+        setVertical();
+      	return this;
+   	}
 
 	/**
 	 * Returns the number of radio options set on this radioset
