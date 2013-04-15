@@ -8,9 +8,12 @@
         <jqm:form.JQMForm ui:field="form">
             <jqm:button.JQMButton text="Standalone Button"/>
             <jqm:button.JQMButtonGroup>
-                <jqm:button.JQMButton text="Button#1 of group"/>
-                <jqm:button.JQMButton text="Button#2 of group"/>
-                <jqm:button.JQMButton text="Button#3 of group"/>
+                <jqm:button.JQMButton theme="a" text="Button theme 'a' of group"/>
+                <jqm:button.JQMButton theme="b" text="Button theme 'b' of group"/>
+                <jqm:button.JQMButton theme="c" text="Button theme 'c' of group"/>
+                <jqm:button.JQMButton theme="d" text="Button theme 'd' of group"/>
+                <jqm:button.JQMButton theme="e" text="Button theme 'e' of group"/>
+                <jqm:button.JQMButton theme="f" text="Button theme 'f' of group"/>
             </jqm:button.JQMButtonGroup>
             <jqm:form.elements.JQMCheckset>
                 <jqm:check id="blah" text="Checkbox#1"/>
