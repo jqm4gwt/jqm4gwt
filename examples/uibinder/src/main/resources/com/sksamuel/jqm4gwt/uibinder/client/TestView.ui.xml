@@ -6,7 +6,7 @@
     <jqm:JQMPage>
         <jqm:toolbar.JQMHeader text="Header"/>
         <jqm:form.JQMForm ui:field="form">
-            <jqm:button.JQMButton text="Standalone Button"  transition="NONE" iconPos="RIGHT"  withIcon="RIGHT"/>
+            <jqm:button.JQMButton text="Standalone Button"  transition="NONE" iconPos="RIGHT"  icon="RIGHT"/>
             <jqm:button.JQMButtonGroup>
                 <jqm:button.JQMButton theme="a" text="Button theme 'a' of group"/>
                 <jqm:button.JQMButton theme="b" text="Button theme 'b' of group"/>
