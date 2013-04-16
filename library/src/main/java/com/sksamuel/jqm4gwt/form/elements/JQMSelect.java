@@ -340,20 +340,33 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
      * Sets the icon used by this button. See {@link DataIcon}.
      */
     @Override
-    public JQMSelect setIcon(DataIcon icon) {
+    public void setIcon(DataIcon icon) {
         if (icon == null)
             removeIcon();
         else
-            getElement().setAttribute("data-icon", icon.getJqmValue());
-        return this;
+            setIcon(icon.getJqmValue());
     }
 
     @Override
-    public JQMSelect setIcon(String src) {
+    public void setIcon(String src) {
         if (src == null)
             removeIcon();
         else
             getElement().setAttribute("data-icon", src);
+    }
+
+    /**
+     * Sets the icon used by this button. See {@link DataIcon}.
+     */
+    @Override
+    public JQMSelect withIcon(DataIcon icon) {
+        setIcon(icon);
+        return this;
+    }
+
+    @Override
+    public JQMSelect withIcon(String src) {
+        setIcon(src);
         return this;
     }
 

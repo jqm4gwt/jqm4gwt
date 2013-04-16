@@ -6,14 +6,13 @@
     <jqm:JQMPage>
         <jqm:toolbar.JQMHeader text="Header"/>
         <jqm:form.JQMForm ui:field="form">
-            <jqm:button.JQMButton text="Standalone Button"/>
+            <jqm:button.JQMButton text="Standalone Button"  transition="NONE" iconPos="RIGHT"  withIcon="RIGHT"/>
             <jqm:button.JQMButtonGroup>
                 <jqm:button.JQMButton theme="a" text="Button theme 'a' of group"/>
                 <jqm:button.JQMButton theme="b" text="Button theme 'b' of group"/>
                 <jqm:button.JQMButton theme="c" text="Button theme 'c' of group"/>
                 <jqm:button.JQMButton theme="d" text="Button theme 'd' of group"/>
                 <jqm:button.JQMButton theme="e" text="Button theme 'e' of group"/>
-                <jqm:button.JQMButton theme="f" text="Button theme 'f' of group"/>
             </jqm:button.JQMButtonGroup>
             <jqm:form.elements.JQMCheckset>
                 <jqm:check id="blah" text="Checkbox#1"/>
@@ -146,6 +145,9 @@
         <jqm:plugins.grid960.Grid960Panel>
             <jqm:plugins.grid960.GridColumn span="3"/>
         </jqm:plugins.grid960.Grid960Panel>
+        <jqm:plugins.iscroll.IScrollPanel>
+            <jqm:html.Span text="spanText in IScrollPanel"/>
+        </jqm:plugins.iscroll.IScrollPanel>
         <jqm:JQMPopup/>
         <jqm:LoadingIndicator/>
         <jqm:toolbar.JQMFooter text="Footer"/>

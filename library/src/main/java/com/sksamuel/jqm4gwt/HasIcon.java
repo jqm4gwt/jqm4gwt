@@ -12,13 +12,29 @@ public interface HasIcon<T> extends HasIconPos<T> {
 	 */
 	T removeIcon();
 
+    /**
+   	 * Sets the data icon to use
+   	 *
+   	 * @param icon
+   	 *              of the standard built in icon types
+   	 */
+   	void setIcon(DataIcon icon);
+
+   	/**
+   	 * Sets the icon to be a custom URL.
+   	 *
+   	 * @param src
+   	 *              the src of the custom icon
+   	 */
+   	void setIcon(String src);
+
 	/**
 	 * Sets the data icon to use
 	 * 
 	 * @param icon
 	 *              of the standard built in icon types
 	 */
-	T setIcon(DataIcon icon);
+	T withIcon(DataIcon icon);
 
 	/**
 	 * Sets the icon to be a custom URL.
@@ -26,6 +42,6 @@ public interface HasIcon<T> extends HasIconPos<T> {
 	 * @param src
 	 *              the src of the custom icon
 	 */
-	T setIcon(String src);
+	T withIcon(String src);
 
 }

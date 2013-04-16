@@ -66,7 +66,7 @@ public class JQMHeader extends JQMToolbar {
 	protected JQMButton createButton(String text, String url, DataIcon icon) {
 		JQMButton button = new JQMButton(text, url);
 		if (icon != null)
-			button.setIcon(icon);
+			button.withIcon(icon);
 		return button;
 	}
 
@@ -101,7 +101,7 @@ public class JQMHeader extends JQMToolbar {
 	 */
 	public JQMButton setBackButton(String text) {
 		JQMButton button = new JQMButton(text);
-		button.setIcon(DataIcon.LEFT);
+		button.withIcon(DataIcon.LEFT);
 		button.setBack(true);
 		setBackButton(button);
 		return button;

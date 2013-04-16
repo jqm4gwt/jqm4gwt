@@ -9,7 +9,7 @@ public class GridColumn extends JQMPanel {
     private static final String GRID_STYLE_PREFIX = "grid_";
 
     /**
-     * Nullary constructor used by UiBinder - must be followed setSpan for proper styling.
+     * Nullary constructor used by UiBinder - must be followed by setSpan() for proper styling.
      */
     public GridColumn() {
         super(Document.get().createDivElement(), "jqm4gwt-gridcolumn", null);

@@ -29,12 +29,12 @@ public class EventsDemoPage extends JQMPage {
 		final JQMHeader header = new JQMHeader("Events demo");
 		JQMButton right = new JQMButton("View source",
 				"https://github.com/sksamuel/jqm4gwt-examples/blob/master/src/main/java/com/sksamuel/jqm4gwt/examples/events/EventsDemoPage.java");
-		right.setIcon(DataIcon.GEAR);
+		right.withIcon(DataIcon.GEAR);
 		right.setExternal();
 		header.setRightButton(right);
 
 		final JQMButton left = new JQMButton("ClickMe");
-		left.setIcon(DataIcon.STAR);
+		left.withIcon(DataIcon.STAR);
 		left.setExternal();
 		left.addClickHandler(new ClickHandler() {
 
@@ -126,7 +126,7 @@ public class EventsDemoPage extends JQMPage {
 
 		final JQMFooter footer = new JQMFooter();
 		button = new JQMButton("Footer Button 1");
-		button.setIcon(DataIcon.REFRESH);
+		button.withIcon(DataIcon.REFRESH);
 		button.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -136,7 +136,7 @@ public class EventsDemoPage extends JQMPage {
 		});
 		footer.add(button);
 		button = new JQMButton("Footer Button 2");
-		button.setIcon(DataIcon.GRID);
+		button.withIcon(DataIcon.GRID);
 		button.addClickHandler(new ClickHandler() {
 
 			@Override
