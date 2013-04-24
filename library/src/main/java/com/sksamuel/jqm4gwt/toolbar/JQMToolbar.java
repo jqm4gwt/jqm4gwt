@@ -1,5 +1,6 @@
 package com.sksamuel.jqm4gwt.toolbar;
 
+import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
@@ -41,6 +42,7 @@ public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedP
 	/**
 	 * Adds the given widget to the toolbar
 	 */
+    @UiChild(tagname="widget")
 	public void add(Widget w) {
 		flow.add(w);
 	}
