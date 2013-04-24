@@ -104,7 +104,7 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
     public JQMButton(String text, String url, final Transition t) {
         this(text);
         if (url != null)
-            setAttribute("href", url);
+            setHref(url);
         if (t != null)
             withTransition(t);
     }

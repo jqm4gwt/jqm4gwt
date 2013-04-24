@@ -17,8 +17,10 @@ import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
 public class DynamicCollapsibleDemoPage extends JQMPage {
 
 	private JQMCollapsibleSet	set;
+    private static int count = 0;
 
 	public DynamicCollapsibleDemoPage() {
+        withContainerId();
 		add(new JQMHeader("Dynamic Collapsible"));
 		add(new Paragraph(
 				"This page shows how a JQM Collapsible can be combined with an event handler to dynamically add new collapsibles. "
@@ -42,10 +44,12 @@ public class DynamicCollapsibleDemoPage extends JQMPage {
 
 	protected void addCollapsible() {
 		JQMCollapsible c = new JQMCollapsible("Expand me!");
+        c.setId(""+count++);
 		c.add(new Paragraph("some content in the collapsible"));
 
 		JQMCollapsible nested = new JQMCollapsible("A nested collapsible");
 		nested.add(new Paragraph("some content in the nested collapsible"));
+        c.setId(""+count++);
 		c.add(nested);
 
 		set.add(c);

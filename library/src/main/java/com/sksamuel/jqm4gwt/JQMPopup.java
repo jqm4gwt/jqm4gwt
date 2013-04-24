@@ -27,6 +27,15 @@ public class JQMPopup extends JQMContainer {
         add(widgets);
     }
 
+    /**
+     * Automatically assigns an id in the form popup-xx where XX is an incrementing number.
+     */
+    @Override
+    public JQMContainer withContainerId() {
+        super.setContainerId("popup-" + (counter++));
+        return this;
+    }
+
     private native void _close(String id) /*-{
                                 $('#' + id).popup("close")
 								}-*/;

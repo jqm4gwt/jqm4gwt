@@ -1,7 +1,8 @@
 package com.sksamuel.jqm4gwt;
 
 import com.google.gwt.junit.client.GWTTestCase;
-import com.sksamuel.jqm4gwt.uibinder.client.TestView;
+import com.sksamuel.jqm4gwt.uibinder.client.TestView1;
+import com.sksamuel.jqm4gwt.uibinder.client.TestView2;
 
 /**
  * GWT JUnit <b>integration</b> tests must extend GWTTestCase.
@@ -31,8 +32,9 @@ public class GWTTestUiBinder extends GWTTestCase {
      * This test simply brings up a UiBinder generated view.
      */
     public void onModuleLoad() {
-        TestView view = new TestView();
-        view.show();
+        TestView1 view1 = new TestView1();
+        TestView2 view2 = new TestView2();
+        view1.show();
     }
 
     public void testUiBinderView() {

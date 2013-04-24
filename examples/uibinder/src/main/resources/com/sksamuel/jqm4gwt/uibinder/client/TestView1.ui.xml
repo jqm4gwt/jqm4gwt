@@ -3,10 +3,10 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:jqm='urn:import:com.sksamuel.jqm4gwt'>
 
-    <jqm:JQMPage>
-        <jqm:toolbar.JQMHeader text="Header"/>
+    <jqm:JQMPage containerId="testPage1">
+        <jqm:toolbar.JQMHeader text="Test Page 1 Header"/>
         <jqm:form.JQMForm ui:field="form">
-            <jqm:button.JQMButton text="Standalone Button"  transition="NONE" iconPos="RIGHT"  icon="RIGHT"/>
+            <jqm:button.JQMButton text="Go To Test Page 2" href="#testPage2" transition="NONE" iconPos="RIGHT" icon="RIGHT"/>
             <jqm:button.JQMButtonGroup>
                 <jqm:button.JQMButton theme="a" text="Button theme 'a' of group"/>
                 <jqm:button.JQMButton theme="b" text="Button theme 'b' of group"/>
@@ -145,12 +145,36 @@
         <jqm:plugins.grid960.Grid960Panel>
             <jqm:plugins.grid960.GridColumn span="3"/>
         </jqm:plugins.grid960.Grid960Panel>
+        <!--
+        <jqm:plugins.datebox.DateBox mode="CALBOX" afterToday="true" notToday="true" minDays="5"/>
         <jqm:plugins.iscroll.IScrollPanel>
             <jqm:html.Span text="spanText in IScrollPanel"/>
         </jqm:plugins.iscroll.IScrollPanel>
+        -->
         <jqm:JQMPopup/>
         <jqm:LoadingIndicator/>
-        <jqm:toolbar.JQMFooter text="Footer"/>
+        <jqm:toolbar.JQMFooter>
+            <jqm:widget>
+                <jqm:toolbar.JQMNavBar>
+                    <jqm:button>
+                        <jqm:button.JQMButton icon="LEFT" href="login" transition="NONE" text="Log Out"
+                                              ui:field="login"/>
+                    </jqm:button>
+                    <jqm:button>
+                        <jqm:button.JQMButton icon="SEARCH" href="searchRooms" transition="NONE" text="Search"
+                                              ui:field="searchButton"/>
+                    </jqm:button>
+                    <jqm:button>
+                        <jqm:button.JQMButton icon="SEARCH" href="myReservations" transition="NONE" text="Reservations"
+                                              ui:field="reservationsButton"/>
+                    </jqm:button>
+                    <jqm:button>
+                        <jqm:button.JQMButton icon="SEARCH" href="settings" transition="NONE" text="Settings"
+                                              ui:field="settingsButton"/>
+                    </jqm:button>
+                </jqm:toolbar.JQMNavBar>
+            </jqm:widget>
+        </jqm:toolbar.JQMFooter>
     </jqm:JQMPage>
 
 </ui:UiBinder>

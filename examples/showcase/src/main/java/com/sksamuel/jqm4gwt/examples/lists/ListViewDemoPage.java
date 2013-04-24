@@ -29,6 +29,7 @@ public class ListViewDemoPage extends JQMPage {
 	protected List<String>		items		= getCountries();
 
 	public ListViewDemoPage() {
+        withContainerId();
 		JQMHeader header = new JQMHeader("List View Demo");
 		header.setRightButton("View source", SOURCE_URL, DataIcon.GEAR);
 		add(header);
@@ -127,8 +128,10 @@ public class ListViewDemoPage extends JQMPage {
 	protected void updateTimes(JQMList list) {
 		String now = DateTimeFormat.getFormat(PredefinedFormat.HOUR_MINUTE_SECOND).format(new Date());
 		for (JQMListItem item : list.getItems()) {
-			item.setAside(now);
-			item.setCount(item.getCount() == null ? 1 : item.getCount() + 1);
+            if (item != null) {
+                item.setAside(now);
+                item.setCount(item.getCount() == null ? 1 : item.getCount() + 1);
+            }
 		}
 	}
 }

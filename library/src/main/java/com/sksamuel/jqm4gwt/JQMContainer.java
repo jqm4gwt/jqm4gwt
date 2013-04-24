@@ -18,23 +18,59 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
                                 $wnd.$('body').trigger('create');
 								}-*/;
 
+    static int counter = 1;
+
     /**
      * Set to true once the container has been enhanced by jQuery Mobile.
      */
     private boolean enhanced;
 
-    protected final String id;
+    protected String id;
+
+    protected JQMContainer() {
+        setElement(Document.get().createDivElement());
+    }
 
     protected JQMContainer(String id, String role) {
-        if (id == null)
-            throw new RuntimeException("id for page cannot be null");
-        if (id.contains(" "))
-            throw new RuntimeException("id for page cannot contain space");
-        this.id = id;
-        setElement(Document.get().createDivElement());
-        setAttribute("data-url", id);
+        this();
+        setContainerId(id);
+        setRole(role);
+    }
+
+    protected void setRole(String role) {
         setAttribute("data-role", role);
         setStyleName("jqm4gwt-" + role);
+    }
+
+    /**
+     * Assigns a default containerId of 'container' followed by the instance number.
+     * @return the instance being operated on as part of a Fluent API
+     */
+    public JQMContainer withContainerId() {
+        setContainerId("container" + (counter++));
+        return this;
+    }
+
+    /**
+     * Sets the containerId so it can be referenced by name.
+     * @param containerId
+     */
+    public void setContainerId(String containerId) {
+        if (containerId == null)
+            throw new IllegalArgumentException("id for JQMContainer cannot be null");
+        if (containerId.contains(" "))
+            throw new IllegalArgumentException("id for JQMContainer cannot contain space");
+        this.id = containerId;
+        setAttribute("data-url", containerId);
+    }
+
+    /**
+     * Sets the containerId so it can be referenced by name.
+     * @return the instance being operated on as part of a Fluent API
+     */
+    public JQMContainer withContainerId(String containerId) {
+        setContainerId(containerId);
+        return this;
     }
 
     /**

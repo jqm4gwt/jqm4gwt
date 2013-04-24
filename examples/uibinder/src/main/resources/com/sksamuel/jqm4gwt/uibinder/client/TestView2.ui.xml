@@ -1,0 +1,178 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:jqm='urn:import:com.sksamuel.jqm4gwt'>
+
+    <jqm:JQMPage containerId="testPage2">
+        <jqm:toolbar.JQMHeader text="Test Page 2 Header"/>
+        <jqm:form.JQMForm ui:field="form">
+            <jqm:button.JQMButton text="Go To Test Page 1" href="#testPage1" transition="NONE" iconPos="RIGHT" icon="RIGHT"/>
+            <jqm:button.JQMButtonGroup>
+                <jqm:button.JQMButton theme="a" text="Button theme 'a' of group"/>
+                <jqm:button.JQMButton theme="b" text="Button theme 'b' of group"/>
+                <jqm:button.JQMButton theme="c" text="Button theme 'c' of group"/>
+                <jqm:button.JQMButton theme="d" text="Button theme 'd' of group"/>
+                <jqm:button.JQMButton theme="e" text="Button theme 'e' of group"/>
+            </jqm:button.JQMButtonGroup>
+            <jqm:form.elements.JQMCheckset>
+                <jqm:check id="blah" text="Checkbox#1"/>
+            </jqm:form.elements.JQMCheckset>
+            <jqm:form.elements.JQMEmail text="email"/>
+            <jqm:form.elements.JQMFlip label1="Flip1" label2="Flip2" value1="flip1Value" value2="flip2Value"
+                                       text="flipText"/>
+            <jqm:form.elements.JQMMonth text="monthText"/>
+            <jqm:form.elements.JQMNumber text="numberText"/>
+            <jqm:form.elements.JQMPassword text="passwordText"/>
+            <jqm:form.elements.JQMRadioset text="radiosetText">
+                <jqm:radio text="radio1Text" value="radio1value"/>
+                <!-- TODO:? <jqm:form.elements.JQMRadio text="radioTextMini" mini="true"/>-->
+            </jqm:form.elements.JQMRadioset>
+            <jqm:form.elements.JQMSearch text="searchText"/>
+            <jqm:form.elements.JQMSelect text="selectText">
+                <jqm:option>
+                    <jqm:form.elements.JQMSelect.Option text="option1Text" value="option1value"/>
+                </jqm:option>
+                <jqm:option>
+                    <jqm:form.elements.JQMSelect.Option text="option2Text" value="option2value"/>
+                </jqm:option>
+                <jqm:option>
+                    <jqm:form.elements.JQMSelect.Option text="option3Text" value="option3value"/>
+                </jqm:option>
+                <jqm:option>
+                    <jqm:form.elements.JQMSelect.Option text="option4Text" value="option4value"/>
+                </jqm:option>
+            </jqm:form.elements.JQMSelect>
+            <jqm:form.elements.JQMSlider min="5" max="8" labelText="sliderLabelText"/>
+            <jqm:form.elements.JQMTelephone text="telephoneText"/>
+            <jqm:form.elements.JQMText text="textText"/>
+            <!-- TODO fix col/rows setter <jqm:form.elements.JQMTextArea text="textAreaText" columns="40" rows="20"/>-->
+            <jqm:form.elements.JQMTextArea text="textAreaText"/>
+            <jqm:form.elements.JQMUrl text="urlText"/>
+            <jqm:form.JQMFieldContainer/>
+            <jqm:toolbar.JQMNavBar>
+                <jqm:button>
+                    <jqm:button.JQMButton text="Button 1"/>
+                </jqm:button>
+                <jqm:button>
+                    <jqm:button.JQMButton text="Button 2"/>
+                </jqm:button>
+                <jqm:button>
+                    <jqm:button.JQMButton text="Button 3"/>
+                </jqm:button>
+                <jqm:button>
+                    <jqm:button.JQMButton text="Button 4"/>
+                </jqm:button>
+                <jqm:button>
+                    <jqm:button.JQMButton text="Button 5"/>
+                </jqm:button>
+            </jqm:toolbar.JQMNavBar>
+            <jqm:form.JQMSubmit text="submitButtonText"/>
+        </jqm:form.JQMForm>
+        <jqm:html.FormLabel for="that" text="formLabelText"/>
+        <jqm:html.Heading.H1 text="This should be Heading 1"/>
+        <jqm:html.Heading.H2 text="This should be Heading 2"/>
+        <jqm:html.Heading.H3 text="This should be Heading 3"/>
+        <jqm:html.Heading.H4 text="This should be Heading 4"/>
+        <jqm:html.Heading.H5 text="This should be Heading 5"/>
+        <jqm:html.Heading.H6 text="This should be Heading 6"/>
+        <jqm:html.ImageLink src="data://29a6c7d09e8f829" href="http://google.com"/>
+        <jqm:html.Legend text="legendText"/>
+        <jqm:html.ListWidget.Ordered>
+            <jqm:html.Span text="span1Text"/>
+            <jqm:html.Span text="span2Text"/>
+            <jqm:html.Span text="spanText"/>
+        </jqm:html.ListWidget.Ordered>
+        <jqm:html.ListWidget.Unordered>
+            <jqm:html.Span text="someSpanText"/>
+            <jqm:html.Span text="moreSpanText"/>
+            <jqm:html.Span text="evenMoreSpanText"/>
+        </jqm:html.ListWidget.Unordered>
+        <jqm:html.Paragraph text="paragraphText"/>
+        <jqm:html.Span text="spanText"/>
+        <!-- TODO: fix collapsed setter <jqm:layout.JQMCollapsible text="collapsibleText" collapsed="false">-->
+        <jqm:layout.JQMCollapsible text="collapsibleText">
+            <jqm:widget>
+                <jqm:html.Span text="spanText in Collapsible"/>
+            </jqm:widget>
+        </jqm:layout.JQMCollapsible>
+        <jqm:layout.JQMCollapsibleSet>
+            <jqm:collapsible>
+                <jqm:layout.JQMCollapsible text="collapsible1Text">
+                    <jqm:widget>
+                        <jqm:html.Span text="spanText in Collapsible#1"/>
+                    </jqm:widget>
+                </jqm:layout.JQMCollapsible>
+            </jqm:collapsible>
+            <jqm:collapsible>
+                <jqm:layout.JQMCollapsible text="collapsible2Text">
+                    <jqm:widget>
+                        <jqm:html.Span text="spanText in Collapsible#2"/>
+                    </jqm:widget>
+                </jqm:layout.JQMCollapsible>
+            </jqm:collapsible>
+            <jqm:collapsible>
+                <jqm:layout.JQMCollapsible text="collapsible3Text">
+                    <jqm:widget>
+                        <jqm:html.Span text="spanText in Collapsible#3"/>
+                    </jqm:widget>
+                </jqm:layout.JQMCollapsible>
+            </jqm:collapsible>
+        </jqm:layout.JQMCollapsibleSet>
+        <jqm:layout.JQMTable>
+            <jqm:cell>
+                <jqm:html.Span text="spanText in Table Row#1 Col#1"/>
+            </jqm:cell>
+            <jqm:cell>
+                <jqm:html.Span text="spanText in Table Row#1 Col#2"/>
+            </jqm:cell>
+            <jqm:cell>
+                <jqm:html.Span text="spanText in Table Row#2 Col#1"/>
+            </jqm:cell>
+            <jqm:cell>
+                <jqm:html.Span text="spanText in Table Row#2 Col#2"/>
+            </jqm:cell>
+        </jqm:layout.JQMTable>
+        <jqm:list.JQMList.Ordered>
+            <jqm:item text="Ordered List Item #1 Text"/>
+            <jqm:divider text="Ordered List divider text"/>
+            <jqm:item text="Ordered List Item #2 Text"/>
+        </jqm:list.JQMList.Ordered>
+        <jqm:list.JQMList.Unordered>
+            <jqm:item text="Unordered List Item #1 Text"/>
+            <jqm:divider text="Unordered List divider text"/>
+            <jqm:item text="Unordered List Item #2 Text"/>
+        </jqm:list.JQMList.Unordered>
+        <jqm:plugins.datebox.DateBox mode="CALBOX" afterToday="true" notToday="true" minDays="5"/>
+        <jqm:plugins.grid960.Grid960Panel>
+            <jqm:plugins.grid960.GridColumn span="3"/>
+        </jqm:plugins.grid960.Grid960Panel>
+        <jqm:plugins.iscroll.IScrollPanel>
+            <jqm:html.Span text="spanText in IScrollPanel"/>
+        </jqm:plugins.iscroll.IScrollPanel>
+        <jqm:JQMPopup/>
+        <jqm:LoadingIndicator/>
+        <jqm:toolbar.JQMFooter>
+            <jqm:widget>
+                <jqm:toolbar.JQMNavBar>
+                    <jqm:button>
+                        <jqm:button.JQMButton icon="LEFT" href="login" transition="NONE" text="Log Out"
+                                              ui:field="login"/>
+                    </jqm:button>
+                    <jqm:button>
+                        <jqm:button.JQMButton icon="SEARCH" href="searchRooms" transition="NONE" text="Search"
+                                              ui:field="searchButton"/>
+                    </jqm:button>
+                    <jqm:button>
+                        <jqm:button.JQMButton icon="SEARCH" href="myReservations" transition="NONE" text="Reservations"
+                                              ui:field="reservationsButton"/>
+                    </jqm:button>
+                    <jqm:button>
+                        <jqm:button.JQMButton icon="SEARCH" href="settings" transition="NONE" text="Settings"
+                                              ui:field="settingsButton"/>
+                    </jqm:button>
+                </jqm:toolbar.JQMNavBar>
+            </jqm:widget>
+        </jqm:toolbar.JQMFooter>
+    </jqm:JQMPage>
+
+</ui:UiBinder>

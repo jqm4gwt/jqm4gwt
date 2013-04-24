@@ -30,7 +30,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     /**
      * The primary content div
      */
-    private final JQMContent content;
+    private JQMContent content;
 
     public boolean firstShow = false;
 
@@ -43,10 +43,13 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     private com.google.web.bindery.event.shared.HandlerRegistration footerHandlerRegistration;
 
     /**
-     * Create a new {@link JQMPage} with an automatically assigned page id.
+     * Create a new {@link JQMPage}. Using this constructor, the page will not be rendered until a containerID has been
+     * assigned.
      */
     public JQMPage() {
-        this("page" + (counter++));
+        setRole("page");
+        content = createContent();
+
     }
 
     /**
@@ -55,6 +58,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     public JQMPage(Collection<Widget> widgets) {
         this();
+        withContainerId();
         if (widgets != null)
             add(widgets);
     }
@@ -65,15 +69,36 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * @param id the id to use as this page's id
      */
     public JQMPage(String id) {
-        super(id, "page");
-        JQMContext.attachAndEnhance(this);
+        this();
+        this.setContainerId(id);
+    }
 
-        // create the primary content div and add this to the super class
-        // containing widget
-        content = createContent();
+    /**
+     * Assigns a default containerId of 'page' followed by the instance number. This can only be called once. All
+     * subsequent attempts on this instance will result in an IllegalStateException.
+     * @return the instance being operated on as part of a Fluent API
+     */
+    @Override
+    public JQMContainer withContainerId() {
+        setContainerId("page" + (counter++));
+        return this;
+    }
 
-        JQMContext.attachAndEnhance(this);
-        bindLifecycleEvents(this, getId());
+    /**
+     * Sets the containerId so it can be referenced by name. This can only be set once. All subsequent attempts on this
+     * instance will result in an IllegalStateException.
+     * @param containerId
+     */
+    @Override
+    public void setContainerId(String containerId) {
+        if (getId() == null) {
+            super.setContainerId(containerId);
+            JQMContext.attachAndEnhance(this);
+            bindLifecycleEvents(this, getId());
+
+        } else if (! containerId.equals(getId())) {
+            throw new IllegalStateException("Attempt to change JQMPage with containerId '" + getId() + "' to '" + containerId + "' failed - once set, it cannot be changed.");
+        }
     }
 
     /**
@@ -82,6 +107,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     public JQMPage(Widget... widgets) {
         this();
+        withContainerId();
         if (widgets != null)
             add(widgets);
     }
