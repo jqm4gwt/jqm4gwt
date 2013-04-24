@@ -142,13 +142,13 @@
             <jqm:divider text="Unordered List divider text"/>
             <jqm:item text="Unordered List Item #2 Text"/>
         </jqm:list.JQMList.Unordered>
-        <jqm:plugins.datebox.DateBox mode="CALBOX" afterToday="true" notToday="true" minDays="5"/>
         <jqm:plugins.grid960.Grid960Panel>
             <jqm:plugins.grid960.GridColumn span="3"/>
         </jqm:plugins.grid960.Grid960Panel>
-        <jqm:plugins.iscroll.IScrollPanel>
-            <jqm:html.Span text="spanText in IScrollPanel"/>
-        </jqm:plugins.iscroll.IScrollPanel>
+        <!--<jqm:plugins.datebox.DateBox mode="CALBOX" afterToday="true" notToday="true" minDays="5"/>-->
+        <!--<jqm:plugins.iscroll.IScrollPanel>-->
+            <!--<jqm:html.Span text="spanText in IScrollPanel"/>-->
+        <!--</jqm:plugins.iscroll.IScrollPanel>-->
         <jqm:JQMPopup/>
         <jqm:LoadingIndicator/>
         <jqm:toolbar.JQMFooter>
