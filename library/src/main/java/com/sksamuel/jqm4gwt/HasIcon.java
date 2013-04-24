@@ -24,35 +24,34 @@ public interface HasIcon<T> extends HasIconPos<T> {
 	T removeIcon();
 
     /**
-   	 * Sets the data icon to use
+   	 * Sets the data icon to use, overriding any previously built-in or URL-defined icons specified.
    	 *
-   	 * @param icon
-   	 *              of the standard built in icon types
+   	 * @param icon  of the standard built in icon types
    	 */
-   	void setIcon(DataIcon icon);
+   	void setBuiltInIcon(DataIcon icon);
 
    	/**
-   	 * Sets the icon to be a custom URL.
+   	 * Sets the icon to be a custom URL, overriding any previously built-in or URL-defined icons specified.
    	 *
    	 * @param src
    	 *              the src of the custom icon
    	 */
-   	void setIcon(String src);
+   	void setIconURL(String src);
 
 	/**
-	 * Sets the data icon to use
+	 * Sets the data icon to use, overriding any previously built-in or URL-defined icons specified.
 	 * 
 	 * @param icon
 	 *              of the standard built in icon types
 	 */
-	T withIcon(DataIcon icon);
+	T withBuiltInIcon(DataIcon icon);
 
 	/**
-	 * Sets the icon to be a custom URL.
+	 * Sets the icon to be a custom URL, overriding any previously built-in or URL-defined icons specified.
 	 * 
 	 * @param src
 	 *              the src of the custom icon
 	 */
-	T withIcon(String src);
+	T withIconURL(String src);
 
 }

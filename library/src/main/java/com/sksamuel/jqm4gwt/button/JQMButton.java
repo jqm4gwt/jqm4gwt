@@ -247,15 +247,15 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
      * Sets the icon used by this button. See {@link DataIcon}.
      */
     @Override
-    public void setIcon(DataIcon icon) {
+    public void setBuiltInIcon(DataIcon icon) {
         if (icon == null)
             removeIcon();
         else
-            setIcon(icon.getJqmValue());
+            setIconURL(icon.getJqmValue());
     }
 
     @Override
-    public void setIcon(String src) {
+    public void setIconURL(String src) {
         if (src == null)
             removeIcon();
         else
@@ -266,14 +266,14 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
      * Sets the icon used by this button. See {@link DataIcon}.
      */
     @Override
-    public JQMButton withIcon(DataIcon icon) {
-        setIcon(icon);
+    public JQMButton withBuiltInIcon(DataIcon icon) {
+        setBuiltInIcon(icon);
         return this;
     }
 
     @Override
-    public JQMButton withIcon(String src) {
-        setIcon(src);
+    public JQMButton withIconURL(String src) {
+        setIconURL(src);
         return this;
     }
 

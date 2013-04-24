@@ -6,7 +6,7 @@
     <jqm:JQMPage containerId="testPage1">
         <jqm:toolbar.JQMHeader text="Test Page 1 Header"/>
         <jqm:form.JQMForm ui:field="form">
-            <jqm:button.JQMButton text="Go To Test Page 2" href="#testPage2" transition="NONE" iconPos="RIGHT" icon="RIGHT"/>
+            <jqm:button.JQMButton text="Go To Test Page 2" href="#testPage2" transition="NONE" iconPos="RIGHT" builtInIcon="RIGHT"/>
             <jqm:button.JQMButtonGroup>
                 <jqm:button.JQMButton theme="a" text="Button theme 'a' of group"/>
                 <jqm:button.JQMButton theme="b" text="Button theme 'b' of group"/>
@@ -157,19 +157,19 @@
             <jqm:widget>
                 <jqm:toolbar.JQMNavBar>
                     <jqm:button>
-                        <jqm:button.JQMButton icon="LEFT" href="login" transition="NONE" text="Log Out"
+                        <jqm:button.JQMButton builtInIcon="LEFT" href="login" transition="NONE" text="Log Out"
                                               ui:field="login"/>
                     </jqm:button>
                     <jqm:button>
-                        <jqm:button.JQMButton icon="SEARCH" href="searchRooms" transition="NONE" text="Search"
+                        <jqm:button.JQMButton builtInIcon="SEARCH" href="searchRooms" transition="NONE" text="Search"
                                               ui:field="searchButton"/>
                     </jqm:button>
                     <jqm:button>
-                        <jqm:button.JQMButton icon="SEARCH" href="myReservations" transition="NONE" text="Reservations"
+                        <jqm:button.JQMButton builtInIcon="SEARCH" href="myReservations" transition="NONE" text="Reservations"
                                               ui:field="reservationsButton"/>
                     </jqm:button>
                     <jqm:button>
-                        <jqm:button.JQMButton icon="SEARCH" href="settings" transition="NONE" text="Settings"
+                        <jqm:button.JQMButton builtInIcon="SEARCH" href="settings" transition="NONE" text="Settings"
                                               ui:field="settingsButton"/>
                     </jqm:button>
                 </jqm:toolbar.JQMNavBar>
