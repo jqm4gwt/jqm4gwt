@@ -2,6 +2,17 @@ package com.sksamuel.jqm4gwt;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 13 Jul 2011 23:08:58
+ *
+ *       * <h3>Use in UiBinder Templates</h3>
+ *
+ * Using components implementing HasIcon can define which Icon to use in
+ * {@link com.google.gwt.uibinder.client.UiBinder UiBinder} templates in defining it in the 'icon attribute.
+ * For example:
+ * <pre>
+ * &lt;jqm:button.JQMButton icon="RIGHT"/>
+ * </pre>
+ *
+ * Valid values for the icon attribute are defined in @see DataIcon
  * 
  */
 public interface HasIcon<T> extends HasIconPos<T> {
