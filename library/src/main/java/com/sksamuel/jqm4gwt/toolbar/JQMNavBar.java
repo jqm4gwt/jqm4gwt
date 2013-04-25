@@ -32,21 +32,17 @@ public class JQMNavBar extends JQMWidget implements HasFixedPosition {
 
 		Label label = new Label();
 		initWidget(label);
-
+        setDataRole("navbar");
 		ul = Document.get().createULElement();
 		label.getElement().appendChild(ul);
 	}
 
+    @UiChild (limit = 5, tagname = "button")
 	public void add(JQMButton button) {
 		LIElement e = Document.get().createLIElement();
 		e.appendChild(button.getElement());
 		ul.appendChild(e);
 	}
-
-    @UiChild (limit = 5)
-    public void addButton(JQMButton button) {
-        add(button);
-    }
 
 	@Override
 	public boolean isFixed() {
