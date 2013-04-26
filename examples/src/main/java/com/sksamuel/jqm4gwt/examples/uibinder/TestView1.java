@@ -1,4 +1,4 @@
-package com.sksamuel.jqm4gwt.uibinder.client;
+package com.sksamuel.jqm4gwt.examples.uibinder;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiField;
@@ -9,16 +9,20 @@ import com.sksamuel.jqm4gwt.form.SubmissionHandler;
 
 /**
  * @author jraymond
- *         Date: 4/18/13
- *         Time: 12:19 PM
+ *         Date: 4/4/13
+ *         Time: 11:02 AM
  */
-public class TestView2 {
+public class TestView1 {
 
-    interface UiBinder extends com.google.gwt.uibinder.client.UiBinder<JQMPage, TestView2> { }
+    interface UiBinder extends com.google.gwt.uibinder.client.UiBinder<JQMPage, TestView1> { }
 
-    public static final UiBinder BINDER = GWT.create(TestView2.UiBinder.class);
+    public static final UiBinder BINDER = GWT.create(TestView1.UiBinder.class);
 
-    private JQMPage page = BINDER.createAndBindUi(this);
+    public static JQMPage createPage() { return new TestView1().page; }
+
+    private JQMPage page = TestView1.BINDER.createAndBindUi(this);
+
+    private TestView2 nextView = new TestView2();
 
     @UiField
     JQMForm form;
@@ -35,4 +39,5 @@ public class TestView2 {
     public void show() {
         JQMContext.changePage(page);
     }
+
 }

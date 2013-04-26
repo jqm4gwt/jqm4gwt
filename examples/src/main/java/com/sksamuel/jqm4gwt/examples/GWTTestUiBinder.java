@@ -1,8 +1,8 @@
-package com.sksamuel.jqm4gwt;
+package com.sksamuel.jqm4gwt.examples;
 
 import com.google.gwt.junit.client.GWTTestCase;
-import com.sksamuel.jqm4gwt.uibinder.client.TestView1;
-import com.sksamuel.jqm4gwt.uibinder.client.TestView2;
+import com.sksamuel.jqm4gwt.examples.uibinder.TestView1;
+import com.sksamuel.jqm4gwt.examples.uibinder.TestView2;
 
 /**
  * GWT JUnit <b>integration</b> tests must extend GWTTestCase.
@@ -18,7 +18,7 @@ import com.sksamuel.jqm4gwt.uibinder.client.TestView2;
  *         Date: 4/4/13
  *         Time: 9:09 AM
  */
-public class GWTTestUiBinder extends GWTTestCase {
+public class GWTTestUiBinder /* extends GWTTestCase */ {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -33,7 +33,6 @@ public class GWTTestUiBinder extends GWTTestCase {
      */
     public void onModuleLoad() {
         TestView1 view1 = new TestView1();
-        TestView2 view2 = new TestView2();
         view1.show();
     }
 

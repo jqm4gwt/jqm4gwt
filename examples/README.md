@@ -1,4 +1,4 @@
-jqm4gwt-examples
+jqm4gwt-showcase
 ================
 
-Examples projects for jqm4gwt
+A showcase of jqm4gwt components.

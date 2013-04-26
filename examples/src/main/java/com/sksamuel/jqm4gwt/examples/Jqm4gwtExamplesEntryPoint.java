@@ -11,6 +11,8 @@ import com.sksamuel.jqm4gwt.examples.helloworld.HelloWorldPage;
 import com.sksamuel.jqm4gwt.examples.lists.ListViewDemoPage;
 import com.sksamuel.jqm4gwt.examples.showcase.FormShowcasePage;
 import com.sksamuel.jqm4gwt.examples.transition.TransitionDemoPage;
+import com.sksamuel.jqm4gwt.examples.uibinder.TestView1;
+import com.sksamuel.jqm4gwt.examples.uibinder.TestView2;
 import com.sksamuel.jqm4gwt.html.Paragraph;
 import com.sksamuel.jqm4gwt.toolbar.JQMFooter;
 import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
@@ -42,6 +44,7 @@ public class Jqm4gwtExamplesEntryPoint implements EntryPoint {
 		page.add(new JQMButton("Dynamic Table", new DynamicTableDemoPage()));
 		page.add(new JQMButton("Dynamic Collapsible", new DynamicCollapsibleDemoPage()));
 		page.add(new JQMButton("Popups", new PopupExamplePage()));
+        page.add(new JQMButton("UiBinder", TestView1.createPage() ));
 
 		page.add(new JQMFooter("jqm4gwt open source project"));
 
