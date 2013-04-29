@@ -34,7 +34,7 @@ public class JQMButtonGroup extends JQMControlGroup implements HasInline<JQMButt
     }
 
     /**
-     * Returns true if this widget is currently rendering inline
+     * @return true if this widget is currently rendering inline
      */
     @Override
     public boolean isInline() {
@@ -49,7 +49,6 @@ public class JQMButtonGroup extends JQMControlGroup implements HasInline<JQMButt
      * If the buttons are in a group then it is best to call this method
      * instead of withInline on each button
      *
-     * @return
      */
     @Override
     public void setInline(boolean inline) {
@@ -67,7 +66,6 @@ public class JQMButtonGroup extends JQMControlGroup implements HasInline<JQMButt
      * If the buttons are in a group then it is best to call this method
      * instead of withInline on each button
      *
-     * @return
      */
     @Override
     public JQMButtonGroup withInline(boolean inline) {
