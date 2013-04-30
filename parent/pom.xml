@@ -35,7 +35,7 @@
     </developers>
 
     <properties>
-        <gwt.version>2.4.0</gwt.version>
+        <gwt.version>2.5.1</gwt.version>
 
         <!-- Sets the project's default encoding. http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
