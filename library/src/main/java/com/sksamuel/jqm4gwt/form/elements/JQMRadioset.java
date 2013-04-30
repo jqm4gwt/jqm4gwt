@@ -42,8 +42,8 @@ import com.sksamuel.jqm4gwt.html.Legend;
  * can add Radio buttons via child elements. For example:
  * <pre>
  * &lt;jqm:form.elements.JQMRadioset>
- *    &lt;jqm:check id="checkId#1" text="Checkbox #1"/>
- *    &lt;jqm:check id="checkId#1" text="Checkbox #2"/>
+ *    &lt;jqm:radio id="radioId#1" text="radio #1"/>
+ *    &lt;jqm:radio id="radioId#2" text="radio #2"/>
  * &lt;/jqm:form.elements.JQMRadioset>
  * </pre>
  *
@@ -172,40 +172,26 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 	 * 
 	 * @return a JQMRadio instance to adjust the added radio button
 	 */
-    @UiChild(tagname = "radio")
 	public JQMRadio addRadio(String value, String text) {
-
-		String id = Document.get().createUniqueId();
-
-		// we must use a text box as the standard GWT radio/check inputs
-		// already have an associated label (but a div not a <label>) so we
-		// can't use them. Textboxes do not have such a label so will work
-		// for us, as long as we coerce the type attribute to radio.
-		final TextBox input = new TextBox();
-		input.setName(fieldset.getId());
-		input.setValue(value);
-		input.getElement().setId(id);
-		input.getElement().setAttribute("type", "radio");
-		radios.add(input);
-
-		final FormLabel label = new FormLabel();
-		label.setFor(id);
-		label.setText(text);
-		// label.addDomHandler(new ClickHandler() {
-		//
-		// @Override
-		// public void onClick(ClickEvent event) {
-		// clickIndex = radios.indexOf(input);
-		// }
-		// }, ClickEvent.getType());
-
-		fieldset.add(input);
-		fieldset.add(label);
-
-		return new JQMRadio(label);
+        JQMRadio radio = new JQMRadio(value, text);
+        addRadio(radio);
+		return radio;
 	}
 
-	public void clear() {
+    /**
+     * UiBinder call method to add a radio button
+     * @param radio
+     */
+    @UiChild(tagname = "radio")
+    public void addRadio(JQMRadio radio) {
+        radio.setName(fieldset.getId());
+        radios.add(radio.getInput());
+        fieldset.add(radio.getInput());
+        fieldset.add(radio.getLabel());
+    }
+
+
+    public void clear() {
 		radios.clear();
 		setupFieldset(getText());
 	}
@@ -338,7 +324,7 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 	 *              the radio to remove
 	 */
 	public void removeRadio(JQMRadio radio) {
-		removeRadio(radio.getValue());
+		removeRadio(radio);
 	}
 
 	/**
@@ -363,10 +349,10 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 	/**
 	 * Sets the selected value. This is an alias for setValue(String)
 	 * 
-	 * @see setValue(String)
+	 * @see #setValue(String)
 	 */
-	public void setSelectedValue(String string) {
-		setValue(string);
+	public void setSelectedValue(String value) {
+		setValue(value);
 	}
 
 	@Override

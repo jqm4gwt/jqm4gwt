@@ -1,6 +1,10 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasTheme;
 import com.sksamuel.jqm4gwt.html.FormLabel;
@@ -8,12 +12,44 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 24 Jul 2011 12:46:07
  */
-public class JQMRadio implements HasText, HasMini<JQMRadio>, HasTheme<JQMRadio> {
+public class JQMRadio extends Widget implements HasText, HasMini<JQMRadio>, HasTheme<JQMRadio> {
 
-    private final FormLabel label;
+    private FormLabel label;
 
-    JQMRadio(FormLabel label) {
+    // we must use a text box as the standard GWT radio/check inputs
+    // already have an associated label (but a div not a <label>) so we
+    // can't use them. Textboxes do not have such a label so will work
+    // for us, as long as we coerce the type attribute to radio.
+    private final TextBox input = new TextBox();
+
+    JQMRadio() {
+        Element element = input.getElement();
+        element.setId(Document.get().createUniqueId());
+        element.setAttribute("type", "radio");
+        setLabel(new FormLabel());
+    }
+
+    JQMRadio(String value, String text) {
+        this();
+        setValue(value);
+        setText(text);
+    }
+
+    void setName(String name) {
+        input.setName(name);
+    }
+
+    TextBox getInput() {
+        return input;
+    }
+
+    FormLabel getLabel() {
+       return label;
+    }
+
+    void setLabel(FormLabel label) {
         this.label = label;
+        label.setFor(input.getElement().getId());
     }
 
     /**
@@ -31,8 +67,8 @@ public class JQMRadio implements HasText, HasMini<JQMRadio>, HasTheme<JQMRadio> 
         return label.getElement().getAttribute("theme");
     }
 
-    JQMRadio getValue() {
-        return null;
+    public String getValue() {
+        return input.getValue();
     }
 
     @Override
@@ -63,6 +99,13 @@ public class JQMRadio implements HasText, HasMini<JQMRadio>, HasTheme<JQMRadio> 
     @Override
     public void setText(String text) {
         label.setText(text);
+    }
+
+    /**
+     * Sets the value for this radio button
+     */
+    public void setValue(String value) {
+        input.setValue(value);
     }
 
     @Override
