@@ -7,13 +7,13 @@
         <groupId>com.sksamuel.jqm4gwt</groupId>
         <artifactId>parent</artifactId>
         <version>1.2.2-SNAPSHOT</version>
-        <relativePath>../../parent</relativePath>
+        <relativePath>../parent</relativePath>
     </parent>
 
-    <artifactId>jqm4gwt-showcase</artifactId>
+    <artifactId>jqm4gwt-examples</artifactId>
     <packaging>war</packaging>
 
-    <name>jqm4gwt Showcase Example</name>
+    <name>jqm4gwt Examples</name>
     <description>A showcase of jqm4gwt capabilities.</description>
 
     <!-- Specify hard-coded project properties here -->
@@ -97,10 +97,14 @@
     </dependencies>
 
     <build>
+        <!-- Generate compiled stuff in the folder used for developing mode allowing for real-time editting -->
+        <outputDirectory>${webapp.directory}/WEB-INF/classes</outputDirectory>
+
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
+                    <webappDirectory>${webapp.directory}</webappDirectory>
                     <webResources>
                         <resource>
                             <directory>src/main/webapp</directory>
@@ -198,6 +202,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
                 <configuration>
+                    <hostedWebapp>${webapp.directory}</hostedWebapp>
                     <gwtSdkFirstInClasspath>true</gwtSdkFirstInClasspath>
                     <runTarget>examples.html</runTarget>
                     <module>com.sksamuel.jqm4gwt.examples</module>
