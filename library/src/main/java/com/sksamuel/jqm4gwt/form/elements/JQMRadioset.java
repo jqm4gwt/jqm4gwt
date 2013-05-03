@@ -1,32 +1,22 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.sksamuel.jqm4gwt.HasOrientation;
+import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.form.JQMFieldset;
-import com.sksamuel.jqm4gwt.html.FormLabel;
 import com.sksamuel.jqm4gwt.html.Legend;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 24 May 2011 08:17:31
@@ -48,7 +38,7 @@ import com.sksamuel.jqm4gwt.html.Legend;
  * </pre>
  *
  */
-public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandlers<String>, HasOrientation<JQMRadioset>, HasValue<String>,
+public class JQMRadioset extends JQMWidget implements HasText<JQMRadioset>, HasSelectionHandlers<String>, HasOrientation<JQMRadioset>, HasValue<String>,
 		JQMFormWidget, HasClickHandlers {
 
 	/**
@@ -402,4 +392,10 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 	public int size() {
 		return radios.size();
 	}
+
+    @Override
+    public JQMRadioset withText(String text) {
+        setText(text);
+        return this;
+    }
 }

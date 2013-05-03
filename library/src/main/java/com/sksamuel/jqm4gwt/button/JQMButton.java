@@ -5,8 +5,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasCorners;
@@ -14,6 +14,7 @@ import com.sksamuel.jqm4gwt.HasIcon;
 import com.sksamuel.jqm4gwt.HasIconShadow;
 import com.sksamuel.jqm4gwt.HasInline;
 import com.sksamuel.jqm4gwt.HasMini;
+import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.HasRel;
 import com.sksamuel.jqm4gwt.HasTransition;
 import com.sksamuel.jqm4gwt.IconPos;
@@ -28,7 +29,7 @@ import com.sksamuel.jqm4gwt.Transition;
  *         An implementation of a Jquery mobile button
  * @link http://jquerymobile.com/demos/1.2.0/docs/buttons/buttons-types.html
  */
-public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, HasTransition<JQMButton>, HasClickHandlers, HasInline<JQMButton>,
+public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<JQMButton>, HasTransition<JQMButton>, HasClickHandlers, HasInline<JQMButton>,
         HasIcon<JQMButton>, HasCorners, HasIconShadow, HasMini<JQMButton> {
 
     /**
@@ -38,7 +39,7 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
      *
      * @param text the text to display on the button
      */
-    public JQMButton(String text) {
+    public @UiConstructor JQMButton(String text) {
         this(new Anchor(text));
     }
 
@@ -107,14 +108,6 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
             setHref(url);
         if (t != null)
             withTransition(t);
-    }
-
-    /**
-     * Nullary constructor used by tools such as UiBinder that make subsequent
-     * property instantiation calls.
-     */
-    public JQMButton() {
-        this("");
     }
 
     protected JQMButton(Widget widget) {
@@ -390,6 +383,12 @@ public class JQMButton extends JQMWidget implements HasText, HasRel<JQMButton>, 
             e = e.getFirstChildElement();
         }
         e.setInnerText(text);
+    }
+
+    @Override
+    public JQMButton withText(String text) {
+        setText(text);
+        return this;
     }
 
     /**

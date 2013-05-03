@@ -2,17 +2,17 @@ package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasMini;
+import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.HasTheme;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 24 Jul 2011 12:46:07
  */
-public class JQMRadio extends Widget implements HasText, HasMini<JQMRadio>, HasTheme<JQMRadio> {
+public class JQMRadio extends Widget implements HasText<JQMRadio>, HasMini<JQMRadio>, HasTheme<JQMRadio> {
 
     private FormLabel label;
 
@@ -119,4 +119,9 @@ public class JQMRadio extends Widget implements HasText, HasMini<JQMRadio>, HasT
         return this;
     }
 
+    @Override
+    public JQMRadio withText(String text) {
+        setText(text);
+        return this;
+    }
 }

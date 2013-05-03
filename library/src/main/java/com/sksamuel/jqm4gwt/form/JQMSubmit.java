@@ -3,7 +3,6 @@ package com.sksamuel.jqm4gwt.form;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.sksamuel.jqm4gwt.*;
 
@@ -15,7 +14,7 @@ import com.sksamuel.jqm4gwt.*;
  *         {@link JQMForm}
  * 
  */
-public class JQMSubmit extends JQMWidget implements HasText, HasClickHandlers, HasTransition<JQMSubmit>, HasIcon<JQMSubmit> {
+public class JQMSubmit extends JQMWidget implements HasText<JQMSubmit>, HasClickHandlers, HasTransition<JQMSubmit>, HasIcon<JQMSubmit> {
 
 	private final SubmitButton	submit;
 
@@ -52,6 +51,12 @@ public class JQMSubmit extends JQMWidget implements HasText, HasClickHandlers, H
 	public void setText(String text) {
 		submit.setText(text);
 	}
+
+    @Override
+    public JQMSubmit withText(String text) {
+        setText(text);
+        return this;
+    }
 
     @Override
     public Transition getTransition() {

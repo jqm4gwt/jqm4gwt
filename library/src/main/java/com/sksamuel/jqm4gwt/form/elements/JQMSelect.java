@@ -13,15 +13,8 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.*;
-import com.sksamuel.jqm4gwt.DataIcon;
-import com.sksamuel.jqm4gwt.HasCorners;
-import com.sksamuel.jqm4gwt.HasIcon;
-import com.sksamuel.jqm4gwt.HasInline;
-import com.sksamuel.jqm4gwt.HasMini;
-import com.sksamuel.jqm4gwt.HasNative;
-import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
-import com.sksamuel.jqm4gwt.IconPos;
-import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.*;
+import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
@@ -30,7 +23,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *         An implementation of a jQuery mobile select element.
  * @link http://jquerymobile.com/demos/1.1.1/docs/forms/selects/options.html
  */
-public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasText, HasFocusHandlers, HasChangeHandlers, HasClickHandlers,
+public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasText<JQMSelect>, HasFocusHandlers, HasChangeHandlers, HasClickHandlers,
         HasValue<String>, JQMFormWidget, HasIcon<JQMSelect>, HasInline<JQMSelect>, HasPreventFocusZoom, HasCorners<JQMSelect>, HasMini<JQMSelect>, Focusable {
 
 
@@ -511,6 +504,12 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
     @Override
     public void setText(String text) {
         label.setText(text);
+    }
+
+    @Override
+    public JQMSelect withText(String text) {
+        setText(text);
+        return this;
     }
 
     /**

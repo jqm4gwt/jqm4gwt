@@ -6,15 +6,15 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.sksamuel.jqm4gwt.HasMini;
+import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 12 Jul 2011 15:42:39
  */
-public class JQMCheckbox implements HasText, IsChecked, HasValue<Boolean>, HasMini<JQMCheckbox> {
+public class JQMCheckbox implements HasText<JQMCheckbox>, IsChecked, HasValue<Boolean>, HasMini<JQMCheckbox> {
 
     private InputElement input;
 
@@ -109,6 +109,12 @@ public class JQMCheckbox implements HasText, IsChecked, HasValue<Boolean>, HasMi
     @Override
     public void setText(String text) {
         label.setText(text);
+    }
+
+    @Override
+    public JQMCheckbox withText(String text) {
+        setText(text);
+        return this;
     }
 
     @Override

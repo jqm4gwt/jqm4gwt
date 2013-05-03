@@ -7,13 +7,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.HasText;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 11:21:29
  */
-public class JQMListItem extends Widget implements HasText, HasClickHandlers {
+public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClickHandlers {
 
     /**
      * Element to hold the count bubble
@@ -314,6 +314,12 @@ public class JQMListItem extends Widget implements HasText, HasClickHandlers {
             getElement().appendChild(anchor);
         }
         anchor.setAttribute("href", url);
+        return this;
+    }
+
+    @Override
+    public JQMListItem withText(String text) {
+        setText(text);
         return this;
     }
 }

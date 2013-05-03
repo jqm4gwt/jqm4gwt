@@ -8,9 +8,9 @@ import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.ListBox;
+import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
@@ -26,7 +26,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *       .html
  * 
  */
-public class JQMFlip extends JQMFieldContainer implements HasText, HasValue<String>, HasChangeHandlers,
+public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasValue<String>, HasChangeHandlers,
 		HasClickHandlers {
 
 	private final FormLabel	label		= new FormLabel();
@@ -185,6 +185,12 @@ public class JQMFlip extends JQMFieldContainer implements HasText, HasValue<Stri
 	public void setText(String text) {
 		label.setText(text);
 	}
+
+    @Override
+    public JQMFlip withText(String text) {
+        setText(text);
+        return this;
+    }
 
 	/**
 	 * Sets the currently selected value

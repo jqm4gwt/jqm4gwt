@@ -1,8 +1,8 @@
 package com.sksamuel.jqm4gwt.html;
 
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.HasText;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 18 May 2011 05:36:02
@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
  *         element
  * 
  */
-public class Paragraph extends Widget implements HasText {
+public class Paragraph extends Widget implements HasText<Paragraph> {
 
 	public Paragraph() {
 		setElement(Document.get().createPElement());
@@ -32,4 +32,10 @@ public class Paragraph extends Widget implements HasText {
 	public void setText(String text) {
 		getElement().setInnerText(text);
 	}
+
+    @Override
+    public Paragraph withText(String text) {
+        setText(text);
+        return this;
+    }
 }

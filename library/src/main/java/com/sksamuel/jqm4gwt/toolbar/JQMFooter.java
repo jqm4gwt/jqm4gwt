@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.toolbar;
 
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.HasText;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 4 May 2011 21:21:13
@@ -12,7 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
  *       http://jquerymobile.com/demos/1.2.0/docs/toolbars/docs-footers.html
  * 
  */
-public class JQMFooter extends JQMToolbar {
+public class JQMFooter extends JQMToolbar implements HasText<JQMFooter> {
 
 	/**
 	 * Create a new empty {@link JQMFooter}. Use this when you want a blank
@@ -45,4 +46,9 @@ public class JQMFooter extends JQMToolbar {
 		}
 	}
 
+    @Override
+    public JQMFooter withText(String text) {
+        setText(text);
+        return this;
+    }
 }

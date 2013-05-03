@@ -1,8 +1,8 @@
 package com.sksamuel.jqm4gwt.html;
 
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.HasText;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 11 Jul 2011 13:38:38
@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
  *         An implementation of a H{n} element.
  * 
  */
-public class Heading extends Widget implements HasText {
+public class Heading extends Widget implements HasText<Heading> {
 
 	public Heading(int n) {
 		setElement(Document.get().createHElement(n));
@@ -30,6 +30,12 @@ public class Heading extends Widget implements HasText {
 	public void setText(String text) {
 		getElement().setInnerText(text);
 	}
+
+    @Override
+    public Heading withText(String text) {
+        setText(text);
+        return this;
+    }
 
     public static class H1 extends Heading {
         public H1() {

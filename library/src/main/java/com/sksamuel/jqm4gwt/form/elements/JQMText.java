@@ -23,12 +23,12 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Focusable;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
+import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
@@ -37,7 +37,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *         <p/>
  *         An implementation of a standard HTML text input.
  */
-public class JQMText extends JQMWidget implements HasText, HasFocusHandlers, HasClickHandlers, HasChangeHandlers, HasValue<String>,
+public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHandlers, HasClickHandlers, HasChangeHandlers, HasValue<String>,
         JQMFormWidget, HasKeyDownHandlers, HasKeyUpHandlers, HasMouseOverHandlers, HasMouseOutHandlers, HasPreventFocusZoom, HasMini<JQMText>,
         Focusable {
 
@@ -249,5 +249,11 @@ public class JQMText extends JQMWidget implements HasText, HasFocusHandlers, Has
     @Override
     public void setValue(String value, boolean fireEvents) {
         input.setValue(value, fireEvents);
+    }
+
+    @Override
+    public JQMText withText(String text) {
+        setText(text);
+        return this;
     }
 }

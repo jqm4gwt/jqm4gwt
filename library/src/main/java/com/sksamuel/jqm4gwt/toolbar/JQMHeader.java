@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.toolbar;
 
 import com.sksamuel.jqm4gwt.DataIcon;
+import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 
@@ -14,7 +15,7 @@ import com.sksamuel.jqm4gwt.button.JQMButton;
  *       http://jquerymobile.com/demos/1.2.0/docs/toolbars/docs-headers.html
  * 
  */
-public class JQMHeader extends JQMToolbar {
+public class JQMHeader extends JQMToolbar implements HasText<JQMHeader> {
 
 	/**
 	 * Left button, keep reference so we can replace
@@ -374,4 +375,10 @@ public class JQMHeader extends JQMToolbar {
 		setRightButton(button);
 		return button;
 	}
+
+    @Override
+    public JQMHeader withText(String text) {
+        setText(text);
+        return this;
+    }
 }

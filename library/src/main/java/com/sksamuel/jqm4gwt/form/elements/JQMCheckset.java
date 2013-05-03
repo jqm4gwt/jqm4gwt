@@ -14,10 +14,10 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.sksamuel.jqm4gwt.HasOrientation;
+import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.form.JQMFieldset;
@@ -48,7 +48,7 @@ import com.sksamuel.jqm4gwt.html.Legend;
  * </pre>
  * 
  */
-public class JQMCheckset extends JQMFieldContainer implements HasText, HasSelectionHandlers<String>, HasOrientation<JQMCheckset>,
+public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckset>, HasSelectionHandlers<String>, HasOrientation<JQMCheckset>,
 		HasClickHandlers, JQMFormWidget {
 
 	private JQMFieldset		fieldset;
@@ -274,6 +274,12 @@ public class JQMCheckset extends JQMFieldContainer implements HasText, HasSelect
 	public void setText(String text) {
 		legend.setText(text);
 	}
+
+    @Override
+    public JQMCheckset withText(String text) {
+        setText(text);
+        return this;
+    }
 
 	/**
 	 * Sets the checkbox with the given value to be selected

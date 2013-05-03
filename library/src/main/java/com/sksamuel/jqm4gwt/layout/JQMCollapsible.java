@@ -3,14 +3,8 @@ package com.sksamuel.jqm4gwt.layout;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
-import com.sksamuel.jqm4gwt.DataIcon;
-import com.sksamuel.jqm4gwt.HasIconPos;
-import com.sksamuel.jqm4gwt.HasInset;
-import com.sksamuel.jqm4gwt.HasMini;
-import com.sksamuel.jqm4gwt.IconPos;
-import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.*;
 import com.sksamuel.jqm4gwt.html.Heading;
 
 /**
@@ -22,7 +16,7 @@ import com.sksamuel.jqm4gwt.html.Heading;
  * @link http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/content/content-
  * collapsible.html
  */
-public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos<JQMCollapsible>, HasMini<JQMCollapsible>, HasInset<JQMCollapsible> {
+public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>, HasIconPos<JQMCollapsible>, HasMini<JQMCollapsible>, HasInset<JQMCollapsible> {
 
     /**
      * The container for the elements of the collapsible.
@@ -238,5 +232,11 @@ public class JQMCollapsible extends JQMWidget implements HasText, HasIconPos<JQM
     @Override
     public void setText(String text) {
         header.setText(text);
+    }
+
+    @Override
+    public JQMCollapsible withText(String text) {
+        setText(text);
+        return this;
     }
 }

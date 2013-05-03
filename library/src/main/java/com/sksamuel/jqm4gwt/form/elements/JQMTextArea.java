@@ -12,11 +12,11 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Focusable;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextArea;
 import com.sksamuel.jqm4gwt.HasGridDimensions;
 import com.sksamuel.jqm4gwt.HasMini;
+import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
@@ -25,7 +25,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *         <p/>
  *         An implementation of a standard HTML Textarea
  */
-public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<JQMTextArea>, HasText, HasValue<String>, HasMini<JQMTextArea>, HasKeyDownHandlers, HasKeyUpHandlers, HasFocusHandlers, HasBlurHandlers, Focusable {
+public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<JQMTextArea>, HasText<JQMTextArea>, HasValue<String>, HasMini<JQMTextArea>, HasKeyDownHandlers, HasKeyUpHandlers, HasFocusHandlers, HasBlurHandlers, Focusable {
 
     private final FormLabel label = new FormLabel();
 
@@ -198,5 +198,9 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
         return input.addKeyDownHandler(handler);
     }
 
-
+    @Override
+    public JQMTextArea withText(String text) {
+        setText(text);
+        return this;
+    }
 }
