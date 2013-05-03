@@ -187,6 +187,11 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
          setAttribute("href", url);
     }
 
+    public JQMButton withHref(String url) {
+        setHref(url);
+        return this;
+    }
+
     @Override
     public JQMButton removeIcon() {
         getElement().removeAttribute("data-icon");
