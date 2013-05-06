@@ -20,7 +20,6 @@ public class DynamicCollapsibleDemoPage extends JQMPage {
     private static int count = 0;
 
 	public DynamicCollapsibleDemoPage() {
-        withContainerId();
 		add(new JQMHeader("Dynamic Collapsible"));
 		add(new Paragraph(
 				"This page shows how a JQM Collapsible can be combined with an event handler to dynamically add new collapsibles. "

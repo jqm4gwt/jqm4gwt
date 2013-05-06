@@ -21,7 +21,6 @@ public class DynamicTableDemoPage extends JQMPage {
 	private JQMTable	table;
 
 	public DynamicTableDemoPage() {
-        withContainerId();
 		add(new JQMHeader("Dynamic Table"));
 		add(new Paragraph(
 				"This example shows how a JQMTable can be combined with event handlers to dynamically adjust the table and cells."));

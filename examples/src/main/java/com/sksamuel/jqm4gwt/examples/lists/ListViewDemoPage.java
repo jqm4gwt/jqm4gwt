@@ -29,7 +29,6 @@ public class ListViewDemoPage extends JQMPage {
 	protected List<String>		items		= getCountries();
 
 	public ListViewDemoPage() {
-        withContainerId();
 		JQMHeader header = new JQMHeader("List View Demo");
 		header.setRightButton("View source", SOURCE_URL, DataIcon.GEAR);
 		add(header);

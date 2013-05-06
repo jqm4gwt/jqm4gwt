@@ -21,7 +21,6 @@ import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
 public class FormShowcasePage extends JQMPage {
 
 	public FormShowcasePage() {
-        withContainerId();
 		add(new JQMHeader("Showcase"));
 		add(new Paragraph("This page shows all the different form elements in use."));
 

@@ -5,6 +5,7 @@ import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
@@ -46,7 +47,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * Create a new {@link JQMPage}. Using this constructor, the page will not be rendered until a containerID has been
      * assigned.
      */
-    public JQMPage() {
+    private JQMPage() {
         setRole("page");
         content = createContent();
 
@@ -66,11 +67,11 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     /**
      * Creates a {@link JQMPage} with the given id
      *
-     * @param id the id to use as this page's id
+     * @param containerId the id to use as this page's id
      */
-    public JQMPage(String id) {
+    public @UiConstructor JQMPage(String containerId) {
         this();
-        this.setContainerId(id);
+        this.setContainerId(containerId);
     }
 
     /**

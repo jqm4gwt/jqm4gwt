@@ -99,8 +99,7 @@
         </jqm:html.ListWidget.Unordered>
         <jqm:html.Paragraph text="paragraphText"/>
         <jqm:html.Span text="spanText"/>
-        <!-- TODO: fix collapsed setter <jqm:layout.JQMCollapsible text="collapsibleText" collapsed="false">-->
-        <jqm:layout.JQMCollapsible text="collapsibleText">
+        <jqm:layout.JQMCollapsible text="collapsibleText" collapsed="false">
             <jqm:widget>
                 <jqm:html.Span text="spanText in Collapsible"/>
             </jqm:widget>

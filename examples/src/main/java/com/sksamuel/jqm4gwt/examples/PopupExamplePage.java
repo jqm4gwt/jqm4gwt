@@ -14,7 +14,6 @@ import com.sksamuel.jqm4gwt.button.JQMButtonGroup;
 public class PopupExamplePage extends JQMPage {
 
 	public PopupExamplePage() {
-        withContainerId();
 		setHeader("Popups");
 
 		JQMPopup popup = new JQMPopup();
