@@ -72,7 +72,7 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
         flow.add(header);
 
         setDataRole("collapsible");
-        setCollapsed(collapsed);
+        withCollapsed(collapsed);
         setText(text);
     }
 
@@ -159,8 +159,15 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
     /**
      * Programatically set the collapsed state of this widget.
      */
-    public JQMCollapsible setCollapsed(boolean collapsed) {
+    public void setCollapsed(boolean collapsed) {
         removeAttribute("data-collapsed");
+    }
+
+    /**
+     * Programatically set the collapsed state of this widget.
+     */
+    public JQMCollapsible withCollapsed(boolean collapsed) {
+        setCollapsed(collapsed);
         return this;
     }
 
