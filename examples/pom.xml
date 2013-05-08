@@ -19,10 +19,10 @@
     <!-- Specify hard-coded project properties here -->
     <properties>
         <!-- Produce detailed JS during GWT compilation for development environment -->
-        <gwt.style>DETAILED</gwt.style>
+        <!--<gwt.style>DETAILED</gwt.style>-->
         <!-- or showcase how fast it runs thanks to GWT -->
-        <!--<gwt.style>OBF</gwt.style>-->
-        <gwt.optimizationLevel>-1</gwt.optimizationLevel>
+        <gwt.style>OBF</gwt.style>
+        <gwt.optimizationLevel>9</gwt.optimizationLevel>
         <!--<gwt.optimizationLevel>9</gwt.optimizationLevel>-->
 
         <!-- Specify AppEngine version for your project. It should match SDK version
