@@ -85,7 +85,6 @@
         <jqm:html.Heading.H4 text="This should be Heading 4"/>
         <jqm:html.Heading.H5 text="This should be Heading 5"/>
         <jqm:html.Heading.H6 text="This should be Heading 6"/>
-        <jqm:html.ImageLink src="data://29a6c7d09e8f829" href="http://google.com"/>
         <jqm:html.Legend text="legendText"/>
         <jqm:html.ListWidget.Ordered>
             <jqm:html.Span text="span1Text"/>

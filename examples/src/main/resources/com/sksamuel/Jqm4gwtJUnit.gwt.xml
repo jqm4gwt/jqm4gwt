@@ -5,5 +5,4 @@
     <inherits name='com.google.gwt.junit.JUnit' />
     <source path='jqm4gwt/uibinder/client' />
     <entry-point class='com.sksamuel.jqm4gwt.examples.GWTTestUiBinder'/>
-
 </module>
