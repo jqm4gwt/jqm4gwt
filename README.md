@@ -21,7 +21,7 @@ These include the typical hello world and a show case of JQuery Mobile widgets a
 What's Supported
 ========
 
-The full JQuery Mobile widget set is supported. That is pages, dialogs, popups, buttons, form elements, list boxes, navigation, etc. Jqm4gwt goes further and supports standard GWT MVP constructs (Activities, Places, etc) and mixes that with the JQuery Mobile navigation system seemlessly.
+The full JQuery Mobile widget set is supported. That is pages, dialogs, popups, buttons, form elements, list boxes, navigation, etc. Jqm4gwt goes further and supports standard GWT MVP constructs (Activities, Places, etc) and mixes that with the JQuery Mobile navigation system seemlessly. JQueryMobile is exposed to GWT users via both a simple [Fluent-style](http://en.wikipedia.org/wiki/Fluent_interface) API and via [GWT's UiBinder](https://developers.google.com/web-toolkit/doc/latest/DevGuideUiBinder).
 
 Getting Started
 ========
