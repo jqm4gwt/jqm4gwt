@@ -261,7 +261,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
      * @return the data divider theme string, eg "b"
      */
     public String getDividerTheme() {
-        return getAttribute("data-dividertheme");
+        return getAttribute("data-divider-theme");
     }
 
     public String getFilterPlaceholder() {
@@ -393,7 +393,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
      * Sets the theme attribute for the data dividers
      */
     public JQMList setDividerTheme(String theme) {
-        setAttribute("data-dividertheme", theme);
+        setAttribute("data-divider-theme", theme);
         return this;
     }
 
