@@ -69,11 +69,6 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 	private final List<TextBox>	radios	= new ArrayList();
 
 	/**
-	 * The index of the radio that was last clicked
-	 */
-	private int				clickIndex;
-
-	/**
 	 * Creates a new {@link JQMRadioset} with no label
 	 * 
 	 */
@@ -191,13 +186,6 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 		final FormLabel label = new FormLabel();
 		label.setFor(id);
 		label.setText(text);
-		// label.addDomHandler(new ClickHandler() {
-		//
-		// @Override
-		// public void onClick(ClickEvent event) {
-		// clickIndex = radios.indexOf(input);
-		// }
-		// }, ClickEvent.getType());
 
 		fieldset.add(input);
 		fieldset.add(label);
@@ -225,13 +213,6 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 	@Override
 	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
 		return null;
-	}
-
-	/**
-	 * Returns the index of the radio that was last clicked.
-	 */
-	public int getClickIndex() {
-		return clickIndex;
 	}
 
 	/**
@@ -267,21 +248,23 @@ public class JQMRadioset extends JQMWidget implements HasText, HasSelectionHandl
 		for (int k = 0; k < fieldset.getWidgetCount(); k++) {
 			Widget widget = fieldset.getWidget(k);
 			Element element = widget.getElement();
-			if (element.getAttribute("class") != null && element.getAttribute("class").contains("ui-btn-hover")) {
-				return getValueForId(element.getAttribute("for"));
+			String classAttribute = element.getAttribute("class");
+			if (classAttribute != null)
+			{
+				if (classAttribute.contains("ui-btn-hover")) {
+					return getValueForId(element.getAttribute("for"));
+				}
+				else if (classAttribute.contains("ui-btn-active")) {
+					return getValueForId(element.getAttribute("for"));
+				}
+				else if (classAttribute.contains("ui-radio-on")) {
+					return getValueForId(element.getAttribute("for"));
+				}
 			}
 		}
-		for (int k = 0; k < fieldset.getWidgetCount(); k++) {
-			Widget widget = fieldset.getWidget(k);
-			Element element = widget.getElement();
-			if (element.getAttribute("class") != null && element.getAttribute("class").contains("ui-btn-active")) {
-				return getValueForId(element.getAttribute("for"));
-			}
-		}
+		
 		for (TextBox radio : radios) {
-
 			Element element = radio.getElement();
-			System.out.println(element.getAttribute("checked"));
 			if (element.getAttribute("checked") != null && element.getAttribute("checked").equals("checked")) {
 				return getValueForId(element.getAttribute("value"));
 			}
