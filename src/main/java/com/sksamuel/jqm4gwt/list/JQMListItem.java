@@ -46,7 +46,7 @@ public class JQMListItem extends Widget implements HasText, HasClickHandlers {
      * Create a read only {@link JQMList} with the initial content set to the
      * value of the text
      */
-    public JQMListItem(String text) {
+    protected JQMListItem(String text) {
         if (text == null)
             throw new RuntimeException("Cannot create list item with null text");
 
@@ -62,7 +62,7 @@ public class JQMListItem extends Widget implements HasText, HasClickHandlers {
      * value of the @param text and the link set to the value of the @param
      * url
      */
-    public JQMListItem(String text, String url) {
+    protected JQMListItem(String text, String url) {
         this(text);
         if (url != null)
             setUrl(url);
@@ -274,7 +274,7 @@ public class JQMListItem extends Widget implements HasText, HasClickHandlers {
         return this;
     }
 
-    public JQMListItem setList(JQMList jqmList) {
+    protected JQMListItem setList(JQMList jqmList) {
         this.list = jqmList;
         return this;
     }

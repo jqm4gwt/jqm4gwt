@@ -137,7 +137,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
         addDivider(text);
     }
 
-    public void addItem(int index, final JQMListItem item) {
+    protected void addItem(int index, final JQMListItem item) {
         list.insert(item, index);
         items.add(index,item);
         item.setList(this);
