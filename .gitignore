@@ -5,6 +5,8 @@
 /pom.xml.versionsBackup
 /bin
 .idea
+*.iml
+**/*.iml
 /.idea
 .DS_Store
 /.DS_Store

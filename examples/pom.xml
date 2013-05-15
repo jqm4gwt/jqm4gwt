@@ -44,7 +44,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>jqm4gwt</artifactId>
+            <artifactId>jqm4gwt-standalone</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>
