@@ -174,11 +174,11 @@
                                               ui:field="searchButton"/>
                     </jqm:button>
                     <jqm:button>
-                        <jqm:button.JQMButton builtInIcon="SEARCH" href="myReservations" transition="NONE" text="Reservations"
-                                              ui:field="reservationsButton"/>
+                        <jqm:button.JQMButton builtInIcon="ALERT" href="actions" transition="NONE" text="Actions"
+                                              ui:field="actionsButton"/>
                     </jqm:button>
                     <jqm:button>
-                        <jqm:button.JQMButton builtInIcon="SEARCH" href="settings" transition="NONE" text="Settings"
+                        <jqm:button.JQMButton builtInIcon="GEAR" href="settings" transition="NONE" text="Settings"
                                               ui:field="settingsButton"/>
                     </jqm:button>
                 </jqm:toolbar.JQMNavBar>
