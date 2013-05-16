@@ -7,6 +7,8 @@ Note that because this project is a wrapper into Java, you do not have to invoke
 
 The project mirrors the release cycle of JQuery Mobile. That is, when version x.y is released of JQM we try to then release version x.y of jqm4gwt to match. Bug fixes in our code are released as x.y.z.
 
+A self-contained module providing all of the required JavaScript & CSS is also available.
+
 Jqm4gwt also provides a useful form framework that enables rapid prototyping of form pages, including ajax submission and validation. See http://code.google.com/p/jqm4gwt/wiki/FormFramework
 
 Please contribute with pull requests!
@@ -14,14 +16,14 @@ Please contribute with pull requests!
 Examples
 ========
 
-Examples and demos are hosted on a google app engine instance here: http://jqm4gwt.appspot.com/examples.html (This is quite out of date now - best off checking out the jqm4gwt-examples project and running locally).
+Examples and demos are hosted on a google app engine instance here: http://jqm4gwt.appspot.com/examples.html.
 
 These include the typical hello world and a show case of JQuery Mobile widgets and events.
 
 What's Supported
 ========
 
-The full JQuery Mobile widget set is supported. That is pages, dialogs, popups, buttons, form elements, list boxes, navigation, etc. Jqm4gwt goes further and supports standard GWT MVP constructs (Activities, Places, etc) and mixes that with the JQuery Mobile navigation system seemlessly.
+The full JQuery Mobile widget set is supported. That is pages, dialogs, popups, buttons, form elements, list boxes, navigation, etc. Jqm4gwt goes further and supports standard GWT MVP constructs (Activities, Places, etc) and mixes that with the JQuery Mobile navigation system seemlessly. JQueryMobile is exposed to GWT users via both a simple [Fluent-style](http://en.wikipedia.org/wiki/Fluent_interface) API and via [GWT's UiBinder](https://developers.google.com/web-toolkit/doc/latest/DevGuideUiBinder).
 
 Getting Started
 ========
