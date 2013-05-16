@@ -87,19 +87,33 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 		setText(labelText);
 	}
 	
+	ArrayList<HandlerRegistration> blurHandlers = new ArrayList<HandlerRegistration>();
+
+	private void clearBlurHandlers()
+	{
+		for(HandlerRegistration blurHandler : blurHandlers) blurHandler.removeHandler();
+		blurHandlers.clear();
+	}
+	
+	protected void onUnload()
+	{
+		clearBlurHandlers();
+	}
+	
 	@Override
 	public HandlerRegistration addBlurHandler(final BlurHandler handler) {
+		clearBlurHandlers();
 		for (FormLabel label : labels)
-			label.addDomHandler(new ClickHandler() {
+			blurHandlers.add(label.addDomHandler(new ClickHandler() {
 
 				@Override
 				public void onClick(ClickEvent event) {
 					handler.onBlur(null);
 				}
-			}, ClickEvent.getType());
+			}, ClickEvent.getType()));
 		return null;
-	}
-
+	}	
+	
 	/**
 	 * Add a new check option to the checkset.
 	 * 

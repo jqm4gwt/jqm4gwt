@@ -209,6 +209,23 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 												
 												}-*/;
 
+    private native void unbindLifecycleEvents(String id) /*-{
+												$wnd.$('div[data-url="' + id + '"]').unbind("pageshow");	
+												$wnd.$('div[data-url="' + id + '"]').unbind("pagehide");
+												$wnd.$('div[data-url="' + id + '"]').unbind("pagebeforehide");
+												$wnd.$('div[data-url="' + id + '"]').unbind("pagebeforeshow");
+	
+												}-*/;
+
+    protected void onUnload()
+    {
+    	unbindLifecycleEvents(getId());
+        if (headerHandlerRegistration != null)
+            headerHandlerRegistration.removeHandler();
+        if (footerHandlerRegistration != null)
+            footerHandlerRegistration.removeHandler();
+    }
+    
     @Override
     public void clear() {
         throw new RuntimeException("You called clear on the page, you probably wanted to call clear on a content panel");
