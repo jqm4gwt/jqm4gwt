@@ -108,9 +108,18 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
     }
 
     private native void bind(String id, JQMListItem item) /*-{
-                                        $wnd.$("#"+id).live("tap", function(event) { item.@com.sksamuel.jqm4gwt.list.JQMListItem::onTap()(); });
+                                        $wnd.$(document).on("tap", "#"+id, function(event) { item.@com.sksamuel.jqm4gwt.list.JQMListItem::onTap()(); })
 										}-*/;
 
+    private native void unbind(String id) /*-{
+    									$wnd.$(document).off("tap", "#"+id)
+										}-*/;    
+    
+    protected void onUnload()
+    {
+    	unbind(getElement().getId());
+    }
+    
     private void createAndAttachAsideElem() {
         asideElem = Document.get().createPElement();
         asideElem.setClassName("ui-li-aside");
