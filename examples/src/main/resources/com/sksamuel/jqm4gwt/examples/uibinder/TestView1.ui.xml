@@ -5,6 +5,8 @@
 
     <jqm:JQMPage containerId="testPage1" backButton="true">
         <jqm:toolbar.JQMHeader text="Test Page 1 Header"/>
+        <jqm:plugins.iscroll.IScrollPanel>
+            <jqm:html.Span text="spanText in IScrollPanel"/>
         <jqm:form.JQMForm ui:field="form">
             <jqm:button.JQMButton text="Go To Test Page 2" href="#testPage2" transition="NONE" iconPos="RIGHT" builtInIcon="RIGHT"/>
             <jqm:button.JQMButtonGroup>
@@ -157,11 +159,9 @@
         <!--
         <jqm:plugins.datebox.DateBox mode="CALBOX" afterToday="true" notToday="true" minDays="5"/>
         -->
-        <jqm:plugins.iscroll.IScrollPanel>
-            <jqm:html.Span text="spanText in IScrollPanel"/>
-        </jqm:plugins.iscroll.IScrollPanel>
         <jqm:JQMPopup/>
         <jqm:LoadingIndicator/>
+        </jqm:plugins.iscroll.IScrollPanel>
         <jqm:toolbar.JQMFooter>
             <jqm:widget>
                 <jqm:toolbar.JQMNavBar>
