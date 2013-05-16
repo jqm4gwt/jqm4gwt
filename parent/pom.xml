@@ -1,0 +1,185 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+        <relativePath>../../oss-parent</relativePath>
+    </parent>
+
+    <groupId>com.sksamuel.jqm4gwt</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.2.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>jqm4gwt Parent POM</name>
+    <description>The parent POM of jqm4gwt, inherited by all of it's modules.</description>
+    <url>https://github.com/sksamuel/jqm4gwt</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Stephen Samuel</name>
+            <email>samspade79@gmail.com</email>
+            <timezone>GMT</timezone>
+        </developer>
+    </developers>
+
+    <properties>
+        <gwt.version>2.5.1</gwt.version>
+
+        <!-- Sets the project's default encoding. http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- This is just for "eclipse:eclipse" goal to always attempt downloading
+            sources -->
+        <downloadSources>true</downloadSources>
+
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.sksamuel.jqm4gwt</groupId>
+                <artifactId>jqm4gwt</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sksamuel.jqm4gwt</groupId>
+                <artifactId>jqm4gwt</artifactId>
+                <classifier>sources</classifier>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sksamuel.jqm4gwt</groupId>
+                <artifactId>jqm4gwt-standalone</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sksamuel.jqm4gwt</groupId>
+                <artifactId>jqm4gwt-standalone</artifactId>
+                <classifier>sources</classifier>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.gwt</groupId>
+                <artifactId>gwt-servlet</artifactId>
+                <version>${gwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.gwt</groupId>
+                <artifactId>gwt-user</artifactId>
+                <version>${gwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.kindleit</groupId>
+                <artifactId>gae-runtime</artifactId>
+                <version>${gae.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>com.google.appengine</groupId>
+                <artifactId>appengine-api-labs</artifactId>
+                <version>${gae.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.appengine</groupId>
+                <artifactId>appengine-api-stubs</artifactId>
+                <version>${gae.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.appengine</groupId>
+                <artifactId>appengine-testing</artifactId>
+                <version>${gae.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.7</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.7</version>
+                <classifier>sources</classifier>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <version>2.5</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <version>2.2.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <version>2.9</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <version>2.1.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <version>2.3.2</version>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <version>1.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>gwt-maven-plugin</artifactId>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <version>${gwt.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-gae-plugin</artifactId>
+                    <groupId>net.kindleit</groupId>
+                    <version>0.9.4</version>
+                </plugin>
+                <plugin>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <version>1.0.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>requirejs-maven-plugin</artifactId>
+                    <groupId>com.github.mcheely</groupId>
+                    <version>1.1.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <version>1.8</version>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
