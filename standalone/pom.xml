@@ -12,7 +12,7 @@
 
     <artifactId>jqm4gwt-standalone</artifactId>
     <packaging>jar</packaging>
-    <name>jqm4gwt standalone</name>
+    <name>jqm4gwt Standalone</name>
     <description>jqm4gwt bundled with all of its dependencies</description>
 
     <properties>
