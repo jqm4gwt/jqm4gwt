@@ -54,9 +54,15 @@
                     <jqm:form.elements.JQMSelect.Option text="option4Text" value="option4value"/>
                 </jqm:option>
             </jqm:form.elements.JQMSelect>
-            <jqm:form.elements.JQMSlider min="5" max="8" labelText="sliderLabelText"/>
+            <jqm:form.elements.JQMSlider min="5" max="8" labelText="sliderLabelText" ui:field="slider"/>
+            <jqm:button.JQMButton builtInIcon="MINUS" ui:field="disableSliderButton" text="Disable Slider"/>
+            <jqm:button.JQMButton builtInIcon="PLUS" ui:field="enableSliderButton" text="Enable Slider"/>
             <jqm:form.elements.JQMTelephone text="telephoneText"/>
-            <jqm:form.elements.JQMText text="textText"/>
+            <jqm:form.elements.JQMText text="textText" ui:field="text"/>
+            <jqm:button.JQMButton builtInIcon="MINUS" ui:field="disableTextButton" text="Disable Text"/>
+            <jqm:button.JQMButton builtInIcon="PLUS" ui:field="enableTextButton" text="Enable Text"/>
+
+
             <!-- TODO fix col/rows setter <jqm:form.elements.JQMTextArea text="textAreaText" columns="40" rows="20"/>-->
             <jqm:form.elements.JQMTextArea text="textAreaText"/>
             <jqm:form.elements.JQMUrl text="urlText"/>
@@ -159,7 +165,10 @@
         <!--
         <jqm:plugins.datebox.DateBox mode="CALBOX" afterToday="true" notToday="true" minDays="5"/>
         -->
-        <jqm:JQMPopup/>
+        <jqm:JQMPopup ui:field="popup">
+            <jqm:button.JQMButton builtInIcon="MINUS" ui:field="popupCloseButton" text="Close Pop-up"/>
+        </jqm:JQMPopup>
+        <jqm:button.JQMButton builtInIcon="INFO" ui:field="popupOpenButton" text="Pop-up example..."/>
         <jqm:LoadingIndicator/>
         </jqm:plugins.iscroll.IScrollPanel>
         <jqm:toolbar.JQMFooter>

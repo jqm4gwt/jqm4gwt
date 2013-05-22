@@ -85,19 +85,20 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
     }
 
     private native void disable(String id)/*-{
-                                $("#"+id).slider('disable');
-								}-*/;
+        $wnd.$("#" + id).slider('disable');
+    }-*/;
 
     public void enable() {
         enable(input.getElement().getId());
     }
 
     private native void enable(String id) /*-{
-                                $("#"+id).slider('enable');
-								}-*/;
+        $wnd.$("#" + id).slider('enable');
+    }-*/;
 
     /**
      * Returns the text of the label
+     *
      * @return
      */
     public String getLabelText() {
@@ -136,8 +137,8 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
     }
 
     private native String getValue(String id) /*-{
-                                    return $wnd.$("#" + name).attr("value");
-									}-*/;
+        return $wnd.$("#" + name).attr("value");
+    }-*/;
 
     public boolean isHighlight() {
         return "true".equals(getAttribute("data-highligh"));
@@ -149,9 +150,8 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
     }
 
     private native void refresh(String id, int value) /*-{
-										$wnd.$("#" + name).val(value).slider("refresh");
-										}-*/;
-
+        $wnd.$("#" + name).val(value).slider("refresh");
+    }-*/;
 
 
     public void setHighlight(boolean highlight) {
