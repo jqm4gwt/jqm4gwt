@@ -1,5 +1,7 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
+import com.google.gwt.uibinder.client.UiConstructor;
+
 /**
  * @author Stephen K Samuel samspade79@gmail.com 18 May 2011 04:17:45
  * 
@@ -21,7 +23,8 @@ public class JQMTelephone extends JQMText {
 	 * @param text
 	 *              the text to use for the label
 	 */
-	public JQMTelephone(String text) {
+	public @UiConstructor
+    JQMTelephone(String text) {
 		super(text);
 		setType("tel");
 	}
