@@ -1,11 +1,18 @@
 package com.sksamuel.jqm4gwt.examples.uibinder;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMPage;
+import com.sksamuel.jqm4gwt.JQMPopup;
+import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.form.JQMForm;
 import com.sksamuel.jqm4gwt.form.SubmissionHandler;
+import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
+import com.sksamuel.jqm4gwt.form.elements.JQMText;
 
 /**
  * @author jraymond
@@ -25,7 +32,64 @@ public class TestView1 {
     private TestView2 nextView = new TestView2();
 
     @UiField
+    JQMPopup popup;
+
+    @UiField
+    JQMButton popupOpenButton;
+
+    @UiField
+    JQMButton popupCloseButton;
+
+    @UiField
+    JQMText text;
+
+    @UiField
+    JQMButton disableTextButton;
+
+    @UiField
+    JQMButton enableTextButton;
+
+    @UiField
+    JQMSlider slider;
+
+    @UiField
+    JQMButton disableSliderButton;
+
+    @UiField
+    JQMButton enableSliderButton;
+
+    @UiField
     JQMForm form;
+
+    @UiHandler("popupOpenButton")
+    void handlePopupOpenButtonClick(ClickEvent e) {
+        popup.open();
+    }
+
+    @UiHandler("popupCloseButton")
+    void handlePopupCloseButtonClick(ClickEvent e) {
+        popup.close();
+    }
+
+    @UiHandler("disableTextButton")
+    void handleDisableTextButtonClick(ClickEvent e) {
+        text.disable();
+    }
+
+    @UiHandler("enableTextButton")
+    void handleEnableTextButtonClick(ClickEvent e) {
+        text.enable();
+    }
+
+    @UiHandler("disableSliderButton")
+    void handleDisableSliderButtonClick(ClickEvent e) {
+        slider.disable();
+    }
+
+    @UiHandler("enableSliderButton")
+    void handleEnableSliderButtonClick(ClickEvent e) {
+        slider.enable();
+    }
 
     {
         form.setSubmissionHandler(new SubmissionHandler() {

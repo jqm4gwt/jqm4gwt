@@ -37,11 +37,11 @@ public class JQMPopup extends JQMContainer {
     }
 
     private native void _close(String id) /*-{
-                                $('#' + id).popup("close")
+        $wnd.$('#' + id).popup("close")
 								}-*/;
 
     private native void _open(String id) /*-{
-                                $('#' + id).popup("open")
+        $wnd.$('#' + id).popup("open")
 								}-*/;
 
     public JQMPopup close() {
