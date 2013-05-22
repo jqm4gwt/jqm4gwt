@@ -144,16 +144,16 @@ public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHand
     }
 
     private native void disable(String id)/*-{
-                                $("#" + id).textinput('disable');
-								}-*/;
+        $wnd.$("#" + id).textinput('disable');
+    }-*/;
 
     public void enable() {
         enable(input.getElement().getId());
     }
 
     private native void enable(String id) /*-{
-								$("#" + id).textinput('enable');
-								}-*/;
+        $wnd.$("#" + id).textinput('enable');
+    }-*/;
 
     @Override
     public String getId() {
