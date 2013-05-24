@@ -1,15 +1,18 @@
 jqm4gwt
 =======
 
-JQuery Mobile wrapper for GWT is a project that wraps the JQuery Mobile framework into a gwt widget library that can be used in a GWT application. This allows GWT developers to develop mobile web pages with all the benefits of jQuery Mobile without having to hand code javascript. In addition, projects that currently leverage GWT can add a mobile channel with ease.
+JQuery Mobile wrapper for GWT is a project that wraps the JQuery Mobile framework into a gwt widget library that can be used in a GWT application. This allows GWT developers to develop mobile web apps with and leverage the vibrant jQuery Mobile widgets community without having to hand code javascript. In addition, projects that currently leverage GWT can add a mobile channel with ease.
 
 Note that because this project is a wrapper into Java, you do not have to invoke javascript native methods, nor do you have to pass inline javascript to generic methods. You create widgets exactly as you do in the normal GWT widgetset. In fact you don't have to have any understanding of how jquery mobile works behind the scenes (although of course it helps if you do). A quick example to create a jquery mobile enhanced button is `JQMButton button = new JQMButton("Click me")`
 
 The project mirrors the release cycle of JQuery Mobile. That is, when version x.y is released of JQM we try to then release version x.y of jqm4gwt to match. Bug fixes in our code are released as x.y.z.
 
-A self-contained module providing all of the required JavaScript & CSS is also available.
+There is [full support for GWT's UiBinder](https://github.com/sksamuel/jqm4gwt/wiki/Using-jqm4gwt-with-UiBinder),
+ and a self-contained version of the module providing all of the dependent JQueryMobile JavaScript, CSS, and images.
 
 Jqm4gwt also provides a useful form framework that enables rapid prototyping of form pages, including ajax submission and validation. See http://code.google.com/p/jqm4gwt/wiki/FormFramework
+
+For more information, see the [Frequently Asked Questions] (https://github.com/sksamuel/jqm4gwt/wiki/Frequently-Asked-Questions).
 
 Please contribute with pull requests!
 
@@ -30,10 +33,12 @@ Getting Started
 
 Read the [quick start guide](https://github.com/sksamuel/jqm4gwt/wiki/Getting-Started). You will need to be familiar with GWT already.
 
-Latest Release 1.2.1
+Getting It
 ========
 
-Released 22-Dec-2012
+Latest Release: 1.2.1 Released 22-Dec-2012
+ * [GWT Module] (http://artifacts.accelerantmobile.com:8081/nexus/service/local/artifact/maven/redirect?r=central&g=com.sksamuel.jqm4gwt&a=jqm4gwt&v=1.2.1&e=jar)
+ * [Sources] (http://artifacts.accelerantmobile.com:8081/nexus/service/local/artifact/maven/redirect?r=central&g=com.sksamuel.jqm4gwt&a=jqm4gwt&v=1.2.1&e=jar&c=sources)
 
 Dependencies are available from maven central:
 
@@ -42,6 +47,12 @@ Dependencies are available from maven central:
 			<artifactId>jqm4gwt</artifactId>
 			<version>1.2.1</version>
   	</dependency>
+
+Latest Stable Build 1.2.2-SNAPSHOT (not in a repo):
+ * [Library](http://ci.accelerantmobile.com:8080/job/jqm4gwt_sksamuel/lastStableBuild/com.sksamuel.jqm4gwt$jqm4gwt/)
+ * [Standalone](http://ci.accelerantmobile.com:8080/job/jqm4gwt_sksamuel/lastStableBuild/com.sksamuel.jqm4gwt$jqm4gwt-standalone/)
+
+[Current Build Status](http://ci.accelerantmobile.com:8080/job/jqm4gwt_sksamuel/)
 
 Spread the word
 ================
