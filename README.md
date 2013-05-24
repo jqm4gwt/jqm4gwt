@@ -12,7 +12,7 @@ There is [full support for GWT's UiBinder](https://github.com/sksamuel/jqm4gwt/w
 
 Jqm4gwt also provides a useful form framework that enables rapid prototyping of form pages, including ajax submission and validation. See http://code.google.com/p/jqm4gwt/wiki/FormFramework
 
-For more information, see the [Frequently Asked Questions] ()
+For more information, see the [Frequently Asked Questions] (https://github.com/sksamuel/jqm4gwt/wiki/Frequently-Asked-Questions).
 
 Please contribute with pull requests!
 
