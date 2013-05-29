@@ -209,7 +209,6 @@ public class JQMRadioset extends JQMWidget implements HasText<JQMRadioset>, HasS
 	
     @Override
     public void setTheme(String themeName) {
-    	super.withTheme(themeName);
     	for(TextBox radio : radios) applyTheme(radio, themeName);
     }
 	

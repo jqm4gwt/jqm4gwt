@@ -174,7 +174,6 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 	
     @Override
     public void setTheme(String themeName) {
-    	super.withTheme(themeName);
     	for(TextBox checkInput : inputs) applyTheme(checkInput, themeName);
     }
 	
