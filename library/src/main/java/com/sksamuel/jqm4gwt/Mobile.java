@@ -9,8 +9,6 @@ package com.sksamuel.jqm4gwt;
  */
 public class Mobile {
 
-	private static final String	DIALOG_DEFAULT	= "Loading";
-
 	/**
 	 * Invokes the $.mobile.changePage method
 	 */
@@ -26,20 +24,10 @@ public class Mobile {
 	}
 
 	/**
-	 * Hide the page loading dialog and set the global loading message back to
-	 * the default "Loading"
+	 * Hide the page loading dialog.
 	 */
-	public static void hideLoadingDialog() {
-		hideLoadingDialog(DIALOG_DEFAULT);
-	}
-
-	/**
-	 * Hide the page loading dialog and set the global loading message back to
-	 * the default "Loading"
-	 */
-	private static native void hideLoadingDialog(String s) /*-{
-											$wnd.$.mobile.hidePageLoadingMsg();
-											$wnd.$.mobile.loadingMessage = s;
+	public static native void hideLoadingDialog() /*-{
+											$wnd.$.mobile.loading('hide');
 											}-*/;
 
 	/**
@@ -54,8 +42,7 @@ public class Mobile {
 	 * 
 	 */
 	public static native void showLoadingDialog(String msg) /*-{
-											$wnd.$.mobile.loadingMessage = msg;
-											$wnd.$.mobile.showPageLoadingMsg();
+											$wnd.$.mobile.loading('show', {text: msg, textVisible: true});
 											}-*/;
 
 	/**

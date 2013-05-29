@@ -298,7 +298,6 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
     
     @Override
     public void setTheme(String themeName) {
-    	super.withTheme(themeName);
     	applyTheme(select, themeName);
     }
 
