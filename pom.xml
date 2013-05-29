@@ -24,6 +24,7 @@
         <module>parent</module>
         <module>library</module>
         <module>standalone</module>
+        <module>remote</module>
         <module>examples</module>
     </modules>
 
