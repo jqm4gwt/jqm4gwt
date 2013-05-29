@@ -96,12 +96,31 @@ public class JQMRadioset extends JQMWidget implements HasText<JQMRadioset>, HasS
 		fieldset.add(legend);		
 	}
 	
+	BlurHandler blurHandler;
 	ArrayList<HandlerRegistration> blurHandlers = new ArrayList<HandlerRegistration>();
 
+	private void addRadiosBlurHandler(final BlurHandler handler)
+	{
+		for (TextBox radio : radios) {
+			blurHandlers.add(radio.addChangeHandler(new ChangeHandler() {
+
+				@Override
+				public void onChange(ChangeEvent event) {
+					handler.onBlur(null);
+				}
+			}));
+		}		
+	}
+	
 	private void clearBlurHandlers()
 	{
 		for(HandlerRegistration blurHandler : blurHandlers) blurHandler.removeHandler();
 		blurHandlers.clear();
+	}
+	
+	protected void onLoad()
+	{
+		if(blurHandler != null && blurHandlers.size() == 0) addRadiosBlurHandler(blurHandler);
 	}
 	
 	protected void onUnload()
@@ -114,16 +133,9 @@ public class JQMRadioset extends JQMWidget implements HasText<JQMRadioset>, HasS
 	 */
 	@Override
 	public HandlerRegistration addBlurHandler(final BlurHandler handler) {
+		this.blurHandler = handler;
 		clearBlurHandlers();
-		for (TextBox radio : radios) {
-			blurHandlers.add(radio.addChangeHandler(new ChangeHandler() {
-
-				@Override
-				public void onChange(ChangeEvent event) {
-					handler.onBlur(null);
-				}
-			}));
-		}
+		addRadiosBlurHandler(handler);
 		return null;
 	}
 

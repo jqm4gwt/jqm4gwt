@@ -95,8 +95,6 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         if (getId() == null) {
             super.setContainerId(containerId);
             JQMContext.attachAndEnhance(this);
-            bindLifecycleEvents(this, getId());
-
         } else if (! containerId.equals(getId())) {
             throw new IllegalStateException("Attempt to change JQMPage with containerId '" + getId() + "' to '" + containerId + "' failed - once set, it cannot be changed.");
         }
@@ -217,13 +215,26 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 	
 												}-*/;
 
+    protected void onLoad()
+    {
+        bindLifecycleEvents(this, getId());
+        if(header != null && headerHandlerRegistration == null) bindHeaderEvents();
+        if(footer != null && footerHandlerRegistration == null) bindFooterEvents();
+    }
+    
     protected void onUnload()
     {
     	unbindLifecycleEvents(getId());
         if (headerHandlerRegistration != null)
+        {
             headerHandlerRegistration.removeHandler();
+            headerHandlerRegistration = null;
+        }
         if (footerHandlerRegistration != null)
+        {
             footerHandlerRegistration.removeHandler();
+            footerHandlerRegistration = null;
+        }
     }
     
     @Override

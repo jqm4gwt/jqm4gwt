@@ -54,7 +54,6 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
         setStyleName("jqm4gwt-listitem");
         setText(text);
         setId();
-        bind(getElement().getId(), this);
     }
 
     /**
@@ -114,6 +113,12 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
     private native void unbind(String id) /*-{
     									$wnd.$(document).off("tap", "#"+id)
 										}-*/;    
+    
+    
+    protected void onLoad()
+    {
+        bind(getElement().getId(), this);
+    }
     
     protected void onUnload()
     {
