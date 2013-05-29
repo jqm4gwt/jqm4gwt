@@ -14,7 +14,7 @@ Jqm4gwt also provides a useful form framework that enables rapid prototyping of 
 
 For more information, see the [Frequently Asked Questions] (https://github.com/sksamuel/jqm4gwt/wiki/Frequently-Asked-Questions).
 
-Please contribute with pull requests!
+Please contribute with pull requests! See the [Contributors Guidelines] (https://github.com/sksamuel/jqm4gwt/wiki/Contributors-Guidelines) to assure the health of the project.
 
 Examples
 ========
