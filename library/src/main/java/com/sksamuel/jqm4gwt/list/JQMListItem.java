@@ -54,7 +54,6 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
         setStyleName("jqm4gwt-listitem");
         setText(text);
         setId();
-        bind(getElement().getId(), this);
     }
 
     /**
@@ -108,9 +107,24 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
     }
 
     private native void bind(String id, JQMListItem item) /*-{
-                                        $wnd.$("#"+id).live("tap", function(event) { item.@com.sksamuel.jqm4gwt.list.JQMListItem::onTap()(); });
+                                        $wnd.$(document).on("tap", "#"+id, function(event) { item.@com.sksamuel.jqm4gwt.list.JQMListItem::onTap()(); })
 										}-*/;
 
+    private native void unbind(String id) /*-{
+    									$wnd.$(document).off("tap", "#"+id)
+										}-*/;    
+    
+    
+    protected void onLoad()
+    {
+        bind(getElement().getId(), this);
+    }
+    
+    protected void onUnload()
+    {
+    	unbind(getElement().getId());
+    }
+    
     private void createAndAttachAsideElem() {
         asideElem = Document.get().createPElement();
         asideElem.setClassName("ui-li-aside");

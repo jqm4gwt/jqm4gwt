@@ -87,19 +87,45 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 		setText(labelText);
 	}
 	
-	@Override
-	public HandlerRegistration addBlurHandler(final BlurHandler handler) {
+	BlurHandler blurHandler;
+	ArrayList<HandlerRegistration> blurHandlers = new ArrayList<HandlerRegistration>();
+
+	private void addLabelsBlurHandler(final BlurHandler handler)
+	{
 		for (FormLabel label : labels)
-			label.addDomHandler(new ClickHandler() {
+			blurHandlers.add(label.addDomHandler(new ClickHandler() {
 
 				@Override
 				public void onClick(ClickEvent event) {
 					handler.onBlur(null);
 				}
-			}, ClickEvent.getType());
-		return null;
+			}, ClickEvent.getType()));		
 	}
-
+	
+	private void clearBlurHandlers()
+	{
+		for(HandlerRegistration blurHandler : blurHandlers) blurHandler.removeHandler();
+		blurHandlers.clear();
+	}
+	
+	protected void onLoad()
+	{
+		if(blurHandler != null && blurHandlers.size() == 0) addLabelsBlurHandler(blurHandler);
+	}
+	
+	protected void onUnload()
+	{
+		clearBlurHandlers();
+	}
+	
+	@Override
+	public HandlerRegistration addBlurHandler(final BlurHandler handler) {
+		this.blurHandler = handler;
+		clearBlurHandlers();
+		addLabelsBlurHandler(handler);
+		return null;
+	}	
+	
 	/**
 	 * Add a new check option to the checkset.
 	 * 
@@ -148,7 +174,6 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 	
     @Override
     public void setTheme(String themeName) {
-    	super.withTheme(themeName);
     	for(TextBox checkInput : inputs) applyTheme(checkInput, themeName);
     }
 	
