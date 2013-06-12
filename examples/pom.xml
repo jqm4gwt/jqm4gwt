@@ -43,8 +43,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>jqm4gwt-standalone</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <artifactId>jqm4gwt-iscroll</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <artifactId>jqm4gwt-grid960</artifactId>
+            <groupId>${project.groupId}</groupId>
             <scope>compile</scope>
         </dependency>
         <dependency>

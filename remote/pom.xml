@@ -33,7 +33,6 @@
         <dependency>
             <groupId>com.sksamuel.jqm4gwt</groupId>
             <artifactId>jqm4gwt</artifactId>
-            <classifier>sources</classifier>
             <scope>provided</scope>
         </dependency>
     </dependencies>

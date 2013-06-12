@@ -25,6 +25,7 @@
         <module>library</module>
         <module>standalone</module>
         <module>remote</module>
+        <module>plugins</module>
         <module>examples</module>
     </modules>
 

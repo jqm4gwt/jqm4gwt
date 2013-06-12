@@ -54,10 +54,10 @@ Latest Stable Build 1.2.2-SNAPSHOT (not in a repo):
 
 [Current Build Status](http://ci.accelerantmobile.com:8080/job/jqm4gwt_sksamuel/)
 
-Spread the word
+Spread the word and join the conversation!
 ================
 
-If you like jqm4gwt then [cheer on ohloh](https://www.ohloh.net/stack_entries/new?project_id=jqm4gwt&ref=sample) ![ohloh logo](https://www.ohloh.net/images/stack/iusethis/static_logo.png)
+If you like jqm4gwt then [cheer on ohloh](https://www.ohloh.net/stack_entries/new?project_id=jqm4gwt&ref=sample) ![ohloh logo](https://www.ohloh.net/images/stack/iusethis/static_logo.png). Want to talk about it? Join the [discussion group for jqm4gwt on Google Groups](https://groups.google.com/forum/?fromgroups#!forum/jqm4gwt).
 
 Related Projects
 ================
