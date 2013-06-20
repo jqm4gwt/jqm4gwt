@@ -36,7 +36,7 @@ public class JQMContext {
 
 	/**
 	 * Programatically change the displayed page to the given {@link JQMPage}
-	 * instance. This uses the default transition which is Transition.POP
+	 * instance. This uses the default transition which is Transition.POP and changeHash which is true.
 	 */
 	public static void changePage(JQMContainer container) {
 		changePage(container, defaultTransition);
@@ -44,12 +44,20 @@ public class JQMContext {
 
 	/**
 	 * Change the displayed page to the given {@link JQMPage} instance using
-	 * the supplied transition.
+	 * the supplied transition. This uses the default changeHash which is true.
 	 */
 	public static void changePage(JQMContainer container, Transition transition) {
 		Mobile.changePage("#" + container.getId(), transition, defaultTransistionDirection, defaultChangeHash);
 	}
 
+	/**
+	  * Change the displayed page to the given {@link JQMPage} instance using
+	  * the supplied transition and changeHash
+	  */
+	public static void changePage(JQMContainer container, Transition transition, boolean changeHash) {
+		Mobile.changePage("#" + container.getId(), transition, defaultTransistionDirection, changeHash);
+	}
+	
 	private static void enhance(JQMContainer c) {
 		render(c.getId());
 	}
