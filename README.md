@@ -26,7 +26,10 @@ These include the typical hello world and a show case of JQuery Mobile widgets a
 What's Supported
 ========
 
-The full JQuery Mobile widget set is supported. That is pages, dialogs, popups, buttons, form elements, list boxes, navigation, etc. Jqm4gwt goes further and supports standard GWT MVP constructs (Activities, Places, etc) and mixes that with the JQuery Mobile navigation system seemlessly. JQueryMobile is exposed to GWT users via both a simple [Fluent-style](http://en.wikipedia.org/wiki/Fluent_interface) API and via [GWT's UiBinder](https://developers.google.com/web-toolkit/doc/latest/DevGuideUiBinder).
+The full JQuery Mobile widget set is supported. That is pages, dialogs, popups, buttons, form elements, list boxes, navigation, etc.
+Jqm4gwt goes further and supports standard GWT MVP constructs (Activities, Places, etc) and mixes that with the JQuery Mobile navigation system seemlessly.
+JQueryMobile is exposed to GWT users via both a simple [Fluent-style](http://en.wikipedia.org/wiki/Fluent_interface) API and via
+[GWT's UiBinder](https://developers.google.com/web-toolkit/doc/latest/DevGuideUiBinder).
 
 Getting Started
 ========
@@ -57,11 +60,13 @@ Latest Stable Build 1.2.2-SNAPSHOT (not in a repo):
 Spread the word and join the conversation!
 ================
 
-If you like jqm4gwt then [cheer on ohloh](https://www.ohloh.net/stack_entries/new?project_id=jqm4gwt&ref=sample) ![ohloh logo](https://www.ohloh.net/images/stack/iusethis/static_logo.png). Want to talk about it? Join the [discussion group for jqm4gwt on Google Groups](https://groups.google.com/forum/?fromgroups#!forum/jqm4gwt).
+If you like jqm4gwt then [cheer on ohloh](https://www.ohloh.net/stack_entries/new?project_id=jqm4gwt&ref=sample)
+![ohloh logo](https://www.ohloh.net/images/stack/iusethis/static_logo.png).
+
+Want to talk about it? Join the [discussion group for jqm4gwt on Google Groups](https://groups.google.com/forum/?fromgroups#!forum/jqm4gwt).
 
 Related Projects
 ================
 
 If you are looking for a GWT wrapper for the desktop [jQuery UI](http://jqueryui.com) then [gwtquery-ui](http://code.google.com/p/gwtquery-ui/) is where to look.
-
 For a GWT wrapper of JQuery then [gwtquery](http://code.google.com/p/gwtquery) is where to go.
