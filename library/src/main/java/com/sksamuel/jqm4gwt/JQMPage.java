@@ -393,6 +393,11 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 		bindFooterEvents();
     }
 
+    public JQMFooter getFooter()
+    {
+    	return footer;
+    }
+    
     @Override
     public void setFullScreen(boolean fs) {
         if (fs) {
@@ -424,6 +429,11 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         return header;
     }
 
+    public JQMHeader getHeader()
+    {
+    	return header;
+    }
+    
     /**
      * Sets the title of this page, which will be used as the contents of the
      * title tag when this page is the visible page.
