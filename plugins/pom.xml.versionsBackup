@@ -1,0 +1,21 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.sksamuel.jqm4gwt</groupId>
+        <artifactId>jqm4gwt</artifactId>
+        <version>1.2.2-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jqm4gwt-plugins</artifactId>
+    <name>jqm4gwt Plugins</name>
+    <description>GWT wrappers for common JQuery Mobile plugins</description>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>grid960</module>
+        <module>iscroll</module>
+    </modules>
+
+</project>
