@@ -4,11 +4,9 @@
 
     <parent>
         <groupId>com.sksamuel.jqm4gwt</groupId>
-        <artifactId>parent</artifactId>
-        <version>1.3.0</version>
-        <relativePath>../parent</relativePath>
+        <artifactId>jqm4gwt</artifactId>
+        <version>1.2.2-SNAPSHOT</version>
     </parent>
-
 
     <artifactId>jqm4gwt-remote</artifactId>
     <packaging>jar</packaging>
