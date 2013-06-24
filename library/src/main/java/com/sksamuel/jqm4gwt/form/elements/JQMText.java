@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
+import com.sksamuel.jqm4gwt.HasReadOnly;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.html.FormLabel;
@@ -37,7 +38,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *         <p/>
  *         An implementation of a standard HTML text input.
  */
-public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHandlers, HasClickHandlers, HasChangeHandlers, HasValue<String>,
+public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHandlers, HasClickHandlers, HasChangeHandlers, HasValue<String>, HasReadOnly,
         JQMFormWidget, HasKeyDownHandlers, HasKeyUpHandlers, HasMouseOverHandlers, HasMouseOutHandlers, HasPreventFocusZoom, HasMini<JQMText>,
         Focusable {
 
@@ -256,4 +257,15 @@ public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHand
         setText(text);
         return this;
     }
+
+    @Override
+	public boolean isReadOnly() {
+		return input.isReadOnly();
+	}
+
+	@Override
+	public void setReadOnly(boolean readOnly) 
+	{
+		input.setReadOnly(readOnly);
+	}
 }
