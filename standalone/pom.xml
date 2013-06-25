@@ -66,7 +66,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>${project.groupId}</groupId>
-                                    <artifactId>jqm4gwt</artifactId>
+                                    <artifactId>jqm4gwt-library</artifactId>
                                     <version>${project.version}</version>
                                     <type>jar</type>
                                     <classifier>sources</classifier>
