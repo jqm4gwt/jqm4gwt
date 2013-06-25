@@ -9,9 +9,10 @@
     </parent>
 
     <artifactId>jqm4gwt-grid960</artifactId>
+    <packaging>jar</packaging>
+
     <name>jqm4gwt Plugin: Grid960</name>
     <description>Plugin to jqm4gwt to use Jquery Mobile Grid960</description>
-    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
@@ -20,8 +21,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <artifactId>jqm4gwt-standalone</artifactId>
             <groupId>${project.groupId}</groupId>
+            <artifactId>jqm4gwt-library</artifactId>
         </dependency>
     </dependencies>
 

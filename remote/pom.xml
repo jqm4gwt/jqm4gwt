@@ -10,6 +10,7 @@
 
     <artifactId>jqm4gwt-remote</artifactId>
     <packaging>jar</packaging>
+
     <name>jqm4gwt Remote</name>
     <description>jqm4gwt using remote dependencies</description>
 
@@ -29,9 +30,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.sksamuel.jqm4gwt</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>jqm4gwt-library</artifactId>
-            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -56,7 +56,7 @@
                 <executions>
                     <execution>
                         <id>bring-in-jqm4gwt-sources</id>
-                        <phase>validate</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>unpack</goal>
                         </goals>

@@ -23,6 +23,8 @@ Examples and demos are hosted on a google app engine instance here: http://jqm4g
 
 These include the typical hello world and a show case of JQuery Mobile widgets and events.
 
+[![Build Status](https://travis-ci.org/sksamuel/jqm4gwt.png)](https://travis-ci.org/sksamuel/jqm4gwt)
+
 What's Supported
 ========
 
