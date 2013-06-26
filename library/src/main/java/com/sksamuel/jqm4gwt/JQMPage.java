@@ -492,6 +492,10 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         getElement().insertBefore(panel.getElement(), getElement().getFirstChild());
     }
     
+    public JQMPanel getPanel() {
+    	return panel;
+    }
+    
     /**
      * Sets the title of this page, which will be used as the contents of the
      * title tag when this page is the visible page.
