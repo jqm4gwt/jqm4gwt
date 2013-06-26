@@ -439,6 +439,11 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 		bindFooterEvents();
     }
 
+    public JQMFooter getFooter()
+    {
+    	return footer;
+    }
+    
     @Override
     public void setFullScreen(boolean fs) {
         if (fs) {
@@ -475,6 +480,10 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         JQMHeader header = new JQMHeader(text);
         setHeader(header);
         return header;
+    }
+
+    public JQMHeader getHeader() {
+    	return header;
     }
 
     public void setPanel(JQMPanel panel) {

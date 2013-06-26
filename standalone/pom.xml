@@ -4,14 +4,13 @@
 
     <parent>
         <groupId>com.sksamuel.jqm4gwt</groupId>
-        <artifactId>parent</artifactId>
-        <version>1.2.2-SNAPSHOT</version>
-        <relativePath>../parent</relativePath>
+        <artifactId>jqm4gwt</artifactId>
+        <version>1.3.1-SNAPSHOT</version>
     </parent>
-
 
     <artifactId>jqm4gwt-standalone</artifactId>
     <packaging>jar</packaging>
+
     <name>jqm4gwt Standalone</name>
     <description>jqm4gwt bundled with all of its dependencies</description>
 
@@ -31,9 +30,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.sksamuel.jqm4gwt</groupId>
-            <artifactId>jqm4gwt</artifactId>
-            <classifier>sources</classifier>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jqm4gwt-library</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -43,6 +41,7 @@
 
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>${maven.plugin.source.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -55,10 +54,11 @@
 
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven.plugin.dependency.version}</version>
                 <executions>
                     <execution>
                         <id>bring-in-jqm4gwt-sources</id>
-                        <phase>validate</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>unpack</goal>
                         </goals>
@@ -66,7 +66,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>${project.groupId}</groupId>
-                                    <artifactId>jqm4gwt</artifactId>
+                                    <artifactId>jqm4gwt-library</artifactId>
                                     <version>${project.version}</version>
                                     <type>jar</type>
                                     <classifier>sources</classifier>
@@ -83,6 +83,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
                 <executions>
                     <execution>
                         <id>add-source</id>

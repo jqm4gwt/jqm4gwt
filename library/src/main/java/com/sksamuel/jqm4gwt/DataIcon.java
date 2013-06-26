@@ -14,7 +14,7 @@ public enum DataIcon {
 
 	GEAR("gear"), LEFT("arrow-l"), RIGHT("arrow-r"), UP("arrow-u"), DOWN("arrow-d"), DELETE("delete"), PLUS("plus"), MINUS(
 			"minus"), CHECK("check"), REFRESH("refresh"), FORWARD("forward"), BACK("back"), GRID("grid"), STAR(
-			"star"), ALERT("alert"), INFO("info"), HOME("home"), SEARCH("search"), BARS("bars"), EDIT("edit"), ;
+			"star"), ALERT("alert"), INFO("info"), HOME("home"), SEARCH("search"), BARS("bars"), EDIT("edit");
 
 	private final String	jqmValue;
 
@@ -28,5 +28,4 @@ public enum DataIcon {
 	public String getJqmValue() {
 		return jqmValue;
 	}
-
 }

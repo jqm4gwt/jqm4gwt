@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextArea;
 import com.sksamuel.jqm4gwt.HasGridDimensions;
 import com.sksamuel.jqm4gwt.HasMini;
+import com.sksamuel.jqm4gwt.HasReadOnly;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.html.FormLabel;
@@ -25,7 +26,8 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *         <p/>
  *         An implementation of a standard HTML Textarea
  */
-public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<JQMTextArea>, HasText<JQMTextArea>, HasValue<String>, HasMini<JQMTextArea>, HasKeyDownHandlers, HasKeyUpHandlers, HasFocusHandlers, HasBlurHandlers, Focusable {
+public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<JQMTextArea>, HasText<JQMTextArea>, HasValue<String>, HasReadOnly,
+	HasMini<JQMTextArea>, HasKeyDownHandlers, HasKeyUpHandlers, HasFocusHandlers, HasBlurHandlers, Focusable {
 
     private final FormLabel label = new FormLabel();
 
@@ -203,4 +205,15 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
         setText(text);
         return this;
     }
+
+	@Override
+	public boolean isReadOnly() {
+		return input.isReadOnly();
+	}
+
+	@Override
+	public void setReadOnly(boolean readOnly) 
+	{
+		input.setReadOnly(readOnly);
+	}
 }
