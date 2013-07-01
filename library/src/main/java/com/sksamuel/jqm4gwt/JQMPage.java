@@ -11,6 +11,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.toolbar.JQMFooter;
 import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
+import com.sksamuel.jqm4gwt.toolbar.JQMPanel;
 
 import java.util.Collection;
 
@@ -38,10 +39,12 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     protected JQMHeader header;
 
     protected JQMFooter footer;
+    
+    protected JQMPanel panel;
 
     private HandlerRegistration headerHandlerRegistration;
 
-    private com.google.web.bindery.event.shared.HandlerRegistration footerHandlerRegistration;
+    private com.google.web.bindery.event.shared.HandlerRegistration footerHandlerRegistration, panelHandlerRegistration;
 
     /**
      * Create a new {@link JQMPage}. Using this constructor, the page will not be rendered until a containerID has been
@@ -129,6 +132,12 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         bindHeaderEvents();
     }
 
+    public void add(JQMPanel panel) {
+    	setPanel(panel);
+    	panel.bindLifecycleEvents();
+    	bindPanelEvents();
+    }
+    
     /**
      * Adds a widget to the primary content container of this page.
      *
@@ -145,6 +154,25 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         // triggerCreate();
     }
 
+    void bindPanelEvents() {
+        if (panelHandlerRegistration != null)
+            panelHandlerRegistration.removeHandler();
+        panelHandlerRegistration = addDomHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                EventTarget target = event.getNativeEvent().getEventTarget();
+                Element element = Element.as(target);
+                for (Widget widget : panel.getWidgets()) {
+                    if (widget.getElement().isOrHasChild(element)) {
+                        widget.fireEvent(event);
+                        break;
+                    }
+                }
+            }
+        }, ClickEvent.getType());
+    }
+    
     void bindFooterEvents() {
         if (footerHandlerRegistration != null)
             footerHandlerRegistration.removeHandler();
@@ -220,6 +248,11 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         bindLifecycleEvents(this, getId());
         if(header != null && headerHandlerRegistration == null) bindHeaderEvents();
         if(footer != null && footerHandlerRegistration == null) bindFooterEvents();
+        if(panel != null)
+        {
+        	panel.bindLifecycleEvents();
+        	if(panelHandlerRegistration == null) bindPanelEvents();
+        }
     }
     
     protected void onUnload()
@@ -235,6 +268,12 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
             footerHandlerRegistration.removeHandler();
             footerHandlerRegistration = null;
         }
+        if (panelHandlerRegistration != null)
+        {
+            panelHandlerRegistration.removeHandler();
+            panelHandlerRegistration = null;
+        }
+        if(panel != null) panel.unbindLifecycleEvents();
     }
     
     @Override
@@ -350,9 +389,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     public void removeFooter() {
         footer = null;
-        Element element = getToolBar("footer");
-        if (element != null)
-            getElement().removeChild(element);
+        removeToolBar("footer");
     }
 
     /**
@@ -361,11 +398,20 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     public void removeHeader() {
         header = null;
-        Element element = getToolBar("header");
+        removeToolBar("header");
+    }
+
+    public void removePanel() {
+    	panel = null;
+    	removeToolBar("panel");
+    }
+    
+    private void removeToolBar(String name) {
+        Element element = getToolBar(name);
         if (element != null)
             getElement().removeChild(element);
     }
-
+    
     /**
      * Sets whether or not this page should have an auto generated back
      * button. If so, it will be placed in the left slot and override any left
@@ -419,7 +465,14 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     public void setHeader(JQMHeader header) {
         removeHeader();
         this.header = header;
-        getElement().insertBefore(header.getElement(), getElement().getFirstChild());
+        if(panel == null)
+        {
+        	getElement().insertBefore(header.getElement(), getElement().getFirstChild());
+        }
+        else
+        {
+        	getElement().insertAfter(header.getElement(), panel.getElement());
+        }
 		bindHeaderEvents();
     }
 
@@ -429,9 +482,18 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         return header;
     }
 
-    public JQMHeader getHeader()
-    {
+    public JQMHeader getHeader() {
     	return header;
+    }
+
+    public void setPanel(JQMPanel panel) {
+        removePanel();
+        this.panel = panel;
+        getElement().insertBefore(panel.getElement(), getElement().getFirstChild());
+    }
+    
+    public JQMPanel getPanel() {
+    	return panel;
     }
     
     /**
