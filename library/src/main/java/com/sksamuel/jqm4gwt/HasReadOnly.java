@@ -5,7 +5,7 @@ package com.sksamuel.jqm4gwt;
  * 
  *         This interface is implemented by widgets that have the readOnly property.
  */
-public interface HasReadOnly {
+public interface HasReadOnly<T> {
 
 	/**
 	 * Returns true if this widget is currently readOnly
@@ -18,4 +18,6 @@ public interface HasReadOnly {
    	 * @param readOnly
    	 */
    	void setReadOnly(boolean readOnly);
+   	
+    T withReadOnly(boolean readOnly);
 }

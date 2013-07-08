@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.sksamuel.jqm4gwt.HasMini;
+import com.sksamuel.jqm4gwt.HasPlaceHolder;
 import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
 import com.sksamuel.jqm4gwt.HasReadOnly;
 import com.sksamuel.jqm4gwt.HasText;
@@ -38,9 +39,9 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *         <p/>
  *         An implementation of a standard HTML text input.
  */
-public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHandlers, HasClickHandlers, HasChangeHandlers, HasValue<String>, HasReadOnly,
+public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHandlers, HasClickHandlers, HasChangeHandlers, HasValue<String>, HasReadOnly<JQMText>,
         JQMFormWidget, HasKeyDownHandlers, HasKeyUpHandlers, HasMouseOverHandlers, HasMouseOutHandlers, HasPreventFocusZoom, HasMini<JQMText>,
-        Focusable {
+        HasPlaceHolder<JQMText>,Focusable {
 
     /**
      * The widget used for the label
@@ -267,5 +268,29 @@ public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHand
 	public void setReadOnly(boolean readOnly) 
 	{
 		input.setReadOnly(readOnly);
+	}
+
+	@Override
+	public JQMText withReadOnly(boolean readOnly) 
+	{
+		setReadOnly(readOnly);
+		return this;
+	}
+
+	@Override
+	public String getPlaceHolder() 
+	{
+		return input.getElement().getAttribute(HasPlaceHolder.ATTRIBUTE_PLACEHOLDER);
+	}
+
+	@Override
+	public void setPlaceHolder(String placeHolderText) {
+		input.getElement().setAttribute(HasPlaceHolder.ATTRIBUTE_PLACEHOLDER,placeHolderText);
+	}
+
+	@Override
+	public JQMText withPlaceHolder(String placeHolderText) {
+		setPlaceHolder(placeHolderText);
+		return this;
 	}
 }

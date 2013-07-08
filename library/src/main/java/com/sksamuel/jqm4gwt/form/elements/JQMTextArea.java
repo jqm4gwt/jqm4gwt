@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextArea;
 import com.sksamuel.jqm4gwt.HasGridDimensions;
 import com.sksamuel.jqm4gwt.HasMini;
+import com.sksamuel.jqm4gwt.HasPlaceHolder;
 import com.sksamuel.jqm4gwt.HasReadOnly;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
@@ -26,11 +27,10 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *         <p/>
  *         An implementation of a standard HTML Textarea
  */
-public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<JQMTextArea>, HasText<JQMTextArea>, HasValue<String>, HasReadOnly,
-	HasMini<JQMTextArea>, HasKeyDownHandlers, HasKeyUpHandlers, HasFocusHandlers, HasBlurHandlers, Focusable {
+public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<JQMTextArea>, HasText<JQMTextArea>, HasValue<String>, HasReadOnly<JQMTextArea>,
+		HasPlaceHolder<JQMTextArea>,HasMini<JQMTextArea>, HasKeyDownHandlers, HasKeyUpHandlers, HasFocusHandlers, HasBlurHandlers, Focusable {
 
     private final FormLabel label = new FormLabel();
-
     private final TextArea input = new TextArea();
 
     /**
@@ -215,5 +215,29 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
 	public void setReadOnly(boolean readOnly) 
 	{
 		input.setReadOnly(readOnly);
+	}
+	
+	@Override
+	public JQMTextArea withReadOnly(boolean readOnly) 
+	{
+		setReadOnly(readOnly);
+		return this;
+	}
+
+	@Override
+	public String getPlaceHolder() 
+	{
+		return input.getElement().getAttribute(HasPlaceHolder.ATTRIBUTE_PLACEHOLDER);
+	}
+
+	@Override
+	public void setPlaceHolder(String placeHolderText) {
+		input.getElement().setAttribute(HasPlaceHolder.ATTRIBUTE_PLACEHOLDER,placeHolderText);
+	}
+
+	@Override
+	public JQMTextArea withPlaceHolder(String placeHolderText) {
+		setPlaceHolder(placeHolderText);
+		return this;
 	}
 }
