@@ -135,7 +135,11 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     @Override
     public String getText() {
-        return getElement().getInnerText();
+        Element e = getElement();
+        while (e.getFirstChildElement() != null) {
+            e = e.getFirstChildElement();
+        }
+        return e.getInnerText();
     }
 
     @Override
