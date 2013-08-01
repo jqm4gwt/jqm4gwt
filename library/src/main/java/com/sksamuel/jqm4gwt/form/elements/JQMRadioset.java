@@ -256,35 +256,19 @@ public class JQMRadioset extends JQMWidget implements HasText<JQMRadioset>, HasS
 	 */
 	@Override
 	public String getValue() {
-		// we can't use the jquery methods because they fire after the GWT
-		// event handlers. We also must look for the hover element first.
-		for (int k = 0; k < fieldset.getWidgetCount(); k++) {
-			Widget widget = fieldset.getWidget(k);
-			Element element = widget.getElement();
-			String classAttribute = element.getAttribute("class");
-			if (classAttribute != null)
-			{
-				if (classAttribute.contains("ui-btn-hover")) {
-					return getValueForId(element.getAttribute("for"));
-				}
-				else if (classAttribute.contains("ui-btn-active")) {
-					return getValueForId(element.getAttribute("for"));
-				}
-				else if (classAttribute.contains("ui-radio-on")) {
-					return getValueForId(element.getAttribute("for"));
-				}
-			}
-		}
-		
 		for (TextBox radio : radios) {
 			Element element = radio.getElement();
-			if (element.getAttribute("checked") != null && element.getAttribute("checked").equals("checked")) {
-				return getValueForId(element.getAttribute("value"));
+			if (isChecked(element.getId())) {
+				return element.getAttribute("value");
 			}
 		}
 		return null;
 	}
 
+	protected native boolean isChecked(String id) /*-{
+		return $wnd.$("input#"+ id).prop("checked") ? true : false;
+	}-*/;
+	
 	/**
 	 * Returns the value of the radio option at the given index.
 	 * 
