@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+   <inherits name='com.google.gwt.user.User' />
+   <inherits name='com.sksamuel.Jqm4gwt' />
+
+   <stylesheet src="css/jqm-datebox-1.4.0.min.css"/>
+   <script src="js/jqm-datebox-1.4.0.comp.calbox.min.js"/>
+   <script src="js/jquery.mobile.datebox.i18n.en_US.utf8.js"/>
+
+   <source path='jqm4gwt' />
+</module>

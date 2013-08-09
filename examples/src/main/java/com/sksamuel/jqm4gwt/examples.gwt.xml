@@ -5,6 +5,7 @@
 	<inherits name='com.sksamuel.Jqm4gwt' />
     <inherits name='com.sksamuel.Jqm4gwt-iscroll'/>
     <inherits name='com.sksamuel.Jqm4gwt-grid960'/>
+    <inherits name='com.sksamuel.Jqm4gwt-datebox'/>
     <!--<inherits name='com.google.gwt.junit.JUnit' />-->
 	<entry-point class='com.sksamuel.jqm4gwt.examples.Jqm4gwtExamplesEntryPoint' />
 	<source path="examples" />
