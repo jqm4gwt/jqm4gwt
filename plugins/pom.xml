@@ -17,6 +17,7 @@
     <modules>
         <module>grid960</module>
         <module>iscroll</module>
+        <module>datebox</module>
     </modules>
 
 </project>

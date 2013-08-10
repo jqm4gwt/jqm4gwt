@@ -58,6 +58,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <artifactId>jqm4gwt-datebox</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
             <scope>provided</scope>

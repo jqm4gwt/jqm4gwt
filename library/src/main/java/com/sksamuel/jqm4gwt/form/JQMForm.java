@@ -342,7 +342,7 @@ public class JQMForm extends FlowPanel {
      * "not null or empty" validator.
      */
     public void setRequired(JQMFormWidget widget, String msg) {
-        setRequired(widget, msg);
+        setRequired(widget, msg, true);
     }
 
     public void setRequired(JQMFormWidget widget, String msg, boolean immediate) {

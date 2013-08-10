@@ -22,6 +22,7 @@
             <jqm:form.elements.JQMEmail text="email"/>
             <jqm:form.elements.JQMFlip label1="Flip1" label2="Flip2" value1="flip1Value" value2="flip2Value"
                                        text="flipText"/>
+            <jqm:plugins.datebox.JQMCalBox text="Date Picker" dateFormat="%A %m/%d/%y"/>
             <jqm:form.elements.JQMMonth text="monthText"/>
             <jqm:form.elements.JQMNumber text="numberText"/>
             <jqm:form.elements.JQMPassword text="passwordText"/>
