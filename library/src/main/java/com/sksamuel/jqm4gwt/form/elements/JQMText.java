@@ -46,12 +46,12 @@ public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHand
     /**
      * The widget used for the label
      */
-    private final FormLabel label;
+    protected final FormLabel label;
 
     /**
      * The widget used for the input element
      */
-    private final TextBox input;
+    protected final TextBox input;
 
     /**
      * The main container used as the basis for this widget
@@ -293,4 +293,18 @@ public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHand
 		setPlaceHolder(placeHolderText);
 		return this;
 	}
+    
+    public void setInputId(String id) {
+        input.getElement().setId(id);
+        input.setName(id);
+        label.setFor(id);
+    }
+
+    /**
+     * Could be useful when submitting form to external service with pre-required element names.
+     * See <a href="http://jquerymobile.com/demos/1.2.1/docs/forms/forms-sample.html">Submitting Forms</a>
+     */
+    public void setInputName(String id) {
+        input.setName(id);
+    }
 }
