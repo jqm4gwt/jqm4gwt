@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.JQMPageEvent.PageState;
 import com.sksamuel.jqm4gwt.toolbar.JQMFooter;
 import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
 import com.sksamuel.jqm4gwt.toolbar.JQMPanel;
@@ -213,35 +214,35 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     private native void bindLifecycleEvents(JQMPage p, String id) /*-{
 
-												$wnd.$('div[data-url="' + id + '"]').bind("pageshow",
-												function(event, ui) {
-												p.@com.sksamuel.jqm4gwt.JQMPage::onPageShow()();
-												});
-												
-												$wnd.$('div[data-url="' + id + '"]').bind("pagehide",
-												function(event, ui) {
-												p.@com.sksamuel.jqm4gwt.JQMPage::onPageHide()();
-												});
-												
-												$wnd.$('div[data-url="' + id + '"]').bind("pagebeforehide",
-												function(event, ui) {
-												p.@com.sksamuel.jqm4gwt.JQMPage::onPageBeforeHide()();
-												});
-												
-												$wnd.$('div[data-url="' + id + '"]').bind("pagebeforeshow",
-												function(event, ui) {
-												p.@com.sksamuel.jqm4gwt.JQMPage::onPageBeforeShow()();
-												});
-												
-												}-*/;
+        $wnd.$('div[data-url="' + id + '"]').bind("pageshow",
+            function(event, ui) {
+                p.@com.sksamuel.jqm4gwt.JQMPage::doPageShow()();
+            });
+        
+        $wnd.$('div[data-url="' + id + '"]').bind("pagehide",
+            function(event, ui) {
+                p.@com.sksamuel.jqm4gwt.JQMPage::doPageHide()();
+            });
+        
+        $wnd.$('div[data-url="' + id + '"]').bind("pagebeforehide",
+            function(event, ui) {
+                p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeHide()();
+            });
+        
+        $wnd.$('div[data-url="' + id + '"]').bind("pagebeforeshow",
+            function(event, ui) {
+                p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeShow()();
+            });
+        
+    }-*/;
 
     private native void unbindLifecycleEvents(String id) /*-{
-												$wnd.$('div[data-url="' + id + '"]').unbind("pageshow");	
-												$wnd.$('div[data-url="' + id + '"]').unbind("pagehide");
-												$wnd.$('div[data-url="' + id + '"]').unbind("pagebeforehide");
-												$wnd.$('div[data-url="' + id + '"]').unbind("pagebeforeshow");
-	
-												}-*/;
+        $wnd.$('div[data-url="' + id + '"]').unbind("pageshow");	
+        $wnd.$('div[data-url="' + id + '"]').unbind("pagehide");
+        $wnd.$('div[data-url="' + id + '"]').unbind("pagebeforehide");
+        $wnd.$('div[data-url="' + id + '"]').unbind("pagebeforeshow");
+
+    }-*/;
 
     protected void onLoad()
     {
@@ -352,25 +353,47 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     protected void onPageBeforeHide() {
     }
+    
+    protected void doPageBeforeHide() {
+        onPageBeforeHide();
+        JQMPageEvent.fire(this, PageState.BEFORE_HIDE);
+    }
 
     /**
      * Triggered on the page being shown, before its transition begins.
      */
     protected void onPageBeforeShow() {
     }
+    
+    protected void doPageBeforeShow() {
+        onPageBeforeShow();
+        JQMPageEvent.fire(this, PageState.BEFORE_SHOW);
+    }
 
     /**
      * Triggered on the page being hidden, after its transition completes.
      */
     protected void onPageHide() {
-
+    }
+    
+    protected void doPageHide() {
+        onPageHide();
+        JQMPageEvent.fire(this, PageState.HIDE);
     }
 
     /**
      * Triggered on the page being hidden, after its transition completes.
      */
     protected void onPageShow() {
-
+    }
+    
+    protected void doPageShow() {
+        onPageShow();
+        JQMPageEvent.fire(this, PageState.SHOW);
+    }
+    
+    public HandlerRegistration addPageHandler(JQMPageEvent.Handler handler) {
+        return addHandler(handler, JQMPageEvent.getType());
     }
 
     @Override
