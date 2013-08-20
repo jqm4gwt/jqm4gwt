@@ -166,6 +166,51 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
     public JQMListItem addItem(String text) {
         return addItem(text, (String) null);
     }
+    
+    public static enum ListItemImageKind { NONE, THUMBNAIL, ICON }
+
+    /**
+     * This method is needed as good enough workaround for the following issue:
+     * <a href="https://github.com/sksamuel/jqm4gwt/issues/18">List item with icon/thumbnail</a>
+     * 
+     * @param url - could be null in case of non-clickable/readonly item. Empty string means
+     * it will be clickable!
+     *
+     * @param imageUrl - could be null/empty initially, and then set later manually
+     * (but imageKind must not be NONE if you are planning to set images for this item).
+     */
+    public JQMListItem addItem(String text, String url, 
+                               ListItemImageKind imageKind, String imageUrl) {
+        // In case if icon/thumbnail is present there is severe rendering problem,
+        // for details see https://github.com/sksamuel/jqm4gwt/issues/18
+
+        JQMListItem item = null;
+        boolean hasImage = imageKind != ListItemImageKind.NONE;
+        boolean clickable = url != null;
+
+        if (hasImage) { // workaround is needed for proper rendering
+            if (clickable) {
+                item = addItem(text, url);
+            } else {
+                item = addItem(text);
+                // Empty url cannot be used, because we don't need clickable and right arrow icon
+                item.addHeaderText(1, "");
+            }
+            switch (imageKind) {
+            case ICON:
+                if (imageUrl != null && !imageUrl.isEmpty()) item.setIcon(imageUrl);
+                break;
+            case THUMBNAIL:
+                if (imageUrl != null && !imageUrl.isEmpty()) item.setThumbnail(imageUrl);
+                break;
+            default:
+                break;
+            }
+        } else {
+            item = addItem(text, url);
+        }
+        return item;
+    }
 
     /**
      * This is simply addItem(String text) but returning void to work with UiBinder.
