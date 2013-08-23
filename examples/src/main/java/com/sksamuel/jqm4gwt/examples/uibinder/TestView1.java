@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.examples.uibinder;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiField;
@@ -8,6 +9,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMPopup;
+import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.form.JQMForm;
 import com.sksamuel.jqm4gwt.form.SubmissionHandler;
@@ -89,6 +91,17 @@ public class TestView1 {
     @UiHandler("enableSliderButton")
     void handleEnableSliderButtonClick(ClickEvent e) {
         slider.enable();
+    }
+    
+    @UiHandler("busyButton")
+    void handleBusyButtonClick(ClickEvent e) {
+        Mobile.busy(true);
+        Timer timer = new Timer() {
+            @Override
+            public void run() {
+                Mobile.busy(false);
+            }};
+        timer.schedule(3000);    
     }
 
     {
