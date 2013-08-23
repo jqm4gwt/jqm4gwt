@@ -3,6 +3,10 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:jqm='urn:import:com.sksamuel.jqm4gwt'>
 
+    <ui:style>
+        .bevel { height: 10px; }
+    </ui:style>
+             
     <jqm:JQMPage containerId="testPage1" backButton="true">
         <jqm:toolbar.JQMHeader text="Test Page 1 Header"/>
         <jqm:plugins.iscroll.IScrollPanel>
@@ -150,27 +154,31 @@
                 <jqm:html.Span text="spanText in Table Row#2 Col#2"/>
             </jqm:cell>
         </jqm:layout.JQMTable>
+        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
         <jqm:list.JQMList.Ordered>
-            <jqm:item text="Ordered List Item #1 Text"/>
-            <jqm:divider text="Ordered List divider text"/>
-            <jqm:item text="Ordered List Item #2 Text"/>
+            <jqm:item><jqm:list.JQMListItem text="Ordered List Item #1 Text"/></jqm:item>
+            <jqm:item><jqm:list.JQMListItem text="Ordered List Item #2 Text"/></jqm:item>
+            <jqm:item><jqm:list.JQMListItem text="Ordered List Item #3 Text" href="http://www.cnn.com"/></jqm:item>
+            <jqm:divider><jqm:list.JQMListDivider text="Ordered List divider text"/></jqm:divider>
+            <jqm:item><jqm:list.JQMListItem text="Ordered List Item #4 Text"/></jqm:item>
+            <jqm:item><jqm:list.JQMListItem text="Ordered List Item #5 Text"/></jqm:item>
         </jqm:list.JQMList.Ordered>
+        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
         <jqm:list.JQMList.Unordered>
-            <jqm:item text="Unordered List Item #1 Text"/>
-            <jqm:divider text="Unordered List divider text"/>
-            <jqm:item text="Unordered List Item #2 Text"/>
+            <jqm:item><jqm:list.JQMListItem text="Unordered List Item #1 Text"/></jqm:item>
+            <jqm:divider><jqm:list.JQMListDivider text="Unordered List divider text"/></jqm:divider>
+            <jqm:item><jqm:list.JQMListItem text="Unordered List Item #2 Text"/></jqm:item>
         </jqm:list.JQMList.Unordered>
         <jqm:plugins.grid960.Grid960Panel>
             <jqm:plugins.grid960.GridColumn span="3"/>
         </jqm:plugins.grid960.Grid960Panel>
-        <!--
-        <jqm:plugins.datebox.DateBox mode="CALBOX" afterToday="true" notToday="true" minDays="5"/>
-        -->
+        
         <jqm:JQMPopup ui:field="popup">
             <jqm:button.JQMButton builtInIcon="MINUS" ui:field="popupCloseButton" text="Close Pop-up"/>
         </jqm:JQMPopup>
         <jqm:button.JQMButton builtInIcon="INFO" ui:field="popupOpenButton" text="Pop-up example..."/>
         <jqm:LoadingIndicator/>
+        <jqm:button.JQMButton builtInIcon="INFO" ui:field="busyButton" text="Application Busy example..."/>
         </jqm:plugins.iscroll.IScrollPanel>
         <jqm:toolbar.JQMFooter>
             <jqm:widget>

@@ -19,23 +19,23 @@ import java.util.List;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 4 May 2011 21:21:13
- *         <p/>
- *         An implementation of a jquery mobile list view as seen here:
- * @link http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/lists/index.html
  * <p/>
- * This list can be ordered or unordered (which must be set at constructor time). The list can be dynamically
- * modified with random access.
+ * An implementation of a jquery mobile list view as seen here:
+ * <a href="http://jquerymobile.com/demos/1.2.1/docs/lists/index.html">Listviews</a>
+ * <p/>
+ * This list can be ordered or unordered (which must be set at constructor time). 
+ * The list can be dynamically modified with random access.
  *
- *       * <h3>Use in UiBinder Templates</h3>
+ * <h3>Use in UiBinder Templates</h3>
  *
  * When working with JQMList in
  * {@link com.google.gwt.uibinder.client.UiBinder UiBinder} templates, you
  * can set the List Items and Separators via child elements. For example:
  * <pre>
  * &lt;jqm:list.JQMList>
- *    &lt;jqm:item text="Item text here..."/>
- *    &lt;jqm:divider text="-- Divider Text Here --"/>
- *    &lt;jqm:item text="...more item text Here"/>
+ *     &lt;jqm:item>&lt;jqm:list.JQMListItem text="List Item #1 Text Here"/>&lt;/jqm:item>
+ *     &lt;jqm:divider>&lt;jqm:list.JQMListDivider text="List divider text here"/>&lt;/jqm:divider>
+ *     &lt;jqm:item>&lt;jqm:list.JQMListItem text="List Item #2 Text Here"/>&lt;/jqm:item>
  * &lt;/jqm:list.JQMList>
  * </pre>
  */
@@ -128,13 +128,11 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
     }
 
     /**
-     * This is simply addDivider(String text) but returning void to work with UiBinder.
-     * @see #addDivider(String)
-     * @param text
+     * For UiBinder.
      */
     @UiChild(tagname = "divider")
-    public void appendDivider(String text) {
-        addDivider(text);
+    public void appendDivider(JQMListDivider divider) {
+        addDivider(divider);
     }
 
     protected void addItem(int index, final JQMListItem item) {
@@ -213,13 +211,11 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
     }
 
     /**
-     * This is simply addItem(String text) but returning void to work with UiBinder.
-     * @see #addItem(String)
-     * @param text
+     * For UiBinder.
      */
     @UiChild(tagname = "item")
-    public void appendItem(String text) {
-        addItem(text);
+    public void appendItem(JQMListItem item) {
+        addItem(items.size(), item);
     }
 
 
