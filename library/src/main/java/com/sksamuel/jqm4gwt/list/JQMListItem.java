@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasText;
 
@@ -46,7 +47,8 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
      * Create a read only {@link JQMList} with the initial content set to the
      * value of the text
      */
-    protected JQMListItem(String text) {
+    @UiConstructor
+    public JQMListItem(String text) {
         if (text == null)
             throw new RuntimeException("Cannot create list item with null text");
 
@@ -61,7 +63,7 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
      * value of the @param text and the link set to the value of the @param
      * url
      */
-    protected JQMListItem(String text, String url) {
+    public JQMListItem(String text, String url) {
         this(text);
         if (url != null)
             setUrl(url);
@@ -329,6 +331,11 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
         }
         anchor.setAttribute("href", url);
         return this;
+    }
+    
+    /** Can be used in UiBinder */
+    public void setHref(String url) {
+        setUrl(url);
     }
 
     @Override

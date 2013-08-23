@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.list;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasText;
 
@@ -10,9 +11,10 @@ import com.sksamuel.jqm4gwt.HasText;
  *         An implementation of a list divider.
  * 
  */
-class JQMListDivider extends Widget implements HasText<JQMListDivider> {
+public class JQMListDivider extends Widget implements HasText<JQMListDivider> {
 
-	JQMListDivider(String text) {
+	@UiConstructor
+    public JQMListDivider(String text) {
 		setElement(Document.get().createLIElement());
 		getElement().setAttribute("data-role", "list-divider");
 		getElement().setId(Document.get().createUniqueId());
