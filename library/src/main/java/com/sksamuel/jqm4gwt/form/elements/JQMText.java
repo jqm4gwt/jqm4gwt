@@ -307,4 +307,8 @@ public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHand
     public void setInputName(String id) {
         input.setName(id);
     }
+    
+    public String getInputName() {
+        return input.getName();
+    }
 }
