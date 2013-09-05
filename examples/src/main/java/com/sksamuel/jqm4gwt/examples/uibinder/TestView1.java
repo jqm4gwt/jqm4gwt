@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt.examples.uibinder;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiField;
@@ -62,6 +63,9 @@ public class TestView1 {
 
     @UiField
     JQMForm form;
+    
+    @UiField
+    JQMButton navBarBtn1;
 
     @UiHandler("popupOpenButton")
     void handlePopupOpenButtonClick(ClickEvent e) {
@@ -102,6 +106,11 @@ public class TestView1 {
                 Mobile.busy(false);
             }};
         timer.schedule(3000);    
+    }
+    
+    @UiHandler("navBarBtn1")
+    void handleNavBarBtn1Click(ClickEvent e) {
+        Window.alert("'" + navBarBtn1.getText() + "' is clicked!");
     }
 
     {
