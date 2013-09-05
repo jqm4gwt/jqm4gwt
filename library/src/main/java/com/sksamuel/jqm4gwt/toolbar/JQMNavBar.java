@@ -3,7 +3,11 @@ package com.sksamuel.jqm4gwt.toolbar;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.uibinder.client.UiChild;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.Label;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.button.JQMButton;
@@ -38,10 +42,19 @@ public class JQMNavBar extends JQMWidget implements HasFixedPosition {
 	}
 
     @UiChild (limit = 5, tagname = "button")
-	public void add(JQMButton button) {
+	public void add(final JQMButton button) {
 		LIElement e = Document.get().createLIElement();
 		e.appendChild(button.getElement());
 		ul.appendChild(e);
+		
+		// button.addClickHandler(...) is not working without the following code
+		DOM.sinkEvents((com.google.gwt.user.client.Element)(Element) e, Event.ONCLICK);
+        DOM.setEventListener((com.google.gwt.user.client.Element)(Element) e, new EventListener() {
+            @Override
+            public void onBrowserEvent(Event event) {
+                DomEvent.fireNativeEvent(event, button);
+            }
+        });
 	}
 
 	@Override

@@ -74,7 +74,7 @@
             <jqm:form.JQMFieldContainer/>
             <jqm:toolbar.JQMNavBar>
                 <jqm:button>
-                    <jqm:button.JQMButton text="Button 1"/>
+                    <jqm:button.JQMButton ui:field="navBarBtn1" text="Button 1"/>
                 </jqm:button>
                 <jqm:button>
                     <jqm:button.JQMButton text="Button 2"/>
