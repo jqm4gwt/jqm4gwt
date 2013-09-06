@@ -72,12 +72,12 @@
             <jqm:form.elements.JQMTextArea text="textAreaText"/>
             <jqm:form.elements.JQMUrl text="urlText"/>
             <jqm:form.JQMFieldContainer/>
-            <jqm:toolbar.JQMNavBar>
+            <jqm:toolbar.JQMNavBar iconPos="LEFT">
                 <jqm:button>
                     <jqm:button.JQMButton ui:field="navBarBtn1" text="Button 1"/>
                 </jqm:button>
                 <jqm:button>
-                    <jqm:button.JQMButton text="Button 2"/>
+                    <jqm:button.JQMButton text="Button 2" builtInIcon="STAR"/>
                 </jqm:button>
                 <jqm:button>
                     <jqm:button.JQMButton text="Button 3"/>
