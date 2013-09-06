@@ -9,6 +9,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.Label;
+import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 
@@ -57,13 +58,13 @@ public class JQMNavBar extends JQMWidget implements HasFixedPosition {
         });
 	}
 
+    public void remove(JQMButton button) { // todo
+
+	}
+    
 	@Override
 	public boolean isFixed() {
 		return "fixed".equals(getAttribute("data-position"));
-	}
-
-	public void remove(JQMButton button) { // todo
-
 	}
 
 	@Override
@@ -73,4 +74,20 @@ public class JQMNavBar extends JQMWidget implements HasFixedPosition {
 		else
 			removeAttribute("data-position");
 	}
+    
+    public IconPos getIconPos() {
+        String string = getAttribute("data-iconpos");
+        return string == null ? null : IconPos.valueOf(string);
+    }
+    
+    /**
+     * Sets the position of the icon. If you desire an icon only button then
+     * set the position to IconPos.NOTEXT
+     */
+    public void setIconPos(IconPos pos) {
+        if (pos == null)
+            getElement().removeAttribute("data-iconpos");
+        else
+            getElement().setAttribute("data-iconpos", pos.getJqmValue());
+    }
 }
