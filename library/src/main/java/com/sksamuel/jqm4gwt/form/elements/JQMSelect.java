@@ -172,7 +172,7 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
 
     private native int getSelectedIndex(String id) /*-{
                                     var select = $wnd.$("select#" + id);
-									return select[0].selectedIndex;
+									return select.length > 0 ? select[0].selectedIndex : -1;
 									}-*/;
 
     public String getSelectedValue() {
