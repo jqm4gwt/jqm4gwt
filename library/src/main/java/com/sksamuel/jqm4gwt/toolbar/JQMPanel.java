@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt.toolbar;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMWidget;
 
@@ -23,6 +24,7 @@ public class JQMPanel extends JQMWidget {
 	public static final String POSITION_LEFT = "left";
 	public static final String POSITION_RIGHT = "right";
 
+	private SimplePanel flowPanelContainer;
 	private FlowPanel flowPanel;
 	
 	public JQMPanel()
@@ -32,7 +34,10 @@ public class JQMPanel extends JQMWidget {
 
 	public JQMPanel(String id) {
 		flowPanel = new FlowPanel();
-		initWidget(flowPanel);
+		flowPanel.setStylePrimaryName("ui-panel-inner");
+		flowPanelContainer = new  SimplePanel();
+		flowPanelContainer.add(flowPanel);
+		initWidget(flowPanelContainer);
 		setId(id);
 		setDataRole("panel");
 	}
