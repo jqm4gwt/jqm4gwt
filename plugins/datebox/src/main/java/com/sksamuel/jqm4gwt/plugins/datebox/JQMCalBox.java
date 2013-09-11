@@ -9,15 +9,18 @@ import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
 
 /**
- * See <a href="http://dev.jtsage.com/jQM-DateBox2/demos/mode/calbox.html">jQueryMobile - DateBox</a>
+ * <p> When you add {@literal <inherits name='com.sksamuel.Jqm4gwt-datebox' />} to yourApp.gwt.xml 
+ * the following scripts will be included automatically to resulting war: </p>
+ * <pre> jqm-datebox.comp.calbox.min.js, jqm-datebox.min.css, 
+ * jquery.mobile.datebox.i18n.en_US.utf8.js, and datebox.png (for "new style" support) </pre>
+ * <p> You can add additional languages by including something like: </p>
+ * <pre> {@literal <script src="javascript/jquery.mobile.datebox.i18n.ru.utf8.js"></script>} </pre>
+ * <p> into your main html after yourApp.nocache.js script. </p>
+ * 
+ * See also: 
+ * <p><a href="http://dev.jtsage.com/jQM-DateBox2/demos/mode/calbox.html">jQueryMobile - DateBox</a></p>
  * <p><a href="http://dev.jtsage.com/jQM-DateBox2/demos/install.html">Install instructions</a></p>
- * <p> Shortly the following scrips must be added: </p>
- * <pre>
- * {@literal <link rel="stylesheet" href="javascript/jqm-datebox.min.css" />}
- * {@literal <script src="javascript/jqm-datebox.comp.calbox.min.js"></script>}
- * {@literal <script src="javascript/jquery.mobile.datebox.i18n.en_US.utf8.js"></script>}
- * And datebox.png should be placed into javascript/image/datebox.png when using "new style".
- * </pre>
+ *
  */
 public class JQMCalBox extends JQMText {
 
