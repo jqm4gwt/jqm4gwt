@@ -3,9 +3,9 @@
 
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name='com.google.gwt.activity.Activity' />
-    <stylesheet src="css/jquery.mobile-1.3.1.min.css"/>
-    <script src="js/jquery-1.9.1.min.js"/>
-    <script src="js/jquery.mobile-1.3.1.min.js"/>
+    <stylesheet src="css/jquery.mobile-1.3.2.min.css"/>
+    <script src="js/jquery-1.10.2.min.js"/>
+    <script src="js/jquery.mobile-1.3.2.min.js"/>
 
 	<source path='jqm4gwt' />
 
