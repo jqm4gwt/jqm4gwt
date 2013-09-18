@@ -169,8 +169,17 @@
             <jqm:divider><jqm:list.JQMListDivider text="Unordered List divider text"/></jqm:divider>
             <jqm:item><jqm:list.JQMListItem text="Unordered List Item #2 Text"/></jqm:item>
         </jqm:list.JQMList.Unordered>
+        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
         <jqm:plugins.grid960.Grid960Panel>
-            <jqm:plugins.grid960.GridColumn span="3"/>
+            <jqm:plugins.grid960.GridColumn span="4">
+              <jqm:button.JQMButton text="Span4"/>
+            </jqm:plugins.grid960.GridColumn>
+            <jqm:plugins.grid960.GridColumn span="5">
+              <jqm:button.JQMButton text="Span5"/>
+            </jqm:plugins.grid960.GridColumn>
+            <jqm:plugins.grid960.GridColumn span="3">
+              <jqm:button.JQMButton text="Span3"/>
+            </jqm:plugins.grid960.GridColumn>
         </jqm:plugins.grid960.Grid960Panel>
         
         <jqm:JQMPopup ui:field="popup">
