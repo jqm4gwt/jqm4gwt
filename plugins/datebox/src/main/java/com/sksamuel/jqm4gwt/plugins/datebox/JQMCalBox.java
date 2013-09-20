@@ -225,7 +225,7 @@ public class JQMCalBox extends JQMText {
 
     @Override
     public void setValue(String value, boolean fireEvents) {
-        Date oldD = getDate();
+        Date oldD = fireEvents ? getDate() : null;
         setValue(value);
         if (fireEvents) {
             Date newD = getDate();
