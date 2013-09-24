@@ -179,6 +179,11 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
      */
     public JQMListItem addItem(String text, String url, 
                                ListItemImageKind imageKind, String imageUrl) {
+        return addItem(items.size(), text, url, imageKind, imageUrl);
+    }
+     
+    public JQMListItem addItem(int index, String text, String url, 
+                               ListItemImageKind imageKind, String imageUrl) {
         // In case if icon/thumbnail is present there is severe rendering problem,
         // for details see https://github.com/sksamuel/jqm4gwt/issues/18
 
@@ -188,9 +193,9 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
 
         if (hasImage) { // workaround is needed for proper rendering
             if (clickable) {
-                item = addItem(text, url);
+                item = addItem(index, text, url);
             } else {
-                item = addItem(text);
+                item = addItem(index, text);
                 // Empty url cannot be used, because we don't need clickable and right arrow icon
                 item.addHeaderText(1, "");
             }
@@ -205,7 +210,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
                 break;
             }
         } else {
-            item = addItem(text, url);
+            item = addItem(index, text, url);
         }
         return item;
     }
