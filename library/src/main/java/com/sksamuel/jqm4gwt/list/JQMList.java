@@ -372,7 +372,8 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
     public boolean removeDivider(String text) {
         for (int k = 0; k < list.getWidgetCount(); k++) {
             Widget w = list.getWidget(k);
-            if ("list-divider".equals(w.getElement().getAttribute("data-role"))) {
+            if ("list-divider".equals(w.getElement().getAttribute("data-role"))
+                    && w.getElement().getInnerText().equals(text)) {
                 list.remove(k);
                 items.remove(k);
                 return true;
