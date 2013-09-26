@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -9,6 +10,7 @@ import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
@@ -59,6 +61,8 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
      * The panel that will contain the labe and select widgets
      */
     private final FlowPanel flow;
+    
+    private boolean valueChangeHandlerInitialized;
 
     /**
      * Creates a new {@link JQMSelect} with no label text.
@@ -139,7 +143,16 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
-        throw new UnsupportedOperationException();
+        // Initialization code
+        if (!valueChangeHandlerInitialized) {
+            valueChangeHandlerInitialized = true;
+            addChangeHandler(new ChangeHandler() {
+                public void onChange(ChangeEvent event) {
+                    ValueChangeEvent.fire(JQMSelect.this, getValue());
+                }
+            });
+        }
+        return addHandler(handler, ValueChangeEvent.getType());
     }
 
     /**
@@ -150,8 +163,8 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
     }
 
     private native void close(String id) /*-{
-                                $wnd.$("#" + id).selectmenu('close');
-								}-*/;
+        $wnd.$("#" + id).selectmenu('close');
+    }-*/;
 
     @Override
     public IconPos getIconPos() {
@@ -171,9 +184,9 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
     }
 
     private native int getSelectedIndex(String id) /*-{
-                                    var select = $wnd.$("select#" + id);
-									return select.length > 0 ? select[0].selectedIndex : -1;
-									}-*/;
+        var select = $wnd.$("select#" + id);
+        return select.length > 0 ? select[0].selectedIndex : -1;
+    }-*/;
 
     public String getSelectedValue() {
         return getValue();
@@ -201,7 +214,7 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
      * Returns the value at the given index
      */
     public String getValue(int index) {
-        return select.getValue(index);
+        return index == -1 ? null : select.getValue(index);
     }
 
     /**
@@ -262,8 +275,8 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
     }
 
     private native void open(String id) /*-{
-                            $wnd.$("#" + id).selectmenu('open');
-							}-*/;
+        $wnd.$("#" + id).selectmenu('open');
+    }-*/;
 
     /**
      * Refreshes the select after a programatic change has taken place.
@@ -273,9 +286,9 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
     }
 
     private native void refresh(String id) /*-{
-								var select = $wnd.$("select#" + id);
-								select.selectmenu("refresh");
-								}-*/;
+        var select = $wnd.$("select#" + id);
+        select.selectmenu("refresh");
+    }-*/;
 
     @Override
     public JQMSelect removeIcon() {
@@ -474,11 +487,11 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
     }
 
     private native void setSelectedIndex(String id, int index) /*-{
-											$wnd.$("#" + id).attr('selectedIndex', index);
-											var select = $wnd.$("select#" + id);
-											select.selectedIndex = index;
-											select.selectmenu("refresh");
-											}-*/;
+        $wnd.$("#" + id).attr('selectedIndex', index);
+        var select = $wnd.$("select#" + id);
+        select.selectedIndex = index;
+        select.selectmenu("refresh");
+    }-*/;
 
     /**
      *
@@ -523,14 +536,18 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
     /**
      * Sets the selected value to the given value. If no option matches the
      * given value then the selected is removed.
-     * <p/>
-     * The fireEvents param is ignored.
      */
     @Override
-    public void setValue(String value, boolean ignored) {
-        int indexOf = indexOf(value);
-        if (indexOf >= 0)
-            setSelectedIndex(indexOf);
+    public void setValue(String value, boolean fireEvents) {
+        int newIdx = value == null ? -1 : indexOf(value);
+        int oldIdx = fireEvents ? getSelectedIndex() : -1;
+        setSelectedIndex(newIdx);
+        if (fireEvents) {
+            newIdx = getSelectedIndex();
+            if (oldIdx != newIdx) {
+                ValueChangeEvent.fire(this, value);
+            }                
+        }
     }
 
 }
