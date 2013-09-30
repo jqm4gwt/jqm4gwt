@@ -20,8 +20,17 @@
                 <jqm:button.JQMButton theme="d" text="Button theme 'd' of group"/>
                 <jqm:button.JQMButton theme="e" text="Button theme 'e' of group"/>
             </jqm:button.JQMButtonGroup>
-            <jqm:form.elements.JQMCheckset>
-                <jqm:check id="blah" text="Checkbox#1"/>
+            <jqm:form.elements.JQMCheckbox ui:field="cb1" name="cb1" text="Checkbox"/>
+            <jqm:form.elements.JQMCheckbox ui:field="cb2" name="cb2" text="Mini-Checkbox" mini="true" value="true"/>
+            <jqm:form.elements.JQMCheckbox ui:field="cb3" name="cb3" text="Themed Checkbox" theme="a"/>
+            <jqm:button.JQMButton ui:field="checkboxInfoBtn" text="Show Checkboxes Info" />
+            <jqm:form.elements.JQMCheckset text="Mini Horizontal Checkset" orientation="HORIZONTAL" mini="true">
+                <jqm:check><jqm:form.elements.JQMCheckbox name="cb10" text="Check1"/></jqm:check>
+                <jqm:check><jqm:form.elements.JQMCheckbox name="cb11" text="Check2"/></jqm:check>
+            </jqm:form.elements.JQMCheckset>
+            <jqm:form.elements.JQMCheckset text="Vertical Checkset"> <!-- iconPos="RIGHT" -->
+                <jqm:check><jqm:form.elements.JQMCheckbox name="cb20" text="Check1"/></jqm:check>
+                <jqm:check><jqm:form.elements.JQMCheckbox name="cb21" text="Check2"/></jqm:check>
             </jqm:form.elements.JQMCheckset>
             <jqm:form.elements.JQMEmail text="email"/>
             <jqm:form.elements.JQMFlip label1="Flip1" label2="Flip2" value1="flip1Value" value2="flip2Value"

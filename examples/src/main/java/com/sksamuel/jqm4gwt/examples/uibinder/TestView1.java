@@ -14,6 +14,7 @@ import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.form.JQMForm;
 import com.sksamuel.jqm4gwt.form.SubmissionHandler;
+import com.sksamuel.jqm4gwt.form.elements.JQMCheckbox;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
 
@@ -66,6 +67,18 @@ public class TestView1 {
     
     @UiField
     JQMButton navBarBtn1;
+    
+    @UiField
+    JQMCheckbox cb1;
+    
+    @UiField
+    JQMCheckbox cb2;
+    
+    @UiField
+    JQMCheckbox cb3;
+    
+    @UiField
+    JQMButton checkboxInfoBtn;
 
     @UiHandler("popupOpenButton")
     void handlePopupOpenButtonClick(ClickEvent e) {
@@ -111,6 +124,14 @@ public class TestView1 {
     @UiHandler("navBarBtn1")
     void handleNavBarBtn1Click(ClickEvent e) {
         Window.alert("'" + navBarBtn1.getText() + "' is clicked!");
+    }
+    
+    @UiHandler("checkboxInfoBtn")
+    void checkboxInfoBtnClick(ClickEvent e) {
+        String cb1Str = "'" + cb1.getText() + "' is " + (cb1.isChecked() ? "checked" : "unchecked");
+        String cb2Str = "'" + cb2.getText() + "' is " + (cb2.isChecked() ? "checked" : "unchecked");
+        String cb3Str = "'" + cb3.getText() + "' is " + (cb3.isChecked() ? "checked" : "unchecked");
+        Window.alert(cb1Str + "\n" + cb2Str + "\n" + cb3Str);
     }
 
     {
