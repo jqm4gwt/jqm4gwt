@@ -1,6 +1,5 @@
 package com.sksamuel.jqm4gwt.plugins.datebox;
 
-import java.text.DateFormat;
 import java.util.Date;
 
 import com.google.gwt.core.client.JsDate;
@@ -11,15 +10,15 @@ import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
 
 /**
- * <p> When you add {@literal <inherits name='com.sksamuel.Jqm4gwt-datebox' />} to yourApp.gwt.xml 
+ * <p> When you add {@literal <inherits name='com.sksamuel.Jqm4gwt-datebox' />} to yourApp.gwt.xml
  * the following scripts will be included automatically to resulting war: </p>
- * <pre> jqm-datebox.comp.calbox.min.js, jqm-datebox.min.css, 
+ * <pre> jqm-datebox.comp.calbox.min.js, jqm-datebox.min.css,
  * jquery.mobile.datebox.i18n.en_US.utf8.js, and datebox.png (for "new style" support) </pre>
  * <p> You can add additional languages by including something like: </p>
  * <pre> {@literal <script src="javascript/jquery.mobile.datebox.i18n.ru.utf8.js"></script>} </pre>
  * <p> into your main html after yourApp.nocache.js script. </p>
- * 
- * See also: 
+ *
+ * See also:
  * <p><a href="http://dev.jtsage.com/jQM-DateBox2/demos/mode/calbox.html">jQueryMobile - DateBox</a></p>
  * <p><a href="http://dev.jtsage.com/jQM-DateBox2/demos/install.html">Install instructions</a></p>
  *
@@ -28,7 +27,7 @@ public class JQMCalBox extends JQMText {
 
     /** <a href="http://dev.jtsage.com/jQM-DateBox2/demos/api/dateformat.html">Available Date Format Options</a> */
     public static final String FMT_MMDDYY = "%m/%d/%y";
-    
+
     // HasValue<String> declared in JQMText and cannot be overridden as HasValue<Date> in this class.
     // So we are going to return well formatted string representation of date as getValue() result,
     // and expecting the same string format when setValue() method called.
@@ -173,46 +172,47 @@ public class JQMCalBox extends JQMText {
     public static DateTimeFormat getValueStrFmt() {
         return valueStrFmt;
     }
-    
+
     public static void setValueStrFmt(DateTimeFormat fmt) {
         valueStrFmt = fmt;
     }
-    
+
     protected static class CalBoxValueChangeEvent extends ValueChangeEvent<String> {
         public CalBoxValueChangeEvent(String value) {
             super(value);
         }
     }
-    
+
     protected static class CalBoxValueChangeHandler implements ValueChangeHandler<String> {
-        
+
         private final ValueChangeHandler<String> handler;
         private final JQMCalBox calBox;
-        
+
         public CalBoxValueChangeHandler(ValueChangeHandler<String> handler, JQMCalBox calBox) {
             this.handler = handler;
             this.calBox = calBox;
         }
-        
+
+        @Override
         public void onValueChange(ValueChangeEvent<String> event) {
-            ValueChangeEvent<String> newEvent = event instanceof CalBoxValueChangeEvent 
+            ValueChangeEvent<String> newEvent = event instanceof CalBoxValueChangeEvent
                     ? event : new CalBoxValueChangeEvent(calBox.getValue());
             handler.onValueChange(newEvent);
         }
     }
-    
+
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
         ValueChangeHandler<String> newHandler = new CalBoxValueChangeHandler(handler, this);
         return input.addValueChangeHandler(newHandler);
     }
-    
+
     @Override
     public String getValue() {
         Date d = getDate();
         return d == null ? null : valueStrFmt.format(d);
     }
-    
+
     @Override
     public void setValue(String value) {
         if (value == null || value.isEmpty()) {
@@ -233,13 +233,13 @@ public class JQMCalBox extends JQMText {
             if (!eq) ValueChangeEvent.fire(input, getValue());
         }
     }
-    
+
     public void setDate(Date d) {
         setDate(d, false);
     }
-    
+
     /**
-     * @param fireEvents - when true {@link com.google.gwt.event.logical.shared.ValueChangeEvent} 
+     * @param fireEvents - when true {@link com.google.gwt.event.logical.shared.ValueChangeEvent}
      * will be fired if date changed.
      */
     public void setDate(Date d, boolean fireEvents) {

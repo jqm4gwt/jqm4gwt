@@ -14,9 +14,21 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
-import com.google.gwt.user.client.ui.*;
-import com.sksamuel.jqm4gwt.*;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Focusable;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
+import com.sksamuel.jqm4gwt.DataIcon;
+import com.sksamuel.jqm4gwt.HasCorners;
+import com.sksamuel.jqm4gwt.HasIcon;
+import com.sksamuel.jqm4gwt.HasInline;
+import com.sksamuel.jqm4gwt.HasMini;
+import com.sksamuel.jqm4gwt.HasNative;
+import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
 import com.sksamuel.jqm4gwt.HasText;
+import com.sksamuel.jqm4gwt.IconPos;
+import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
@@ -61,7 +73,7 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
      * The panel that will contain the labe and select widgets
      */
     private final FlowPanel flow;
-    
+
     private boolean valueChangeHandlerInitialized;
 
     /**
@@ -147,6 +159,7 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
         if (!valueChangeHandlerInitialized) {
             valueChangeHandlerInitialized = true;
             addChangeHandler(new ChangeHandler() {
+                @Override
                 public void onChange(ChangeEvent event) {
                     ValueChangeEvent.fire(JQMSelect.this, getValue());
                 }
@@ -308,7 +321,7 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
     public void clear() {
     	select.clear();
     }
-    
+
     @Override
     public void setTheme(String themeName) {
     	applyTheme(select, themeName);
@@ -546,7 +559,7 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
             newIdx = getSelectedIndex();
             if (oldIdx != newIdx) {
                 ValueChangeEvent.fire(this, value);
-            }                
+            }
         }
     }
 

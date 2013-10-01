@@ -14,7 +14,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasOrientation;
 import com.sksamuel.jqm4gwt.HasText;
@@ -28,12 +27,12 @@ import com.sksamuel.jqm4gwt.html.Legend;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 24 May 2011 08:17:31
- * 
+ *
  *         A widget that is composed of 1 or more checkboxes.
- * 
+ *
  *         The child checkboxes are grouped together and can be set to be
  *         vertical or horizontal.
- * 
+ *
  * <p><a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/checkbox/">Checkboxes</a></p>
  * <p><a href="http://view.jquerymobile.com/1.3.2/dist/demos/#Checkboxes">Form elements - Checkboxes</a></p>
  *
@@ -48,9 +47,9 @@ import com.sksamuel.jqm4gwt.html.Legend;
  *    &lt;jqm:check>&lt;jqm:form.elements.JQMCheckbox name="cb21" text="Check2"/>&lt;/jqm:check>
  * &lt;/jqm:form.elements.JQMCheckset>
  * </pre>
- * 
+ *
  */
-public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckset>, 
+public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckset>,
         HasSelectionHandlers<String>, HasOrientation<JQMCheckset>, HasMini<JQMCheckset>,
 		HasClickHandlers, JQMFormWidget {
 
@@ -69,7 +68,7 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 
 	/**
 	 * Creates a new {@link JQMCheckset} with the label set to the given text.
-	 * 
+	 *
 	 * @param text
 	 *              the display text for the label
 	 */
@@ -87,7 +86,7 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 
 		setText(labelText);
 	}
-	
+
 	BlurHandler blurHandler;
 	ArrayList<HandlerRegistration> blurHandlers = new ArrayList<HandlerRegistration>();
 
@@ -102,28 +101,30 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 			}, ClickEvent.getType()));
 		}
 	}
-	
+
 	private void clearBlurHandlers() {
 		for (HandlerRegistration blurHandler : blurHandlers) blurHandler.removeHandler();
 		blurHandlers.clear();
 	}
-	
-	protected void onLoad() {
+
+	@Override
+    protected void onLoad() {
 		if (blurHandler != null && blurHandlers.size() == 0) addLabelsBlurHandler(blurHandler);
 	}
-	
-	protected void onUnload() {
+
+	@Override
+    protected void onUnload() {
 		clearBlurHandlers();
 	}
-	
+
 	@Override
 	public HandlerRegistration addBlurHandler(final BlurHandler handler) {
 		this.blurHandler = handler;
 		clearBlurHandlers();
 		addLabelsBlurHandler(handler);
 		return null;
-	}	
-	
+	}
+
     @UiChild(tagname = "check")
     public void addCheckbox(JQMCheckbox checkbox) {
         fieldset.add(checkbox);
@@ -134,12 +135,12 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 		checks.clear();
 		setupFieldset(getText());
 	}
-	
+
     @Override
     public void setTheme(String themeName) {
     	for (JQMCheckbox cb : checks) cb.setTheme(themeName);
     }
-	
+
     @Override
     public JQMWidget withTheme(String themeName) {
     	setTheme(themeName);
@@ -177,7 +178,7 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 	/**
 	 * Returns the id of any checkbox that is checked or null if no checkbox
 	 * in this checkset has been selected
-	 * 
+	 *
 	 * @return the first selected value
 	 */
 	@Override
@@ -193,7 +194,7 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 		while (element != null) {
 			if ("label".equalsIgnoreCase(element.getTagName())
 					&& element.getAttribute("class") != null
-					&& (element.getAttribute("class").contains("ui-btn-active") 
+					&& (element.getAttribute("class").contains("ui-btn-active")
 					        || element.getAttribute("class").contains("ui-btn-down")))
 				return element.getAttribute("for");
 			String value = getValue(element.getFirstChildElement());
@@ -222,7 +223,7 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 
 	/**
 	 * Returns true if the checkbox with the given id is selected.
-	 * 
+	 *
 	 * @param id
 	 *              the id of the checkbox to test
 	 */
@@ -297,26 +298,26 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
    		setVertical();
    		return this;
    	}
-    
+
     public void setOrientation(Orientation value) {
         switch (value) {
             case HORIZONTAL:
                 setHorizontal();
                 break;
-            
+
             case VERTICAL:
                 setVertical();
                 break;
         }
     }
-    
+
     public IconPos getIconPos() {
         String string = fieldset.getElement().getAttribute("data-iconpos");
         return string == null ? null : IconPos.valueOf(string);
     }
-    
+
     /**
-     * Sets the position of the icon. 
+     * Sets the position of the icon.
      */
     public void setIconPos(IconPos pos) {
         if (pos == null)
@@ -324,7 +325,7 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
         else
             fieldset.getElement().setAttribute("data-iconpos", pos.getJqmValue());
     }
-    
+
     @Override
     public boolean isMini() {
         return "true".equals(fieldset.getElement().getAttribute("data-mini"));

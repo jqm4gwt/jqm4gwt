@@ -4,27 +4,26 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-//import com.google.gwt.event.dom.client.ClickEvent;
-//import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiConstructor;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.Window;
-
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.HasTheme;
 import com.sksamuel.jqm4gwt.html.FormLabel;
+//import com.google.gwt.event.dom.client.ClickEvent;
+//import com.google.gwt.event.dom.client.ClickHandler;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 12 Jul 2011 15:42:39
  */
-public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasValue<Boolean>, 
+public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasValue<Boolean>,
         HasMini<JQMCheckbox>, HasTheme<JQMCheckbox> {
 
     private TextBox input;
@@ -32,30 +31,30 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
     private FormLabel label;
 
     private String id;
-    
+
     private boolean valueChangeHandlerInitialized;
-    
+
     // There are three internal states: null, false, true AND only two ui states: false, true.
     // Three internal states are needed to properly support data binding libraries (Errai for example).
-    private Boolean internVal; 
+    private Boolean internVal;
 
     /**
      * Should be followed by calls to set Input, Label and Id)
      */
     public JQMCheckbox() {
     }
-    
+
     protected void init(TextBox input, FormLabel label, String id) {
         FlowPanel flow = new FlowPanel();
         initWidget(flow);
         flow.add(label);
-        flow.add(input); 
-        
+        flow.add(input);
+
         setInput(input);
         setLabel(label);
         setId(id);
     }
-    
+
     @UiConstructor
     public JQMCheckbox(String name, String text) {
         this();
@@ -90,6 +89,7 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
         if (!valueChangeHandlerInitialized) {
             valueChangeHandlerInitialized = true;
             input.addChangeHandler(new ChangeHandler() {
+                @Override
                 public void onChange(ChangeEvent event) {
                     ValueChangeEvent.fire(JQMCheckbox.this, getValue());
                 }
@@ -116,7 +116,7 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
         InputElement e = input.getElement().cast();
         return "true".equals(e.getAttribute("data-mini"));
     }
-    
+
     /**
      * If set to true then renders a smaller version of the standard-sized element.
      */
@@ -150,7 +150,7 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
         InputElement e = input.getElement().cast();
         return e.isChecked();
     }
-    
+
     @Override
     public Boolean getValue() {
         boolean checked = isChecked();
@@ -186,7 +186,7 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
             if (!eq) ValueChangeEvent.fire(this, internVal);
         }
     }
-    
+
     private native void setChecked(Element e, boolean value) /*-{
         $wnd.$(e).prop('checked', value).checkboxradio('refresh');
     }-*/;
@@ -194,26 +194,27 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
     public void setInput(TextBox input) {
         this.input = input;
         input.addChangeHandler(new ChangeHandler() {
+            @Override
             public void onChange(ChangeEvent event) {
                 internVal = isChecked(); // user touched the checkbox, we must take current ui value
                 //showMsg("setInput: " + (internVal ? "checked" : "unchecked"));
             }
         });
     }
-    
+
     private static void showMsg(String s) {
         Window.alert(s);
-    };
+    }
 
     public void setId(String id) {
         this.id = id;
     }
-    
+
     @Override
     public String getTheme() {
         return input.getElement().getAttribute("data-theme");
     }
-    
+
     @Override
     public void setTheme(String themeName) {
         if (themeName == null) {
