@@ -41,18 +41,19 @@
             <jqm:form.elements.JQMPassword text="passwordText"/>
             
             <jqm:form.elements.JQMRadioset ui:field="radio1" text="radiosetText" selectedValue="b">
-                <jqm:radio>
-                        <jqm:form.elements.JQMRadio text="radio_A_Text" theme="a" value="a"/>
-                </jqm:radio>
-                <jqm:radio>
-                        <jqm:form.elements.JQMRadio text="radio_B_Text" theme="b" value="b"/>
-                </jqm:radio>
-                <jqm:radio>
-                        <jqm:form.elements.JQMRadio text="radio_C_Text" theme="c" value="c"/>
-                </jqm:radio>
-                <jqm:radio>
-                        <jqm:form.elements.JQMRadio text="radio_D_Text" theme="d" value="d"/>
-                </jqm:radio>
+              <!-- orientation="HORIZONTAL" mini="true" iconPos="RIGHT" theme="a" -->
+              <jqm:radio>
+                <jqm:form.elements.JQMRadio text="radio_A_Text" value="a"/>
+              </jqm:radio>
+              <jqm:radio>
+                <jqm:form.elements.JQMRadio text="radio_B_Text" value="b"/>
+              </jqm:radio>
+              <jqm:radio>
+                <jqm:form.elements.JQMRadio text="radio_C_Text" value="c"/>
+              </jqm:radio>
+              <jqm:radio>
+                <jqm:form.elements.JQMRadio text="radio_D_Text" value="d"/>
+              </jqm:radio>
             </jqm:form.elements.JQMRadioset>
             <jqm:layout.JQMTable columns="3">
               <jqm:cell>

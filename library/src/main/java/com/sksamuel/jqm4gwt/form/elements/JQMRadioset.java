@@ -23,34 +23,39 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasOrientation;
 import com.sksamuel.jqm4gwt.HasText;
+import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.Orientation;
 import com.sksamuel.jqm4gwt.form.JQMFieldset;
 import com.sksamuel.jqm4gwt.html.Legend;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 24 May 2011 08:17:31
  *
- *         A widget that is a collection of one or more radio buttons. All radio
+ * <p> A widget that is a collection of one or more radio buttons. All radio
  *         buttons must belong to a radioset. All radio buttons in a set are
- *         grouped and styled together.
+ *         grouped and styled together. </p>
  *
- *       * <h3>Use in UiBinder Templates</h3>
+ * <h3>Use in UiBinder Templates</h3>
  *
  * When working with JQMRadioset in
  * {@link com.google.gwt.uibinder.client.UiBinder UiBinder} templates, you
  * can add Radio buttons via child elements. For example:
  * <pre>
  * &lt;jqm:form.elements.JQMRadioset>
- *    &lt;jqm:radio id="radioId#1" text="radio #1"/>
- *    &lt;jqm:radio id="radioId#2" text="radio #2"/>
+ *    &lt;jqm:radio>
+ *      &lt;jqm:form.elements.JQMRadio text="radio_A_Text" value="a"/>
+ *      &lt;jqm:form.elements.JQMRadio text="radio_B_Text" value="b"/>
+ *    &lt;/jqm:radio>
  * &lt;/jqm:form.elements.JQMRadioset>
  * </pre>
  *
  */
-public class JQMRadioset extends JQMWidget implements HasText<JQMRadioset>,
-        HasSelectionHandlers<String>, HasOrientation<JQMRadioset>, HasValue<String>,
+public class JQMRadioset extends JQMWidget implements HasText<JQMRadioset>, HasValue<String>,
+        HasSelectionHandlers<String>, HasOrientation<JQMRadioset>, HasMini<JQMRadioset>,
         JQMFormWidget, HasClickHandlers {
 
     private boolean valueChangeHandlerInitialized;
@@ -217,8 +222,7 @@ public class JQMRadioset extends JQMWidget implements HasText<JQMRadioset>,
 
     @Override
     public void setTheme(String themeName) {
-        for (TextBox radio : radios)
-            applyTheme(radio, themeName);
+        for (TextBox radio : radios) applyTheme(radio, themeName);
     }
 
     @Override
@@ -441,6 +445,55 @@ public class JQMRadioset extends JQMWidget implements HasText<JQMRadioset>,
     @Override
     public JQMRadioset withText(String text) {
         setText(text);
+        return this;
+    }
+
+    public void setOrientation(Orientation value) {
+        switch (value) {
+            case HORIZONTAL:
+                setHorizontal();
+                break;
+
+            case VERTICAL:
+                setVertical();
+                break;
+        }
+    }
+
+    public IconPos getIconPos() {
+        String string = fieldset.getElement().getAttribute("data-iconpos");
+        return string == null ? null : IconPos.valueOf(string);
+    }
+
+    /**
+     * Sets the position of the icon.
+     */
+    public void setIconPos(IconPos pos) {
+        if (pos == null)
+            fieldset.getElement().removeAttribute("data-iconpos");
+        else
+            fieldset.getElement().setAttribute("data-iconpos", pos.getJqmValue());
+    }
+
+    @Override
+    public boolean isMini() {
+        return "true".equals(fieldset.getElement().getAttribute("data-mini"));
+    }
+
+    /**
+     * If set to true then renders a smaller version of the standard-sized element.
+     */
+    @Override
+    public void setMini(boolean mini) {
+        fieldset.getElement().setAttribute("data-mini", String.valueOf(mini));
+    }
+
+    /**
+     * If set to true then renders a smaller version of the standard-sized element.
+     */
+    @Override
+    public JQMRadioset withMini(boolean mini) {
+        setMini(mini);
         return this;
     }
 }
