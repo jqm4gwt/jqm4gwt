@@ -39,7 +39,8 @@
             <jqm:form.elements.JQMMonth text="monthText"/>
             <jqm:form.elements.JQMNumber text="numberText"/>
             <jqm:form.elements.JQMPassword text="passwordText"/>
-            <jqm:form.elements.JQMRadioset text="radiosetText" selectedValue="b">
+            
+            <jqm:form.elements.JQMRadioset ui:field="radio1" text="radiosetText" selectedValue="b">
                 <jqm:radio>
                         <jqm:form.elements.JQMRadio text="radio_A_Text" theme="a" value="a"/>
                 </jqm:radio>
@@ -53,6 +54,18 @@
                         <jqm:form.elements.JQMRadio text="radio_D_Text" theme="d" value="d"/>
                 </jqm:radio>
             </jqm:form.elements.JQMRadioset>
+            <jqm:layout.JQMTable columns="3">
+              <jqm:cell>
+                <jqm:button.JQMButton ui:field="radioInfoBtn" text="Show Radioset Info" />              
+              </jqm:cell>
+              <jqm:cell>
+                <jqm:button.JQMButton ui:field="setRadioValBtn" text="Set Value to 'c'" />
+              </jqm:cell>
+              <jqm:cell>
+                <jqm:button.JQMButton ui:field="setRadioNullBtn" text="Set Value to 'null'" />
+              </jqm:cell>
+            </jqm:layout.JQMTable>
+            
             <jqm:form.elements.JQMSearch text="searchText"/>
             <jqm:form.elements.JQMSelect text="selectText">
                 <jqm:option>

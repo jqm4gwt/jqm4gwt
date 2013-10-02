@@ -1,12 +1,11 @@
 package com.sksamuel.jqm4gwt.examples.uibinder;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMPopup;
@@ -15,6 +14,7 @@ import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.form.JQMForm;
 import com.sksamuel.jqm4gwt.form.SubmissionHandler;
 import com.sksamuel.jqm4gwt.form.elements.JQMCheckbox;
+import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
 
@@ -64,21 +64,33 @@ public class TestView1 {
 
     @UiField
     JQMForm form;
-    
+
     @UiField
     JQMButton navBarBtn1;
-    
+
     @UiField
     JQMCheckbox cb1;
-    
+
     @UiField
     JQMCheckbox cb2;
-    
+
     @UiField
     JQMCheckbox cb3;
-    
+
     @UiField
     JQMButton checkboxInfoBtn;
+
+    @UiField
+    JQMRadioset radio1;
+
+    @UiField
+    JQMButton radioInfoBtn;
+
+    @UiField
+    JQMButton setRadioValBtn;
+
+    @UiField
+    JQMButton setRadioNullBtn;
 
     @UiHandler("popupOpenButton")
     void handlePopupOpenButtonClick(ClickEvent e) {
@@ -109,7 +121,7 @@ public class TestView1 {
     void handleEnableSliderButtonClick(ClickEvent e) {
         slider.enable();
     }
-    
+
     @UiHandler("busyButton")
     void handleBusyButtonClick(ClickEvent e) {
         Mobile.busy(true);
@@ -118,14 +130,14 @@ public class TestView1 {
             public void run() {
                 Mobile.busy(false);
             }};
-        timer.schedule(3000);    
+        timer.schedule(3000);
     }
-    
+
     @UiHandler("navBarBtn1")
     void handleNavBarBtn1Click(ClickEvent e) {
         Window.alert("'" + navBarBtn1.getText() + "' is clicked!");
     }
-    
+
     @UiHandler("checkboxInfoBtn")
     void checkboxInfoBtnClick(ClickEvent e) {
         String cb1Str = "'" + cb1.getText() + "' is " + (cb1.isChecked() ? "checked" : "unchecked");
@@ -134,13 +146,39 @@ public class TestView1 {
         Window.alert(cb1Str + "\n" + cb2Str + "\n" + cb3Str);
     }
 
+    @UiHandler("radioInfoBtn")
+    void radioInfoBtnClick(ClickEvent e) {
+        Window.alert("'" + radio1.getText() + "' value is " + radio1.getValue());
+    }
+
+    @UiHandler("setRadioValBtn")
+    void setRadioValBtnClick(ClickEvent e) {
+        radio1.setValue("c");
+    }
+
+    @UiHandler("setRadioNullBtn")
+    void setRadioNullBtnClick(ClickEvent e) {
+        radio1.setValue(null);
+    }
+
     {
-        form.setSubmissionHandler(new SubmissionHandler() {
+        form.setSubmissionHandler(new SubmissionHandler<JQMForm>() {
             @Override
             public void onSubmit(JQMForm form) {
                 // Do something here.
             }
         });
+        /*radio1.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                Window.alert("'" + radio1.getText() + "' value changed: " +event.getValue());
+            }
+        });
+        radio1.addSelectionHandler(new SelectionHandler<String>() {
+            @Override
+            public void onSelection(SelectionEvent<String> event) {
+                Window.alert("'" + radio1.getText() + "' selected item: " + event.getSelectedItem());
+            }});*/
     }
 
     public void show() {
