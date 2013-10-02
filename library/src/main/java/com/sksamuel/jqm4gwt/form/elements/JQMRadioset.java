@@ -379,6 +379,14 @@ public class JQMRadioset extends JQMWidget implements HasText<JQMRadioset>, HasV
     public void setValue(String value, boolean fireEvents) {
         String oldValue = fireEvents ? getValue() : null;
         boolean changed = false;
+        for (TextBox radio : radios) { // first we have to uncheck already checked radios (UI refresh issue)
+            if (!isChecked(radio)) continue;
+            boolean checked = value != null && value.equals(radio.getValue()) ? true : false;
+            if (!checked) {
+                setChecked(radio, false);
+                changed = true;
+            }
+        }
         for (TextBox radio : radios) {
             boolean checked = value != null && value.equals(radio.getValue()) ? true : false;
             if (isChecked(radio) != checked) {

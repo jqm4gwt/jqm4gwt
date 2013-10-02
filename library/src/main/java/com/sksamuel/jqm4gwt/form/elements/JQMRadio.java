@@ -26,6 +26,7 @@ public class JQMRadio extends Widget implements HasText<JQMRadio>, HasMini<JQMRa
         Element element = input.getElement();
         element.setId(Document.get().createUniqueId());
         element.setAttribute("type", "radio");
+        setElement(element);
         setLabel(new FormLabel());
     }
 
