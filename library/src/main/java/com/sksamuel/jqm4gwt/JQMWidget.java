@@ -23,16 +23,18 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>, HasId<JQMWidget>, HasDataRole, HasEnabled {
 
+    private static final String STYLE_UI_DISABLED = "ui-disabled";
+
     /**
      * Returns the value of the attribute with the given name
      */
-    protected String getAttribute(String name) {
-        return getElement().getAttribute(name);
+    public String getAttribute(String name) {
+        return getAttribute(this, name);
     }
 
-
-    private static final String STYLE_UI_DISABLED = "ui-disabled";
-
+    public String getAttribute(Widget widget, String name) {
+        return widget.getElement().getAttribute(name);
+    }
 
     public boolean getAttributeBoolean(String name) {
         return "true".equalsIgnoreCase(getAttribute(name));
@@ -73,10 +75,14 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
      * Sets the value of the attribute with the given name to the given value.
      */
     public void setAttribute(String name, String value) {
+        setAttribute(this, name, value);
+    }
+
+    public void setAttribute(Widget widget, String name, String value) {
         if (value == null)
-            getElement().removeAttribute(name);
+            widget.getElement().removeAttribute(name);
         else
-            getElement().setAttribute(name, value);
+            widget.getElement().setAttribute(name, value);
     }
 
     /**
@@ -119,6 +125,7 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
         return this;
     }
 
+    @Override
     public void setEnabled(boolean b) {
         if (isEnabled() != b) {
             if (b) removeStyleName(STYLE_UI_DISABLED);
@@ -126,11 +133,12 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
         }
     }
 
+    @Override
     public boolean isEnabled() {
         String styleName = getStyleName();
         return styleName == null || !styleName.contains(STYLE_UI_DISABLED);
     }
-    
+
     public static void applyTheme(Widget w, String themeName) {
         if (themeName == null)
             w.getElement().removeAttribute("data-theme");

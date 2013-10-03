@@ -179,6 +179,11 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
      */
     public JQMListItem addItem(String text, String url, 
                                ListItemImageKind imageKind, String imageUrl) {
+        return addItem(items.size(), text, url, imageKind, imageUrl);
+    }
+     
+    public JQMListItem addItem(int index, String text, String url, 
+                               ListItemImageKind imageKind, String imageUrl) {
         // In case if icon/thumbnail is present there is severe rendering problem,
         // for details see https://github.com/sksamuel/jqm4gwt/issues/18
 
@@ -188,9 +193,9 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
 
         if (hasImage) { // workaround is needed for proper rendering
             if (clickable) {
-                item = addItem(text, url);
+                item = addItem(index, text, url);
             } else {
-                item = addItem(text);
+                item = addItem(index, text);
                 // Empty url cannot be used, because we don't need clickable and right arrow icon
                 item.addHeaderText(1, "");
             }
@@ -205,7 +210,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
                 break;
             }
         } else {
-            item = addItem(text, url);
+            item = addItem(index, text, url);
         }
         return item;
     }
@@ -355,8 +360,8 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
     }
 
     protected native void refresh(String id) /*-{
-                                $wnd.$("#" + id).listview('refresh');
-								}-*/;
+        $wnd.$("#" + id).listview('refresh');
+    }-*/;
 
     /**
      * Remove the divider with the given text. This method will search all the dividers and remove the first divider
@@ -367,13 +372,69 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
     public boolean removeDivider(String text) {
         for (int k = 0; k < list.getWidgetCount(); k++) {
             Widget w = list.getWidget(k);
-            if ("list-divider".equals(w.getElement().getAttribute("data-role"))) {
+            if (JQMListDivider.ATTR_VALUE.equals(w.getElement().getAttribute(JQMListDivider.ATTR_NAME))
+                    && w.getElement().getInnerText().equals(text)) {
                 list.remove(k);
                 items.remove(k);
                 return true;
             }
         }
         return false;
+    }
+    
+    /**
+     * Remove the divider with the given tag. This method will search all the dividers and remove the first divider
+     * found with the given tag.
+     *
+     * @return true if a divider with the given tag was found and removed, otherwise false.
+     */
+    public boolean removeDivider(Object tag) {
+        if (tag == null) return false;
+        for (int k = 0; k < list.getWidgetCount(); k++) {
+            Widget w = list.getWidget(k);
+            if (JQMListDivider.ATTR_VALUE.equals(w.getElement().getAttribute(JQMListDivider.ATTR_NAME))
+                    && tag.equals(((JQMListDivider) w).getTag())) {
+                list.remove(k);
+                items.remove(k);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Find the divider with the given text. This method will search all the dividers and return the first divider
+     * found with the given text.
+     *
+     * @return the divider with the given text (if found, or null otherwise).
+     */
+    public JQMListDivider findDivider(String text) {
+        for (int k = 0; k < list.getWidgetCount(); k++) {
+            Widget w = list.getWidget(k);
+            if (JQMListDivider.ATTR_VALUE.equals(w.getElement().getAttribute(JQMListDivider.ATTR_NAME))
+                    && w.getElement().getInnerText().equals(text)) {
+                return (JQMListDivider) w;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Find the divider with the given tag. This method will search all the dividers and return the first divider
+     * found with the given tag.
+     *
+     * @return the divider with the given tag (if found, or null otherwise).
+     */
+    public JQMListDivider findDivider(Object tag) {
+        if (tag == null) return null;
+        for (int k = 0; k < list.getWidgetCount(); k++) {
+            Widget w = list.getWidget(k);
+            if (JQMListDivider.ATTR_VALUE.equals(w.getElement().getAttribute(JQMListDivider.ATTR_NAME))
+                    && tag.equals(((JQMListDivider) w).getTag())) {
+                return (JQMListDivider) w;
+            }
+        }
+        return null;
     }
 
     /**
