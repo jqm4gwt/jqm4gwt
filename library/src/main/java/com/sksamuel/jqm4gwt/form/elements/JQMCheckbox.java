@@ -218,7 +218,7 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
     @Override
     public void setTheme(String themeName) {
         if (themeName == null) {
-            input.getElement().removeAttribute(themeName);
+            input.getElement().removeAttribute("data-theme");
         } else {
             input.getElement().setAttribute("data-theme", themeName);
         }

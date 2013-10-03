@@ -558,7 +558,7 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
         if (fireEvents) {
             newIdx = getSelectedIndex();
             if (oldIdx != newIdx) {
-                ValueChangeEvent.fire(this, value);
+                ValueChangeEvent.fire(this, getValue(newIdx));
             }
         }
     }
