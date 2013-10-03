@@ -14,6 +14,7 @@ import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.form.JQMForm;
 import com.sksamuel.jqm4gwt.form.SubmissionHandler;
 import com.sksamuel.jqm4gwt.form.elements.JQMCheckbox;
+import com.sksamuel.jqm4gwt.form.elements.JQMFlip;
 import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
@@ -92,6 +93,18 @@ public class TestView1 {
     @UiField
     JQMButton setRadioNullBtn;
 
+    @UiField
+    JQMFlip flip;
+
+    @UiField
+    JQMButton flipInfoBtn;
+
+    @UiField
+    JQMButton setFlipValBtn;
+
+    @UiField
+    JQMButton setFlipNullBtn;
+
     @UiHandler("popupOpenButton")
     void handlePopupOpenButtonClick(ClickEvent e) {
         popup.open();
@@ -159,6 +172,21 @@ public class TestView1 {
     @UiHandler("setRadioNullBtn")
     void setRadioNullBtnClick(ClickEvent e) {
         radio1.setValue(null);
+    }
+
+    @UiHandler("flipInfoBtn")
+    void flipInfoBtnClick(ClickEvent e) {
+        Window.alert("'" + flip.getText() + "' value is " + flip.getValue());
+    }
+
+    @UiHandler("setFlipValBtn")
+    void setFlipValBtnClick(ClickEvent e) {
+        flip.setValue("flip2Value");
+    }
+
+    @UiHandler("setFlipNullBtn")
+    void setFlipNullBtnClick(ClickEvent e) {
+        flip.setValue(null);
     }
 
     {
