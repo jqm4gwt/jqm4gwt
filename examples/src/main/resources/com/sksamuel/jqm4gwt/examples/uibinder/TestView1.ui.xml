@@ -20,30 +20,66 @@
                 <jqm:button.JQMButton theme="d" text="Button theme 'd' of group"/>
                 <jqm:button.JQMButton theme="e" text="Button theme 'e' of group"/>
             </jqm:button.JQMButtonGroup>
-            <jqm:form.elements.JQMCheckset>
-                <jqm:check id="blah" text="Checkbox#1"/>
+            <jqm:form.elements.JQMCheckbox ui:field="cb1" name="cb1" text="Checkbox"/>
+            <jqm:form.elements.JQMCheckbox ui:field="cb2" name="cb2" text="Mini-Checkbox" mini="true" value="true"/>
+            <jqm:form.elements.JQMCheckbox ui:field="cb3" name="cb3" text="Themed Checkbox" theme="a"/>
+            <jqm:button.JQMButton ui:field="checkboxInfoBtn" text="Show Checkboxes Info" />
+            <jqm:form.elements.JQMCheckset text="Mini Horizontal Checkset" orientation="HORIZONTAL" mini="true">
+                <jqm:check><jqm:form.elements.JQMCheckbox name="cb10" text="Check1"/></jqm:check>
+                <jqm:check><jqm:form.elements.JQMCheckbox name="cb11" text="Check2"/></jqm:check>
+            </jqm:form.elements.JQMCheckset>
+            <jqm:form.elements.JQMCheckset text="Vertical Checkset"> <!-- iconPos="RIGHT" -->
+                <jqm:check><jqm:form.elements.JQMCheckbox name="cb20" text="Check1"/></jqm:check>
+                <jqm:check><jqm:form.elements.JQMCheckbox name="cb21" text="Check2"/></jqm:check>
             </jqm:form.elements.JQMCheckset>
             <jqm:form.elements.JQMEmail text="email"/>
-            <jqm:form.elements.JQMFlip label1="Flip1" label2="Flip2" value1="flip1Value" value2="flip2Value"
-                                       text="flipText"/>
+            <jqm:form.elements.JQMFlip ui:field="flip" 
+              label1="Flip1" label2="Flip2" value1="flip1Value" value2="flip2Value" text="flipText"/>
+              <!-- theme="b" mini="true" -->
+            <jqm:layout.JQMTable columns="3">
+              <jqm:cell>
+                <jqm:button.JQMButton ui:field="flipInfoBtn" text="Show Flip Info" />              
+              </jqm:cell>
+              <jqm:cell>
+                <jqm:button.JQMButton ui:field="setFlipValBtn" text="Set Value to 'Flip2'" />
+              </jqm:cell>
+              <jqm:cell>
+                <jqm:button.JQMButton ui:field="setFlipNullBtn" text="Set Value to 'null'" />
+              </jqm:cell>
+            </jqm:layout.JQMTable>                                       
+                                       
             <jqm:plugins.datebox.JQMCalBox text="Date Picker" dateFormat="%A %m/%d/%y"/>
             <jqm:form.elements.JQMMonth text="monthText"/>
             <jqm:form.elements.JQMNumber text="numberText"/>
             <jqm:form.elements.JQMPassword text="passwordText"/>
-            <jqm:form.elements.JQMRadioset text="radiosetText" selectedValue="b">
-                <jqm:radio>
-                        <jqm:form.elements.JQMRadio text="radio_A_Text" theme="a" value="a"/>
-                </jqm:radio>
-                <jqm:radio>
-                        <jqm:form.elements.JQMRadio text="radio_B_Text" theme="b" value="b"/>
-                </jqm:radio>
-                <jqm:radio>
-                        <jqm:form.elements.JQMRadio text="radio_C_Text" theme="c" value="c"/>
-                </jqm:radio>
-                <jqm:radio>
-                        <jqm:form.elements.JQMRadio text="radio_D_Text" theme="d" value="d"/>
-                </jqm:radio>
+            
+            <jqm:form.elements.JQMRadioset ui:field="radio1" text="radiosetText" selectedValue="b">
+              <!-- orientation="HORIZONTAL" mini="true" iconPos="RIGHT" theme="a" -->
+              <jqm:radio>
+                <jqm:form.elements.JQMRadio text="radio_A_Text" value="a"/>
+              </jqm:radio>
+              <jqm:radio>
+                <jqm:form.elements.JQMRadio text="radio_B_Text" value="b"/>
+              </jqm:radio>
+              <jqm:radio>
+                <jqm:form.elements.JQMRadio text="radio_C_Text" value="c"/>
+              </jqm:radio>
+              <jqm:radio>
+                <jqm:form.elements.JQMRadio text="radio_D_Text" value="d"/>
+              </jqm:radio>
             </jqm:form.elements.JQMRadioset>
+            <jqm:layout.JQMTable columns="3">
+              <jqm:cell>
+                <jqm:button.JQMButton ui:field="radioInfoBtn" text="Show Radioset Info" />              
+              </jqm:cell>
+              <jqm:cell>
+                <jqm:button.JQMButton ui:field="setRadioValBtn" text="Set Value to 'c'" />
+              </jqm:cell>
+              <jqm:cell>
+                <jqm:button.JQMButton ui:field="setRadioNullBtn" text="Set Value to 'null'" />
+              </jqm:cell>
+            </jqm:layout.JQMTable>
+            
             <jqm:form.elements.JQMSearch text="searchText"/>
             <jqm:form.elements.JQMSelect text="selectText">
                 <jqm:option>

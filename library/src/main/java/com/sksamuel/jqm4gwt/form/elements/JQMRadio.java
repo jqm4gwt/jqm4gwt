@@ -26,6 +26,7 @@ public class JQMRadio extends Widget implements HasText<JQMRadio>, HasMini<JQMRa
         Element element = input.getElement();
         element.setId(Document.get().createUniqueId());
         element.setAttribute("type", "radio");
+        setElement(element);
         setLabel(new FormLabel());
     }
 
@@ -64,7 +65,7 @@ public class JQMRadio extends Widget implements HasText<JQMRadio>, HasMini<JQMRa
 
     @Override
     public String getTheme() {
-        return label.getElement().getAttribute("theme");
+        return label.getElement().getAttribute("data-theme");
     }
 
     public String getValue() {
@@ -109,8 +110,11 @@ public class JQMRadio extends Widget implements HasText<JQMRadio>, HasMini<JQMRa
     }
 
     @Override
-    public void setTheme(String theme) {
-        label.getElement().setAttribute("theme", String.valueOf(theme));
+    public void setTheme(String themeName) {
+        if (themeName == null)
+            label.getElement().removeAttribute("data-theme");
+        else
+            label.getElement().setAttribute("data-theme", themeName);
     }
 
     @Override
