@@ -35,11 +35,14 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
     // The GWT widget to use as the select element
     private final ListBox select = new ListBox();
 
+    private String value1;
     private String value2;
 
-    private String value1;
-
     private boolean valueChangeHandlerInitialized;
+
+    // There are three internal states: null, value1, value2 AND only two ui states: value1, value2.
+    // Three internal states are needed to properly support data binding libraries (Errai for example).
+    private String internVal;
 
     /**
      * Creates a new {@link JQMFlip} widget with the given label text and
@@ -94,6 +97,21 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
         select.setName(id);
         select.getElement().setId(id);
         select.getElement().setAttribute("data-role", "slider");
+        addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(ChangeEvent event) {
+                switch (getSelectedIndex()) {
+                case 0:
+                    internVal = getValue1();
+                    break;
+                case 1:
+                    internVal = getValue2();
+                    break;
+                default:
+                    internVal = null;
+                }
+            }
+        });
         add(label);
         add(select);
     }
@@ -165,9 +183,12 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
     public String getValue() {
         switch (getSelectedIndex()) {
         case 0:
-            return getValue1();
+            if (internVal == null) return null;
+            internVal = getValue1();
+            return internVal;
         case 1:
-            return getValue2();
+            internVal = getValue2();
+            return internVal;
         default:
             return null;
         }
@@ -186,11 +207,7 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
      */
     public void setSelectedIndex(int i) {
         select.setSelectedIndex(i);
-        refresh();
-        if (i == -1) { // refresh() updates UI and always resets -1 to 0, but we need null value support for data binding
-            int j = select.getSelectedIndex();
-            if (j != i) select.setSelectedIndex(i);
-        }
+        refresh(); // updates UI and always resets invalid index to 0
     }
 
     /**
@@ -207,6 +224,11 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
         return this;
     }
 
+    public void setTextHidden(boolean value) {
+        if (value) addStyleName("ui-hide-label");
+        else removeStyleName("ui-hide-label");
+    }
+
     /**
      * Sets the currently selected value
      */
@@ -220,15 +242,15 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
      */
     @Override
     public void setValue(String value, boolean fireEvents) {
-        int newIdx = value == null ? -1 : value.equals(getValue1()) ? 0
-                                        : value.equals(getValue2()) ? 1 : -1;
-        int oldIdx = fireEvents ? getSelectedIndex() : -1;
-        setSelectedIndex(newIdx);
+        int newIdx = value == null ? 0 : value.equals(getValue1()) ? 0
+                                       : value.equals(getValue2()) ? 1 : 0;
+        int oldIdx = getSelectedIndex();
+        String oldVal = fireEvents ? getValue() : null;
+        internVal = value;
+        if (oldIdx != newIdx) setSelectedIndex(newIdx);
         if (fireEvents) {
-            newIdx = getSelectedIndex();
-            if (oldIdx != newIdx) {
-                ValueChangeEvent.fire(this, getValue());
-            }
+            boolean eq = internVal == oldVal || internVal != null && internVal.equals(oldVal);
+            if (!eq) ValueChangeEvent.fire(this, internVal);
         }
     }
 
