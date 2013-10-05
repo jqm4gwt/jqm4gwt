@@ -1,14 +1,19 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
-<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:jqm='urn:import:com.sksamuel.jqm4gwt'>
+<ui:UiBinder 
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:jqm='urn:import:com.sksamuel.jqm4gwt' 
+  xmlns:e="urn:import:com.sksamuel.jqm4gwt.form.elements">
 
-    <jqm:JQMPage containerId="testPage2"  backButton="true">
-        <jqm:toolbar.JQMHeader text="Test Page 2 Header"/>
+    <jqm:JQMPage ui:field="testPage2" containerId="testPage2"  backButton="true" contentCentered="true"
+      contentAddStyleNames="aaa bbb ccc">
+        <jqm:toolbar.JQMHeader text="Test Page 2 Header" fixed="true" />
         <jqm:form.JQMForm ui:field="form">
             <jqm:button.JQMButton text="Go To Test Page 1" href="#testPage1" transition="NONE" iconPos="RIGHT" builtInIcon="RIGHT"/>
+            <e:JQMCheckbox ui:field="cbContentCentered" name="cbContentCentered" 
+              text="Is Content Centered" value="true"/>
         </jqm:form.JQMForm>
-        <jqm:toolbar.JQMFooter>
+        <jqm:toolbar.JQMFooter fixed="true">
             <jqm:widget>
                 <jqm:toolbar.JQMNavBar>
                     <jqm:button>
