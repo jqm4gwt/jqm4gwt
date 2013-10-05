@@ -1,9 +1,13 @@
 package com.sksamuel.jqm4gwt;
 
+import java.util.Collection;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.Cookies;
@@ -13,8 +17,6 @@ import com.sksamuel.jqm4gwt.JQMPageEvent.PageState;
 import com.sksamuel.jqm4gwt.toolbar.JQMFooter;
 import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
 import com.sksamuel.jqm4gwt.toolbar.JQMPanel;
-
-import java.util.Collection;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 4 May 2011 23:55:27
@@ -40,12 +42,15 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     protected JQMHeader header;
 
     protected JQMFooter footer;
-    
+
     protected JQMPanel panel;
 
     private HandlerRegistration headerHandlerRegistration;
 
     private com.google.web.bindery.event.shared.HandlerRegistration footerHandlerRegistration, panelHandlerRegistration;
+
+    private boolean contentCentered;
+    private boolean windowResizeInitialized;
 
     /**
      * Create a new {@link JQMPage}. Using this constructor, the page will not be rendered until a containerID has been
@@ -138,7 +143,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     	panel.bindLifecycleEvents();
     	bindPanelEvents();
     }
-    
+
     /**
      * Adds a widget to the primary content container of this page.
      *
@@ -173,7 +178,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
             }
         }, ClickEvent.getType());
     }
-    
+
     void bindFooterEvents() {
         if (footerHandlerRegistration != null)
             footerHandlerRegistration.removeHandler();
@@ -218,32 +223,33 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
             function(event, ui) {
                 p.@com.sksamuel.jqm4gwt.JQMPage::doPageShow()();
             });
-        
+
         $wnd.$('div[data-url="' + id + '"]').bind("pagehide",
             function(event, ui) {
                 p.@com.sksamuel.jqm4gwt.JQMPage::doPageHide()();
             });
-        
+
         $wnd.$('div[data-url="' + id + '"]').bind("pagebeforehide",
             function(event, ui) {
                 p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeHide()();
             });
-        
+
         $wnd.$('div[data-url="' + id + '"]').bind("pagebeforeshow",
             function(event, ui) {
                 p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeShow()();
             });
-        
+
     }-*/;
 
     private native void unbindLifecycleEvents(String id) /*-{
-        $wnd.$('div[data-url="' + id + '"]').unbind("pageshow");	
+        $wnd.$('div[data-url="' + id + '"]').unbind("pageshow");
         $wnd.$('div[data-url="' + id + '"]').unbind("pagehide");
         $wnd.$('div[data-url="' + id + '"]').unbind("pagebeforehide");
         $wnd.$('div[data-url="' + id + '"]').unbind("pagebeforeshow");
 
     }-*/;
 
+    @Override
     protected void onLoad()
     {
         bindLifecycleEvents(this, getId());
@@ -255,7 +261,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         	if(panelHandlerRegistration == null) bindPanelEvents();
         }
     }
-    
+
+    @Override
     protected void onUnload()
     {
     	unbindLifecycleEvents(getId());
@@ -276,7 +283,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         }
         if(panel != null) panel.unbindLifecycleEvents();
     }
-    
+
     @Override
     public void clear() {
         throw new RuntimeException("You called clear on the page, you probably wanted to call clear on a content panel");
@@ -353,7 +360,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     protected void onPageBeforeHide() {
     }
-    
+
     protected void doPageBeforeHide() {
         onPageBeforeHide();
         JQMPageEvent.fire(this, PageState.BEFORE_HIDE);
@@ -364,7 +371,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     protected void onPageBeforeShow() {
     }
-    
+
     protected void doPageBeforeShow() {
         onPageBeforeShow();
         JQMPageEvent.fire(this, PageState.BEFORE_SHOW);
@@ -375,7 +382,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     protected void onPageHide() {
     }
-    
+
     protected void doPageHide() {
         onPageHide();
         JQMPageEvent.fire(this, PageState.HIDE);
@@ -386,12 +393,24 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     protected void onPageShow() {
     }
-    
+
     protected void doPageShow() {
         onPageShow();
         JQMPageEvent.fire(this, PageState.SHOW);
+        if (contentCentered) {
+            centerContent();
+            if (!windowResizeInitialized) {
+                windowResizeInitialized = true;
+                Window.addResizeHandler(new ResizeHandler() {
+                    @Override
+                    public void onResize(ResizeEvent event) {
+                        if (contentCentered) centerContent();
+                    }
+                });
+            }
+        }
     }
-    
+
     public HandlerRegistration addPageHandler(JQMPageEvent.Handler handler) {
         return addHandler(handler, JQMPageEvent.getType());
     }
@@ -428,13 +447,13 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     	panel = null;
     	removeToolBar("panel");
     }
-    
+
     private void removeToolBar(String name) {
         Element element = getToolBar(name);
         if (element != null)
             getElement().removeChild(element);
     }
-    
+
     /**
      * Sets whether or not this page should have an auto generated back
      * button. If so, it will be placed in the left slot and override any left
@@ -466,7 +485,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     {
     	return footer;
     }
-    
+
     @Override
     public void setFullScreen(boolean fs) {
         if (fs) {
@@ -514,11 +533,11 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         this.panel = panel;
         getElement().insertBefore(panel.getElement(), getElement().getFirstChild());
     }
-    
+
     public JQMPanel getPanel() {
     	return panel;
     }
-    
+
     /**
      * Sets the title of this page, which will be used as the contents of the
      * title tag when this page is the visible page.
@@ -532,4 +551,47 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     public String toString() {
         return "JQMPage [id=" + id + "]";
     }
+
+    /**
+     * Additional class names can be added directly to content div for better custom styling.
+     * The same idea as UiBinder's embedded addStyleNames functionality.
+     * <p> Example:
+     * <pre>&lt;jqm:JQMPage contentAddStyleNames="aaa bbb ccc"/></pre></p>
+     */
+    public void setContentAddStyleNames(String value) {
+        if (value == null || value.isEmpty()) return;
+        String[] arr = value.split(" ");
+        for (int i = 0; i < arr.length; i++) {
+            String s = arr[i].trim();
+            if (s.isEmpty()) continue;
+            content.addStyleName(s);
+        }
+    }
+
+    public boolean isContentCentered() {
+        return contentCentered;
+    }
+
+    /**
+     * Content div will be centered between Header and Footer (they must be defined as fixed="true").
+     */
+    public void setContentCentered(boolean contentCentered) {
+        boolean oldVal = this.contentCentered;
+        this.contentCentered = contentCentered;
+        if (oldVal != this.contentCentered && content != null && content.isAttached()) {
+            if (this.contentCentered) centerContent();
+            else content.getElement().getStyle().clearProperty("marginTop");
+        }
+    }
+
+    private void centerContent() {
+        int headerH = header == null ? 0 : header.getOffsetHeight();
+        int footerH = footer == null ? 0 : footer.getOffsetHeight();
+        int windowH = Window.getClientHeight();
+        int contentH = content.getOffsetHeight();
+        int marginTop = (windowH - headerH - footerH - contentH) / 2;
+        if (marginTop < 0) marginTop = 0;
+        content.getElement().getStyle().setProperty("marginTop", String.valueOf(marginTop) + "px");
+    }
+
 }
