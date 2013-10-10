@@ -14,7 +14,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
@@ -29,6 +28,7 @@ import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
@@ -37,8 +37,10 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *         An implementation of a jQuery mobile select element.
  * @link http://jquerymobile.com/demos/1.1.1/docs/forms/selects/options.html
  */
-public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasText<JQMSelect>, HasFocusHandlers, HasChangeHandlers, HasClickHandlers,
-        HasValue<String>, JQMFormWidget, HasIcon<JQMSelect>, HasInline<JQMSelect>, HasPreventFocusZoom, HasCorners<JQMSelect>, HasMini<JQMSelect>, Focusable {
+public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>, HasText<JQMSelect>,
+        HasFocusHandlers, HasChangeHandlers, HasClickHandlers, HasValue<String>, JQMFormWidget,
+        HasIcon<JQMSelect>, HasInline<JQMSelect>, HasPreventFocusZoom, HasCorners<JQMSelect>,
+        HasMini<JQMSelect>, Focusable {
 
 
     public static class Option {
@@ -69,11 +71,6 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
 
     private final FormLabel label;
 
-    /**
-     * The panel that will contain the labe and select widgets
-     */
-    private final FlowPanel flow;
-
     private boolean valueChangeHandlerInitialized;
 
     /**
@@ -89,20 +86,16 @@ public class JQMSelect extends JQMWidget implements HasNative<JQMSelect>, HasTex
     public JQMSelect(String text) {
         String id = Document.get().createUniqueId();
 
-        flow = new FlowPanel();
-        initWidget(flow);
-
         label = new FormLabel();
         label.setFor(id);
-        flow.add(label);
+        add(label);
 
         select = new ListBox(false);
         select.getElement().setId(id);
-        flow.add(select);
+        add(select);
 
         setText(text);
         setStyleName(SELECT_STYLENAME);
-        setDataRole("fieldcontain");
     }
 
     @Override
