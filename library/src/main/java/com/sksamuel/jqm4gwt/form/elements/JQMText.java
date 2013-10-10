@@ -21,7 +21,6 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
@@ -31,7 +30,7 @@ import com.sksamuel.jqm4gwt.HasPlaceHolder;
 import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
 import com.sksamuel.jqm4gwt.HasReadOnly;
 import com.sksamuel.jqm4gwt.HasText;
-import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
@@ -39,9 +38,11 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *         <p/>
  *         An implementation of a standard HTML text input.
  */
-public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHandlers, HasClickHandlers, HasChangeHandlers, HasValue<String>, HasReadOnly<JQMText>,
-        JQMFormWidget, HasKeyDownHandlers, HasKeyUpHandlers, HasMouseOverHandlers, HasMouseOutHandlers, HasPreventFocusZoom, HasMini<JQMText>,
-        HasPlaceHolder<JQMText>,Focusable {
+public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasFocusHandlers,
+        HasClickHandlers, HasChangeHandlers, HasValue<String>, HasReadOnly<JQMText>,
+        JQMFormWidget, HasKeyDownHandlers, HasKeyUpHandlers, HasMouseOverHandlers,
+        HasMouseOutHandlers, HasPreventFocusZoom, HasMini<JQMText>,
+        HasPlaceHolder<JQMText>, Focusable {
 
     /**
      * The widget used for the label
@@ -52,11 +53,6 @@ public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHand
      * The widget used for the input element
      */
     protected final TextBox input;
-
-    /**
-     * The main container used as the basis for this widget
-     */
-    private final FlowPanel flow;
 
     /**
      * Create a new {@link JQMText} element with no label
@@ -71,9 +67,6 @@ public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHand
     public JQMText(String text) {
         String id = Document.get().createUniqueId();
 
-        flow = new FlowPanel();
-        initWidget(flow);
-
         label = new FormLabel();
         label.setFor(id);
 
@@ -81,14 +74,10 @@ public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHand
         input.getElement().setId(id);
         input.setName(id);
 
-        flow.add(label);
-        flow.add(input);
+        add(label);
+        add(input);
 
         setText(text);
-        setDataRole("fieldcontain");
-        addStyleName("jqm4gwt-fieldcontain");
-
-        setId();
     }
 
     @Override
@@ -265,20 +254,20 @@ public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHand
 	}
 
 	@Override
-	public void setReadOnly(boolean readOnly) 
+	public void setReadOnly(boolean readOnly)
 	{
 		input.setReadOnly(readOnly);
 	}
 
 	@Override
-	public JQMText withReadOnly(boolean readOnly) 
+	public JQMText withReadOnly(boolean readOnly)
 	{
 		setReadOnly(readOnly);
 		return this;
 	}
 
 	@Override
-	public String getPlaceHolder() 
+	public String getPlaceHolder()
 	{
 		return input.getElement().getAttribute(HasPlaceHolder.ATTRIBUTE_PLACEHOLDER);
 	}
@@ -293,7 +282,7 @@ public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHand
 		setPlaceHolder(placeHolderText);
 		return this;
 	}
-    
+
     public void setInputId(String id) {
         input.getElement().setId(id);
         input.setName(id);
@@ -307,7 +296,7 @@ public class JQMText extends JQMWidget implements HasText<JQMText>, HasFocusHand
     public void setInputName(String id) {
         input.setName(id);
     }
-    
+
     public String getInputName() {
         return input.getName();
     }
