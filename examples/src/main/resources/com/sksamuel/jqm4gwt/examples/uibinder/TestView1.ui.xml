@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:jqm='urn:import:com.sksamuel.jqm4gwt'>
 
     <ui:style>
@@ -8,7 +9,17 @@
     </ui:style>
              
     <jqm:JQMPage containerId="testPage1" backButton="true">
-        <jqm:toolbar.JQMHeader text="Test Page 1 Header"/>
+        <jqm:toolbar.JQMHeader>
+          <jqm:widget>
+            <jqm:html.Heading.H1 text="Test Page 1 Header" />
+          </jqm:widget>
+          <jqm:widget>
+            <g:FlowPanel ui:field="headerPanel1">
+                <jqm:button.JQMButton ui:field="headerTestBtn1" text="Header Test Button1" inline="true" />
+                <jqm:button.JQMButton ui:field="headerTestBtn2" text="Header Test Button2" inline="true" />
+            </g:FlowPanel>
+          </jqm:widget>
+        </jqm:toolbar.JQMHeader>
         <jqm:plugins.iscroll.IScrollPanel>
             <jqm:html.Span text="spanText in IScrollPanel"/>
         <jqm:form.JQMForm ui:field="form">

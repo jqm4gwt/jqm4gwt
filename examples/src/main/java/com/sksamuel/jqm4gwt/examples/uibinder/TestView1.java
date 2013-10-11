@@ -2,10 +2,12 @@ package com.sksamuel.jqm4gwt.examples.uibinder;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMPopup;
@@ -105,6 +107,15 @@ public class TestView1 {
     @UiField
     JQMButton setFlipNullBtn;
 
+    @UiField
+    JQMButton headerTestBtn1;
+
+    @UiField
+    JQMButton headerTestBtn2;
+
+    @UiField
+    FlowPanel headerPanel1;
+
     @UiHandler("popupOpenButton")
     void handlePopupOpenButtonClick(ClickEvent e) {
         popup.open();
@@ -189,6 +200,16 @@ public class TestView1 {
         flip.setValue(null);
     }
 
+    @UiHandler("headerTestBtn1")
+    void headerTestBtn1Click(ClickEvent e) {
+        Window.alert(headerTestBtn1.getText() + " is clicked!");
+    }
+
+    @UiHandler("headerTestBtn2")
+    void headerTestBtn2Click(ClickEvent e) {
+        Window.alert(headerTestBtn2.getText() + " is clicked!");
+    }
+
     {
         form.setSubmissionHandler(new SubmissionHandler<JQMForm>() {
             @Override
@@ -207,6 +228,12 @@ public class TestView1 {
             public void onSelection(SelectionEvent<String> event) {
                 Window.alert("'" + radio1.getText() + "' selected item: " + event.getSelectedItem());
             }});*/
+
+        headerPanel1.addDomHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.alert("headerPanel1 is clicked!");
+            }}, ClickEvent.getType());
     }
 
     public void show() {
