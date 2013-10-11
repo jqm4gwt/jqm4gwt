@@ -18,7 +18,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
@@ -29,6 +28,7 @@ import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.Orientation;
+import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.form.JQMFieldset;
 import com.sksamuel.jqm4gwt.html.Legend;
 
@@ -54,7 +54,7 @@ import com.sksamuel.jqm4gwt.html.Legend;
  * </pre>
  *
  */
-public class JQMRadioset extends JQMWidget implements HasText<JQMRadioset>, HasValue<String>,
+public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadioset>, HasValue<String>,
         HasSelectionHandlers<String>, HasOrientation<JQMRadioset>, HasMini<JQMRadioset>,
         JQMFormWidget, HasClickHandlers {
 
@@ -66,11 +66,6 @@ public class JQMRadioset extends JQMWidget implements HasText<JQMRadioset>, HasV
     private JQMFieldset fieldset;
 
     private Legend legend;
-
-    /**
-     * The panel that acts as the fieldcontain container
-     */
-    private final FlowPanel flow;
 
     /**
      * The input's that are used for the radio buttons
@@ -93,19 +88,15 @@ public class JQMRadioset extends JQMWidget implements HasText<JQMRadioset>, HasV
      *            the text for the label
      */
     public JQMRadioset(String text) {
-        flow = new FlowPanel();
-        flow.getElement().setId(Document.get().createUniqueId());
-        initWidget(flow);
-        setDataRole("fieldcontain");
         setupFieldset(text);
     }
 
     private void setupFieldset(String labelText) {
-        if (fieldset != null) flow.remove(fieldset);
+        if (fieldset != null) remove(fieldset);
         // the fieldset is the inner container and is contained inside the flow
         fieldset = new JQMFieldset();
         fieldset.getElement().setId(Document.get().createUniqueId());
-        flow.add(fieldset);
+        add(fieldset);
 
         // the legend must be added to the fieldset
         legend = new Legend();
