@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class JQMContext {
 
-	private static Transition	defaultTransition	= Transition.POP;
 	private static boolean 		defaultTransistionDirection = false;
 	private static boolean		defaultChangeHash = true;
 
@@ -39,7 +38,7 @@ public class JQMContext {
 	 * instance. This uses the default transition which is Transition.POP
 	 */
 	public static void changePage(JQMContainer container) {
-		changePage(container, defaultTransition);
+		changePage(container, getDefaultTransition());
 	}
 
 	/**
@@ -63,9 +62,25 @@ public class JQMContext {
 	}
 
 	public static Transition getDefaultTransition() {
-		return defaultTransition;
+		String val = getDefaultTransitionImpl();
+		Transition t = getTransitionForJQMString(val);
+		return t != null ? t : Transition.FADE;
 	}
 
+	private static Transition getTransitionForJQMString(String val) {
+		if (val != null) {
+			for (Transition t : Transition.values()) {
+				if (val.equalsIgnoreCase(t.getJQMValue())) {
+					return t;
+				}
+			}
+		}
+		return null;
+	}	
+	
+	private native static String getDefaultTransitionImpl() /*-{
+								return $wnd.$.mobile.defaultPageTransition;
+								}-*/;	
 
 	/**
 	 * Return the pixel offset of an element from the left of the document.
@@ -109,13 +124,18 @@ public class JQMContext {
 										}-*/;
 
 	public static void setDefaultTransition(Transition defaultTransition) {
-		JQMContext.defaultTransition = defaultTransition;
+		setDefaultTransitionImpl(defaultTransition.getJQMValue());
 	}
+
 	public static void setDefaultTransition(Transition defaultTransition, boolean direction) {
-		JQMContext.defaultTransition = defaultTransition;
+		setDefaultTransitionImpl(defaultTransition.getJQMValue());
 		defaultTransistionDirection = direction;
 	}
 
+	private native static void setDefaultTransitionImpl(String transition) /*-{
+											$wnd.$.mobile.defaultPageTransition = transition; 
+											}-*/;
+	
 	public static void setDefaultChangeHash(boolean defaultChangeHash) {
 		JQMContext.defaultChangeHash = defaultChangeHash;
 	}
