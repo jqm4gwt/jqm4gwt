@@ -202,7 +202,17 @@ public class TestView1 {
 
     @UiHandler("headerTestBtn1")
     void headerTestBtn1Click(ClickEvent e) {
-        Window.alert(headerTestBtn1.getText() + " is clicked!");
+        boolean visible = Mobile.isVisible(nextView.testPage2.getElement());
+        boolean hidden = Mobile.isHidden(nextView.testPage2.getElement());
+        String s2 = "nextView.testPage2: visible=" + String.valueOf(visible) + "; hidden="
+                    + String.valueOf(hidden);
+
+        visible = Mobile.isVisible(page.getElement());
+        hidden = Mobile.isHidden(page.getElement());
+        String s1 = "This page: visible=" + String.valueOf(visible) + "; hidden="
+                    + String.valueOf(hidden);
+
+        Window.alert(headerTestBtn1.getText() + " is clicked!\n\n" + s1 + "\n\n" + s2);
     }
 
     @UiHandler("headerTestBtn2")
