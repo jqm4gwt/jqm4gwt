@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.ListBox;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasText;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
@@ -307,8 +308,8 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
 
     @Override
     public void setTheme(String themeName) {
-        applyTheme(select, themeName);
-        setAttribute(select, "data-track-theme", themeName);
+        JQMCommon.applyTheme(select, themeName);
+        JQMCommon.setAttribute(select, "data-track-theme", themeName);
     }
 
 }

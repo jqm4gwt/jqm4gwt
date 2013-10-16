@@ -14,8 +14,8 @@ import com.sksamuel.jqm4gwt.HasIcon;
 import com.sksamuel.jqm4gwt.HasIconShadow;
 import com.sksamuel.jqm4gwt.HasInline;
 import com.sksamuel.jqm4gwt.HasMini;
-import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.HasRel;
+import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.HasTransition;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMContainer;
@@ -29,8 +29,9 @@ import com.sksamuel.jqm4gwt.Transition;
  *         An implementation of a Jquery mobile button
  * @link http://jquerymobile.com/demos/1.2.0/docs/buttons/buttons-types.html
  */
-public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<JQMButton>, HasTransition<JQMButton>, HasClickHandlers, HasInline<JQMButton>,
-        HasIcon<JQMButton>, HasCorners, HasIconShadow, HasMini<JQMButton> {
+public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<JQMButton>,
+        HasTransition<JQMButton>, HasClickHandlers, HasInline<JQMButton>,
+        HasIcon<JQMButton>, HasCorners<JQMButton>, HasIconShadow<JQMButton>, HasMini<JQMButton> {
 
     /**
      * Create a {@link JQMButton} with the given text that does not link to
@@ -175,7 +176,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
      */
     @Override
     public boolean isInline() {
-        return "true".equals(getAttribute("data-line"));
+        return "true".equals(getAttribute("data-inline"));
     }
 
     @Override

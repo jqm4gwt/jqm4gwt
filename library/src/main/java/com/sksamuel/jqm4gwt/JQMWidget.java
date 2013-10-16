@@ -21,19 +21,14 @@ import com.google.gwt.user.client.ui.Widget;
  *         composition in use. Implementating subclasses must decide how to
  *         compose and thus call initWidget() themselves.
  */
-public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>, HasId<JQMWidget>, HasDataRole, HasEnabled {
-
-    private static final String STYLE_UI_DISABLED = "ui-disabled";
+public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>, HasId<JQMWidget>,
+        HasDataRole, HasEnabled {
 
     /**
      * Returns the value of the attribute with the given name
      */
     public String getAttribute(String name) {
-        return getAttribute(this, name);
-    }
-
-    public String getAttribute(Widget widget, String name) {
-        return widget.getElement().getAttribute(name);
+        return JQMCommon.getAttribute(this, name);
     }
 
     public boolean getAttributeBoolean(String name) {
@@ -42,7 +37,7 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
 
     @Override
     public String getDataRole() {
-        return getAttribute("data-role");
+        return JQMCommon.getDataRole(this);
     }
 
     /**
@@ -55,7 +50,7 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
 
     @Override
     public String getTheme() {
-        return getAttribute("data-theme");
+        return JQMCommon.getTheme(this);
     }
 
     /**
@@ -68,21 +63,14 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
     }
 
     public void removeDataRole() {
-        removeAttribute("data-role");
+        JQMCommon.removeDataRole(this);
     }
 
     /**
      * Sets the value of the attribute with the given name to the given value.
      */
     public void setAttribute(String name, String value) {
-        setAttribute(this, name, value);
-    }
-
-    public void setAttribute(Widget widget, String name, String value) {
-        if (value == null)
-            widget.getElement().removeAttribute(name);
-        else
-            widget.getElement().setAttribute(name, value);
+        JQMCommon.setAttribute(this, name, value);
     }
 
     /**
@@ -92,7 +80,7 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
      */
     @Override
     public void setDataRole(String value) {
-        setAttribute("data-role", value);
+        JQMCommon.setDataRole(this, value);
     }
 
     /**
@@ -116,7 +104,7 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
 
     @Override
     public void setTheme(String themeName) {
-        setAttribute("data-theme", themeName);
+        JQMCommon.setTheme(this, themeName);
     }
 
     @Override
@@ -127,22 +115,12 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
 
     @Override
     public void setEnabled(boolean b) {
-        if (isEnabled() != b) {
-            if (b) removeStyleName(STYLE_UI_DISABLED);
-            else addStyleName(STYLE_UI_DISABLED);
-        }
+        JQMCommon.setEnabled(this, b);
     }
 
     @Override
     public boolean isEnabled() {
-        String styleName = getStyleName();
-        return styleName == null || !styleName.contains(STYLE_UI_DISABLED);
+        return JQMCommon.isEnabled(this);
     }
 
-    public static void applyTheme(Widget w, String themeName) {
-        if (themeName == null)
-            w.getElement().removeAttribute("data-theme");
-        else
-            w.getElement().setAttribute("data-theme", themeName);
-    }
 }

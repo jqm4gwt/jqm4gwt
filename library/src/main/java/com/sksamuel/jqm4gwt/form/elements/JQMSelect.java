@@ -27,6 +27,7 @@ import com.sksamuel.jqm4gwt.HasNative;
 import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.IconPos;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.html.FormLabel;
@@ -317,7 +318,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     @Override
     public void setTheme(String themeName) {
-    	applyTheme(select, themeName);
+    	JQMCommon.applyTheme(select, themeName);
     }
 
     @Override

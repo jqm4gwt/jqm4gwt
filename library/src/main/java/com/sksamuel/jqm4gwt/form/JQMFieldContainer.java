@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt.form;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMWidget;
 
 /**
@@ -37,13 +38,16 @@ public class JQMFieldContainer extends JQMWidget {
 		flow.remove(widget);
 	}
 
+	public boolean isLabelHidden() {
+	    return JQMCommon.isLabelHidden(this);
+	}
+
 	/**
      * Label/Legend/Text can be hidden for form elements.
 	 * <p><a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/forms/form-hide-label.html">
 	 * Field containers, hide label/legend</a></p>
 	 */
 	public void setLabelHidden(boolean value) {
-        if (value) addStyleName("ui-hide-label");
-        else removeStyleName("ui-hide-label");
+	    JQMCommon.setLabelHidden(this, value);
     }
 }

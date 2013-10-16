@@ -4,4 +4,5 @@
    <inherits name='com.google.gwt.activity.Activity' />
 
    <source path='jqm4gwt' />
+   <stylesheet src="css/jqm4gwt.css"/>
 </module>

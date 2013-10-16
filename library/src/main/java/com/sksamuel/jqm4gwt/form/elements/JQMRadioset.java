@@ -26,6 +26,7 @@ import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasOrientation;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.IconPos;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.Orientation;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
@@ -213,7 +214,7 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
 
     @Override
     public void setTheme(String themeName) {
-        for (TextBox radio : radios) applyTheme(radio, themeName);
+        for (TextBox radio : radios) JQMCommon.applyTheme(radio, themeName);
     }
 
     @Override
