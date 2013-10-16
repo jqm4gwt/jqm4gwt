@@ -20,6 +20,14 @@ public class JQMCommon {
     private static final String DATA_INLINE = "data-inline";
     private static final String DATA_CORNERS = "data-corners";
 
+    public static boolean isVisible(Widget widget) {
+        return widget != null && Mobile.isVisible(widget.getElement());
+    }
+
+    public static boolean isHidden(Widget widget) {
+        return widget != null && Mobile.isHidden(widget.getElement());
+    }
+
     public static boolean hasStyle(Widget widget, String style) {
         String styles = widget.getStyleName();
         return styles != null && styles.contains(style);
