@@ -7,6 +7,9 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.JQMPage;
+import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
 
 /**
@@ -43,6 +46,7 @@ public class JQMCalBox extends JQMText {
     protected static final String WEEK_START_DAY = "\"overrideCalStartDay\":";
     protected static final String USE_TODAY_BUTTON = "\"useTodayButton\":";
     protected static final String SQUARE_DATE_BUTTONS = "\"calControlGroup\":";
+    protected static final String USE_CLEAR_BUTTON = "\"useClearButton\":";
 
     private Boolean useNewStyle = true;
     private String dateFormat = null;
@@ -50,6 +54,9 @@ public class JQMCalBox extends JQMText {
     private Integer weekStartDay = null;
     private Boolean useTodayButton = null;
     private Boolean squareDateButtons = null;
+    private Boolean useClearButton = null;
+
+    Date delayedSetDate = null; // used when isAttached() == false
 
     public JQMCalBox() {
         this(null);
@@ -87,6 +94,9 @@ public class JQMCalBox extends JQMText {
         }
         if (squareDateButtons != null) {
             sb.append(',').append(SQUARE_DATE_BUTTONS).append(bool2Str(squareDateButtons));
+        }
+        if (useClearButton != null) {
+            sb.append(',').append(USE_CLEAR_BUTTON).append(bool2Str(useClearButton));
         }
         sb.append('}');
         return sb.toString();
@@ -169,6 +179,15 @@ public class JQMCalBox extends JQMText {
         refreshDataOptions();
     }
 
+    public Boolean getUseClearButton() {
+        return useClearButton;
+    }
+
+    public void setUseClearButton(Boolean useClearButton) {
+        this.useClearButton = useClearButton;
+        refreshDataOptions();
+    }
+
     public static DateTimeFormat getValueStrFmt() {
         return valueStrFmt;
     }
@@ -234,6 +253,31 @@ public class JQMCalBox extends JQMText {
         }
     }
 
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        Widget p = getParent();
+        while (p != null) {
+            if (p instanceof JQMPage) {
+                ((JQMPage) p).addPageHandler(new JQMPageEvent.DefaultHandler() {
+                    @Override
+                    public void onInit(JQMPageEvent event) {
+                        super.onInit(event);
+                        setDate(delayedSetDate);
+                    }
+                });
+                break;
+            }
+            p = p.getParent();
+        }
+    }
+
+    @Override
+    protected void onUnload() {
+        super.onUnload();
+        delayedSetDate = getDate();
+    }
+
     public void setDate(Date d) {
         setDate(d, false);
     }
@@ -244,6 +288,10 @@ public class JQMCalBox extends JQMText {
      */
     public void setDate(Date d, boolean fireEvents) {
         if (input == null) return;
+        if (!input.isAttached()) {
+            delayedSetDate = d;
+            return;
+        }
         Date oldD = fireEvents ? getDate() : null;
         String s = input.getElement().getId();
         if (d == null) {
@@ -265,7 +313,14 @@ public class JQMCalBox extends JQMText {
 
     public Date getDate() {
         if (input == null) return null;
-        String s = input.getElement().getId();
+        if (!input.isAttached()) return delayedSetDate;
+
+        String s = input.getText();
+        // open/close calendar even without any selection, sets js control's date to Now,
+        // but we don't want this behavior, i.e. text is empty means no date is chosen!
+        if (s == null || s.isEmpty()) return null;
+
+        s = input.getElement().getId();
         JsDate jsd = internGetDate(s);
         double msec = jsd.getTime();
         return msec == 0 ? null : new Date((long) msec);

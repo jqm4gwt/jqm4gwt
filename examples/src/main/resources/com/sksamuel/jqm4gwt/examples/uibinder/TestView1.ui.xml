@@ -58,17 +58,23 @@
               <!-- theme="b" mini="true" textHidden="true" -->
             <jqm:layout.JQMTable columns="3">
               <jqm:cell>
-                <jqm:button.JQMButton ui:field="flipInfoBtn" text="Show Flip Info" />              
+                <jqm:button.JQMButton ui:field="flipInfoBtn" text="Show Flip Info" mini="true" />              
               </jqm:cell>
               <jqm:cell>
-                <jqm:button.JQMButton ui:field="setFlipValBtn" text="Set Value to 'Flip2'" />
+                <jqm:button.JQMButton ui:field="setFlipValBtn" text="Set Value to 'Flip2'" mini="true" />
               </jqm:cell>
               <jqm:cell>
-                <jqm:button.JQMButton ui:field="setFlipNullBtn" text="Set Value to 'null'" />
+                <jqm:button.JQMButton ui:field="setFlipNullBtn" text="Set Value to 'null'" mini="true" />
               </jqm:cell>
             </jqm:layout.JQMTable>                                       
                                        
-            <jqm:plugins.datebox.JQMCalBox text="Date Picker" dateFormat="%A %m/%d/%y"/>
+            <jqm:plugins.datebox.JQMCalBox ui:field="datePicker" text="Date Picker" 
+              dateFormat="%A %m/%d/%y" value="2013-10-25" useClearButton="true" />
+            <jqm:button.JQMButton ui:field="datePickerGetValueBtn" text="Get Date Picker value" 
+              inline="true" mini="true" />
+            <jqm:button.JQMButton ui:field="datePickerSetNullBtn" text="Set Date Picker value to Null"
+              inline="true" mini="true" />
+            
             <jqm:form.elements.JQMMonth text="monthText"/>
             <jqm:form.elements.JQMNumber text="numberText"/>
             <jqm:form.elements.JQMPassword text="passwordText"/>

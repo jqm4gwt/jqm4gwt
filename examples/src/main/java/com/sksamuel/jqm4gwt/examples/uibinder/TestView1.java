@@ -20,6 +20,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMFlip;
 import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
+import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox;
 
 /**
  * @author jraymond
@@ -116,6 +117,15 @@ public class TestView1 {
     @UiField
     FlowPanel headerPanel1;
 
+    @UiField
+    JQMCalBox datePicker;
+
+    @UiField
+    JQMButton datePickerGetValueBtn;
+
+    @UiField
+    JQMButton datePickerSetNullBtn;
+
     @UiHandler("popupOpenButton")
     void handlePopupOpenButtonClick(ClickEvent e) {
         popup.open();
@@ -198,6 +208,16 @@ public class TestView1 {
     @UiHandler("setFlipNullBtn")
     void setFlipNullBtnClick(ClickEvent e) {
         flip.setValue(null);
+    }
+
+    @UiHandler("datePickerGetValueBtn")
+    void datePickerGetValueBtnClick(ClickEvent e) {
+        Window.alert("'" + datePicker.getText() + "' value is " + datePicker.getValue());
+    }
+
+    @UiHandler("datePickerSetNullBtn")
+    void datePickerSetNullBtnClick(ClickEvent e) {
+        datePicker.setValue(null);
     }
 
     @UiHandler("headerTestBtn1")
