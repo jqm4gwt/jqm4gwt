@@ -7,6 +7,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class JQMPageEvent extends GwtEvent<JQMPageEvent.Handler> {
 
     public interface Handler extends EventHandler {
+        void onInit(JQMPageEvent event);
         void onBeforeShow(JQMPageEvent event);
         void onBeforeHide(JQMPageEvent event);
         void onShow(JQMPageEvent event);
@@ -14,6 +15,10 @@ public class JQMPageEvent extends GwtEvent<JQMPageEvent.Handler> {
     }
 
     public static class DefaultHandler implements Handler {
+        @Override
+        public void onInit(JQMPageEvent event) {
+        }
+
         @Override
         public void onBeforeShow(JQMPageEvent event) {
         }
@@ -53,7 +58,7 @@ public class JQMPageEvent extends GwtEvent<JQMPageEvent.Handler> {
       return TYPE;
     }
 
-    public enum PageState { BEFORE_SHOW, SHOW, BEFORE_HIDE, HIDE }
+    public enum PageState { INIT, BEFORE_SHOW, SHOW, BEFORE_HIDE, HIDE }
 
     private final PageState pageState;
 
@@ -79,6 +84,10 @@ public class JQMPageEvent extends GwtEvent<JQMPageEvent.Handler> {
     @Override
     protected void dispatch(JQMPageEvent.Handler handler) {
         switch (pageState) {
+            case INIT:
+                handler.onInit(this);
+                break;
+
             case BEFORE_HIDE:
                 handler.onBeforeHide(this);
                 break;

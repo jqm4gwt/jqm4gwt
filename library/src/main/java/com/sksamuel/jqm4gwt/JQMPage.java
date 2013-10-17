@@ -219,6 +219,11 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     private native void bindLifecycleEvents(JQMPage p, String id) /*-{
 
+        $wnd.$('div[data-url="' + id + '"]').bind("pageinit",
+            function(event, ui) {
+                p.@com.sksamuel.jqm4gwt.JQMPage::doPageInit()();
+            });
+
         $wnd.$('div[data-url="' + id + '"]').bind("pageshow",
             function(event, ui) {
                 p.@com.sksamuel.jqm4gwt.JQMPage::doPageShow()();
@@ -242,6 +247,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }-*/;
 
     private native void unbindLifecycleEvents(String id) /*-{
+        $wnd.$('div[data-url="' + id + '"]').unbind("pageinit");
         $wnd.$('div[data-url="' + id + '"]').unbind("pageshow");
         $wnd.$('div[data-url="' + id + '"]').unbind("pagehide");
         $wnd.$('div[data-url="' + id + '"]').unbind("pagebeforehide");
@@ -409,6 +415,17 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
                 });
             }
         }
+    }
+
+    /**
+     * Triggered on the page being initialized, after initialization occurs.
+     */
+    protected void onPageInit() {
+    }
+
+    protected void doPageInit() {
+        onPageInit();
+        JQMPageEvent.fire(this, PageState.INIT);
     }
 
     public HandlerRegistration addPageHandler(JQMPageEvent.Handler handler) {
