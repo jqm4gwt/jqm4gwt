@@ -88,6 +88,9 @@ public class Mobile {
         $wnd.$.mobile.silentScroll(y);
     }-*/;
 
+    /**
+     * jQuery based check if this element is visible, much more correct than GWT default implementation.
+     */
     public static native boolean isVisible(Element elt) /*-{
         return $wnd.$(elt).is(':visible');
     }-*/;

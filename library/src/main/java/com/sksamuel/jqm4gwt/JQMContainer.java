@@ -1,22 +1,23 @@
 package com.sksamuel.jqm4gwt;
 
+import java.util.Collection;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import java.util.Collection;
-
 /**
  * @author Stephen K Samuel samspade79@gmail.com 16 Sep 2012 00:22:18
- *         <p/>
- *         A JQMContainer is any "page level" widget, such as dialogs, popups and pages themselves, which are directly attached to the DOM.
- *         It is meant to contain the common functionality for showing these containers.
+ * <p/>
+ * A JQMContainer is any "page level" widget, such as dialogs, popups and pages themselves,
+ * which are directly attached to the DOM.
+ * It is meant to contain the common functionality for showing these containers.
  */
 public abstract class JQMContainer extends ComplexPanel implements HasId<JQMContainer>, HasTheme<JQMContainer>, HasTransition<JQMContainer> {
 
     public static native void triggerCreate() /*-{
-                                $wnd.$('body').trigger('create');
-								}-*/;
+        $wnd.$('body').trigger('create');
+    }-*/;
 
     static int counter = 1;
 
@@ -38,7 +39,7 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
     }
 
     protected void setRole(String role) {
-        setAttribute("data-role", role);
+        JQMCommon.setDataRole(this, role);
         setStyleName("jqm4gwt-" + role);
     }
 
@@ -119,7 +120,7 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
 
     @Override
     public String getTheme() {
-        return getElement().getAttribute("data-theme");
+        return JQMCommon.getTheme(this);
     }
 
     @Override
@@ -165,7 +166,7 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
 
     @Override
     public void setTheme(String themeName) {
-        getElement().setAttribute("data-theme", themeName);
+        JQMCommon.setTheme(this, themeName);
     }
 
     @Override
@@ -183,5 +184,10 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
     public JQMContainer withTransition(Transition transition) {
         setTransition(transition);
         return this;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return super.isVisible() && JQMCommon.isVisible(this);
     }
 }

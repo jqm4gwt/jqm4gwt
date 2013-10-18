@@ -123,4 +123,9 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
         return JQMCommon.isEnabled(this);
     }
 
+    @Override
+    public boolean isVisible() {
+        return super.isVisible() && JQMCommon.isVisible(this);
+    }
+
 }
