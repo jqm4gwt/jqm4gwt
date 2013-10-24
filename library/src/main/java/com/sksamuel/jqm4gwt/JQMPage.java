@@ -59,7 +59,6 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     private JQMPage() {
         setRole("page");
         content = createContent();
-
     }
 
     /**
@@ -597,11 +596,18 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         this.contentCentered = contentCentered;
         if (oldVal != this.contentCentered && content != null && content.isAttached()) {
             if (this.contentCentered) centerContent();
-            else content.getElement().getStyle().clearProperty("marginTop");
+            else clearCenterContent();
         }
     }
 
-    private void centerContent() {
+    /**
+     * Forcefully centers (just once) page content (needed when content size is changed, because
+     * there is no good way to get resize notification for DOM elements).
+     * <p> Warning! - contentCentered property is not affected, you have to change it manually. </p>
+     * <p> See <a href="http://stackoverflow.com/questions/3444719/how-to-know-when-an-dom-element-moves-or-is-resized">
+     * How to know when an DOM element moves or is resized</a></p>
+     */
+    public void centerContent() {
         int headerH = header == null ? 0 : header.getOffsetHeight();
         int footerH = footer == null ? 0 : footer.getOffsetHeight();
         int windowH = Window.getClientHeight();
@@ -609,6 +615,14 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         int marginTop = (windowH - headerH - footerH - contentH) / 2;
         if (marginTop < 0) marginTop = 0;
         content.getElement().getStyle().setProperty("marginTop", String.valueOf(marginTop) + "px");
+    }
+
+    /**
+     * Content is not centered anymore, i.e. aligned to the top (just once).
+     * <p> Warning! - contentCentered property is not affected, you have to change it manually. </p>
+     */
+    public void clearCenterContent() {
+        content.getElement().getStyle().clearProperty("marginTop");
     }
 
 }
