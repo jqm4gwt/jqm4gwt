@@ -44,29 +44,31 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
     private JQMList list;
 
     /**
-     * Create a read only {@link JQMList} with the initial content set to the
-     * value of the text
+     * Create empty {@link JQMListItem}
      */
     @UiConstructor
-    public JQMListItem(String text) {
-        if (text == null)
-            throw new RuntimeException("Cannot create list item with null text");
-
+    public JQMListItem() {
         setElement(Document.get().createLIElement());
         setStyleName("jqm4gwt-listitem");
-        setText(text);
         setId();
     }
 
     /**
-     * Create a linked {@link JQMList} with the inital content set to the
-     * value of the @param text and the link set to the value of the @param
-     * url
+     * Create {@link JQMListItem} with the initial content set to the value of the text.
+     */
+    public JQMListItem(String text) {
+        this();
+        if (text == null) throw new RuntimeException("Cannot create list item with null text");
+        setText(text);
+    }
+
+    /**
+     * Create a linked {@link JQMListItem} with the inital content set to the
+     * value of the param text and the link set to the value of the param url.
      */
     public JQMListItem(String text, String url) {
         this(text);
-        if (url != null)
-            setUrl(url);
+        if (url != null) setUrl(url);
     }
 
     @Override
@@ -106,6 +108,13 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
             getElement().appendChild(elem);
         else
             anchor.appendChild(elem);
+    }
+
+    private void removeChild(Element elem) {
+        if (anchor == null)
+            getElement().removeChild(elem);
+        else
+            anchor.removeChild(elem);
     }
 
     private native void bind(String id, JQMListItem item) /*-{
@@ -154,7 +163,7 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
      */
     @Override
     public String getText() {
-        return headerElem.getInnerText();
+        return headerElem != null ? headerElem.getInnerText() : null;
     }
 
     private void moveAnchorChildrenToThis() {
@@ -301,6 +310,14 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
      */
     @Override
     public void setText(String text) {
+        if (text == null) {
+            if (headerElem != null) {
+                removeChild(headerElem);
+                headerElem = null;
+            }
+            return;
+        }
+
         if (headerElem == null) {
             headerElem = Document.get().createHElement(3);
             attachChild(headerElem);

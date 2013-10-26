@@ -20,6 +20,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMFlip;
 import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
+import com.sksamuel.jqm4gwt.list.JQMListItem;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox;
 
 /**
@@ -125,6 +126,12 @@ public class TestView1 {
 
     @UiField
     JQMButton datePickerSetNullBtn;
+
+    @UiField
+    JQMListItem listItem4;
+
+    @UiField
+    JQMButton setListItemTextBtn;
 
     @UiHandler("popupOpenButton")
     void handlePopupOpenButtonClick(ClickEvent e) {
@@ -238,6 +245,11 @@ public class TestView1 {
     @UiHandler("headerTestBtn2")
     void headerTestBtn2Click(ClickEvent e) {
         Window.alert(headerTestBtn2.getText() + " is clicked!");
+    }
+
+    @UiHandler("setListItemTextBtn")
+    void setListItemTextBtnClick(ClickEvent e) {
+        listItem4.setText(null);
     }
 
     {
