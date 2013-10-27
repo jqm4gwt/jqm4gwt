@@ -20,6 +20,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMFlip;
 import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
+import com.sksamuel.jqm4gwt.list.JQMList;
 import com.sksamuel.jqm4gwt.list.JQMListItem;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox;
 
@@ -133,6 +134,21 @@ public class TestView1 {
     @UiField
     JQMButton setListItemTextBtn;
 
+    @UiField
+    JQMListItem liCbA;
+
+    @UiField
+    JQMListItem liCbC;
+
+    @UiField
+    JQMListItem liCbD;
+
+    @UiField
+    JQMButton listItemCheckedBtn;
+
+    @UiField
+    JQMList listWithChecked;
+
     @UiHandler("popupOpenButton")
     void handlePopupOpenButtonClick(ClickEvent e) {
         popup.open();
@@ -237,7 +253,7 @@ public class TestView1 {
         visible = Mobile.isVisible(page.getElement());
         hidden = Mobile.isHidden(page.getElement());
         String s1 = "This page: visible=" + String.valueOf(visible) + "; hidden="
-                    + String.valueOf(hidden) + "; HasVisibility.isVisible()=" + page.isVisible();;
+                    + String.valueOf(hidden) + "; HasVisibility.isVisible()=" + page.isVisible();
 
         Window.alert(headerTestBtn1.getText() + " is clicked!\n\n" + s1 + "\n\n" + s2);
     }
@@ -250,6 +266,15 @@ public class TestView1 {
     @UiHandler("setListItemTextBtn")
     void setListItemTextBtnClick(ClickEvent e) {
         listItem4.setText(null);
+    }
+
+    @UiHandler("listItemCheckedBtn")
+    void listItemCheckedBtnClick(ClickEvent e) {
+        Window.alert(liCbA.getText() + " isChecked(): " + liCbA.isChecked() + "; getCheckBox(): " + liCbA.getCheckBox() + "\n"
+                   + liCbC.getText() + " isChecked(): " + liCbC.isChecked() + "\n"
+                   + liCbD.getText() + " isChecked(): " + liCbD.isChecked());
+        //liCbA.setCheckBox(IconPos.LEFT);
+        //listWithChecked.refresh();
     }
 
     {

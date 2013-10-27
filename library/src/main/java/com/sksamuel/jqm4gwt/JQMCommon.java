@@ -19,6 +19,7 @@ public class JQMCommon {
     private static final String DATA_THEME = "data-theme";
     private static final String DATA_INLINE = "data-inline";
     private static final String DATA_CORNERS = "data-corners";
+    private static final String DATA_ICONPOS = "data-iconpos";
 
     public static boolean isVisible(Widget widget) {
         return widget != null && Mobile.isVisible(widget.getElement());
@@ -151,6 +152,22 @@ public class JQMCommon {
 
     public static void setCorners(Widget widget, boolean corners) {
         setCorners(widget.getElement(), corners);
+    }
+
+    public static IconPos getIconPos(Element elt) {
+        return IconPos.fromJqmValue(getAttribute(elt, DATA_ICONPOS));
+    }
+
+    public static IconPos getIconPos(Widget widget) {
+        return getIconPos(widget.getElement());
+    }
+
+    public static void setIconPos(Element elt, IconPos iconPos) {
+        setAttribute(elt, DATA_ICONPOS, iconPos.getJqmValue());
+    }
+
+    public static void setIconPos(Widget widget, IconPos iconPos) {
+        setIconPos(widget.getElement(), iconPos);
     }
 
 }

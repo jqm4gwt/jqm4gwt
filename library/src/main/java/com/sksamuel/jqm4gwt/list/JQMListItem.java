@@ -2,14 +2,22 @@ package com.sksamuel.jqm4gwt.list;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.FieldSetElement;
+import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiConstructor;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasText;
+import com.sksamuel.jqm4gwt.IconPos;
+import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.panel.JQMControlGroup;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 11:21:29
@@ -42,6 +50,17 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
     private Element headerElem;
 
     private JQMList list;
+
+    public class CheckboxControlGroup extends JQMControlGroup {
+
+        protected CheckboxControlGroup(Element element, String styleName) {
+            super(element, styleName);
+        }
+    }
+
+    private CheckboxControlGroup checkBoxCtrlGrp;
+    private Element checkBoxElem;
+
 
     /**
      * Create empty {@link JQMListItem}
@@ -104,17 +123,15 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
     }
 
     private void attachChild(Element elem) {
-        if (anchor == null)
-            getElement().appendChild(elem);
-        else
-            anchor.appendChild(elem);
+        if (anchor == null) getElement().appendChild(elem);
+        else if (checkBoxCtrlGrp != null) checkBoxCtrlGrp.getElement().appendChild(elem);
+        else anchor.appendChild(elem);
     }
 
     private void removeChild(Element elem) {
-        if (anchor == null)
-            getElement().removeChild(elem);
-        else
-            anchor.removeChild(elem);
+        if (anchor == null) getElement().removeChild(elem);
+        else if (checkBoxCtrlGrp != null) checkBoxCtrlGrp.getElement().removeChild(elem);
+        else anchor.removeChild(elem);
     }
 
     private native void bind(String id, JQMListItem item) /*-{
@@ -166,12 +183,16 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
         return headerElem != null ? headerElem.getInnerText() : null;
     }
 
-    private void moveAnchorChildrenToThis() {
+    private void moveAnchorChildrenTo(Element elt) {
         for (int k = 0; k < anchor.getChildCount(); k++) {
             Node node = anchor.getChild(k);
             anchor.removeChild(node);
-            getElement().appendChild(node);
+            elt.appendChild(node);
         }
+    }
+
+    private void moveAnchorChildrenToThis() {
+        moveAnchorChildrenTo(getElement());
     }
 
     private void moveThisChildrenToAnchor() {
@@ -360,5 +381,61 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
     public JQMListItem withText(String text) {
         setText(text);
         return this;
+    }
+
+    /**
+     * CheckBox will be created for this list item.
+     * <p>See <a href="http://stackoverflow.com/a/13931919">Checkbox in ListView</a></p>
+     */
+    public void setCheckBox(IconPos iconPos) {
+        if (checkBoxElem != null) {
+            JQMCommon.setIconPos(checkBoxElem, iconPos);
+            return;
+        }
+
+        if (anchor == null) setUrl("#");
+        anchor.getStyle().setPadding(0, Unit.PX);
+        // TODO: here should be set padding for split icon case
+
+        LabelElement label = Document.get().createLabelElement();
+        setStyleName(label, "jqm4gwt-li-checkbox");
+        JQMCommon.setCorners(label, false);
+        JQMCommon.setIconPos(label, iconPos);
+        Style st = label.getStyle();
+        st.setBorderWidth(0, Unit.PX);
+        st.setMarginTop(0, Unit.PX);
+        st.setMarginBottom(0, Unit.PX);
+
+        FieldSetElement fldSet = Document.get().createFieldSetElement();
+        CheckboxControlGroup grp = new CheckboxControlGroup(fldSet, "jqm4gwt-li-checkbox-ctrls");
+        label.appendChild(fldSet);
+
+        TextBox cb = new TextBox();
+        cb.getElement().setAttribute("type", "checkbox");
+        fldSet.appendChild(cb.getElement());
+
+        moveAnchorChildrenTo(fldSet);
+        checkBoxElem = label;
+        checkBoxCtrlGrp = grp;
+        anchor.appendChild(checkBoxElem);
+    }
+
+    public IconPos getCheckBox() {
+        if (checkBoxElem == null) return null;
+        return JQMCommon.getIconPos(checkBoxElem);
+    }
+
+    public boolean isChecked() {
+        if (checkBoxElem == null) return false;
+        String s = getStyleName(checkBoxElem);
+        return s != null && s.contains("ui-checkbox-on");
+    }
+
+    /**
+     * Currently possible only in checkBox mode, {@link JQMListItem#setCheckBox(IconPos iconPos)}
+     */
+    public void addWidget(Widget w) {
+        if (w == null || checkBoxCtrlGrp == null) return;
+        checkBoxCtrlGrp.add(w);
     }
 }
