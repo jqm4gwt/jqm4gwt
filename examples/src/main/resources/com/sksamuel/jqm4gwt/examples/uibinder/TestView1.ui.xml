@@ -43,6 +43,8 @@
             <jqm:form.elements.JQMCheckbox ui:field="cb1" name="cb1" text="Checkbox"/>
             <jqm:form.elements.JQMCheckbox ui:field="cb2" name="cb2" text="Mini-Checkbox" mini="true" value="true"/>
             <jqm:form.elements.JQMCheckbox ui:field="cb3" name="cb3" text="Themed Checkbox" theme="a"/>
+            <jqm:form.elements.JQMCheckbox ui:field="cb4" name="cb4" text="Right Icon and No corners" 
+              corners="false" iconPos="RIGHT" />
             <jqm:button.JQMButton ui:field="checkboxInfoBtn" text="Show Checkboxes Info" />
             <jqm:form.elements.JQMCheckset text="Mini Horizontal Checkset" orientation="HORIZONTAL" mini="true">
                 <jqm:check><jqm:form.elements.JQMCheckbox name="cb10" text="Check1"/></jqm:check>

@@ -84,6 +84,9 @@ public class TestView1 {
     JQMCheckbox cb3;
 
     @UiField
+    JQMCheckbox cb4;
+
+    @UiField
     JQMButton checkboxInfoBtn;
 
     @UiField
@@ -200,7 +203,8 @@ public class TestView1 {
         String cb1Str = "'" + cb1.getText() + "' is " + (cb1.isChecked() ? "checked" : "unchecked");
         String cb2Str = "'" + cb2.getText() + "' is " + (cb2.isChecked() ? "checked" : "unchecked");
         String cb3Str = "'" + cb3.getText() + "' is " + (cb3.isChecked() ? "checked" : "unchecked");
-        Window.alert(cb1Str + "\n" + cb2Str + "\n" + cb3Str);
+        String cb4Str = "'" + cb4.getText() + "' is " + (cb4.isChecked() ? "checked" : "unchecked");
+        Window.alert(cb1Str + "\n" + cb2Str + "\n" + cb3Str + "\n" + cb4Str);
     }
 
     @UiHandler("radioInfoBtn")

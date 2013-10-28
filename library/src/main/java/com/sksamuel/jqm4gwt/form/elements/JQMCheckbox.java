@@ -13,9 +13,16 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.HasCorners;
+import com.sksamuel.jqm4gwt.HasIconPos;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.HasTheme;
+import com.sksamuel.jqm4gwt.IconPos;
+import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.JQMPage;
+import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 //import com.google.gwt.event.dom.client.ClickEvent;
 //import com.google.gwt.event.dom.client.ClickHandler;
@@ -24,7 +31,8 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * @author Stephen K Samuel samspade79@gmail.com 12 Jul 2011 15:42:39
  */
 public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasValue<Boolean>,
-        HasMini<JQMCheckbox>, HasTheme<JQMCheckbox> {
+        HasMini<JQMCheckbox>, HasTheme<JQMCheckbox>, HasIconPos<JQMCheckbox>,
+        HasCorners<JQMCheckbox> {
 
     private TextBox input;
 
@@ -37,6 +45,8 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
     // There are three internal states: null, false, true AND only two ui states: false, true.
     // Three internal states are needed to properly support data binding libraries (Errai for example).
     private Boolean internVal;
+
+    private IconPos iconPos;
 
     /**
      * Should be followed by calls to set Input, Label and Id)
@@ -191,6 +201,10 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
         $wnd.$(e).prop('checked', value).checkboxradio('refresh');
     }-*/;
 
+    private native void refresh(Element e) /*-{
+      $wnd.$(e).checkboxradio('refresh');
+    }-*/;
+
     public void setInput(TextBox input) {
         this.input = input;
         input.addChangeHandler(new ChangeHandler() {
@@ -227,6 +241,63 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
     @Override
     public JQMCheckbox withTheme(String themeName) {
         setTheme(themeName);
+        return this;
+    }
+
+    @Override
+    public IconPos getIconPos() {
+        return JQMCommon.getIconPos(label);
+    }
+
+    @Override
+    public void setIconPos(IconPos pos) {
+        iconPos = pos;
+        JQMCommon.setIconPos(label, pos);
+    }
+
+    @Override
+    public JQMCheckbox withIconPos(IconPos pos) {
+        setIconPos(pos);
+        return this;
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        // workaround for issue with data-iconpos resetting on js checkbox initialization
+        Widget p = getParent();
+        while (p != null) {
+            if (p instanceof JQMPage) {
+                ((JQMPage) p).addPageHandler(new JQMPageEvent.DefaultHandler() {
+                    @Override
+                    public void onInit(JQMPageEvent event) {
+                        super.onInit(event);
+                        IconPos p = getIconPos();
+                        if (p != iconPos) {
+                            setIconPos(iconPos);
+                            refresh(input.getElement());
+                        }
+                    }
+                });
+                break;
+            }
+            p = p.getParent();
+        }
+    }
+
+    @Override
+    public boolean isCorners() {
+        return JQMCommon.isCorners(label);
+    }
+
+    @Override
+    public void setCorners(boolean corners) {
+        JQMCommon.setCorners(label, corners);
+    }
+
+    @Override
+    public JQMCheckbox withCorners(boolean corners) {
+        setCorners(corners);
         return this;
     }
 

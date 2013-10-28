@@ -1,5 +1,9 @@
 package com.sksamuel.jqm4gwt.list;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -13,17 +17,13 @@ import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.html.ListWidget;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 /**
  * @author Stephen K Samuel samspade79@gmail.com 4 May 2011 21:21:13
  * <p/>
  * An implementation of a jquery mobile list view as seen here:
  * <a href="http://jquerymobile.com/demos/1.2.1/docs/lists/index.html">Listviews</a>
  * <p/>
- * This list can be ordered or unordered (which must be set at constructor time). 
+ * This list can be ordered or unordered (which must be set at constructor time).
  * The list can be dynamically modified with random access.
  *
  * <h3>Use in UiBinder Templates</h3>
@@ -164,25 +164,25 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
     public JQMListItem addItem(String text) {
         return addItem(text, (String) null);
     }
-    
+
     public static enum ListItemImageKind { NONE, THUMBNAIL, ICON }
 
     /**
      * This method is needed as good enough workaround for the following issue:
      * <a href="https://github.com/sksamuel/jqm4gwt/issues/18">List item with icon/thumbnail</a>
-     * 
+     *
      * @param url - could be null in case of non-clickable/readonly item. Empty string means
      * it will be clickable!
      *
      * @param imageUrl - could be null/empty initially, and then set later manually
      * (but imageKind must not be NONE if you are planning to set images for this item).
      */
-    public JQMListItem addItem(String text, String url, 
+    public JQMListItem addItem(String text, String url,
                                ListItemImageKind imageKind, String imageUrl) {
         return addItem(items.size(), text, url, imageKind, imageUrl);
     }
-     
-    public JQMListItem addItem(int index, String text, String url, 
+
+    public JQMListItem addItem(int index, String text, String url,
                                ListItemImageKind imageKind, String imageUrl) {
         // In case if icon/thumbnail is present there is severe rendering problem,
         // for details see https://github.com/sksamuel/jqm4gwt/issues/18
@@ -364,6 +364,18 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
     }-*/;
 
     /**
+     * Needed in some cases (when refresh() is not enough/working) for dynamic list views.
+     * <p>For example after adding complex list items you have to call recreate() and then refresh().</p>
+     */
+    public void recreate() {
+        recreate(getId());
+    }
+
+    protected native void recreate(String id) /*-{
+      $wnd.$("#" + id).trigger('create');
+    }-*/;
+
+    /**
      * Remove the divider with the given text. This method will search all the dividers and remove the first divider
      * found with the given text.
      *
@@ -381,7 +393,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
         }
         return false;
     }
-    
+
     /**
      * Remove the divider with the given tag. This method will search all the dividers and remove the first divider
      * found with the given tag.
@@ -401,7 +413,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
         }
         return false;
     }
-    
+
     /**
      * Find the divider with the given text. This method will search all the dividers and return the first divider
      * found with the given text.
@@ -418,7 +430,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
         }
         return null;
     }
-    
+
     /**
      * Find the divider with the given tag. This method will search all the dividers and return the first divider
      * found with the given tag.
