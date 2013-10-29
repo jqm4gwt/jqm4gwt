@@ -150,6 +150,9 @@ public class TestView1 {
     JQMButton listItemCheckedBtn;
 
     @UiField
+    JQMButton listItemSwitchCheckedBtn;
+
+    @UiField
     JQMList listWithChecked;
 
     @UiHandler("popupOpenButton")
@@ -279,6 +282,12 @@ public class TestView1 {
                    + liCbD.getText() + " isChecked(): " + liCbD.isChecked());
         //liCbA.setCheckBox(IconPos.LEFT);
         //listWithChecked.refresh();
+    }
+
+    @UiHandler("listItemSwitchCheckedBtn")
+    void listItemSwitchCheckedBtnClick(ClickEvent e) {
+        boolean v = liCbD.isChecked();
+        liCbD.setChecked(!v);
     }
 
     {

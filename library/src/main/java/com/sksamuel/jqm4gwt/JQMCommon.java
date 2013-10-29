@@ -1,6 +1,9 @@
 package com.sksamuel.jqm4gwt;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -19,6 +22,7 @@ public class JQMCommon {
     private static final String DATA_THEME = "data-theme";
     private static final String DATA_INLINE = "data-inline";
     private static final String DATA_CORNERS = "data-corners";
+    private static final String DATA_ICON = "data-icon";
     private static final String DATA_ICONPOS = "data-iconpos";
 
     public static boolean isVisible(Widget widget) {
@@ -29,9 +33,61 @@ public class JQMCommon {
         return widget != null && Mobile.isHidden(widget.getElement());
     }
 
+    /**
+     * Exact copy of com.google.gwt.dom.client.Element.indexOfName()
+     * <p> Returns the index of the first occurrence of name in a space-separated list of names,
+     * or -1 if not found. </p>
+     *
+     * @param nameList list of space delimited names
+     * @param name a non-empty string.  Should be already trimmed.
+     */
+    public static int indexOfName(String nameList, String name) {
+        int idx = nameList.indexOf(name);
+        // Calculate matching index.
+        while (idx != -1) {
+            if (idx == 0 || nameList.charAt(idx - 1) == ' ') {
+                int last = idx + name.length();
+                int lastPos = nameList.length();
+                if ((last == lastPos) || ((last < lastPos) && (nameList.charAt(last) == ' '))) {
+                    break;
+                }
+            }
+            idx = nameList.indexOf(name, idx + 1);
+        }
+        return idx;
+    }
+
+    /**
+     * @return - first child Element with specified className
+     */
+    public static Element findChild(Element elt, String className) {
+        if (elt == null) return null;
+        if (JQMCommon.hasStyle(elt, className)) return elt;
+        NodeList<Node> children = elt.getChildNodes();
+        if (children != null && children.getLength() > 0) {
+            for (int i = 0; i < children.getLength(); i++) {
+                Node child = children.getItem(i);
+                if (child instanceof Element) {
+                    Element e = (Element) child;
+                    e = findChild(e, className);
+                    if (e != null) return e;
+                }
+            }
+        }
+        return null;
+    }
+
     public static boolean hasStyle(Widget widget, String style) {
+        if (widget == null) return false;
         String styles = widget.getStyleName();
-        return styles != null && styles.contains(style);
+        return styles != null && (indexOfName(styles, style) >= 0);
+    }
+
+    public static boolean hasStyle(Element elt, String style) {
+        if (elt == null) return false;
+        String styles = DOM.getElementProperty(elt.<com.google.gwt.user.client.Element> cast(),
+                                               "className");
+        return styles != null && (indexOfName(styles, style) >= 0);
     }
 
     public static boolean isEnabled(Widget widget) {
@@ -152,6 +208,22 @@ public class JQMCommon {
 
     public static void setCorners(Widget widget, boolean corners) {
         setCorners(widget.getElement(), corners);
+    }
+
+    public static String getIcon(Element elt) {
+        return getAttribute(elt, DATA_ICON);
+    }
+
+    public static String getIcon(Widget widget) {
+        return getIcon(widget.getElement());
+    }
+
+    public static void setIcon(Element elt, String icon) {
+        setAttribute(elt, DATA_ICON, icon);
+    }
+
+    public static void setIconPos(Widget widget, String icon) {
+        setIcon(widget.getElement(), icon);
     }
 
     public static IconPos getIconPos(Element elt) {

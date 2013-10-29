@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt.list;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FieldSetElement;
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
@@ -60,6 +61,7 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
 
     private CheckboxControlGroup checkBoxCtrlGrp;
     private Element checkBoxElem;
+    private InputElement checkBoxInput;
 
 
     /**
@@ -417,6 +419,7 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
         moveAnchorChildrenTo(fldSet);
         checkBoxElem = label;
         checkBoxCtrlGrp = grp;
+        checkBoxInput = cb.getElement().cast();
         anchor.appendChild(checkBoxElem);
     }
 
@@ -426,9 +429,17 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
     }
 
     public boolean isChecked() {
-        if (checkBoxElem == null) return false;
-        String s = getStyleName(checkBoxElem);
-        return s != null && s.contains("ui-checkbox-on");
+        if (checkBoxInput == null) return false;
+        return checkBoxInput.isChecked();
+    }
+
+    private native void setChecked(InputElement e, boolean value) /*-{
+        $wnd.$(e).prop('checked', value).checkboxradio('refresh');
+    }-*/;
+
+    public void setChecked(boolean value) {
+        if (checkBoxInput == null || isChecked() == value) return;
+        setChecked(checkBoxInput, value);
     }
 
     /**
