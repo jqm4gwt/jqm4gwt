@@ -19,9 +19,9 @@ import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 10 Jul 2011 01:05:56
- * 
+ *
  *         A demo page for showing list views with events
- * 
+ *
  */
 public class ListViewDemoPage extends JQMPage {
 
@@ -109,7 +109,8 @@ public class ListViewDemoPage extends JQMPage {
 
 	protected void addText(JQMList list) {
 		for (JQMListItem item : list.getItems()) {
-			item.addText("Some dummy text");
+			if (item == null) continue;
+		    item.addText("Some dummy text");
 		}
 	}
 
