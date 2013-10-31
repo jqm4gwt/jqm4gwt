@@ -15,6 +15,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasInset;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.events.HasTapHandlers;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.TapEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
 import com.sksamuel.jqm4gwt.html.ListWidget;
 
 /**
@@ -39,7 +44,7 @@ import com.sksamuel.jqm4gwt.html.ListWidget;
  * &lt;/jqm:list.JQMList>
  * </pre>
  */
-public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQMList>, HasFilter<JQMList> {
+public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandlers, HasInset<JQMList>, HasFilter<JQMList> {
 
     /**
      * An ordered JQMList
@@ -109,6 +114,13 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
     public HandlerRegistration addClickHandler(ClickHandler handler) {
         return list.addDomHandler(handler, ClickEvent.getType());
     }
+
+    @Override
+	public HandlerRegistration addTapHandler(TapHandler handler) {
+        HandlerRegistration defaultRegistration = list.addHandler(handler, TapEvent.getType());
+        // this is not a native browser event so we will have to manage it via JS
+        return new JQMHandlerRegistration(list.getElement(), JQMComponentEvents.TAP_EVENT, defaultRegistration);
+	}
 
     protected void addDivider(JQMListDivider d) {
         list.add(d);

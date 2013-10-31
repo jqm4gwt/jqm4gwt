@@ -3,9 +3,6 @@ package com.sksamuel.jqm4gwt;
 import java.util.Collection;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.EventTarget;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -44,10 +41,6 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     protected JQMFooter footer;
 
     protected JQMPanel panel;
-
-    private HandlerRegistration headerHandlerRegistration;
-
-    private com.google.web.bindery.event.shared.HandlerRegistration footerHandlerRegistration, panelHandlerRegistration;
 
     private boolean contentCentered;
     private boolean windowResizeInitialized;
@@ -125,22 +118,58 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     public void add(JQMFooter footer) {
         setFooter(footer);
-        bindFooterEvents();
     }
 
+	/**
+	 * Logical add operation. If you do this you are responsible for adding it
+	 * to the DOM yourself.
+	 * 
+	 * @param child
+	 *            the child widget to be added
+	 */
+	protected void addLogical(Widget child) {
+		// Detach new child.
+		child.removeFromParent();
+
+		// Logical attach.
+		getChildren().add(child);
+
+		// Adopt.
+		adopt(child);
+	}
+
+	/**
+	 * Logical remove operation. If you do this you are responsible for removing it
+	 * from the DOM yourself.
+	 * 
+	 * @param w
+	 *            the child widget to be removed
+	 */
+	protected boolean removeLogical(Widget w) {
+		// Validate.
+		if (w.getParent() != this) {
+			return false;
+		}
+		// Orphan.
+		try {
+			orphan(w);
+		} finally {
+			// Logical detach.
+			getChildren().remove(w);
+		}
+		return true;
+	}
+    
     /**
      * Sets the header of the page. Alias for setHeader(). Any existing header
      * will be replaced.
      */
     public void add(JQMHeader header) {
         setHeader(header);
-        bindHeaderEvents();
     }
 
     public void add(JQMPanel panel) {
     	setPanel(panel);
-    	panel.bindLifecycleEvents();
-    	bindPanelEvents();
     }
 
     /**
@@ -157,63 +186,6 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         // manually
         // if (enhanced)
         // triggerCreate();
-    }
-
-    void bindPanelEvents() {
-        if (panelHandlerRegistration != null)
-            panelHandlerRegistration.removeHandler();
-        panelHandlerRegistration = addDomHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                EventTarget target = event.getNativeEvent().getEventTarget();
-                Element element = Element.as(target);
-                for (Widget widget : panel.getWidgets()) {
-                    if (widget.getElement().isOrHasChild(element)) {
-                        widget.fireEvent(event);
-                        break;
-                    }
-                }
-            }
-        }, ClickEvent.getType());
-    }
-
-    void bindFooterEvents() {
-        if (footerHandlerRegistration != null)
-            footerHandlerRegistration.removeHandler();
-        footerHandlerRegistration = addDomHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                EventTarget target = event.getNativeEvent().getEventTarget();
-                Element element = Element.as(target);
-                for (Widget widget : footer.getWidgets()) {
-                    if (widget.getElement().isOrHasChild(element)) {
-                        widget.fireEvent(event);
-                        break;
-                    }
-                }
-            }
-        }, ClickEvent.getType());
-    }
-
-    void bindHeaderEvents() {
-        if (headerHandlerRegistration != null)
-            headerHandlerRegistration.removeHandler();
-        headerHandlerRegistration = addDomHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                EventTarget target = event.getNativeEvent().getEventTarget();
-                Element element = Element.as(target);
-                if (header.getLeft() != null && header.getLeft().getElement().isOrHasChild(element)) {
-                    header.getLeft().fireEvent(event);
-                } else if (header.getRight() != null && header.getRight().getElement().isOrHasChild(element)) {
-                    header.getRight().fireEvent(event);
-                }
-
-            }
-        }, ClickEvent.getType());
     }
 
     private native void bindLifecycleEvents(JQMPage p, String id) /*-{
@@ -258,35 +230,12 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     protected void onLoad()
     {
         bindLifecycleEvents(this, getId());
-        if(header != null && headerHandlerRegistration == null) bindHeaderEvents();
-        if(footer != null && footerHandlerRegistration == null) bindFooterEvents();
-        if(panel != null)
-        {
-        	panel.bindLifecycleEvents();
-        	if(panelHandlerRegistration == null) bindPanelEvents();
-        }
     }
 
     @Override
     protected void onUnload()
     {
     	unbindLifecycleEvents(getId());
-        if (headerHandlerRegistration != null)
-        {
-            headerHandlerRegistration.removeHandler();
-            headerHandlerRegistration = null;
-        }
-        if (footerHandlerRegistration != null)
-        {
-            footerHandlerRegistration.removeHandler();
-            footerHandlerRegistration = null;
-        }
-        if (panelHandlerRegistration != null)
-        {
-            panelHandlerRegistration.removeHandler();
-            panelHandlerRegistration = null;
-        }
-        if(panel != null) panel.unbindLifecycleEvents();
     }
 
     @Override
@@ -442,27 +391,36 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     /**
-     * Removes the footer element set on this page. If no footer is set then
-     * this has no effect.
-     */
-    public void removeFooter() {
-        footer = null;
-        removeToolBar("footer");
-    }
+	 * Removes the footer element set on this page. If no footer is set then
+	 * this has no effect.
+	 */
+	public void removeFooter() {
+		if (footer != null) {
+			removeLogical(footer);
+			footer = null;
+			removeToolBar("footer");
+		}
+	}
 
-    /**
-     * Removes the header element set on this page. If no header is set then
-     * this has no effect.
-     */
-    public void removeHeader() {
-        header = null;
-        removeToolBar("header");
-    }
+	/**
+	 * Removes the header element set on this page. If no header is set then
+	 * this has no effect.
+	 */
+	public void removeHeader() {
+		if (header != null) {
+			removeLogical(header);
+			header = null;
+			removeToolBar("header");
+		}
+	}
 
-    public void removePanel() {
-    	panel = null;
-    	removeToolBar("panel");
-    }
+	public void removePanel() {
+		if (panel != null) {
+			removeLogical(panel);
+			panel = null;
+			removeToolBar("panel");
+		}
+	}
 
     private void removeToolBar(String name) {
         Element element = getToolBar(name);
@@ -493,8 +451,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     public void setFooter(JQMFooter footer) {
         removeFooter();
         this.footer = footer;
+        addLogical(footer);
         getElement().appendChild(footer.getElement());
-		bindFooterEvents();
     }
 
     public JQMFooter getFooter()
@@ -523,6 +481,9 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     public void setHeader(JQMHeader header) {
         removeHeader();
         this.header = header;
+        
+        addLogical(header);
+        
         if(panel == null)
         {
         	getElement().insertBefore(header.getElement(), getElement().getFirstChild());
@@ -531,7 +492,6 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         {
         	getElement().insertAfter(header.getElement(), panel.getElement());
         }
-		bindHeaderEvents();
     }
 
     public JQMHeader setHeader(String text) {
@@ -547,6 +507,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     public void setPanel(JQMPanel panel) {
         removePanel();
         this.panel = panel;
+        addLogical(panel);
         getElement().insertBefore(panel.getElement(), getElement().getFirstChild());
     }
 

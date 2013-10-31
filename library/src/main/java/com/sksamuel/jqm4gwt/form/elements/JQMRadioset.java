@@ -29,6 +29,11 @@ import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.Orientation;
+import com.sksamuel.jqm4gwt.events.HasTapHandlers;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.TapEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.form.JQMFieldset;
 import com.sksamuel.jqm4gwt.html.Legend;
@@ -57,7 +62,7 @@ import com.sksamuel.jqm4gwt.html.Legend;
  */
 public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadioset>, HasValue<String>,
         HasSelectionHandlers<String>, HasOrientation<JQMRadioset>, HasMini<JQMRadioset>,
-        JQMFormWidget, HasClickHandlers {
+        JQMFormWidget, HasClickHandlers, HasTapHandlers {
 
     private boolean valueChangeHandlerInitialized;
 
@@ -150,6 +155,13 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
         return addDomHandler(handler, ClickEvent.getType());
     }
 
+	@Override
+	public HandlerRegistration addTapHandler(TapHandler handler) {
+        HandlerRegistration defaultRegistration = addHandler(handler, TapEvent.getType());
+        // this is not a native browser event so we will have to manage it via JS
+        return new JQMHandlerRegistration(getElement(), JQMComponentEvents.TAP_EVENT, defaultRegistration);
+	}
+	
     @Override
     public Label addErrorLabel() {
         return null;

@@ -9,6 +9,11 @@ import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasInline;
 import com.sksamuel.jqm4gwt.HasTheme;
 import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.events.HasTapHandlers;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.TapEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
 
 /**
  * Image with look and feel as button, to clearly indicate users on touch devices that it's clickable.
@@ -17,7 +22,7 @@ import com.sksamuel.jqm4gwt.JQMCommon;
  *
  */
 public class ImageLinkButton extends ImageLink implements HasCorners<ImageLinkButton>,
-        HasInline<ImageLinkButton>, HasClickHandlers, HasTheme<ImageLinkButton>, HasEnabled {
+        HasInline<ImageLinkButton>, HasClickHandlers, HasTapHandlers, HasTheme<ImageLinkButton>, HasEnabled {
 
     @Override
     protected void initA() {
@@ -62,6 +67,13 @@ public class ImageLinkButton extends ImageLink implements HasCorners<ImageLinkBu
         return addDomHandler(handler, ClickEvent.getType());
     }
 
+	@Override
+	public HandlerRegistration addTapHandler(TapHandler handler) {
+        HandlerRegistration defaultRegistration = addHandler(handler, TapEvent.getType());
+        // this is not a native browser event so we will have to manage it via JS
+        return new JQMHandlerRegistration(getElement(), JQMComponentEvents.TAP_EVENT, defaultRegistration);
+	}
+	
     @Override
     public String getTheme() {
         return JQMCommon.getTheme(this);

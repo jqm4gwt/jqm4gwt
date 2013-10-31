@@ -30,6 +30,11 @@ import com.sksamuel.jqm4gwt.HasPlaceHolder;
 import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
 import com.sksamuel.jqm4gwt.HasReadOnly;
 import com.sksamuel.jqm4gwt.HasText;
+import com.sksamuel.jqm4gwt.events.HasTapHandlers;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.TapEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
@@ -39,7 +44,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *         An implementation of a standard HTML text input.
  */
 public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasFocusHandlers,
-        HasClickHandlers, HasChangeHandlers, HasValue<String>, HasReadOnly<JQMText>,
+        HasClickHandlers, HasTapHandlers, HasChangeHandlers, HasValue<String>, HasReadOnly<JQMText>,
         JQMFormWidget, HasKeyDownHandlers, HasKeyUpHandlers, HasMouseOverHandlers,
         HasMouseOutHandlers, HasPreventFocusZoom, HasMini<JQMText>,
         HasPlaceHolder<JQMText>, Focusable {
@@ -95,6 +100,13 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasF
         return addDomHandler(handler, ClickEvent.getType());
     }
 
+	@Override
+	public HandlerRegistration addTapHandler(TapHandler handler) {
+        HandlerRegistration defaultRegistration = addHandler(handler, TapEvent.getType());
+        // this is not a native browser event so we will have to manage it via JS
+        return new JQMHandlerRegistration(getElement(), JQMComponentEvents.TAP_EVENT, defaultRegistration);
+	}
+	
     @Override
     public Label addErrorLabel() {
         return null;

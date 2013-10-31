@@ -20,6 +20,11 @@ import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.Orientation;
+import com.sksamuel.jqm4gwt.events.HasTapHandlers;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.TapEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.form.JQMFieldset;
 import com.sksamuel.jqm4gwt.html.FormLabel;
@@ -51,7 +56,7 @@ import com.sksamuel.jqm4gwt.html.Legend;
  */
 public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckset>,
         HasSelectionHandlers<String>, HasOrientation<JQMCheckset>, HasMini<JQMCheckset>,
-		HasClickHandlers, JQMFormWidget {
+		HasClickHandlers, HasTapHandlers, JQMFormWidget {
 
 	private JQMFieldset fieldset;
 
@@ -152,6 +157,13 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 		return addDomHandler(handler, ClickEvent.getType());
 	}
 
+	@Override
+	public HandlerRegistration addTapHandler(TapHandler handler) {
+        HandlerRegistration defaultRegistration = addHandler(handler, TapEvent.getType());
+        // this is not a native browser event so we will have to manage it via JS
+        return new JQMHandlerRegistration(getElement(), JQMComponentEvents.TAP_EVENT, defaultRegistration);
+	}
+	
 	@Override
 	public Label addErrorLabel() {
 		return null;

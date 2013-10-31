@@ -18,12 +18,17 @@ import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.events.HasTapHandlers;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.TapEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
 import com.sksamuel.jqm4gwt.panel.JQMControlGroup;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 11:21:29
  */
-public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClickHandlers {
+public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClickHandlers, HasTapHandlers {
 
     /**
      * Element to hold the count bubble
@@ -96,6 +101,14 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
     public HandlerRegistration addClickHandler(ClickHandler handler) {
         setUrl("#");
         return addDomHandler(handler, ClickEvent.getType());
+    }
+
+    @Override
+    public HandlerRegistration addTapHandler(TapHandler handler) {
+        setUrl("#");
+        HandlerRegistration defaultRegistration = addHandler(handler, TapEvent.getType());
+        // this is not a native browser event so we will have to manage it via JS
+        return new JQMHandlerRegistration(getElement(), JQMComponentEvents.TAP_EVENT, defaultRegistration);
     }
 
     /**

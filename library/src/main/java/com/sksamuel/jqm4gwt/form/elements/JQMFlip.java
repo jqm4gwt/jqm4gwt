@@ -16,6 +16,11 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.events.HasTapHandlers;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.TapEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
@@ -29,7 +34,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *
  */
 public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasValue<String>,
-        HasChangeHandlers, HasClickHandlers, HasMini<JQMFlip> {
+        HasChangeHandlers, HasClickHandlers, HasTapHandlers, HasMini<JQMFlip> {
 
     private final FormLabel label = new FormLabel();
 
@@ -149,6 +154,13 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
         return flow.addDomHandler(handler, ClickEvent.getType());
     }
 
+	@Override
+	public HandlerRegistration addTapHandler(TapHandler handler) {
+        HandlerRegistration defaultRegistration = flow.addHandler(handler, TapEvent.getType());
+        // this is not a native browser event so we will have to manage it via JS
+        return new JQMHandlerRegistration(flow.getElement(), JQMComponentEvents.TAP_EVENT, defaultRegistration);
+	}
+	
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
         // Initialization code
