@@ -424,6 +424,14 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
         checkSplitPadding();
     }
 
+    public void setDataIcon(DataIcon icon) {
+        JQMCommon.setIcon(getElement(), icon);
+    }
+
+    public DataIcon getDataIcon() {
+        return JQMCommon.getIcon(getElement());
+    }
+
     public void setSplitIcon(DataIcon icon) {
         JQMCommon.setIcon(getElement(), icon);
     }
