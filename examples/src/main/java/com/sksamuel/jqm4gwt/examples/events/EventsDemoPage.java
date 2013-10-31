@@ -9,6 +9,8 @@ import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.Transition;
 import com.sksamuel.jqm4gwt.button.JQMButton;
+import com.sksamuel.jqm4gwt.events.TapEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
 import com.sksamuel.jqm4gwt.form.elements.JQMFlip;
 import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.form.elements.JQMSelect;
@@ -49,7 +51,7 @@ public class EventsDemoPage extends JQMPage {
 		add(new Paragraph("Events are some of the most convenient part of GWT. "
 				+ "The jqm4gwt project provides the usual DOM events on the JQuery Mobile widgetset."));
 
-		add(new Paragraph("The follow button has an onClick handler registered. "
+		add(new Paragraph("The following button has an onClick handler registered. "
 				+ "Click the button and you will see the handler call Window.alert()"));
 
 		JQMButton button = new JQMButton("Click me!");
@@ -61,6 +63,20 @@ public class EventsDemoPage extends JQMPage {
 			}
 		});
 		add(button);
+
+		add(new Paragraph("The following button has a JQM non-native 'tap' handler registered. "
+				+ "On some mobile browsers this avoids an annoying delay that click handlers have."));
+		// for example Nexus 7 + Android 4.3 + Phonegap 3.0 has that click delay
+
+		JQMButton button1 = new JQMButton("Tap me!");
+		button1.addTapHandler(new TapHandler() {
+
+			@Override
+			public void onTap(TapEvent event) {
+				Window.alert("You tapped me!");
+			}
+		});
+		add(button1);
 
 		final JQMFlip flip = new JQMFlip("Flip me", "Shiraz", "Merlot");
 		flip.addClickHandler(new ClickHandler() {
