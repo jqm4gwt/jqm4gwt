@@ -10,7 +10,9 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.html.Heading;
@@ -25,7 +27,7 @@ import com.sksamuel.jqm4gwt.layout.JQMTable;
  *         http://jquerymobile.com/demos/1.2.0/docs/toolbars/docs-footers.html
  *
  */
-public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedPosition {
+public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedPosition, HasWidgets {
 
 	private final FlowPanel	flow;
 
@@ -51,6 +53,7 @@ public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedP
 	/**
 	 * Adds the given widget to the toolbar
 	 */
+    @Override
     @UiChild(tagname="widget")
 	public void add(Widget w) {
 		flow.add(w);
@@ -87,6 +90,8 @@ public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedP
                     activateClickHandlers(i);
                 }
             }
+        } else if (w instanceof HasOneWidget) {
+            activateClickHandlers(((HasOneWidget) w).getWidget());
         }
     }
 
@@ -118,8 +123,19 @@ public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedP
 	/**
 	 * Removes the given widget from the toolbar
 	 */
-	public void remove(Widget w) {
-		flow.remove(w);
+	@Override
+    public boolean remove(Widget w) {
+		return flow.remove(w);
+	}
+
+	@Override
+    public void clear() {
+	    flow.clear();
+	}
+
+	@Override
+    public Iterator<Widget> iterator() {
+	    return flow.iterator();
 	}
 
 	/**
