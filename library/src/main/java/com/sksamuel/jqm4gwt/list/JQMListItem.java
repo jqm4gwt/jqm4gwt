@@ -1,7 +1,9 @@
 package com.sksamuel.jqm4gwt.list;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.FieldSetElement;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LabelElement;
@@ -15,6 +17,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
@@ -40,6 +43,10 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
      */
     private Element anchor;
 
+    /** Split button element */
+    private Element split;
+    private String splitTheme;
+
     /**
      * The element that holds the aside content
      */
@@ -52,16 +59,16 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
 
     private JQMList list;
 
-    public class CheckboxControlGroup extends JQMControlGroup {
+    public class LiControlGroup extends JQMControlGroup {
 
-        protected CheckboxControlGroup(Element element, String styleName) {
+        protected LiControlGroup(Element element, String styleName) {
             super(element, styleName);
         }
     }
 
-    private CheckboxControlGroup checkBoxCtrlGrp;
-    private Element checkBoxElem;
-    private InputElement checkBoxInput;
+    private LiControlGroup controlGroup;
+    private Element controlGroupRootElem;
+    private TextBox checkBoxInput;
 
 
     /**
@@ -98,6 +105,23 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
         return addDomHandler(handler, ClickEvent.getType());
     }
 
+    private boolean isSplitClicked(Element elt) {
+        if (split == null || elt == null) return false;
+        Element element = elt;
+        while (element != null) {
+            if (element == split) return true;
+            element = element.getParentElement();
+        }
+        return false;
+    }
+
+    public boolean isSplitClicked(ClickEvent event) {
+        if (event == null) return false;
+        EventTarget target = event.getNativeEvent().getEventTarget();
+        Element element = Element.as(target);
+        return isSplitClicked(element);
+    }
+
     /**
      * Adds a header element containing the given text.
      *
@@ -126,18 +150,21 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
 
     private void attachChild(Element elem) {
         if (anchor == null) getElement().appendChild(elem);
-        else if (checkBoxCtrlGrp != null) checkBoxCtrlGrp.getElement().appendChild(elem);
+        else if (controlGroup != null) controlGroup.getElement().appendChild(elem);
         else anchor.appendChild(elem);
     }
 
     private void removeChild(Element elem) {
         if (anchor == null) getElement().removeChild(elem);
-        else if (checkBoxCtrlGrp != null) checkBoxCtrlGrp.getElement().removeChild(elem);
+        else if (controlGroup != null) controlGroup.getElement().removeChild(elem);
         else anchor.removeChild(elem);
     }
 
+    // Probably this method is not needed, at least it's not raised in Chrome with "Emulate touch events".
     private native void bind(String id, JQMListItem item) /*-{
-        $wnd.$(document).on("tap", "#"+id, function(event) { item.@com.sksamuel.jqm4gwt.list.JQMListItem::onTap()(); })
+        $wnd.$(document).on("tap", "#"+id, function(event) {
+            item.@com.sksamuel.jqm4gwt.list.JQMListItem::onTap(Lcom/google/gwt/core/client/JavaScriptObject;)(event.target);
+        })
     }-*/;
 
     private native void unbind(String id) /*-{
@@ -145,14 +172,12 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
     }-*/;
 
     @Override
-    protected void onLoad()
-    {
+    protected void onLoad() {
         bind(getElement().getId(), this);
     }
 
     @Override
-    protected void onUnload()
-    {
+    protected void onUnload() {
     	unbind(getElement().getId());
     }
 
@@ -205,8 +230,9 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
         }
     }
 
-    protected void onTap() {
-        list.setClickItem(this);
+    protected void onTap(JavaScriptObject jsObj) {
+        Element elt = (Element) jsObj;
+        list.setClickItem(this, isSplitClicked(elt));
     }
 
     /**
@@ -255,6 +281,7 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
         moveAnchorChildrenToThis();
         getElement().removeChild(anchor);
         anchor = null;
+        setSplitHref(null);
         return this;
     }
 
@@ -379,10 +406,97 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
         setUrl(url);
     }
 
+    public void setSplitHref(String url) {
+        if (url == null) {
+            if (split != null) {
+                getElement().removeChild(split);
+                split = null;
+                checkSplitPadding();
+            }
+            return;
+        }
+        if (split != null) return;
+        if (anchor == null) setUrl("#");
+        split = Document.get().createAnchorElement();
+        split.setAttribute("href", url);
+        getElement().appendChild(split);
+        setSplitTheme(splitTheme);
+        checkSplitPadding();
+    }
+
+    public void setSplitIcon(DataIcon icon) {
+        JQMCommon.setIcon(getElement(), icon);
+    }
+
+    public DataIcon getSplitIcon() {
+        return JQMCommon.getIcon(getElement());
+    }
+
+    public void setSplitTheme(String theme) {
+        splitTheme = theme;
+        if (split != null) JQMCommon.setTheme(split, theme);
+    }
+
+    public String getSplitTheme() {
+        if (split == null) return splitTheme;
+        splitTheme = JQMCommon.getTheme(split);
+        return splitTheme;
+    }
+
     @Override
     public JQMListItem withText(String text) {
         setText(text);
         return this;
+    }
+
+    private void checkSplitPadding() {
+        if (anchor == null || controlGroup == null) return;
+        anchor.getStyle().setPaddingRight(split == null ? 0 : 42, Unit.PX);
+    }
+
+    private void createControlGroup() {
+        if (controlGroup != null) return;
+
+        if (anchor == null) setUrl("#");
+        anchor.getStyle().setPadding(0, Unit.PX);
+        checkSplitPadding();
+
+        LabelElement label = Document.get().createLabelElement();
+        setStyleName(label, "jqm4gwt-li-checkbox");
+        JQMCommon.setCorners(label, false);
+        Style st = label.getStyle();
+        st.setBorderWidth(0, Unit.PX);
+        st.setMarginTop(0, Unit.PX);
+        st.setMarginBottom(0, Unit.PX);
+
+        FieldSetElement fldSet = Document.get().createFieldSetElement();
+        LiControlGroup grp = new LiControlGroup(fldSet, "jqm4gwt-li-controls");
+        label.appendChild(fldSet);
+
+        moveAnchorChildrenTo(fldSet);
+        controlGroupRootElem = label;
+        controlGroup = grp;
+        anchor.appendChild(controlGroupRootElem);
+    }
+
+    /**
+     * true - prepare and allow to add widgets to this list box item.
+     */
+    public void setControlGroup(boolean value) {
+        if (value) {
+            createControlGroup();
+        } else if (controlGroup != null) {
+            getElement().removeChild(anchor);
+            anchor = null;
+            setSplitHref(null);
+            controlGroupRootElem = null;
+            controlGroup = null;
+            checkBoxInput = null;
+        }
+    }
+
+    public boolean isControlGroup() {
+        return controlGroup != null;
     }
 
     /**
@@ -390,47 +504,34 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
      * <p>See <a href="http://stackoverflow.com/a/13931919">Checkbox in ListView</a></p>
      */
     public void setCheckBox(IconPos iconPos) {
-        if (checkBoxElem != null) {
-            JQMCommon.setIconPos(checkBoxElem, iconPos);
+        if (checkBoxInput != null) {
+            if (iconPos == null) {
+                controlGroup.remove(checkBoxInput);
+                checkBoxInput = null;
+            } else {
+                JQMCommon.setIconPos(controlGroupRootElem, iconPos);
+            }
             return;
         }
 
-        if (anchor == null) setUrl("#");
-        anchor.getStyle().setPadding(0, Unit.PX);
-        // TODO: here should be set padding for split icon case
-
-        LabelElement label = Document.get().createLabelElement();
-        setStyleName(label, "jqm4gwt-li-checkbox");
-        JQMCommon.setCorners(label, false);
-        JQMCommon.setIconPos(label, iconPos);
-        Style st = label.getStyle();
-        st.setBorderWidth(0, Unit.PX);
-        st.setMarginTop(0, Unit.PX);
-        st.setMarginBottom(0, Unit.PX);
-
-        FieldSetElement fldSet = Document.get().createFieldSetElement();
-        CheckboxControlGroup grp = new CheckboxControlGroup(fldSet, "jqm4gwt-li-checkbox-ctrls");
-        label.appendChild(fldSet);
-
+        if (iconPos == null) return;
+        createControlGroup();
+        JQMCommon.setIconPos(controlGroupRootElem, iconPos);
         TextBox cb = new TextBox();
         cb.getElement().setAttribute("type", "checkbox");
-        fldSet.appendChild(cb.getElement());
-
-        moveAnchorChildrenTo(fldSet);
-        checkBoxElem = label;
-        checkBoxCtrlGrp = grp;
-        checkBoxInput = cb.getElement().cast();
-        anchor.appendChild(checkBoxElem);
+        controlGroup.insert(cb, 0);
+        checkBoxInput = cb;
     }
 
     public IconPos getCheckBox() {
-        if (checkBoxElem == null) return null;
-        return JQMCommon.getIconPos(checkBoxElem);
+        if (checkBoxInput == null) return null;
+        return JQMCommon.getIconPos(controlGroupRootElem);
     }
 
     public boolean isChecked() {
         if (checkBoxInput == null) return false;
-        return checkBoxInput.isChecked();
+        InputElement cb = checkBoxInput.getElement().cast();
+        return cb.isChecked();
     }
 
     private native void setChecked(InputElement e, boolean value) /*-{
@@ -439,14 +540,16 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
 
     public void setChecked(boolean value) {
         if (checkBoxInput == null || isChecked() == value) return;
-        setChecked(checkBoxInput, value);
+        InputElement cb = checkBoxInput.getElement().cast();
+        setChecked(cb, value);
     }
 
     /**
-     * Currently possible only in checkBox mode, {@link JQMListItem#setCheckBox(IconPos iconPos)}
+     * Currently possible only in checkBox and control group modes.
+     * <p>See {@link JQMListItem#setCheckBox(IconPos)} and {@link JQMListItem#setControlGroup(boolean)}
      */
     public void addWidget(Widget w) {
-        if (w == null || checkBoxCtrlGrp == null) return;
-        checkBoxCtrlGrp.add(w);
+        if (w == null || controlGroup == null) return;
+        controlGroup.add(w);
     }
 }

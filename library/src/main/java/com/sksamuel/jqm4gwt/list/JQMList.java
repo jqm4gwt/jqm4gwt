@@ -9,10 +9,12 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.DataIcon;
+import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasInset;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.html.ListWidget;
@@ -39,7 +41,8 @@ import com.sksamuel.jqm4gwt.html.ListWidget;
  * &lt;/jqm:list.JQMList>
  * </pre>
  */
-public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQMList>, HasFilter<JQMList> {
+public class JQMList extends JQMWidget implements HasClickHandlers,
+        HasInset<JQMList>, HasFilter<JQMList>, HasCorners<JQMList> {
 
     /**
      * An ordered JQMList
@@ -70,6 +73,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
      * The index of the last click
      */
     private int clickIndex;
+    private boolean clickIsSplit;
 
     /**
      * The collection of items added to this list
@@ -139,13 +143,12 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
         list.insert(item, index);
         items.add(index,item);
         item.setList(this);
-        item.addDomHandler(new ClickHandler() {
-
+        item.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                setClickIndex(list.getWidgetIndex(item));
-            }
-        }, ClickEvent.getType());
+                boolean isSplit = item.isSplitClicked(event);
+                setClickIndex(list.getWidgetIndex(item), isSplit);
+            }});
     }
 
     public JQMListItem addItem(int index, String text) {
@@ -287,6 +290,10 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
         return clickIndex;
     }
 
+    public boolean getClickIsSplit() {
+        return clickIsSplit;
+    }
+
     /**
      * Returns the JQMListItem that was last clicked on. This is useful in event handlers when one wants to get a
      * reference to which item was clicked.
@@ -346,10 +353,6 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
     @Override
     public boolean isInset() {
         return "true".equals(getElement().getAttribute("inset"));
-    }
-
-    protected void onTap(String id) {
-        Window.alert("I  was tapped!");
     }
 
     /**
@@ -484,13 +487,14 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
         return this;
     }
 
-    protected JQMList setClickIndex(int clickIndex) {
+    protected JQMList setClickIndex(int clickIndex, boolean isSplit) {
         this.clickIndex = clickIndex;
+        this.clickIsSplit = isSplit;
         return this;
     }
 
-    JQMList setClickItem(JQMListItem item) {
-        setClickIndex(list.getWidgetIndex(item));
+    JQMList setClickItem(JQMListItem item, boolean isSplit) {
+        setClickIndex(list.getWidgetIndex(item), isSplit);
         return this;
     }
 
@@ -558,8 +562,41 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasInset<JQM
         return this;
     }
 
-    public JQMList setSplitTheme(String theme) {
+    public void setSplitTheme(String theme) {
         setAttribute("data-split-theme", theme);
+    }
+
+    public JQMList withSplitTheme(String theme) {
+        setSplitTheme(theme);
+        return this;
+    }
+
+    public String getSplitTheme() {
+        return getAttribute("data-split-theme");
+    }
+
+    public void setSplitIcon(DataIcon icon) {
+        setAttribute("data-split-icon", icon != null ? icon.getJqmValue() : null);
+    }
+
+    public DataIcon getSplitIcon() {
+        String s = getAttribute("data-split-icon");
+        return DataIcon.fromJqmValue(s);
+    }
+
+    @Override
+    public boolean isCorners() {
+        return JQMCommon.isCorners(this);
+    }
+
+    @Override
+    public void setCorners(boolean corners) {
+        JQMCommon.setCorners(this, corners);
+    }
+
+    @Override
+    public JQMList withCorners(boolean corners) {
+        setCorners(corners);
         return this;
     }
 
