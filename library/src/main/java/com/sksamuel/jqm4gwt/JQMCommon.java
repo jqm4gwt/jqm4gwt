@@ -210,19 +210,19 @@ public class JQMCommon {
         setCorners(widget.getElement(), corners);
     }
 
-    public static String getIcon(Element elt) {
-        return getAttribute(elt, DATA_ICON);
+    public static DataIcon getIcon(Element elt) {
+        return DataIcon.fromJqmValue(getAttribute(elt, DATA_ICON));
     }
 
-    public static String getIcon(Widget widget) {
+    public static DataIcon getIcon(Widget widget) {
         return getIcon(widget.getElement());
     }
 
-    public static void setIcon(Element elt, String icon) {
-        setAttribute(elt, DATA_ICON, icon);
+    public static void setIcon(Element elt, DataIcon icon) {
+        setAttribute(elt, DATA_ICON, icon != null ? icon.getJqmValue() : null);
     }
 
-    public static void setIconPos(Widget widget, String icon) {
+    public static void setIcon(Widget widget, DataIcon icon) {
         setIcon(widget.getElement(), icon);
     }
 

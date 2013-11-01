@@ -9,9 +9,16 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.user.client.ui.Label;
 import com.sksamuel.jqm4gwt.DataIcon;
+import com.sksamuel.jqm4gwt.IconPos;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMPage;
+import com.sksamuel.jqm4gwt.JQMPopup;
 import com.sksamuel.jqm4gwt.button.JQMButton;
+import com.sksamuel.jqm4gwt.events.TapEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
+import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.html.Paragraph;
 import com.sksamuel.jqm4gwt.list.JQMList;
 import com.sksamuel.jqm4gwt.list.JQMListItem;
@@ -105,10 +112,52 @@ public class ListViewDemoPage extends JQMPage {
 		});
 
 		updateTimes(formattedList);
+
+		add(new Paragraph(
+				"The next list is a demo of control group list item usage"));
+
+		final JQMList controlList = new JQMList();
+		controlList.addDivider("Special list items");
+		controlList.withInset(true);
+		add(controlList);
+
+		item = controlList.addItem("Checkbox");
+		item.setCheckBox(IconPos.LEFT);
+        JQMCommon.setDataRole(item, "fieldcontain");
+
+		item = new JQMListItem();
+		item.setControlGroup(true);
+		item.getControlGroup().setHorizontal();
+		controlList.appendItem(item);
+        JQMCommon.setDataRole(item, "fieldcontain");
+		
+		final JQMRadioset radioSet = new JQMRadioset();
+		radioSet.setHorizontal();
+		radioSet.addRadio("the big bear.", "yogi@yellowsrock.net");
+		radioSet.addRadio("the little bear.", "bubu@yellowsrock.net");
+		radioSet.addRadio("the ranger.", "ranger@yellowsrock.net");
+		item.addWidget(radioSet);
+		
+		JQMButton send = new JQMButton("Send email");
+		item.addWidget(send);
+		final JQMPopup popup = new JQMPopup();
+		popup.setPosition("#" + radioSet.getId());
+		add(popup);
+		send.addTapHandler(new TapHandler() {
+			@Override
+			public void onTap(TapEvent event) {
+				String value = radioSet.getValue();
+				if (value == null) value = "... no-one?";
+				popup.clear();
+				popup.add(new Label("You almost sent an email to " + value));
+				popup.open();
+			}
+		});
 	}
 
 	protected void addText(JQMList list) {
 		for (JQMListItem item : list.getItems()) {
+			if (item == null) continue;
 			item.addText("Some dummy text");
 		}
 	}

@@ -12,6 +12,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.Focusable;
@@ -32,6 +33,7 @@ import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.events.HasTapHandlers;
 import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
 import com.sksamuel.jqm4gwt.events.TapEvent;
 import com.sksamuel.jqm4gwt.events.TapHandler;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
@@ -121,9 +123,13 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
 	@Override
 	public HandlerRegistration addTapHandler(TapHandler handler) {
-        HandlerRegistration defaultRegistration = select.addHandler(handler, TapEvent.getType());
         // this is not a native browser event so we will have to manage it via JS
-        return new JQMHandlerRegistration(select.getElement(), JQMComponentEvents.TAP_EVENT, defaultRegistration);
+        return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
+			@Override
+			public int getHandlerCountForWidget(Type<?> type) {
+				return getHandlerCount(type);
+			}
+        }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
 	}
 	
     @Override

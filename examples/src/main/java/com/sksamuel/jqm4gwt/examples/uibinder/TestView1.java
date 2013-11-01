@@ -8,6 +8,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMPopup;
@@ -155,6 +157,12 @@ public class TestView1 {
     @UiField
     JQMList listWithChecked;
 
+    @UiField
+    JQMList unorderedList;
+
+    @UiField
+    JQMButton ulBtn;
+
     @UiHandler("popupOpenButton")
     void handlePopupOpenButtonClick(ClickEvent e) {
         popup.open();
@@ -290,6 +298,35 @@ public class TestView1 {
         liCbD.setChecked(!v);
     }
 
+    @UiHandler("ulBtn")
+    void ulBtnClick(ClickEvent e) {
+        unorderedList.clear();
+
+        JQMListItem li = new JQMListItem("test1", "");
+        li.setSplitHref("");
+        unorderedList.appendItem(li);
+
+        li = new JQMListItem("test2", "");
+        li.setSplitHref("");
+        unorderedList.appendItem(li);
+
+        li = new JQMListItem();
+        li.setControlGroup(true);
+        Label l = new Label("Input1");
+        li.addWidget(l);
+        TextBox t = new TextBox();
+        li.addWidget(t);
+        l = new Label("Input2");
+        li.addWidget(l);
+        t = new TextBox();
+        li.addWidget(t);
+        li.setSplitHref("");
+        unorderedList.appendItem(li);
+
+        //unorderedList.recreate();
+        unorderedList.refresh();
+    }
+
     {
         form.setSubmissionHandler(new SubmissionHandler<JQMForm>() {
             @Override
@@ -314,6 +351,15 @@ public class TestView1 {
             public void onClick(ClickEvent event) {
                 Window.alert("headerPanel1 is clicked!");
             }}, ClickEvent.getType());
+
+        unorderedList.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                JQMListItem item = unorderedList.getClickItem();
+                boolean isSplit = unorderedList.getClickIsSplit();
+                Window.alert("Clicked: " + item.getText() + "; Split button: " + isSplit);
+            }
+        });
     }
 
     public void show() {

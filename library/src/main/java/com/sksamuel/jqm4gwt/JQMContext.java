@@ -1,15 +1,8 @@
 package com.sksamuel.jqm4gwt;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.sksamuel.jqm4gwt.events.HasTapHandlers;
-import com.sksamuel.jqm4gwt.events.HasTapHoldHandlers;
-import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
-import com.sksamuel.jqm4gwt.events.TapEvent;
-import com.sksamuel.jqm4gwt.events.TapHoldEvent;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 9 Jul 2011 12:57:43
@@ -115,41 +108,6 @@ public class JQMContext {
 
 	public native static void initializePage() /*-{
 		$wnd.$.mobile.initializePage();
-	}-*/;
-
-	public static native JavaScriptObject addJQMEvent(Element element,
-			String jqmEventName) /*-{
-		var handlerFunction = function(event) { // just to make sure it's a new instance each time - not sure if $entry creates one each time
-			$entry(
-					function() {
-						// without the following two lines, in Android 4.3/Phonegap 3.0.0 for example when a "tap" event would trigger a Page change,
-						// the tap would be wrongly executed twice (once more on whatever is at the same location in next page);
-						// they are also needed in case multiple same-type JQM events are added to the same element as GWT will dispatch to all handlers anyway
-						event.stopImmediatePropagation();
-						event.preventDefault();
-
-						@com.sksamuel.jqm4gwt.JQMContext::dispatchJQMEvent(Ljava/lang/String;Lcom/google/gwt/user/client/EventListener;)(jqmEventName, element.__listener);
-					})();
-		};
-		$wnd.$(element).on(jqmEventName, handlerFunction);
-		return handlerFunction;
-	}-*/;
-
-	public static final void dispatchJQMEvent(String jqmEventName,
-			EventListener listener) {
-		if (listener != null) {
-			// TODO do this nicer somehow
-			if (JQMComponentEvents.TAP_EVENT.equals(jqmEventName))
-				TapEvent.fire((HasTapHandlers) listener);
-			if (JQMComponentEvents.TAP_HOLD_EVENT.equals(jqmEventName))
-				TapHoldEvent.fire((HasTapHoldHandlers) listener);
-		}
-	}
-
-	// TODO what if there are multiple event handlers for this event name?
-	public static native void removeJQMEventHandler(Element element,
-			String jqmEventName, JavaScriptObject handlerFunction) /*-{
-		$wnd.$(element).off(jqmEventName, handlerFunction);
 	}-*/;
 
 	/**

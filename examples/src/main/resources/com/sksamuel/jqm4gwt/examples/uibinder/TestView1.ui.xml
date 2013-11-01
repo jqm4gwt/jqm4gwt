@@ -235,11 +235,13 @@
         <jqm:button.JQMButton ui:field="setListItemTextBtn" 
           text="Set 'Ordered List Item #4 Text' to 'null'" mini="true" inline="true" />
         <jqm:html.Paragraph addStyleNames="{style.bevel}" />
-        <jqm:list.JQMList.Unordered ui:field="listWithChecked">
+        <jqm:list.JQMList.Unordered ui:field="listWithChecked" splitIcon="GEAR" splitTheme="b">
             <jqm:divider><jqm:list.JQMListDivider text="List with checkBoxes"/></jqm:divider>
             <jqm:item><jqm:list.JQMListItem ui:field="liCbA" text="Aaa" checkBox="RIGHT"/></jqm:item>
             <jqm:item><jqm:list.JQMListItem text="Bbb"/></jqm:item>
-            <jqm:item><jqm:list.JQMListItem ui:field="liCbC" text="Ccc" checkBox="RIGHT"/></jqm:item>
+            <jqm:item><jqm:list.JQMListItem ui:field="liCbC" text="Ccc" checkBox="RIGHT"
+              splitHref="" />
+            </jqm:item>
             <jqm:item><jqm:list.JQMListItem ui:field="liCbD" text="Ddd" checkBox="RIGHT"/></jqm:item>
         </jqm:list.JQMList.Unordered>
         <jqm:html.Paragraph />
@@ -248,11 +250,19 @@
         <jqm:button.JQMButton ui:field="listItemSwitchCheckedBtn" text="Switch Ddd checked state" 
           mini="true" inline="true" />   
         <jqm:html.Paragraph addStyleNames="{style.bevel}" /> 
-        <jqm:list.JQMList.Unordered>
-            <jqm:item><jqm:list.JQMListItem text="Unordered List Item #1 Text"/></jqm:item>
+        <jqm:list.JQMList.Unordered ui:field="unorderedList" inset="true" corners="false"
+           splitTheme="a" splitIcon="ALERT">
+            <jqm:item><jqm:list.JQMListItem text="Unordered List Item #1 Text"
+              splitHref="" />
+            </jqm:item>
             <jqm:divider><jqm:list.JQMListDivider text="Unordered List divider text"/></jqm:divider>
-            <jqm:item><jqm:list.JQMListItem text="Unordered List Item #2 Text"/></jqm:item>
+            <jqm:item><jqm:list.JQMListItem text="Unordered List Item #2 Text"
+              splitHref="" splitTheme="b" splitIcon="INFO" />
+            </jqm:item>
         </jqm:list.JQMList.Unordered>
+        <jqm:html.Paragraph />
+        <jqm:button.JQMButton ui:field="ulBtn" text="Test Dynamic List" 
+          mini="true" inline="true" />
         <jqm:html.Paragraph addStyleNames="{style.bevel}" />
         <jqm:plugins.grid960.Grid960Panel>
             <jqm:plugins.grid960.GridColumn span="4">

@@ -1,5 +1,6 @@
 package com.sksamuel.jqm4gwt.events;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.DomEvent;
 
 /**
@@ -7,7 +8,7 @@ import com.google.gwt.event.dom.client.DomEvent;
  * 
  * @author Andrei Costescu costescuandrei@gmail.com 31 Oct 2013
  */
-public class TapHoldEvent extends TapBaseEvent<TapHoldHandler> {
+public class TapHoldEvent extends JQueryBaseEvent<TapHoldHandler> {
 
 	/**
 	 * Event type for tap hold events. Represents the meta-data associated with this
@@ -31,8 +32,10 @@ public class TapHoldEvent extends TapBaseEvent<TapHoldHandler> {
 	 * or
 	 * {@link DomEvent#fireNativeEvent(com.google.gwt.dom.client.NativeEvent, com.google.gwt.event.shared.HasHandlers, com.google.gwt.dom.client.Element)}
 	 * to fire tap hold.
+	 * @param jQueryEvent 
 	 */
-	protected TapHoldEvent() {
+	protected TapHoldEvent(JavaScriptObject jQueryEvent) {
+		super(jQueryEvent);
 	}
 
 	@Override
@@ -51,10 +54,11 @@ public class TapHoldEvent extends TapBaseEvent<TapHoldHandler> {
 	 * 
 	 * @param source
 	 *            the source of the handlers
+	 * @param jQueryEvent 
 	 */
-	public static void fire(HasTapHoldHandlers source) {
+	public static void fire(HasTapHoldHandlers source, JavaScriptObject jQueryEvent) {
 		if (TYPE != null) {
-			TapHoldEvent event = new TapHoldEvent();
+			TapHoldEvent event = new TapHoldEvent(jQueryEvent);
 			source.fireEvent(event);
 		}
 	}
