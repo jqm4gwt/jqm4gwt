@@ -560,4 +560,14 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
         if (w == null || controlGroup == null) return;
         controlGroup.add(w);
     }
+
+    public int getWidgetCount() {
+        if (controlGroup == null) return 0;
+        return controlGroup.getWidgetCount();
+    }
+
+    public Widget getWidget(int index) {
+        if (controlGroup == null) return null;
+        return controlGroup.getWidget(index);
+    }
 }
