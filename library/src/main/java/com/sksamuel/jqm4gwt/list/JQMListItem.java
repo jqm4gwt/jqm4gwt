@@ -517,7 +517,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         checkSplitPadding();
 
         CustomFlowPanel groupRoot = new CustomFlowPanel(checkBoxInput == null ? DOM.createDiv() : DOM.createLabel());
-        setStyleName(groupRoot.getElement(), "jqm4gwt-li-band");
+        if (checkBoxInput != null) setStyleName(groupRoot.getElement(), "jqm4gwt-li-band");
         JQMCommon.setCorners(groupRoot, false);
         Style st = groupRoot.getElement().getStyle();
         st.setBorderWidth(0, Unit.PX);
