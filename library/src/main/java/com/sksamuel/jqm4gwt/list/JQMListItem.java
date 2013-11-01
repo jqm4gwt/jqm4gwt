@@ -470,7 +470,7 @@ public class JQMListItem extends Widget implements HasText<JQMListItem>, HasClic
         checkSplitPadding();
 
         LabelElement label = Document.get().createLabelElement();
-        setStyleName(label, "jqm4gwt-li-checkbox");
+        setStyleName(label, "jqm4gwt-li-band");
         JQMCommon.setCorners(label, false);
         Style st = label.getStyle();
         st.setBorderWidth(0, Unit.PX);
