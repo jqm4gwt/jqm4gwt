@@ -223,7 +223,7 @@
         </jqm:layout.JQMTable>
         <jqm:html.Paragraph addStyleNames="{style.bevel}" />
         <jqm:list.JQMList.Ordered>
-            <jqm:item><jqm:list.JQMListItem text="Ordered List Item #1 Text"/></jqm:item>
+            <jqm:item><jqm:list.JQMListItem text="Ordered List Item #1 Text" dataIcon="NONE" /></jqm:item>
             <jqm:item><jqm:list.JQMListItem text="Ordered List Item #2 Text"/></jqm:item>
             <jqm:item><jqm:list.JQMListItem text="Ordered List Item #3 Text" href="http://www.cnn.com"/></jqm:item>
             <jqm:divider><jqm:list.JQMListDivider text="Ordered List divider text"/></jqm:divider>

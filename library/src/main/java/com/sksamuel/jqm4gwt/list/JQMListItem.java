@@ -83,7 +83,6 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
 
 	private HandlerRegistration tapHandler;
 
-
     /**
      * Create empty {@link JQMListItem}
      */
@@ -145,7 +144,8 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         Element element = Element.as(target);
         return isSplitClicked(element);
     }
-    /**
+
+	/**
      * Adds a header element containing the given text.
      *
      * @param n    the Hn element to use, eg if n is 2 then a <h2>element is
@@ -383,7 +383,6 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
 				clickHandler = addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-//						alert("listItem onClick");
 						boolean isSplit = (event != null) ? isSplitClicked(event
 								.getNativeEvent().getEventTarget()) : false;
 						list.setClickItem(JQMListItem.this, isSplit);
@@ -394,7 +393,6 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
 				tapHandler = addTapHandler(new TapHandler() {
 					@Override
 					public void onTap(TapEvent event) {
-//						alert("listItem onTap");
 						boolean isSplit = (event != null) ? isSplitClicked(event
 								.getJQueryEvent().getEventTarget()) : false;
 						list.setClickItem(JQMListItem.this, isSplit);
@@ -471,6 +469,14 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         getElement().appendChild(split);
         setSplitTheme(splitTheme);
         checkSplitPadding();
+    }
+
+    public void setDataIcon(DataIcon icon) {
+        JQMCommon.setIcon(getElement(), icon);
+    }
+
+    public DataIcon getDataIcon() {
+        return JQMCommon.getIcon(getElement());
     }
 
     public void setSplitIcon(DataIcon icon) {
@@ -611,5 +617,15 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
     public void addWidget(Widget w) {
         if (w == null || controlGroup == null) return;
         controlGroup.add(w);
+    }
+
+    public int getWidgetCount() {
+        if (controlGroup == null) return 0;
+        return controlGroup.getWidgetCount();
+    }
+
+    public Widget getWidget(int index) {
+        if (controlGroup == null) return null;
+        return controlGroup.getWidget(index);
     }
 }

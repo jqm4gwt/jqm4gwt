@@ -127,7 +127,7 @@ public class ListViewDemoPage extends JQMPage {
 
 		item = new JQMListItem();
 		item.setControlGroup(true);
-		item.getControlGroup().setHorizontal();
+		item.getControlGroup().setHorizontal(); // no effect yet...
 		controlList.appendItem(item);
         JQMCommon.setDataRole(item, "fieldcontain");
 		
