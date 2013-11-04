@@ -48,7 +48,8 @@ import com.sksamuel.jqm4gwt.html.ListWidget;
  * &lt;/jqm:list.JQMList>
  * </pre>
  */
-public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandlers, HasInset<JQMList>, HasFilter<JQMList>, HasCorners<JQMList> {
+public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandlers,
+        HasInset<JQMList>, HasFilter<JQMList>, HasCorners<JQMList> {
 
     /**
      * An ordered JQMList
@@ -121,15 +122,15 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
     }
 
     @Override
-	public HandlerRegistration addTapHandler(TapHandler handler) {
+    public HandlerRegistration addTapHandler(TapHandler handler) {
         // this is not a native browser event so we will have to manage it via JS
         return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
-			@Override
-			public int getHandlerCountForWidget(Type<?> type) {
-				return getHandlerCount(type);
-			}
+            @Override
+            public int getHandlerCountForWidget(Type<?> type) {
+                return getHandlerCount(type);
+            }
         }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
-	}
+    }
 
     protected void addDivider(JQMListDivider d) {
         list.add(d);
@@ -479,10 +480,10 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
      * @param item the item to remove
      */
     public void removeItem(JQMListItem item) {
-    	if (item != null) {
-	        items.remove(item);
-	        list.remove(item);
-    	}
+        if (item != null) {
+            items.remove(item);
+            list.remove(item);
+        }
     }
 
     /**

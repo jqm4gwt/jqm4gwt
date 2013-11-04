@@ -9,10 +9,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
 import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.IconPos;
-import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMPopup;
 import com.sksamuel.jqm4gwt.button.JQMButton;
@@ -26,9 +26,9 @@ import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 10 Jul 2011 01:05:56
- * 
+ *
  *         A demo page for showing list views with events
- * 
+ *
  */
 public class ListViewDemoPage extends JQMPage {
 
@@ -123,21 +123,28 @@ public class ListViewDemoPage extends JQMPage {
 
 		item = controlList.addItem("Checkbox");
 		item.setCheckBox(IconPos.LEFT);
-        JQMCommon.setDataRole(item, "fieldcontain");
+		final JQMButton cbBtn = new JQMButton("Checkbox with Button");
+		cbBtn.setInline(true);
+		cbBtn.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.alert(cbBtn.getText() + " is clicked.");
+            }
+        });
+		item.addWidget(cbBtn);
 
 		item = new JQMListItem();
 		item.setControlGroup(true);
 		item.getControlGroup().setHorizontal(); // no effect yet...
 		controlList.appendItem(item);
-        JQMCommon.setDataRole(item, "fieldcontain");
-		
+
 		final JQMRadioset radioSet = new JQMRadioset();
 		radioSet.setHorizontal();
 		radioSet.addRadio("the big bear.", "yogi@yellowsrock.net");
 		radioSet.addRadio("the little bear.", "bubu@yellowsrock.net");
 		radioSet.addRadio("the ranger.", "ranger@yellowsrock.net");
 		item.addWidget(radioSet);
-		
+
 		JQMButton send = new JQMButton("Send email");
 		item.addWidget(send);
 		final JQMPopup popup = new JQMPopup();
@@ -163,7 +170,7 @@ public class ListViewDemoPage extends JQMPage {
 	}
 
 	private List<String> getCountries() {
-		final List<String> items = new ArrayList();
+		final List<String> items = new ArrayList<String>();
 		items.add("United Kingdom");
 		items.add("Spain");
 		items.add("France");
