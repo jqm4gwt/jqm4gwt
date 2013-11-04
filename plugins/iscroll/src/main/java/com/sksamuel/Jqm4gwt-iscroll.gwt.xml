@@ -4,8 +4,8 @@
    <inherits name='com.sksamuel.Jqm4gwt' />
 
     <stylesheet src="css/jquery.mobile.iscrollview.css"/>
-    <script src="js/iscroll.js"/>
-    <script src="js/jquery.mobile.iscrollview.js"/>
+    <script src="js/iscroll.min.js"/>
+    <script src="js/jquery.mobile.iscrollview.min.js"/>
 
    <source path='jqm4gwt' />
 </module>

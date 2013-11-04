@@ -12,6 +12,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.Focusable;
@@ -29,6 +30,12 @@ import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.events.HasTapHandlers;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
+import com.sksamuel.jqm4gwt.events.TapEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
@@ -39,7 +46,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * @link http://jquerymobile.com/demos/1.1.1/docs/forms/selects/options.html
  */
 public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>, HasText<JQMSelect>,
-        HasFocusHandlers, HasChangeHandlers, HasClickHandlers, HasValue<String>, JQMFormWidget,
+        HasFocusHandlers, HasChangeHandlers, HasClickHandlers, HasTapHandlers, HasValue<String>, JQMFormWidget,
         HasIcon<JQMSelect>, HasInline<JQMSelect>, HasPreventFocusZoom, HasCorners<JQMSelect>,
         HasMini<JQMSelect>, Focusable {
 
@@ -114,6 +121,17 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         return select.addClickHandler(handler);
     }
 
+	@Override
+	public HandlerRegistration addTapHandler(TapHandler handler) {
+        // this is not a native browser event so we will have to manage it via JS
+        return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
+			@Override
+			public int getHandlerCountForWidget(Type<?> type) {
+				return getHandlerCount(type);
+			}
+        }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
+	}
+	
     @Override
     public Label addErrorLabel() {
         return null;

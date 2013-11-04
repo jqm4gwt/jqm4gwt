@@ -4,6 +4,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.Anchor;
@@ -22,6 +23,12 @@ import com.sksamuel.jqm4gwt.JQMContainer;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.Transition;
+import com.sksamuel.jqm4gwt.events.HasTapHandlers;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
+import com.sksamuel.jqm4gwt.events.TapEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 14:02:24
@@ -31,7 +38,7 @@ import com.sksamuel.jqm4gwt.Transition;
  */
 public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<JQMButton>,
         HasTransition<JQMButton>, HasClickHandlers, HasInline<JQMButton>,
-        HasIcon<JQMButton>, HasCorners<JQMButton>, HasIconShadow<JQMButton>, HasMini<JQMButton> {
+        HasIcon<JQMButton>, HasCorners<JQMButton>, HasIconShadow<JQMButton>, HasMini<JQMButton>, HasTapHandlers {
 
     /**
      * Create a {@link JQMButton} with the given text that does not link to
@@ -123,7 +130,18 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         return addDomHandler(handler, ClickEvent.getType());
     }
 
-    @Override
+	@Override
+	public HandlerRegistration addTapHandler(TapHandler handler) {
+        // this is not a native browser event so we will have to manage it via JS
+        return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
+			@Override
+			public int getHandlerCountForWidget(Type<?> type) {
+				return getHandlerCount(type);
+			}
+        }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
+	}
+	
+	@Override
     public IconPos getIconPos() {
         String string = getAttribute("data-iconpos");
         return string == null ? null : IconPos.valueOf(string);

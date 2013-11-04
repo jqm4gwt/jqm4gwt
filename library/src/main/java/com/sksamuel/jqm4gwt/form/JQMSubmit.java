@@ -2,9 +2,22 @@ package com.sksamuel.jqm4gwt.form;
 
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.SubmitButton;
-import com.sksamuel.jqm4gwt.*;
+import com.sksamuel.jqm4gwt.DataIcon;
+import com.sksamuel.jqm4gwt.HasIcon;
+import com.sksamuel.jqm4gwt.HasText;
+import com.sksamuel.jqm4gwt.HasTransition;
+import com.sksamuel.jqm4gwt.IconPos;
+import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.Transition;
+import com.sksamuel.jqm4gwt.events.HasTapHandlers;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
+import com.sksamuel.jqm4gwt.events.TapEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 18 May 2011 04:17:45
@@ -14,7 +27,7 @@ import com.sksamuel.jqm4gwt.*;
  *         {@link JQMForm}
  * 
  */
-public class JQMSubmit extends JQMWidget implements HasText<JQMSubmit>, HasClickHandlers, HasTransition<JQMSubmit>, HasIcon<JQMSubmit> {
+public class JQMSubmit extends JQMWidget implements HasText<JQMSubmit>, HasClickHandlers, HasTapHandlers, HasTransition<JQMSubmit>, HasIcon<JQMSubmit> {
 
 	private final SubmitButton	submit;
 
@@ -42,6 +55,17 @@ public class JQMSubmit extends JQMWidget implements HasText<JQMSubmit>, HasClick
 		return submit.addClickHandler(handler);
 	}
 
+	@Override
+	public HandlerRegistration addTapHandler(TapHandler handler) {
+        // this is not a native browser event so we will have to manage it via JS
+        return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
+			@Override
+			public int getHandlerCountForWidget(Type<?> type) {
+				return getHandlerCount(type);
+			}
+        }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
+	}
+	
 	@Override
 	public String getText() {
 		return submit.getText();

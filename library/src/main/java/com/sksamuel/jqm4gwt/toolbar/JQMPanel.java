@@ -133,14 +133,16 @@ public class JQMPanel extends JQMWidget {
 	protected void onPanelOpen() {		
 	}
 
-    public void bindLifecycleEvents() {
-        bindLifecycleEvents(this, getId());
-    }
-    
-    public void unbindLifecycleEvents() {
-    	unbindLifecycleEvents(getId());
-    }	
+	@Override
+	protected void onLoad() {
+		bindLifecycleEvents(this, getId());
+	}
 	
+	@Override
+	protected void onUnload() {
+		unbindLifecycleEvents(getId());
+	}
+
     private native void bindLifecycleEvents(JQMPanel p, String id) /*-{
 	$wnd.$('#' + id).bind("panelbeforeclose",
 	function(event, ui) {
