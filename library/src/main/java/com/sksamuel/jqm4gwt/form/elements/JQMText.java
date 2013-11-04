@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -26,11 +27,17 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.HasClearButton;
+import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasPlaceHolder;
 import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
 import com.sksamuel.jqm4gwt.HasReadOnly;
 import com.sksamuel.jqm4gwt.HasText;
+import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.JQMPage;
+import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.events.HasTapHandlers;
 import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
@@ -49,7 +56,7 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasF
         HasClickHandlers, HasTapHandlers, HasChangeHandlers, HasValue<String>, HasReadOnly<JQMText>,
         JQMFormWidget, HasKeyDownHandlers, HasKeyUpHandlers, HasMouseOverHandlers,
         HasMouseOutHandlers, HasPreventFocusZoom, HasMini<JQMText>,
-        HasPlaceHolder<JQMText>, Focusable {
+        HasPlaceHolder<JQMText>, Focusable, HasClearButton<JQMText>, HasCorners<JQMText> {
 
     /**
      * The widget used for the label
@@ -102,17 +109,17 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasF
         return addDomHandler(handler, ClickEvent.getType());
     }
 
-	@Override
-	public HandlerRegistration addTapHandler(TapHandler handler) {
+    @Override
+    public HandlerRegistration addTapHandler(TapHandler handler) {
         // this is not a native browser event so we will have to manage it via JS
         return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
-			@Override
-			public int getHandlerCountForWidget(Type<?> type) {
-				return getHandlerCount(type);
-			}
+            @Override
+            public int getHandlerCountForWidget(Type<?> type) {
+                return getHandlerCount(type);
+            }
         }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
-	}
-	
+    }
+
     @Override
     public Label addErrorLabel() {
         return null;
@@ -267,39 +274,39 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasF
     }
 
     @Override
-	public boolean isReadOnly() {
-		return input.isReadOnly();
-	}
+    public boolean isReadOnly() {
+        return input.isReadOnly();
+    }
 
-	@Override
-	public void setReadOnly(boolean readOnly)
-	{
-		input.setReadOnly(readOnly);
-	}
+    @Override
+    public void setReadOnly(boolean readOnly)
+    {
+        input.setReadOnly(readOnly);
+    }
 
-	@Override
-	public JQMText withReadOnly(boolean readOnly)
-	{
-		setReadOnly(readOnly);
-		return this;
-	}
+    @Override
+    public JQMText withReadOnly(boolean readOnly)
+    {
+        setReadOnly(readOnly);
+        return this;
+    }
 
-	@Override
-	public String getPlaceHolder()
-	{
-		return input.getElement().getAttribute(HasPlaceHolder.ATTRIBUTE_PLACEHOLDER);
-	}
+    @Override
+    public String getPlaceHolder()
+    {
+        return input.getElement().getAttribute(HasPlaceHolder.ATTRIBUTE_PLACEHOLDER);
+    }
 
-	@Override
-	public void setPlaceHolder(String placeHolderText) {
-		input.getElement().setAttribute(HasPlaceHolder.ATTRIBUTE_PLACEHOLDER,placeHolderText);
-	}
+    @Override
+    public void setPlaceHolder(String placeHolderText) {
+        input.getElement().setAttribute(HasPlaceHolder.ATTRIBUTE_PLACEHOLDER,placeHolderText);
+    }
 
-	@Override
-	public JQMText withPlaceHolder(String placeHolderText) {
-		setPlaceHolder(placeHolderText);
-		return this;
-	}
+    @Override
+    public JQMText withPlaceHolder(String placeHolderText) {
+        setPlaceHolder(placeHolderText);
+        return this;
+    }
 
     public void setInputId(String id) {
         input.getElement().setId(id);
@@ -317,5 +324,83 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasF
 
     public String getInputName() {
         return input.getName();
+    }
+
+    @Override
+    public boolean isClearButton() {
+        return JQMCommon.isClearButton(input);
+    }
+
+    @Override
+    public void setClearButton(boolean value) {
+        JQMCommon.setClearButton(input, value);
+    }
+
+    @Override
+    public JQMText withClearButton(boolean value) {
+        setClearButton(value);
+        return this;
+    }
+
+    // In JQM 1.4.0 all this tricky "corners" code won't be needed anymore,
+    // see https://github.com/jquery/jquery-mobile/commit/698ffb210b06cfcef5fa0f86d5b9b4826e307ba3
+
+    private static final String UI_CORNER_ALL = "ui-corner-all";
+    private Boolean corners = null;
+
+    @Override
+    public boolean isCorners() {
+        if (!isAttached()) return corners != null ? corners : false;
+        if (JQMCommon.hasStyle(input, UI_CORNER_ALL)) return true;
+        Element p = input.getElement().getParentElement();
+        if (p != null && p != flow.getElement() && p.getParentElement() == flow.getElement()) {
+            if (JQMCommon.hasStyle(p, UI_CORNER_ALL)) return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void setCorners(boolean corners) {
+        this.corners = corners;
+        if (corners) {
+            input.getElement().addClassName(UI_CORNER_ALL);
+            Element p = input.getElement().getParentElement();
+            if (p != null && p != flow.getElement() && p.getParentElement() == flow.getElement()) {
+                p.addClassName(UI_CORNER_ALL);
+            }
+        } else {
+            input.getElement().removeClassName(UI_CORNER_ALL);
+            Element p = input.getElement().getParentElement();
+            if (p != null && p != flow.getElement() && p.getParentElement() == flow.getElement()) {
+                p.removeClassName(UI_CORNER_ALL);
+            }
+        }
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        if (corners != null) {
+            Widget p = getParent();
+            while (p != null) {
+                if (p instanceof JQMPage) {
+                    ((JQMPage) p).addPageHandler(new JQMPageEvent.DefaultHandler() {
+                        @Override
+                        public void onInit(JQMPageEvent event) {
+                            super.onInit(event);
+                            setCorners(corners);
+                        }
+                    });
+                    break;
+                }
+                p = p.getParent();
+            }
+        }
+    }
+
+    @Override
+    public JQMText withCorners(boolean corners) {
+        setCorners(corners);
+        return this;
     }
 }

@@ -54,7 +54,8 @@
                 <jqm:check><jqm:form.elements.JQMCheckbox name="cb20" text="Check1"/></jqm:check>
                 <jqm:check><jqm:form.elements.JQMCheckbox name="cb21" text="Check2"/></jqm:check>
             </jqm:form.elements.JQMCheckset>
-            <jqm:form.elements.JQMEmail text="email"/>
+            <jqm:form.elements.JQMEmail text="email" corners="false" clearButton="true" />
+            <jqm:form.elements.JQMFile text="File" corners="false" />
             <jqm:form.elements.JQMFlip ui:field="flip" 
               label1="Flip1" label2="Flip2" value1="flip1Value" value2="flip2Value" text="flipText"/>
               <!-- theme="b" mini="true" textHidden="true" -->
