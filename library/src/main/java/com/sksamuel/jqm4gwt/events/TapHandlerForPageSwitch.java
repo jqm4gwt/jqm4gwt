@@ -10,7 +10,7 @@ package com.sksamuel.jqm4gwt.events;
  * @author Andrei Costescu costescuandrei@gmail.com 31 Oct 2013
  *
  */
-public abstract class SwitchPageTapHandler implements TapHandler {
+public abstract class TapHandlerForPageSwitch implements TapHandler {
 
 	@Override
 	public void onTap(TapEvent event) {
@@ -20,9 +20,9 @@ public abstract class SwitchPageTapHandler implements TapHandler {
 		event.getJQueryEvent().stopImmediatePropagation();
 		event.getJQueryEvent().preventDefault();
 		
-		onTapSwitchPage();
+		onSafeTap(event);
 	}
 
-	public abstract void onTapSwitchPage();
+	public abstract void onSafeTap(TapEvent event);
 
 }

@@ -9,7 +9,7 @@ import com.google.gwt.event.shared.EventHandler;
  * {@link JQueryBaseEvent#getJQueryEvent()} and {@link WrappedJQueryEvent#stopImmediatePropagation()}/{@link WrappedJQueryEvent#preventDefault()}.
  * Otherwise you will risk an unwanted tap on the widget at that same location on the next page on some browsers/devices.<br><br>
  * 
- * You can also use {@link SwitchPageTapHandler} for page transitions.
+ * You can also use {@link TapHandlerForPageSwitch} for page transitions.
  * 
  * @author Andrei Costescu costescuandrei@gmail.com 31 Oct 2013
  */
