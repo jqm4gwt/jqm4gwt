@@ -6,10 +6,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 9 Jul 2011 12:57:43
- * 
+ *
  *         The {@link JQMContent} provides methods that facilitate interaction
  *         between GWT, JQM and the DOM.
- * 
+ *
  */
 public class JQMContext {
 
@@ -25,7 +25,7 @@ public class JQMContext {
 	 * able to manipulate it and render it. This should only be done once per
 	 * page, otherwise duplicate HTML would be added to the DOM and this would
 	 * result in elements with overlapping IDs.
-	 * 
+	 *
 	 */
 	public static void attachAndEnhance(JQMContainer container) {
 		RootPanel.get().add(container);
@@ -86,7 +86,7 @@ public class JQMContext {
 	 * Return the pixel offset of an element from the left of the document.
 	 * This can also be thought of as the y coordinate of the top of the
 	 * elements bounding box.
-	 * 
+	 *
 	 * @param id
 	 *            the id of the element to find the offset
 	 */
@@ -98,7 +98,7 @@ public class JQMContext {
 	 * Return the pixel offset of an element from the top of the document.
 	 * This can also be thought of as the x coordinate of the left of the
 	 * elements bounding box.
-	 * 
+	 *
 	 * @param id
 	 *            the id of the element to find the offset
 	 */
@@ -120,8 +120,9 @@ public class JQMContext {
 		renderImpl(id);
 	}
 
+	// page() replaced by trigger("create"), see http://stackoverflow.com/a/6848969
 	private static native void renderImpl(String id) /*-{
-		$wnd.$("#" + id).page();
+		$wnd.$("#" + id).trigger("create");
 	}-*/;
 
 	public static void setDefaultTransition(Transition defaultTransition) {
@@ -145,7 +146,7 @@ public class JQMContext {
 	/**
 	 * Scroll the page to the y-position of the given element. The element must
 	 * be attached to the DOM (obviously!).
-	 * 
+	 *
 	 * This method will not fire jquery mobile scroll events.
 	 */
 	public static void silentScroll(Element e) {
@@ -156,7 +157,7 @@ public class JQMContext {
 	/**
 	 * Scroll the page to the y-position of the given widget. The widget must be
 	 * attached to the DOM (obviously!)
-	 * 
+	 *
 	 * This method will not fire jquery mobile scroll events.
 	 */
 	public static void silentScroll(Widget widget) {
