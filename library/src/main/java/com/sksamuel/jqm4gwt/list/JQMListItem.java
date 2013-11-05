@@ -536,7 +536,6 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         controlGroupRoot = groupRoot;
         controlGroup = grp;
         add(controlGroupRoot);
-        JQMCommon.setDataRole(getElement(), "fieldcontain");
     }
 
     /**
@@ -553,7 +552,6 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
             controlGroupRoot = null;
             controlGroup = null;
             checkBoxInput = null;
-            JQMCommon.setDataRole(getElement(), null);
         }
     }
 

@@ -143,6 +143,7 @@ public class ListViewDemoPage extends JQMPage {
 		radioSet.addRadio("the big bear.", "yogi@yellowsrock.net");
 		radioSet.addRadio("the little bear.", "bubu@yellowsrock.net");
 		radioSet.addRadio("the ranger.", "ranger@yellowsrock.net");
+		radioSet.addStyleName("ui-hide-label");
 		item.addWidget(radioSet);
 
 		JQMButton send = new JQMButton("Send email");
