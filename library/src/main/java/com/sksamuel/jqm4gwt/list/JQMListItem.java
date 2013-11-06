@@ -52,6 +52,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
      * The element that contains the link, if any
      */
     private Element anchor;
+    private CustomFlowPanel anchorPanel;
 
     /** Split button element */
     private Element split;
@@ -277,8 +278,10 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         if (anchor == null)
             return null;
         moveAnchorChildrenToThis();
+        if (anchorPanel != null) remove(anchorPanel);
         getElement().removeChild(anchor);
         anchor = null;
+        anchorPanel = null;
         setSplitHref(null);
         return this;
     }
@@ -535,7 +538,12 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         moveAnchorChildrenTo(fldSet);
         controlGroupRoot = groupRoot;
         controlGroup = grp;
-        add(controlGroupRoot);
+
+        if (anchorPanel == null) {
+            anchorPanel = new CustomFlowPanel((com.google.gwt.user.client.Element) anchor.cast());
+            add(anchorPanel);
+        }
+        anchorPanel.add(controlGroupRoot);
     }
 
     /**
@@ -545,9 +553,10 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         if (value) {
             createControlGroup();
         } else if (controlGroup != null) {
-            remove(controlGroupRoot);
+            if (anchorPanel != null) remove(anchorPanel);
             getElement().removeChild(anchor);
             anchor = null;
+            anchorPanel = null;
             setSplitHref(null);
             controlGroupRoot = null;
             controlGroup = null;
