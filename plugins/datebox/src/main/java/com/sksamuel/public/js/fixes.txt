@@ -1,0 +1,13 @@
+1. Invalid form label vertical alignment fix. 
+   In jqm-datebox-1.4.0.comp.calbox.min.js search for:
+
+if ( o.mobVer < 140 ) {
+  $('label[for=\''+w.d.input.attr('id')+'\']').addClass('ui-input-text').css('verticalAlign', 'middle');
+}
+
+Looks like this issue is fixed in jquery-mobile 1.3.1, so 140 could be replaced by 131.
+
+
+2. Hardcoded -6..+6 extended to -100..+100 to improve selection in year picker when calUsePickers mode defined.
+
+for(e=(b.thisYear-6);e<=b.thisYear+6;e++){b.picker2.append(a('<option value="'+e+'"'+((b.thisYear===e)?' selected="selected"':"")+">"+e+"</option>"))}

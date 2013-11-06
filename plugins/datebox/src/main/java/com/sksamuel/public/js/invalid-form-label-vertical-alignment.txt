@@ -1,7 +1,0 @@
-In jqm-datebox-1.4.0.comp.calbox.min.js search for:
-
-if ( o.mobVer < 140 ) {
-  $('label[for=\''+w.d.input.attr('id')+'\']').addClass('ui-input-text').css('verticalAlign', 'middle');
-}
-
-Looks like this issue is fixed in jquery-mobile 1.3.1, so 140 could be replaced by 131.
