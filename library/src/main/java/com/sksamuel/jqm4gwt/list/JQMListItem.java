@@ -1,5 +1,8 @@
 package com.sksamuel.jqm4gwt.list;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
@@ -115,13 +118,11 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
 
     @Override
     public HandlerRegistration addClickHandler(ClickHandler handler) {
-        setUrl("#");
         return addDomHandler(handler, ClickEvent.getType());
     }
 
     @Override
     public HandlerRegistration addTapHandler(TapHandler handler) {
-        setUrl("#");
         // this is not a native browser event so we will have to manage it via JS
         return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
             @Override
@@ -275,15 +276,34 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
      * item.
      */
     public JQMListItem removeUrl() {
-        if (anchor == null)
-            return null;
-        moveAnchorChildrenToThis();
-        if (anchorPanel != null) remove(anchorPanel);
-        getElement().removeChild(anchor);
+        if (anchor == null) return this;
+
+        if (anchorPanel != null) {
+            List<Widget> lst = new ArrayList<Widget>();
+            for (int i = anchorPanel.getWidgetCount() - 1; i >= 0; i--) {
+                Widget w = anchorPanel.getWidget(i);
+                anchorPanel.remove(i);
+                lst.add(0, w);
+            }
+            remove(anchorPanel);
+            cleanUpLI();
+            for (Widget w : lst) this.add(w);
+        } else {
+            moveAnchorChildrenToThis();
+            getElement().removeChild(anchor);
+        }
         anchor = null;
         anchorPanel = null;
         setSplitHref(null);
         return this;
+    }
+
+    private void cleanUpLI() {
+        Element elt = getElement();
+        for (int i = elt.getChildCount() - 1; i >= 0; i--) {
+            elt.removeChild(elt.getChild(i));
+        }
+        setStyleName("jqm4gwt-listitem");
     }
 
     /**
@@ -379,7 +399,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
     }
 
     private void addItemActivationHandlers() {
-        if (list != null) {
+        if (list != null && anchor != null) {
             // why 2 handlers for this?
             // 'tap' bubbles correctly but is not generated on all child widget types for bubbling usage;
             // on some devices 'tap' happens sooner then click event and can trigger actions
@@ -444,10 +464,23 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         if (url == null)
             throw new RuntimeException("Cannot set URL to null. Call removeUrl() if you wanted to remove the URL");
         if (anchor == null) {
-            // need to make anchor and move children to it
-            anchor = Document.get().createAnchorElement();
-            moveThisChildrenToAnchor();
-            getElement().appendChild(anchor);
+            if (controlGroupRoot != null) {
+                //!!! following code is semi-working, it's not reconstructed item correctly
+                remove(controlGroupRoot);
+                anchor = Document.get().createAnchorElement();
+                anchor.setAttribute("href", url);
+                moveThisChildrenToAnchor();
+                cleanUpLI();
+                getElement().appendChild(anchor);
+                prepareAnchorForControlGroup();
+                checkAnchorPanel();
+            } else {
+                // need to make anchor and move children to it
+                anchor = Document.get().createAnchorElement();
+                moveThisChildrenToAnchor();
+                getElement().appendChild(anchor);
+            }
+            addItemActivationHandlers();
         }
         anchor.setAttribute("href", url);
         return this;
@@ -456,6 +489,10 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
     /** Can be used in UiBinder */
     public void setHref(String url) {
         setUrl(url);
+    }
+
+    public String getHref() {
+        return anchor != null ? anchor.getAttribute("href") : null;
     }
 
     public void setSplitHref(String url) {
@@ -514,12 +551,21 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         anchor.getStyle().setPaddingRight(split == null ? 0 : 42, Unit.PX);
     }
 
-    private void createControlGroup() {
-        if (controlGroup != null) return;
-
-        if (anchor == null) setUrl("#");
+    private void prepareAnchorForControlGroup() {
+        if (anchor == null) return;
         anchor.getStyle().setPadding(0, Unit.PX);
         checkSplitPadding();
+    }
+
+    private void createControlGroup(boolean linkable) {
+        if (controlGroup != null) return;
+
+        if (linkable) {
+            if (anchor == null) setUrl("#");
+            prepareAnchorForControlGroup();
+        } else {
+            removeUrl();
+        }
 
         // groupRoot needs to be either "label" for checkbox or "div" for other elements (radio group for example)
         CustomFlowPanel groupRoot = new CustomFlowPanel(checkBoxInput == null
@@ -535,26 +581,34 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         LiControlGroup grp = new LiControlGroup(fldSet, "jqm4gwt-li-controls");
         groupRoot.add(grp);
 
-        moveAnchorChildrenTo(fldSet);
+        if (anchor != null) moveAnchorChildrenTo(fldSet);
         controlGroupRoot = groupRoot;
         controlGroup = grp;
+        if (anchor != null) checkAnchorPanel();
+        else add(controlGroupRoot);
+    }
 
+    private void checkAnchorPanel() {
         if (anchorPanel == null) {
             anchorPanel = new CustomFlowPanel((com.google.gwt.user.client.Element) anchor.cast());
             add(anchorPanel);
         }
-        anchorPanel.add(controlGroupRoot);
+        if (controlGroupRoot != null && controlGroupRoot.getParent() != anchorPanel) {
+            anchorPanel.add(controlGroupRoot);
+        }
     }
 
     /**
      * true - prepare and allow to add widgets to this list box item.
+     *
+     * @param linkable - if true &lt;a> will be forcefully created, so row will be clickable.
      */
-    public void setControlGroup(boolean value) {
+    public void setControlGroup(boolean value, boolean linkable) {
         if (value) {
-            createControlGroup();
+            createControlGroup(linkable);
         } else if (controlGroup != null) {
             if (anchorPanel != null) remove(anchorPanel);
-            getElement().removeChild(anchor);
+            else if (anchor != null) getElement().removeChild(anchor);
             anchor = null;
             anchorPanel = null;
             setSplitHref(null);
@@ -562,6 +616,10 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
             controlGroup = null;
             checkBoxInput = null;
         }
+    }
+
+    public void setControlGroup(boolean value) {
+        setControlGroup(value, true/*linkable*/);
     }
 
     public boolean isControlGroup() {
@@ -598,7 +656,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
 
         // controlGroupRoot needs to be either "label" for checkbox or "div" for other elements (radio group for example)
         setControlGroup(false);
-        createControlGroup();
+        setControlGroup(true);
         JQMCommon.setIconPos(controlGroupRoot, iconPos);
         controlGroup.insert(cb, 0);
     }

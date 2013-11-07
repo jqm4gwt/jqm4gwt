@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.IconPos;
@@ -20,6 +21,7 @@ import com.sksamuel.jqm4gwt.events.TapEvent;
 import com.sksamuel.jqm4gwt.events.TapHandler;
 import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.html.Paragraph;
+import com.sksamuel.jqm4gwt.layout.JQMTable;
 import com.sksamuel.jqm4gwt.list.JQMList;
 import com.sksamuel.jqm4gwt.list.JQMListItem;
 import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
@@ -161,6 +163,74 @@ public class ListViewDemoPage extends JQMPage {
 				popup.open();
 			}
 		});
+		final JQMListItem thisRow = item;
+		JQMButton removeUrl = new JQMButton("Make this row/band non-clickable");
+        item.addWidget(removeUrl);
+        removeUrl.addTapHandler(new TapHandler() {
+            @Override
+            public void onTap(TapEvent event) {
+                if (thisRow.getHref() != null) {
+                    thisRow.removeUrl();
+                    //controlList.recreate();
+                    controlList.refresh();
+                }
+            }
+        });
+        JQMButton addUrl = new JQMButton("Make this row/band clickable");
+        item.addWidget(addUrl);
+        addUrl.addTapHandler(new TapHandler() {
+            @Override
+            public void onTap(TapEvent event) {
+                if (thisRow.getHref() == null) {
+                    // semi-working code, it's not reconstructed item correctly
+                    thisRow.setUrl("#");
+                    //controlList.recreate();
+                    controlList.refresh();
+                }
+            }
+        });
+
+        {
+            FlowPanel p = new FlowPanel();
+            JQMTable t = new JQMTable(3);
+            t.add(new Label("AAA"));
+            t.add(new Label("BBB"));
+            JQMButton btn = new JQMButton("CCC");
+            btn.setInline(true);
+            btn.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    Window.alert("CCC clicked");
+                }
+            });
+            t.add(btn);
+            p.add(t);
+            item = new JQMListItem();
+            item.setControlGroup(true);
+            item.addWidget(p);
+            controlList.appendItem(item);
+        }
+
+        {
+            FlowPanel p = new FlowPanel();
+            JQMTable t = new JQMTable(3);
+            t.add(new Label("DDD"));
+            t.add(new Label("EEE"));
+            JQMButton btn = new JQMButton("FFF");
+            btn.setInline(true);
+            btn.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    Window.alert("FFF clicked");
+                }
+            });
+            t.add(btn);
+            p.add(t);
+            item = new JQMListItem();
+            item.setControlGroup(true, false/*linkable*/);
+            item.addWidget(p);
+            controlList.appendItem(item);
+        }
 	}
 
 	protected void addText(JQMList list) {

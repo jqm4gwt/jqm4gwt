@@ -236,7 +236,7 @@ public class JQMCommon {
     }
 
     public static void setIconPos(Element elt, IconPos iconPos) {
-        setAttribute(elt, DATA_ICONPOS, iconPos.getJqmValue());
+        setAttribute(elt, DATA_ICONPOS, iconPos != null ? iconPos.getJqmValue() : null);
     }
 
     public static void setIconPos(Widget widget, IconPos iconPos) {
