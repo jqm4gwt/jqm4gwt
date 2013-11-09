@@ -1,6 +1,8 @@
 package com.sksamuel.jqm4gwt.layout;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -34,6 +36,8 @@ public class JQMTable extends JQMWidget {
      * The number of columns this table has.
      */
     private int columns;
+
+    private int[] percentage;
 
     /**
      * The container to hold the child widget
@@ -78,6 +82,7 @@ public class JQMTable extends JQMWidget {
         widgetWrapper.getElement().setId(Document.get().createUniqueId());
         removeAllCellStyles(widgetWrapper.getElement());
         widgetWrapper.getElement().addClassName(klass);
+        prepareCellPercentStyle(size, widgetWrapper);
         widgetWrapper.add(widget);
 
         flow.add(widgetWrapper);
@@ -112,6 +117,18 @@ public class JQMTable extends JQMWidget {
             return "ui-block-e";
         default:
             throw new RuntimeException("internal error");
+        }
+    }
+
+    private void prepareCellPercentStyle(int pos, Widget w) {
+        Style st = w.getElement().getStyle();
+        if (percentage == null || percentage.length != columns) {
+            st.clearFloat();
+            st.clearWidth();
+        } else {
+            int column = pos % columns;
+            st.setFloat(Style.Float.LEFT);
+            st.setWidth(percentage[column], Unit.PCT);
         }
     }
 
@@ -161,6 +178,7 @@ public class JQMTable extends JQMWidget {
             Widget widget = flow.getWidget(k);
             String cellStyleName = getCellStyleName(k);
             removeAllCellStyles(widget.getElement());
+            prepareCellPercentStyle(k, widget);
             widget.getElement().addClassName(cellStyleName);
         }
     }
@@ -231,8 +249,47 @@ public class JQMTable extends JQMWidget {
         if (n == columns)
             return;
         this.columns = n;
+        refresh(this.columns);
+    }
+
+    public int getColumns() {
+        return this.columns;
+    }
+
+    private void refresh(int n) {
         setTableStyleName(n);
         rebase();
+    }
+
+    /**
+     *
+     * @param percents - comma separated percent size for each column.
+     * <p/>For example: 10,30,30,30 defines table/grid with four columns.
+     */
+    public void setPercentageColumns(String percents) {
+        if (percents == null || percents.isEmpty()) {
+            percentage = null;
+            refresh(this.columns);
+            return;
+        }
+        String[] arr = percents.split(",");
+        percentage = new int[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            String s = arr[i];
+            percentage[i] = Integer.parseInt(s);
+        }
+        if (arr.length == this.columns) refresh(this.columns);
+        else setColumns(arr.length);
+    }
+
+    public String getPercentageColumns() {
+        if (percentage == null) return null;
+        String s = "";
+        for (int i = 0; i < percentage.length-1; i++) {
+            s += String.valueOf(percentage[i]) + ",";
+        }
+        s += String.valueOf(percentage[percentage.length-1]);
+        return s;
     }
 
     /**

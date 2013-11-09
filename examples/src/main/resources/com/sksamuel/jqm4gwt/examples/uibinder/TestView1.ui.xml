@@ -11,6 +11,14 @@
       .myBtn.jqm4gwt-image-link-a .ui-btn-inner {
         padding: 0px !important;
       }
+      .red { background-color: red; color: yellow; }
+      .green { background-color: green; color: yellow; }
+      .blue { background-color: blue; color: yellow; }
+      .yellow { background-color: yellow; color: red; }
+      .centerText { 
+	      display: block;
+	      text-align: center;
+	    }
     </ui:style>
              
     <jqm:JQMPage containerId="testPage1" backButton="true">
@@ -222,6 +230,21 @@
                 <jqm:html.Span text="spanText in Table Row#2 Col#2"/>
             </jqm:cell>
         </jqm:layout.JQMTable>
+        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
+          <jqm:layout.JQMTable percentageColumns="10,20,40,30">
+            <jqm:cell>
+                <jqm:html.Span text="10%" addStyleNames="{style.red} {style.centerText}"/>
+            </jqm:cell>
+            <jqm:cell>
+                <jqm:html.Span text="20%" addStyleNames="{style.green} {style.centerText}"/>
+            </jqm:cell>
+            <jqm:cell>
+                <jqm:html.Span text="40%" addStyleNames="{style.blue} {style.centerText}"/>
+            </jqm:cell>
+            <jqm:cell>
+                <jqm:html.Span text="30%" addStyleNames="{style.yellow} {style.centerText}"/>
+            </jqm:cell>
+          </jqm:layout.JQMTable>
         <jqm:html.Paragraph addStyleNames="{style.bevel}" />
         <jqm:list.JQMList.Ordered>
             <jqm:item><jqm:list.JQMListItem text="Ordered List Item #1 Text" dataIcon="NONE" /></jqm:item>
