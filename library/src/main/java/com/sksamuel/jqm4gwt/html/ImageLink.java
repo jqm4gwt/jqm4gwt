@@ -3,9 +3,21 @@ package com.sksamuel.jqm4gwt.html;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.Orientation;
+import com.sksamuel.jqm4gwt.events.HasTapHandlers;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
+import com.sksamuel.jqm4gwt.events.TapEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 17 Jul 2011 15:38:47
@@ -14,7 +26,7 @@ import com.sksamuel.jqm4gwt.Orientation;
  *         <pre> &lt;a href='mylink'>&lt;img src='myimage'/>&lt;/a> </pre>
  *
  */
-public class ImageLink extends Widget {
+public class ImageLink extends Widget implements HasClickHandlers, HasTapHandlers, HasEnabled {
 
     protected static final String JQM4GWT_IMAGE_LINK_A = "jqm4gwt-image-link-a";
     protected static final String JQM4GWT_IMAGE_LINK_IMG = "jqm4gwt-image-link-img";
@@ -109,5 +121,31 @@ public class ImageLink extends Widget {
     public void setImageResizePriority(Orientation value) {
         if (value == null) img.removeAttribute(DATA_RESIZE_PRIORITY);
         else img.setAttribute(DATA_RESIZE_PRIORITY, value.getJqmValue());
+    }
+
+    @Override
+    public HandlerRegistration addClickHandler(ClickHandler handler) {
+        return addDomHandler(handler, ClickEvent.getType());
+    }
+
+    @Override
+    public HandlerRegistration addTapHandler(TapHandler handler) {
+        // this is not a native browser event so we will have to manage it via JS
+        return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
+            @Override
+            public int getHandlerCountForWidget(Type<?> type) {
+                return getHandlerCount(type);
+            }
+        }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return JQMCommon.isEnabled(this);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        JQMCommon.setEnabled(this, enabled);
     }
 }
