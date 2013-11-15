@@ -152,15 +152,34 @@
                 <jqm:button>
                     <jqm:button.JQMButton text="Button 2" builtInIcon="STAR"/>
                 </jqm:button>
-                <jqm:button>
+                <jqm:buttonActivePersist>
                     <jqm:button.JQMButton text="Button 3"/>
-                </jqm:button>
+                </jqm:buttonActivePersist>
                 <jqm:button>
                     <jqm:button.JQMButton text="Button 4"/>
                 </jqm:button>
                 <jqm:button>
                     <jqm:button.JQMButton text="Button 5"/>
                 </jqm:button>
+            </jqm:toolbar.JQMNavBar>
+            <jqm:html.Paragraph />
+            <jqm:html.Span text="Navbar with last clicked highlighting" />
+            <jqm:toolbar.JQMNavBar iconPos="RIGHT" highlightLastClicked="true">
+                <jqm:button>
+                    <jqm:button.JQMButton text="Button 1"/>
+                </jqm:button>
+                <jqm:button>
+                    <jqm:button.JQMButton text="Button 2" builtInIcon="GEAR"/>
+                </jqm:button>
+                <jqm:button>
+                    <jqm:button.JQMButton text="Button 3"/>
+                </jqm:button>
+                <jqm:button>
+                    <jqm:button.JQMButton text="Button 4"/>
+                </jqm:button>
+                <jqm:buttonActivePersist>
+                    <jqm:button.JQMButton text="Button 5"/>
+                </jqm:buttonActivePersist>
             </jqm:toolbar.JQMNavBar>
             <jqm:form.JQMSubmit text="submitButtonText"/>
         </jqm:form.JQMForm>

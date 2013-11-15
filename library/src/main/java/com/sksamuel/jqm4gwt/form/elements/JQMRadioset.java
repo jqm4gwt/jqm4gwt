@@ -167,7 +167,7 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
 			}
         }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
 	}
-	
+
     @Override
     public Label addErrorLabel() {
         return null;
@@ -341,7 +341,13 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
      *            the radio to remove
      */
     public void removeRadio(JQMRadio radio) {
-        removeRadio(radio);
+        if (radio == null) return;
+        TextBox inp = radio.getInput();
+        if (inp != null) {
+            radios.remove(inp);
+            fieldset.remove(inp);
+        }
+        if (radio.getLabel() != null) fieldset.remove(radio.getLabel());
     }
 
     /**
