@@ -325,7 +325,31 @@
         <jqm:button.JQMButton builtInIcon="INFO" ui:field="popupOpenButton" text="Pop-up example..."/>
         <jqm:LoadingIndicator/>
         <jqm:button.JQMButton builtInIcon="INFO" ui:field="busyButton" text="Application Busy example..."/>
+        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
+        
+        <jqm:table.JQMColumnToggle colNames="Rank=2, Movie Title, Year=3, &lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
+          cells="&lt;th>1&lt;/th>, The Matrix, 1999, 8.7, 784311, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5,  105111" />
+        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
+        <jqm:table.JQMColumnToggle colNames="Rank=2, Movie Title, Year=3, &lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5">
+          <jqm:cell>
+            <g:Label text="1" />
+          </jqm:cell>
+          <jqm:cell>
+            <g:Label text="The Matrix" />
+          </jqm:cell>
+          <jqm:cell>
+            <jqm:button.JQMButton ui:field="movieYearBtn" text="1999" inline="true" mini="true" />
+          </jqm:cell>
+          <jqm:cell>
+            <jqm:button.JQMButton text="8.7" inline="true" mini="true" builtInIcon="STAR" />
+          </jqm:cell>
+          <jqm:cell>
+            <g:Anchor text="784311" href="http://www.imdb.com/title/tt0133093/" />
+          </jqm:cell>
+        </jqm:table.JQMColumnToggle>  
+        
         </jqm:plugins.iscroll.IScrollPanel>
+        
         <jqm:toolbar.JQMFooter>
             <jqm:widget>
                 <jqm:toolbar.JQMNavBar>

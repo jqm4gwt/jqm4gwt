@@ -163,6 +163,9 @@ public class TestView1 {
     @UiField
     JQMButton ulBtn;
 
+    @UiField
+    JQMButton movieYearBtn;
+
     @UiHandler("popupOpenButton")
     void handlePopupOpenButtonClick(ClickEvent e) {
         popup.open();
@@ -325,6 +328,11 @@ public class TestView1 {
 
         //unorderedList.recreate();
         unorderedList.refresh();
+    }
+
+    @UiHandler("movieYearBtn")
+    void movieYearBtnClick(ClickEvent e) {
+        Window.alert(movieYearBtn.getText());
     }
 
     {
