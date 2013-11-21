@@ -21,9 +21,11 @@ import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
 /**
  * See <a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/">Table: Column Toggle</a>
  * <p/> See also <a href="http://jquerymobile.com/demos/1.3.0-rc.1/docs/tables/">Responsive tables</a>
+ * <p/> See also <a href="http://jquerymobile.com/demos/1.3.0-beta.1/docs/demos/tables/financial-grouped-columns.html">Grouped column headers</a>
  * <p/><b>WARNING!</b> You'd better use fixed jQuery Mobile 1.3.2 from "jqm4gwt\standalone\misc\fixed jquery mobile",
  * because critical "columns stay hidden when shrinking and resizing the browser window"
  * bug is not fixed in official 1.3.2 version.
+ *
  * @author slavap
  *
  */
@@ -37,6 +39,10 @@ public class JQMColumnToggle extends CustomFlowPanel {
     private static final String COLUMN_BTN_THEME = "data-column-btn-theme";
     private static final String COLUMN_POPUP_THEME = "data-column-popup-theme";
 
+    // See http://stackoverflow.com/a/2709855
+    private static final String COMMA_SPLIT = "(?<!\\\\),";
+    private static final String BACKSLASH_COMMA = "\\\\,";
+
     private final ComplexPanel tHead;
     private final ComplexPanel tBody;
 
@@ -48,12 +54,18 @@ public class JQMColumnToggle extends CustomFlowPanel {
 
     private String colNames;
     private String cells;
+    private String colGroups;
 
     private static class ColumnDef {
-        public final String title;
-        public final String priority;
+        public String title;
+        public String priority;
+        public int colspan; // needed for 'Grouped column headers' mode
+
+        public ColumnDef() {
+        }
 
         public ColumnDef(String title, String priority) {
+            this();
             this.title = title;
             this.priority = priority;
         }
@@ -64,6 +76,9 @@ public class JQMColumnToggle extends CustomFlowPanel {
 
     /** populated directly by addColTitleWidget(), probably from UiBinder template */
     private final Map<Widget, ColumnDef> colTitleWidgets = new LinkedHashMap<Widget, ColumnDef>();
+
+    /** populated based on colGroups parsing */
+    private final Set<ColumnDef> headGroups = new LinkedHashSet<ColumnDef>();
 
     private List<String> dataStr;
     private List<Widget> dataObj;
@@ -91,6 +106,7 @@ public class JQMColumnToggle extends CustomFlowPanel {
 
     /**
      * @param colNames - comma separated column names with optional priority (1 = highest, 6 = lowest).
+     * If you need comma in name use \, to preserve it.
      * <p/> Column name can be valid HTML, i.e. &lt;abbr title="Rotten Tomato Rating">Rating&lt;/abbr>=1
      * <p/> Example: Rank,Movie Title,Year=3,Reviews=5
      * <p/> To make a column persistent so it's not available for hiding, just omit priority.
@@ -100,23 +116,74 @@ public class JQMColumnToggle extends CustomFlowPanel {
         if (this.colNames == colNames || this.colNames != null && this.colNames.equals(colNames)) return;
         this.colNames = colNames;
         colTitleWidgets.clear();
+
         if (this.colNames == null || this.colNames.isEmpty()) {
             setColumns(null);
             return;
         }
-        String[] arr = this.colNames.split(",");
+        String[] arr = this.colNames.split(COMMA_SPLIT);
         Set<ColumnDef> cols = new LinkedHashSet<ColumnDef>();
         for (int i = 0; i < arr.length; i++) {
-            String s = arr[i].trim();
-            int j = s.lastIndexOf('=');
-            String prio = null;
-            if (j >= 0) {
-                prio = s.substring(j + 1);
-                s = s.substring(0, j);
-            }
-            cols.add(new ColumnDef(s, prio));
+            String s = arr[i].trim().replaceAll(BACKSLASH_COMMA, ",");
+            cols.add(parseColumnDef(s, false/*colspanExpected*/));
         }
         setColumns(cols);
+    }
+
+    private static ColumnDef parseColumnDef(String str, boolean colspanExpected) {
+        if (str == null) return null;
+        ColumnDef col = new ColumnDef();
+        int j = str.lastIndexOf('=');
+        if (j >= 0) {
+            String s = str.substring(j + 1).trim();
+            if (s != null && !s.isEmpty()) col.priority = s;
+            col.title = str.substring(0, j);
+        } else {
+            col.title = str;
+        }
+        if (colspanExpected) {
+            j = col.title.indexOf('=');
+            if (j >= 0) {
+                String s = col.title.substring(0, j).trim();
+                if (s != null && !s.isEmpty()) col.colspan = Integer.parseInt(s);
+                col.title = col.title.substring(j + 1);
+            }
+        }
+        return col;
+    }
+
+    public String getColGroups() {
+        return colGroups;
+    }
+
+    /**
+     * @param colGroups - comma separated grouped column headers with colspan and priority (1 = highest, 6 = lowest).
+     * If you need comma in name use \, to preserve it.
+     * <p/> Expected format: colspan=GroupName=priority
+     * <p/> Group name can be valid HTML, i.e. 4=&lt;abbr title="Previous Year Results">2012&lt;/abbr>=1
+     * <p/> Example: 3=Q1 2012=5, 3=Q2 2012=4, 3=Q3 2012=3, 3=Q4 2012=2, 3=2012 Totals=1
+     */
+    public void setColGroups(String colGroups) {
+        if (this.colGroups == colGroups || this.colGroups != null && this.colGroups.equals(colGroups)) return;
+        this.colGroups = colGroups;
+
+        if (this.colGroups == null || this.colGroups.isEmpty()) {
+            setHeadGroups(null);
+            return;
+        }
+        String[] arr = this.colGroups.split(COMMA_SPLIT);
+        Set<ColumnDef> groups = new LinkedHashSet<ColumnDef>();
+        for (int i = 0; i < arr.length; i++) {
+            String s = arr[i].trim().replaceAll(BACKSLASH_COMMA, ",");
+            groups.add(parseColumnDef(s, true/*colspanExpected*/));
+        }
+        setHeadGroups(groups);
+    }
+
+    private void setHeadGroups(Set<ColumnDef> groups) {
+        headGroups.clear();
+        if (groups != null) headGroups.addAll(groups);
+        populateHeadGroups();
     }
 
     public String getCells() {
@@ -124,7 +191,8 @@ public class JQMColumnToggle extends CustomFlowPanel {
     }
 
     /**
-     * @param cells - comma separated table cells, each string/cell can be valid HTML
+     * @param cells - comma separated table cells, each string/cell can be valid HTML.
+     * If you need comma in name use \, to preserve it.
      * <p/> Example: &lt;th>1&lt;/th>, The Matrix, 1999, 8.7, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5
      */
     public void setCells(String cells) {
@@ -134,10 +202,10 @@ public class JQMColumnToggle extends CustomFlowPanel {
             setDataStr(null);
             return;
         }
-        String[] arr = this.cells.split(",");
+        String[] arr = this.cells.split(COMMA_SPLIT);
         List<String> lst = new ArrayList<String>(arr.length);
         for (int i = 0; i < arr.length; i++) {
-            String s = arr[i].trim();
+            String s = arr[i].trim().replaceAll(BACKSLASH_COMMA, ",");
             lst.add(s);
         }
         setDataStr(lst);
@@ -153,7 +221,7 @@ public class JQMColumnToggle extends CustomFlowPanel {
         int newCnt = cols != null ? cols.size() : 0;
         columns.clear();
         if (cols != null) columns.addAll(cols);
-        tHead.clear();
+        removeHeadRow();
         populateHead();
         if (cnt == newCnt) {
             if (tBody.getWidgetCount() == 0) populateBody();
@@ -183,14 +251,16 @@ public class JQMColumnToggle extends CustomFlowPanel {
         if (col == null) return;
         if (priority != null && !priority.isEmpty()) {
             JQMCommon.setAttribute(col.getElement(), "data-priority", priority);
+            col.getElement().removeClassName("jqm4gwt-col-persistent");
         } else {
             JQMCommon.setAttribute(col.getElement(), "data-priority", null);
+            col.getElement().addClassName("jqm4gwt-col-persistent");
         }
     }
 
     private void addToHead(String title, String priority, int index) {
         if (index < 0) return;
-        ComplexPanel col = getHeadCol(index);
+        ComplexPanel col = getCol(getHeadRow(), index, true/*addTh*/);
         if (col == null) return;
         setColPriority(col, priority);
         col.getElement().setInnerHTML(title);
@@ -198,7 +268,7 @@ public class JQMColumnToggle extends CustomFlowPanel {
 
     private void addToHead(Widget w, String title, String priority, int index) {
         if (index < 0) return;
-        ComplexPanel col = getHeadCol(index);
+        ComplexPanel col = getCol(getHeadRow(), index, true/*addTh*/);
         if (col == null) return;
         col.clear();
         setColPriority(col, priority);
@@ -236,17 +306,47 @@ public class JQMColumnToggle extends CustomFlowPanel {
         return 0;
     }
 
+    private void populateHeadGroups() {
+        if (headGroups.isEmpty()) {
+            removeHeadGroupsRow();
+        } else {
+            int i = 0;
+            for (ColumnDef grp : headGroups) {
+                addToHeadGroups(grp, i++);
+            }
+        }
+    }
+
+    private void addToHeadGroups(ColumnDef grp, int index) {
+        if (grp == null || index < 0) return;
+        boolean addTh = grp.colspan > 1 || isTh(grp.title);
+        ComplexPanel col = getCol(getHeadGroupsRow(), index, addTh);
+        if (col == null) return;
+        setColPriority(col, grp.priority);
+        col.getElement().setInnerHTML(addTh ? removeTh(grp.title) : grp.title);
+        if (grp.colspan > 1) JQMCommon.setAttribute(col, "colspan", String.valueOf(grp.colspan));
+    }
+
+    private static boolean isTh(String s) {
+        return s != null && !s.isEmpty() && (s.startsWith("<th>") || s.startsWith("<TH>"));
+    }
+
+    private static String removeTh(String s) {
+        if (s == null || s.isEmpty() || !isTh(s)) return s;
+        return s.substring("<th>".length(), s.length() - "</th>".length()).trim();
+    }
+
     private void addToBody(String cell, int index) {
         if (cell == null || index < 0 || getNumOfCols() <= 0) return;
         int row = index / getNumOfCols();
         int col = index % getNumOfCols();
         ComplexPanel r = getRow(row);
         if (r == null) return;
-        boolean addTh = cell.startsWith("<th>") || cell.startsWith("<TH>");
+        boolean addTh = isTh(cell);
         ComplexPanel c = getCol(r, col, addTh);
         if (c == null) return;
         if (addTh) {
-            String s = cell.substring("<th>".length(), cell.length() - "</th>".length()).trim();
+            String s = removeTh(cell);
             c.getElement().setInnerHTML(s);
         } else {
             c.getElement().setInnerHTML(cell);
@@ -308,9 +408,18 @@ public class JQMColumnToggle extends CustomFlowPanel {
         return c;
     }
 
+    private static class HeadGroupsPanel extends CustomFlowPanel {
+
+        public HeadGroupsPanel(com.google.gwt.dom.client.Element e) {
+            super(e);
+            getElement().addClassName("jqm4gwt-thead-groups");
+        }
+    }
+
     private ComplexPanel getHeadRow() {
         for (int i = 0; i < tHead.getWidgetCount(); i++) {
             Widget child = tHead.getWidget(i);
+            if (child instanceof HeadGroupsPanel) continue;
             if (child instanceof ComplexPanel && isTag(TableRowElement.TAG, child.getElement())) {
                 return (ComplexPanel) child;
             }
@@ -320,25 +429,42 @@ public class JQMColumnToggle extends CustomFlowPanel {
         return r;
     }
 
-    private ComplexPanel getHeadCol(int col) {
-        ComplexPanel r = getHeadRow();
-        if (r == null || col < 0) return null;
-        int cnt = -1;
-        for (int i = 0; i < r.getWidgetCount(); i++) {
-            Widget child = r.getWidget(i);
-            if (child instanceof ComplexPanel
-                    && (isTag(TableCellElement.TAG_TH, child.getElement())
-                            || isTag(TableCellElement.TAG_TD, child.getElement()))) {
-                cnt++;
-                if (cnt == col) return (ComplexPanel) child;
+    private void removeHeadRow() {
+        for (int i = 0; i < tHead.getWidgetCount(); i++) {
+            Widget child = tHead.getWidget(i);
+            if (child instanceof HeadGroupsPanel) continue;
+            if (child instanceof ComplexPanel && isTag(TableRowElement.TAG, child.getElement())) {
+                tHead.remove(child);
+                return;
             }
         }
-        ComplexPanel c = null;
-        for (int i = cnt; i < col; i++) {
-            c = new CustomFlowPanel(Document.get().createTHElement());
-            r.add(c);
+    }
+
+    private ComplexPanel getHeadGroupsRow() {
+        for (int i = 0; i < tHead.getWidgetCount(); i++) {
+            Widget child = tHead.getWidget(i);
+            if (child instanceof HeadGroupsPanel) return (ComplexPanel) child;
         }
-        return c;
+        ComplexPanel headRow = getHeadRow();
+        ComplexPanel r = new HeadGroupsPanel(Document.get().createTRElement());
+        if (headRow == null) {
+            tHead.add(r);
+        } else {
+            tHead.remove(headRow);
+            tHead.add(r);
+            tHead.add(headRow);
+        }
+        return r;
+    }
+
+    private void removeHeadGroupsRow() {
+        for (int i = 0; i < tHead.getWidgetCount(); i++) {
+            Widget child = tHead.getWidget(i);
+            if (child instanceof HeadGroupsPanel) {
+                tHead.remove(child);
+                return;
+            }
+        }
     }
 
     private void setDataStr(List<String> lst) {
@@ -368,7 +494,7 @@ public class JQMColumnToggle extends CustomFlowPanel {
     @UiChild(tagname = "colTitle")
     public void addColTitleWidget(Widget w, String priority, String text) {
         if (colNames != null) {
-            tHead.clear();
+            removeHeadRow();
             columns.clear();
             colNames = null;
         }

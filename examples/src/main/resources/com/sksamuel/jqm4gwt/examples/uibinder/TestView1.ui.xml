@@ -7,7 +7,7 @@
     <ui:style>
       .bevel { height: 10px; }
       
-      @external jqm4gwt-image-link-a, .ui-btn-inner;
+      @external .jqm4gwt-image-link-a, .ui-btn-inner;
       .myBtn.jqm4gwt-image-link-a .ui-btn-inner {
         padding: 0px !important;
       }
@@ -19,6 +19,18 @@
 	      display: block;
 	      text-align: center;
 	    }
+	    
+	    @external .jqm4gwt-thead-groups;
+	    .jqm4gwt-thead-groups th { 
+        text-align: center;
+        background-color: rgba(0,0,0,.1);
+        border-right:1px solid #fff;
+      }
+      .jqm4gwt-thead-groups th[data-priority="1"] { 
+        background-color: rgba(0,0,0,.5);
+        color: #fff;
+        text-shadow: none;
+      }
     </ui:style>
              
     <jqm:JQMPage containerId="testPage1" backButton="true">
@@ -328,7 +340,8 @@
         <jqm:html.Paragraph addStyleNames="{style.bevel}" />
         
         <jqm:table.JQMColumnToggle colNames="Rank=2, Movie Title, Year=3, &lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
-          cells="&lt;th>1&lt;/th>, The Matrix, 1999, 8.7, 784311, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5,  105111" />
+          cells="&lt;th>1&lt;/th>, The Matrix, 1999, 8.7, 784\,311, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5,  105\,111" />
+        
         <jqm:html.Paragraph addStyleNames="{style.bevel}" />
         
         <jqm:table.JQMColumnToggle columnBtnText="Choose columns..." columnBtnTheme="b" 
@@ -363,7 +376,7 @@
             <jqm:button.JQMButton text="8.7" inline="true" mini="true" builtInIcon="STAR" />
           </jqm:cell>
           <jqm:cell>
-            <g:Anchor text="784311" href="http://www.imdb.com/title/tt0133093/" />
+            <g:Anchor text="784,311" href="http://www.imdb.com/title/tt0133093/" />
           </jqm:cell>
           
           <jqm:cell>
@@ -379,8 +392,18 @@
             <jqm:button.JQMButton text="7.5" inline="true" mini="true" builtInIcon="STAR" />
           </jqm:cell>
           <jqm:cell>
-            <g:Anchor text="105111" href="http://www.imdb.com/title/tt0106856/" />
+            <g:Anchor text="105,111" href="http://www.imdb.com/title/tt0106856/" />
           </jqm:cell>
+        </jqm:table.JQMColumnToggle>
+        
+        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
+        
+        <jqm:table.JQMColumnToggle 
+          colNames="Store, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change"
+          colGroups="1==, 3=Q1 2012=5, 3=Q2 2012=4, 3=Q3 2012=3, 3=Q4 2012=2, 3=YTD Totals=1"
+          cells="&lt;th> Boston &lt;/th>,   2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%,
+                 &lt;th> Chicago &lt;/th>,  2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%,
+                 &lt;th> New York &lt;/th>, 2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%">
         </jqm:table.JQMColumnToggle>  
         
         </jqm:plugins.iscroll.IScrollPanel>
