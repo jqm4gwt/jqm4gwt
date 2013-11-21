@@ -590,7 +590,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
 
     private void checkAnchorPanel() {
         if (anchorPanel == null) {
-            anchorPanel = new CustomFlowPanel((com.google.gwt.user.client.Element) anchor.cast());
+            anchorPanel = new CustomFlowPanel(anchor);
             add(anchorPanel);
         }
         if (controlGroupRoot != null && controlGroupRoot.getParent() != anchorPanel) {

@@ -4,8 +4,8 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
- * A panel that formats its child widgets using the default HTML layout
- * behavior. The HTML element is sent as argument.
+ * Flow panel based on the given HTML element sent as constructor argument.
+ * <p/>A panel that formats its child widgets using the default HTML layout behavior.
  */
 public class CustomFlowPanel extends FlowPanel {
 
@@ -18,6 +18,10 @@ public class CustomFlowPanel extends FlowPanel {
 		super();
 		this.e = e;
 		setElement(e);
+	}
+
+	public CustomFlowPanel(com.google.gwt.dom.client.Element e) {
+	    this((Element) e.cast());
 	}
 
 	@Override

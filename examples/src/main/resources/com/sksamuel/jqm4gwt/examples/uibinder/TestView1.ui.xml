@@ -330,7 +330,26 @@
         <jqm:table.JQMColumnToggle colNames="Rank=2, Movie Title, Year=3, &lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
           cells="&lt;th>1&lt;/th>, The Matrix, 1999, 8.7, 784311, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5,  105111" />
         <jqm:html.Paragraph addStyleNames="{style.bevel}" />
-        <jqm:table.JQMColumnToggle colNames="Rank=2, Movie Title, Year=3, &lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5">
+        
+        <jqm:table.JQMColumnToggle columnBtnText="Choose columns..." columnBtnTheme="b" 
+          columnPopupTheme="a" backgroundTheme="d" headerTheme="d">
+          
+          <jqm:colTitle priority="2">
+            <g:Label text="Rank" />
+          </jqm:colTitle>
+          <jqm:colTitle>
+            <jqm:button.JQMButton ui:field="movieTitleBtn" text="Movie Title" inline="true" mini="true" />
+          </jqm:colTitle>
+          <jqm:colTitle priority="3">
+            <g:Label text="Year" />
+          </jqm:colTitle>
+          <jqm:colTitle priority="1">
+            <jqm:html.Abbr text="Rating" title="Rotten Tomato Rating" />
+          </jqm:colTitle>
+          <jqm:colTitle priority="5">
+            <jqm:button.JQMButton text="Reviews" inline="true" mini="true" />
+          </jqm:colTitle>
+          
           <jqm:cell>
             <g:Label text="1" />
           </jqm:cell>
@@ -345,6 +364,22 @@
           </jqm:cell>
           <jqm:cell>
             <g:Anchor text="784311" href="http://www.imdb.com/title/tt0133093/" />
+          </jqm:cell>
+          
+          <jqm:cell>
+            <g:Label text="2" />
+          </jqm:cell>
+          <jqm:cell>
+            <g:Label text="Falling Down" />
+          </jqm:cell>
+          <jqm:cell>
+            <jqm:button.JQMButton text="1993" inline="true" mini="true" />
+          </jqm:cell>
+          <jqm:cell>
+            <jqm:button.JQMButton text="7.5" inline="true" mini="true" builtInIcon="STAR" />
+          </jqm:cell>
+          <jqm:cell>
+            <g:Anchor text="105111" href="http://www.imdb.com/title/tt0106856/" />
           </jqm:cell>
         </jqm:table.JQMColumnToggle>  
         

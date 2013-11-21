@@ -166,6 +166,9 @@ public class TestView1 {
     @UiField
     JQMButton movieYearBtn;
 
+    @UiField
+    JQMButton movieTitleBtn;
+
     @UiHandler("popupOpenButton")
     void handlePopupOpenButtonClick(ClickEvent e) {
         popup.open();
@@ -333,6 +336,11 @@ public class TestView1 {
     @UiHandler("movieYearBtn")
     void movieYearBtnClick(ClickEvent e) {
         Window.alert(movieYearBtn.getText());
+    }
+
+    @UiHandler("movieTitleBtn")
+    void movieTitleBtnClick(ClickEvent e) {
+        Window.alert("'" + movieTitleBtn.getText() + "' button is clicked.");
     }
 
     {

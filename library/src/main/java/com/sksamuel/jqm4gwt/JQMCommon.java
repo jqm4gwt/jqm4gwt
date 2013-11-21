@@ -91,6 +91,60 @@ public class JQMCommon {
         return styles != null && (indexOfName(styles, style) >= 0);
     }
 
+    public static void removeStylesStartsWith(Element elt, String startsWith) {
+        if (elt == null || startsWith == null || startsWith.isEmpty()) return;
+        String styles = DOM.getElementProperty(elt.<com.google.gwt.user.client.Element> cast(),
+                                               "className");
+        if (styles == null || styles.isEmpty()) return;
+        boolean changed = false;
+        int p = 0;
+        do {
+            p = styles.indexOf(startsWith, p);
+            if (p == -1) break;
+            if (p == 0 || p > 0 && styles.charAt(p - 1) == ' ') {
+                int j = p + startsWith.length();
+                while (j < styles.length()) {
+                    if (styles.charAt(j) == ' ') break;
+                    j++;
+                }
+                if (p > 0) styles = styles.substring(0, p - 1) + styles.substring(j); // skip leading space
+                else styles = styles.substring(j).trim();
+                changed = true;
+            } else {
+                p += startsWith.length();
+            }
+        } while (true);
+
+        if (changed) {
+            DOM.setElementProperty(elt.<com.google.gwt.user.client.Element> cast(),
+                                   "className", styles);
+        }
+    }
+
+    public static String getStyleStartsWith(Element elt, String startsWith) {
+        if (elt == null || startsWith == null || startsWith.isEmpty()) return null;
+        String styles = DOM.getElementProperty(elt.<com.google.gwt.user.client.Element> cast(),
+                                               "className");
+        if (styles == null || styles.isEmpty()) return null;
+        int p = 0;
+        do {
+            p = styles.indexOf(startsWith, p);
+            if (p == -1) break;
+            if (p == 0 || p > 0 && styles.charAt(p - 1) == ' ') {
+                int j = p + startsWith.length();
+                while (j < styles.length()) {
+                    if (styles.charAt(j) == ' ') break;
+                    j++;
+                }
+                return styles.substring(p, j);
+            } else {
+                p += startsWith.length();
+            }
+        } while (true);
+
+        return null;
+    }
+
     public static boolean isEnabled(Widget widget) {
         return !hasStyle(widget, STYLE_UI_DISABLED);
     }
