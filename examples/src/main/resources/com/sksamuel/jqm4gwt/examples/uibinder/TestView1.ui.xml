@@ -20,11 +20,19 @@
 	      text-align: center;
 	    }
 	    
-	    @external .jqm4gwt-thead-groups;
-	    .jqm4gwt-thead-groups th { 
+	    .inlineBlock {
+        display: inline-block;
+        vertical-align: middle; /* makes more smooth/uniform line/row */
+      }
+	    
+	    @external .jqm4gwt-thead-groups, .ui-table-reflow .ui-table-cell-label-top;
+	    .jqm4gwt-thead-groups th, .ui-table-reflow tbody .ui-table-cell-label-top { 
         text-align: center;
         background-color: rgba(0,0,0,.1);
         border-right:1px solid #fff;
+      }
+      .ui-table-reflow tbody .ui-table-cell-label-top {
+	      font-weight: bold; 
       }
       .jqm4gwt-thead-groups th[data-priority="1"] { 
         background-color: rgba(0,0,0,.5);
@@ -337,6 +345,7 @@
         <jqm:button.JQMButton builtInIcon="INFO" ui:field="popupOpenButton" text="Pop-up example..."/>
         <jqm:LoadingIndicator/>
         <jqm:button.JQMButton builtInIcon="INFO" ui:field="busyButton" text="Application Busy example..."/>
+        
         <jqm:html.Paragraph addStyleNames="{style.bevel}" />
         
         <jqm:table.JQMColumnToggle colNames="Rank=2, Movie Title, Year=3, &lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
@@ -344,17 +353,24 @@
         
         <jqm:html.Paragraph addStyleNames="{style.bevel}" />
         
+        <g:Label text="Reflow Mode Example" />
+        <jqm:table.JQMColumnToggle reflow="true" 
+          colNames="Rank=2, Movie Title, Year=3, &lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
+          cells="&lt;th>1&lt;/th>, The Matrix, 1999, 8.7, 784\,311, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5,  105\,111" />  
+        
+        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
+        
         <jqm:table.JQMColumnToggle columnBtnText="Choose columns..." columnBtnTheme="b" 
           columnPopupTheme="a" backgroundTheme="d" headerTheme="d">
           
           <jqm:colTitle priority="2">
-            <g:Label text="Rank" />
+            <g:Label text="Rank" addStyleNames="{style.inlineBlock}" />
           </jqm:colTitle>
           <jqm:colTitle>
             <jqm:button.JQMButton ui:field="movieTitleBtn" text="Movie Title" inline="true" mini="true" />
           </jqm:colTitle>
           <jqm:colTitle priority="3">
-            <g:Label text="Year" />
+            <g:Label text="Year" addStyleNames="{style.inlineBlock}" />
           </jqm:colTitle>
           <jqm:colTitle priority="1">
             <jqm:html.Abbr text="Rating" title="Rotten Tomato Rating" />
@@ -363,11 +379,11 @@
             <jqm:button.JQMButton text="Reviews" inline="true" mini="true" />
           </jqm:colTitle>
           
-          <jqm:cell>
-            <g:Label text="1" />
+          <jqm:cell asTh="true">
+            <g:Label text="1" addStyleNames="{style.inlineBlock}" />
           </jqm:cell>
           <jqm:cell>
-            <g:Label text="The Matrix" />
+            <g:Label text="The Matrix" addStyleNames="{style.inlineBlock}" />
           </jqm:cell>
           <jqm:cell>
             <jqm:button.JQMButton ui:field="movieYearBtn" text="1999" inline="true" mini="true" />
@@ -379,11 +395,11 @@
             <g:Anchor text="784,311" href="http://www.imdb.com/title/tt0133093/" />
           </jqm:cell>
           
-          <jqm:cell>
-            <g:Label text="2" />
+          <jqm:cell asTh="true">
+            <g:Label text="2" addStyleNames="{style.inlineBlock}" />
           </jqm:cell>
           <jqm:cell>
-            <g:Label text="Falling Down" />
+            <g:Label text="Falling Down" addStyleNames="{style.inlineBlock}" />
           </jqm:cell>
           <jqm:cell>
             <jqm:button.JQMButton text="1993" inline="true" mini="true" />
@@ -416,7 +432,7 @@
                  &lt;th> New York &lt;/th>, 2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%">
           
           <jqm:colGroup>
-            <g:Label />
+            <g:Label addStyleNames="{style.inlineBlock}" />
           </jqm:colGroup>
           <jqm:colGroup colspan="3" priority="5">
             <jqm:button.JQMButton text="Q1 2012" inline="true" mini="true" />

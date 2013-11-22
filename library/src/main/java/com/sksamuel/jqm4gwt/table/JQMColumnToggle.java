@@ -20,6 +20,7 @@ import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
 
 /**
  * See <a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/">Table: Column Toggle</a>
+ * <p/> See <a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-reflow/">Table: Reflow</a>
  * <p/> See also <a href="http://jquerymobile.com/demos/1.3.0-rc.1/docs/tables/">Responsive tables</a>
  * <p/> See also <a href="http://jquerymobile.com/demos/1.3.0-beta.1/docs/demos/tables/financial-grouped-columns.html">Grouped column headers</a>
  * <p/><b>WARNING!</b> You'd better use fixed jQuery Mobile 1.3.2 from "jqm4gwt\standalone\misc\fixed jquery mobile",
@@ -35,9 +36,15 @@ public class JQMColumnToggle extends CustomFlowPanel {
     public static final String STD_ROW_STRIPES = "table-stripe";
     public static final String STD_RESPONSIVE = "ui-responsive";
 
+    public static final String JQM4GWT_COL_PERSISTENT = "jqm4gwt-col-persistent";
+    public static final String JQM4GWT_THEAD_GROUPS = "jqm4gwt-thead-groups";
+
     private static final String COLUMN_BTN_TEXT = "data-column-btn-text";
     private static final String COLUMN_BTN_THEME = "data-column-btn-theme";
     private static final String COLUMN_POPUP_THEME = "data-column-popup-theme";
+
+    private static final String TOGGLE = "columntoggle";
+    private static final String REFLOW = "reflow";
 
     // See http://stackoverflow.com/a/2709855
     private static final String COMMA_SPLIT = "(?<!\\\\),";
@@ -85,14 +92,14 @@ public class JQMColumnToggle extends CustomFlowPanel {
     private final Map<Widget, ColumnDef> colGroupWidgets = new LinkedHashMap<Widget, ColumnDef>();
 
     private List<String> dataStr;
-    private List<Widget> dataObj;
+    private Map<Widget, Boolean> dataObj;
 
     public JQMColumnToggle() {
         super(Document.get().createTableElement());
         Element table = getElement();
         table.setId(Document.get().createUniqueId());
         JQMCommon.setDataRole(table, "table");
-        JQMCommon.setAttribute(table, "data-mode", "columntoggle");
+        JQMCommon.setAttribute(table, "data-mode", TOGGLE);
 
         setResponsive(STD_RESPONSIVE);
         setRowLines(STD_ROW_LINES);
@@ -225,10 +232,10 @@ public class JQMColumnToggle extends CustomFlowPanel {
         if (col == null) return;
         if (priority != null && !priority.isEmpty()) {
             JQMCommon.setAttribute(col.getElement(), "data-priority", priority);
-            col.getElement().removeClassName("jqm4gwt-col-persistent");
+            col.getElement().removeClassName(JQM4GWT_COL_PERSISTENT);
         } else {
             JQMCommon.setAttribute(col.getElement(), "data-priority", null);
-            col.getElement().addClassName("jqm4gwt-col-persistent");
+            col.getElement().addClassName(JQM4GWT_COL_PERSISTENT);
         }
     }
 
@@ -289,8 +296,8 @@ public class JQMColumnToggle extends CustomFlowPanel {
         }
         if (dataObj != null) {
             int i = 0;
-            for (Widget w : dataObj) {
-                addToBody(w, i++);
+            for (Entry<Widget, Boolean> j : dataObj.entrySet()) {
+                addToBody(j.getKey(), i++, j.getValue() != null ? j.getValue() : false);
             }
             return;
         }
@@ -371,13 +378,13 @@ public class JQMColumnToggle extends CustomFlowPanel {
         }
     }
 
-    private void addToBody(Widget w, int index) {
+    private void addToBody(Widget w, int index, boolean addTh) {
         if (index < 0 || getNumOfCols() <= 0) return;
         int row = index / getNumOfCols();
         int col = index % getNumOfCols();
         ComplexPanel r = getRow(row);
         if (r == null) return;
-        ComplexPanel c = getCol(r, col, false/*addTh*/);
+        ComplexPanel c = getCol(r, col, addTh);
         if (c == null) return;
         c.clear();
         if (w != null) c.add(w);
@@ -430,7 +437,7 @@ public class JQMColumnToggle extends CustomFlowPanel {
 
         public HeadGroupsPanel(com.google.gwt.dom.client.Element e) {
             super(e);
-            getElement().addClassName("jqm4gwt-thead-groups");
+            getElement().addClassName(JQM4GWT_THEAD_GROUPS);
         }
     }
 
@@ -495,21 +502,24 @@ public class JQMColumnToggle extends CustomFlowPanel {
     }
 
     @SuppressWarnings("unused")
-    private void setDataObj(List<Widget> lst) {
+    private void setDataObj(Map<Widget, Boolean> lst) {
         dataObj = lst;
         dataStr = null;
         refreshBody();
     }
 
+    /**
+     * @param asTh - &lt;th> will be used for creating cell instead of &lt;td>
+     */
     @UiChild(tagname = "cell")
-    public void addCellWidget(Widget w) {
+    public void addCellWidget(Widget w, Boolean asTh) {
         if (dataStr != null) {
             tBody.clear();
             dataStr = null;
         }
-        if (dataObj == null) dataObj = new ArrayList<Widget>();
-        dataObj.add(w);
-        addToBody(w, dataObj.size() - 1);
+        if (dataObj == null) dataObj = new LinkedHashMap<Widget, Boolean>();
+        dataObj.put(w, asTh);
+        addToBody(w, dataObj.size() - 1, asTh != null ? asTh : false);
     }
 
     @UiChild(tagname = "colTitle")
@@ -639,4 +649,13 @@ public class JQMColumnToggle extends CustomFlowPanel {
         if (r != null) setEltHeaderTheme(r.getElement(), value);
     }
 
+    public boolean isReflow() {
+        return REFLOW.equals(JQMCommon.getAttribute(this, "data-mode"));
+    }
+
+    public void setReflow(boolean value) {
+        if (isReflow() == value) return;
+        if (value) JQMCommon.setAttribute(this, "data-mode", REFLOW);
+        else JQMCommon.setAttribute(this, "data-mode", TOGGLE);
+    }
 }
