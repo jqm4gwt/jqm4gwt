@@ -404,9 +404,38 @@
           cells="&lt;th> Boston &lt;/th>,   2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%,
                  &lt;th> Chicago &lt;/th>,  2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%,
                  &lt;th> New York &lt;/th>, 2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%">
+        </jqm:table.JQMColumnToggle>
+        
+        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
+        
+        <jqm:table.JQMColumnToggle columnBtnText="Choose columns..." columnBtnTheme="b" 
+          columnPopupTheme="a" backgroundTheme="d" headerTheme="d"
+          colNames="Store, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change"
+          cells="&lt;th> Boston &lt;/th>,   2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%,
+                 &lt;th> Chicago &lt;/th>,  2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%,
+                 &lt;th> New York &lt;/th>, 2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%">
+          
+          <jqm:colGroup>
+            <g:Label />
+          </jqm:colGroup>
+          <jqm:colGroup colspan="3" priority="5">
+            <jqm:button.JQMButton text="Q1 2012" inline="true" mini="true" />
+          </jqm:colGroup>
+          <jqm:colGroup colspan="3" priority="4">
+            <jqm:button.JQMButton text="Q2 2012" inline="true" mini="true" />
+          </jqm:colGroup>
+          <jqm:colGroup colspan="3" priority="3">
+            <jqm:button.JQMButton text="Q3 2012" inline="true" mini="true" />
+          </jqm:colGroup>
+          <jqm:colGroup colspan="3" priority="2">
+            <jqm:button.JQMButton text="Q4 2012" inline="true" mini="true" />
+          </jqm:colGroup>
+          <jqm:colGroup colspan="3" priority="1">
+            <jqm:button.JQMButton text="YTD Totals" inline="true" mini="true" />
+          </jqm:colGroup>         
         </jqm:table.JQMColumnToggle>  
         
-        </jqm:plugins.iscroll.IScrollPanel>
+        </jqm:plugins.iscroll.IScrollPanel>        
         
         <jqm:toolbar.JQMFooter>
             <jqm:widget>

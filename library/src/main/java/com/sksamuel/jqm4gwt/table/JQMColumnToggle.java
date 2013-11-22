@@ -51,6 +51,7 @@ public class JQMColumnToggle extends CustomFlowPanel {
     private String rowLines;
     private String rowStripes;
     private String responsive;
+    private String headerTheme;
 
     private String colNames;
     private String cells;
@@ -79,6 +80,9 @@ public class JQMColumnToggle extends CustomFlowPanel {
 
     /** populated based on colGroups parsing */
     private final Set<ColumnDef> headGroups = new LinkedHashSet<ColumnDef>();
+
+    /** populated directly by addColGroupWidget(), probably from UiBinder template */
+    private final Map<Widget, ColumnDef> colGroupWidgets = new LinkedHashMap<Widget, ColumnDef>();
 
     private List<String> dataStr;
     private List<Widget> dataObj;
@@ -166,6 +170,7 @@ public class JQMColumnToggle extends CustomFlowPanel {
     public void setColGroups(String colGroups) {
         if (this.colGroups == colGroups || this.colGroups != null && this.colGroups.equals(colGroups)) return;
         this.colGroups = colGroups;
+        colGroupWidgets.clear();
 
         if (this.colGroups == null || this.colGroups.isEmpty()) {
             setHeadGroups(null);
@@ -216,6 +221,17 @@ public class JQMColumnToggle extends CustomFlowPanel {
         populateBody();
     }
 
+    private static void setColPriority(Widget col, String priority) {
+        if (col == null) return;
+        if (priority != null && !priority.isEmpty()) {
+            JQMCommon.setAttribute(col.getElement(), "data-priority", priority);
+            col.getElement().removeClassName("jqm4gwt-col-persistent");
+        } else {
+            JQMCommon.setAttribute(col.getElement(), "data-priority", null);
+            col.getElement().addClassName("jqm4gwt-col-persistent");
+        }
+    }
+
     private void setColumns(Set<ColumnDef> cols) {
         int cnt = columns.size();
         int newCnt = cols != null ? cols.size() : 0;
@@ -247,32 +263,19 @@ public class JQMColumnToggle extends CustomFlowPanel {
         }
     }
 
-    private static void setColPriority(Widget col, String priority) {
-        if (col == null) return;
-        if (priority != null && !priority.isEmpty()) {
-            JQMCommon.setAttribute(col.getElement(), "data-priority", priority);
-            col.getElement().removeClassName("jqm4gwt-col-persistent");
-        } else {
-            JQMCommon.setAttribute(col.getElement(), "data-priority", null);
-            col.getElement().addClassName("jqm4gwt-col-persistent");
-        }
-    }
-
-    private void addToHead(String title, String priority, int index) {
-        if (index < 0) return;
+    private ComplexPanel addToHead(String title, String priority, int index) {
+        if (index < 0) return null;
         ComplexPanel col = getCol(getHeadRow(), index, true/*addTh*/);
-        if (col == null) return;
+        if (col == null) return null;
         setColPriority(col, priority);
         col.getElement().setInnerHTML(title);
+        return col;
     }
 
     private void addToHead(Widget w, String title, String priority, int index) {
-        if (index < 0) return;
-        ComplexPanel col = getCol(getHeadRow(), index, true/*addTh*/);
+        ComplexPanel col = addToHead(title, priority, index);
         if (col == null) return;
         col.clear();
-        setColPriority(col, priority);
-        col.getElement().setInnerHTML(title);
         if (w != null) col.add(w);
     }
 
@@ -307,24 +310,39 @@ public class JQMColumnToggle extends CustomFlowPanel {
     }
 
     private void populateHeadGroups() {
-        if (headGroups.isEmpty()) {
-            removeHeadGroupsRow();
-        } else {
+        if (!headGroups.isEmpty()) {
             int i = 0;
             for (ColumnDef grp : headGroups) {
                 addToHeadGroups(grp, i++);
             }
+            return;
         }
+        if (!colGroupWidgets.isEmpty()) {
+            int i = 0;
+            for (Entry<Widget, ColumnDef> j : colGroupWidgets.entrySet()) {
+                addToHeadGroups(j.getKey(), j.getValue(), i++);
+            }
+            return;
+        }
+        removeHeadGroupsRow();
     }
 
-    private void addToHeadGroups(ColumnDef grp, int index) {
-        if (grp == null || index < 0) return;
+    private ComplexPanel addToHeadGroups(ColumnDef grp, int index) {
+        if (grp == null || index < 0) return null;
         boolean addTh = grp.colspan > 1 || isTh(grp.title);
         ComplexPanel col = getCol(getHeadGroupsRow(), index, addTh);
-        if (col == null) return;
+        if (col == null) return null;
         setColPriority(col, grp.priority);
         col.getElement().setInnerHTML(addTh ? removeTh(grp.title) : grp.title);
         if (grp.colspan > 1) JQMCommon.setAttribute(col, "colspan", String.valueOf(grp.colspan));
+        return col;
+    }
+
+    private void addToHeadGroups(Widget w, ColumnDef grp, int index) {
+        ComplexPanel col = addToHeadGroups(grp, index);
+        if (col == null) return;
+        col.clear();
+        if (w != null) col.add(w);
     }
 
     private static boolean isTh(String s) {
@@ -416,7 +434,7 @@ public class JQMColumnToggle extends CustomFlowPanel {
         }
     }
 
-    private ComplexPanel getHeadRow() {
+    private ComplexPanel findHeadRow() {
         for (int i = 0; i < tHead.getWidgetCount(); i++) {
             Widget child = tHead.getWidget(i);
             if (child instanceof HeadGroupsPanel) continue;
@@ -424,29 +442,36 @@ public class JQMColumnToggle extends CustomFlowPanel {
                 return (ComplexPanel) child;
             }
         }
-        ComplexPanel r = new CustomFlowPanel(Document.get().createTRElement());
+        return null;
+    }
+
+    private ComplexPanel getHeadRow() {
+        ComplexPanel r = findHeadRow();
+        if (r != null) return r;
+        r = new CustomFlowPanel(Document.get().createTRElement());
         tHead.add(r);
+        setHeaderTheme(headerTheme);
         return r;
     }
 
     private void removeHeadRow() {
-        for (int i = 0; i < tHead.getWidgetCount(); i++) {
-            Widget child = tHead.getWidget(i);
-            if (child instanceof HeadGroupsPanel) continue;
-            if (child instanceof ComplexPanel && isTag(TableRowElement.TAG, child.getElement())) {
-                tHead.remove(child);
-                return;
-            }
-        }
+        ComplexPanel r = findHeadRow();
+        if (r != null) tHead.remove(r);
     }
 
-    private ComplexPanel getHeadGroupsRow() {
+    private ComplexPanel findHeadGroupsRow() {
         for (int i = 0; i < tHead.getWidgetCount(); i++) {
             Widget child = tHead.getWidget(i);
             if (child instanceof HeadGroupsPanel) return (ComplexPanel) child;
         }
+        return null;
+    }
+
+    private ComplexPanel getHeadGroupsRow() {
+        ComplexPanel r = findHeadGroupsRow();
+        if (r != null) return r;
         ComplexPanel headRow = getHeadRow();
-        ComplexPanel r = new HeadGroupsPanel(Document.get().createTRElement());
+        r = new HeadGroupsPanel(Document.get().createTRElement());
         if (headRow == null) {
             tHead.add(r);
         } else {
@@ -454,17 +479,13 @@ public class JQMColumnToggle extends CustomFlowPanel {
             tHead.add(r);
             tHead.add(headRow);
         }
+        setHeaderTheme(headerTheme);
         return r;
     }
 
     private void removeHeadGroupsRow() {
-        for (int i = 0; i < tHead.getWidgetCount(); i++) {
-            Widget child = tHead.getWidget(i);
-            if (child instanceof HeadGroupsPanel) {
-                tHead.remove(child);
-                return;
-            }
-        }
+        ComplexPanel r = findHeadGroupsRow();
+        if (r != null) tHead.remove(r);
     }
 
     private void setDataStr(List<String> lst) {
@@ -501,6 +522,19 @@ public class JQMColumnToggle extends CustomFlowPanel {
         ColumnDef colDef = new ColumnDef(text, priority);
         colTitleWidgets.put(w, colDef);
         addToHead(w, colDef.title, colDef.priority, colTitleWidgets.size() - 1);
+    }
+
+    @UiChild(tagname = "colGroup")
+    public void addColGroupWidget(Widget w, String priority, String text, Integer colspan) {
+        if (colGroups != null) {
+            removeHeadGroupsRow();
+            headGroups.clear();
+            colGroups = null;
+        }
+        ColumnDef colDef = new ColumnDef(text, priority);
+        if (colspan != null && colspan > 0) colDef.colspan = colspan;
+        colGroupWidgets.put(w, colDef);
+        addToHeadGroups(w, colDef, colGroupWidgets.size() - 1);
     }
 
     public String getRowLines() {
@@ -572,20 +606,37 @@ public class JQMColumnToggle extends CustomFlowPanel {
         if (newTheme != null) this.getElement().addClassName(newTheme);
     }
 
+    private static String getEltHeaderTheme(Element elt) {
+        if (elt == null) return null;
+        return JQMCommon.getStyleStartsWith(elt, "ui-bar-");
+    }
+
+    private static void setEltHeaderTheme(Element elt, String value) {
+        if (elt == null) return;
+        String s = getEltHeaderTheme(elt);
+        String newTheme = value != null && !value.isEmpty() ? "ui-bar-" + value : null;
+        if (s == newTheme || s != null && s.equals(newTheme)) return;
+        JQMCommon.removeStylesStartsWith(elt, "ui-bar-");
+        if (newTheme != null) elt.addClassName(newTheme);
+    }
+
     public String getHeaderTheme() {
-        ComplexPanel r = getHeadRow();
-        if (r == null) return null;
-        return JQMCommon.getStyleStartsWith(r.getElement(), "ui-bar-");
+        ComplexPanel r = findHeadRow();
+        if (r == null) return headerTheme;
+        String s = getEltHeaderTheme(r.getElement());
+        if (s != null && !s.isEmpty()) {
+            s = s.substring("ui-bar-".length());
+            return s;
+        }
+        return headerTheme;
     }
 
     public void setHeaderTheme(String value) {
-        ComplexPanel r = getHeadRow();
-        if (r == null) return;
-        String s = getHeaderTheme();
-        String newTheme = value != null && !value.isEmpty() ? "ui-bar-" + value : null;
-        if (s == newTheme || s != null && s.equals(newTheme)) return;
-        JQMCommon.removeStylesStartsWith(r.getElement(), "ui-bar-");
-        if (newTheme != null) r.getElement().addClassName(newTheme);
+        headerTheme = value;
+        ComplexPanel r = findHeadRow();
+        if (r != null) setEltHeaderTheme(r.getElement(), value);
+        r = findHeadGroupsRow();
+        if (r != null) setEltHeaderTheme(r.getElement(), value);
     }
 
 }
