@@ -71,6 +71,21 @@ public class TestView1 {
     JQMButton enableSliderButton;
 
     @UiField
+    JQMButton getSliderValueBtn;
+
+    @UiField
+    JQMButton setSliderNullBtn;
+
+    @UiField
+    JQMButton setSliderMinBtn;
+
+    @UiField
+    JQMButton setSliderMinTo6Btn;
+
+    @UiField
+    JQMButton setSliderStepBtn;
+
+    @UiField
     JQMForm form;
 
     @UiField
@@ -197,6 +212,37 @@ public class TestView1 {
     @UiHandler("enableSliderButton")
     void handleEnableSliderButtonClick(ClickEvent e) {
         slider.enable();
+    }
+
+    @UiHandler("getSliderValueBtn")
+    void getSliderValueBtnClick(ClickEvent e) {
+        Window.alert(String.valueOf(slider.getValue()));
+    }
+
+    @UiHandler("setSliderNullBtn")
+    void setSliderNullBtnClick(ClickEvent e) {
+        slider.setValue(null);
+    }
+
+    @UiHandler("setSliderMinBtn")
+    void setSliderMinBtnClick(ClickEvent e) {
+        Double min = slider.getMin();
+        if (min == null) {
+            min = slider.getMax();
+            if (min == null) min = 0d;
+            else min = min - 100;
+        }
+        slider.setValue(min);
+    }
+
+    @UiHandler("setSliderMinTo6Btn")
+    void setSliderMinTo6BtnClick(ClickEvent e) {
+        slider.setMin(6d);
+    }
+
+    @UiHandler("setSliderStepBtn")
+    void setSliderStepBtnClick(ClickEvent e) {
+        slider.setStep(0.5d);
     }
 
     @UiHandler("busyButton")

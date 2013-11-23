@@ -1,24 +1,38 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasChangeHandlers;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextBox;
 import com.sksamuel.jqm4gwt.HasMini;
+import com.sksamuel.jqm4gwt.HasText;
+import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.events.HasTapHandlers;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
+import com.sksamuel.jqm4gwt.events.TapEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 10 May 2011 00:24:06
- *         <p/>
- *         An implementation of a jquery mobile "slider" widget.
- *         <p/>
- *         For further info see
- * @link http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/forms/forms-slider.html
+ *
+ * <p/> An implementation of a jquery mobile "slider" widget.
+ * <p/> See <a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/sliders/">Slider</a>
  */
-public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, HasMini {
+public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, HasMini<JQMSlider>,
+        HasText<JQMSlider>, HasChangeHandlers, HasClickHandlers, HasTapHandlers {
 
     private final FormLabel label = new FormLabel();
 
@@ -27,26 +41,39 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
      */
     private final TextBox input = new TextBox();
 
+    private boolean valueChangeHandlerInitialized;
+    private boolean ignoreChange;
+
+    // There is null internal state, but no such/corresponding UI state.
+    // null internal state is needed to properly support data binding libraries (Errai for example).
+    private Double internVal;
 
     /**
-     * Create a new {@link JQMSlider} with no label and default values
-     * for the min and max
+     * Create a new {@link JQMSlider} with no label and default values for the min and max
      */
     public JQMSlider() {
         String id = Document.get().createUniqueId();
         label.setFor(id);
         input.getElement().setId(id);
         input.getElement().setAttribute("type", "range");
+        internVal = 0d;
         input.getElement().setAttribute("value", "0");
         input.getElement().setAttribute("min", "0");
         input.getElement().setAttribute("max", "100");
         add(label);
         add(input);
+        addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(ChangeEvent event) {
+                if (!ignoreChange) {
+                    internVal = getUiValue();
+                }
+            }
+        });
     }
 
     /**
-     * Create a new {@link JQMSlider} with the given label and default values
-     * for the min and max
+     * Create a new {@link JQMSlider} with the given label and default values for the min and max
      *
      * @param text the label text
      */
@@ -56,28 +83,53 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
     }
 
     /**
-     * Create a new {@link JQMSlider} with the given label and min and max
-     * values
+     * Create a new {@link JQMSlider} with the given label and min and max values
      *
      * @param text the label text
      * @param min  the minimum value of the slider
      * @param max  the maximum value of the slider
      */
-    public JQMSlider(String text, int min, int max) {
+    public JQMSlider(String text, Double min, Double max) {
         this(text);
         setMax(max);
         setMin(min);
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Integer> handler) {
-        return input.addValueChangeHandler(new ValueChangeHandler<String>() {
+    public HandlerRegistration addChangeHandler(ChangeHandler handler) {
+        return flow.addDomHandler(handler, ChangeEvent.getType());
+    }
 
+    @Override
+    public HandlerRegistration addClickHandler(ClickHandler handler) {
+        return flow.addDomHandler(handler, ClickEvent.getType());
+    }
+
+    @Override
+    public HandlerRegistration addTapHandler(TapHandler handler) {
+        // this is not a native browser event so we will have to manage it via JS
+        return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
             @Override
-            public void onValueChange(ValueChangeEvent<String> event) {
-                ValueChangeEvent.fire(JQMSlider.this, getValue());
+            public int getHandlerCountForWidget(Type<?> type) {
+                return getHandlerCount(type);
             }
-        });
+        }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
+    }
+
+    @Override
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Double> handler) {
+        // Initialization code
+        if (!valueChangeHandlerInitialized) {
+            valueChangeHandlerInitialized = true;
+            addChangeHandler(new ChangeHandler() {
+                @Override
+                public void onChange(ChangeEvent event) {
+                    if (!ignoreChange) return;
+                    ValueChangeEvent.fire(JQMSlider.this, getValue());
+                }
+            });
+        }
+        return addHandler(handler, ValueChangeEvent.getType());
     }
 
     public void disable() {
@@ -98,91 +150,107 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
 
     /**
      * Returns the text of the label
-     *
-     * @return
      */
     public String getLabelText() {
         return label.getText();
     }
 
-    /**
-     * Returns the max value of the slider
-     */
-    public int getMax() {
-        return Integer.parseInt(input.getElement().getAttribute("max"));
-    }
-
-    /**
-     * Returns the min value of the slider
-     */
-    public int getMin() {
-        return Integer.parseInt(input.getElement().getAttribute("min"));
+    @Override
+    public String getText() {
+        return getLabelText();
     }
 
     @Override
     public String getTheme() {
-        return input.getElement().getAttribute("data-theme");
+        return JQMCommon.getTheme(input);
+    }
+
+    @Override
+    public void setTheme(String themeName) {
+        JQMCommon.setTheme(input, themeName);
+    }
+
+    @Override
+    public JQMSlider withTheme(String themeName) {
+        setTheme(themeName);
+        return this;
     }
 
     public String getTrackTheme() {
-        return input.getElement().getAttribute("data-tracktheme");
+        return input.getElement().getAttribute("data-track-theme");
+    }
+
+    /**
+     * Sets the theme swatch for the slider
+     */
+    public void setTrackTheme(String theme) {
+        JQMCommon.setAttribute(input, "data-track-theme", theme);
     }
 
     /**
      * returns the current value of the slider
      */
     @Override
-    public Integer getValue() {
-        return Integer.parseInt(getValue(getId()));
+    public Double getValue() {
+        Double rslt = getUiValue();
+        if (rslt == null) return internVal;
+
+        if (internVal == null) {
+            Double min = getMin();
+            if (rslt == min || rslt != null && rslt.equals(min)) return null;
+        }
+        internVal = rslt;
+        return rslt;
+    }
+
+    /**
+     * @return - null if slider is not created/initialized/attached yet and therefore have no UI value.
+     */
+    private Double getUiValue() {
+        String v = getValue(input.getElement().getId());
+        if (v == null || v.isEmpty()) return null;
+        return Double.valueOf(v);
     }
 
     private native String getValue(String id) /*-{
-        return $wnd.$("#" + name).attr("value");
+        return $wnd.$("#" + id).val();
+    }-*/;
+
+    /**
+     * Can raise ChangeEvent, block it manually by setting ignoreChange (if needed).
+     */
+    private native void refresh(String id, String value) /*-{
+        $wnd.$("#" + id).val(value).slider("refresh");
+    }-*/;
+
+    private native void refresh(String id) /*-{
+        $wnd.$("#" + id).slider("refresh");
+    }-*/;
+
+    private native void refreshMin(String id, String min) /*-{
+        $wnd.$("#" + id).attr("min", min).slider("refresh");
+    }-*/;
+
+    private native void refreshMax(String id, String max) /*-{
+        $wnd.$("#" + id).attr("max", max).slider("refresh");
+    }-*/;
+
+    private native void refreshStep(String id, String step) /*-{
+        $wnd.$("#" + id).attr("step", step).slider("refresh");
     }-*/;
 
     public boolean isHighlight() {
-        return "true".equals(getAttribute("data-highligh"));
+        return "true".equals(JQMCommon.getAttribute(input, "data-highligh"));
+    }
+
+    public void setHighlight(boolean highlight) {
+        if (highlight) JQMCommon.setAttribute(input, "data-highlight", String.valueOf(highlight));
+        else JQMCommon.setAttribute(input, "data-highlight", null);
     }
 
     @Override
     public boolean isMini() {
-        return "true".equals(getAttribute("data-mini"));
-    }
-
-    private native void refresh(String id, int value) /*-{
-        $wnd.$("#" + name).val(value).slider("refresh");
-    }-*/;
-
-
-    public void setHighlight(boolean highlight) {
-        setAttribute("data-highlight", String.valueOf(highlight));
-    }
-
-    /**
-     * Sets the text of the label
-     *
-     * @param text is the new text to display
-     */
-    public void setLabelText(String text) {
-        label.setText(text);
-    }
-
-    /**
-     * Sets the new max range for the slider.
-     *
-     * @param max the new max range
-     */
-    public void setMax(int max) {
-        input.getElement().setAttribute("max", String.valueOf(max));
-    }
-
-    /**
-     * Sets the new min range for the slider
-     *
-     * @param min the new min range
-     */
-    public void setMin(int min) {
-        input.getElement().setAttribute("min", String.valueOf(min));
+        return JQMCommon.isMini(input);
     }
 
     /**
@@ -190,7 +258,7 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
      */
     @Override
     public void setMini(boolean mini) {
-        setAttribute("data-mini", String.valueOf(mini));
+        JQMCommon.setMini(input, mini);
     }
 
     /**
@@ -203,33 +271,155 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Integer>, H
     }
 
     /**
-     * Sets the theme swatch for the slider
+     * Sets the text of the label
+     *
+     * @param text is the new text to display
      */
-    public void setTrackTheme(String theme) {
-        input.getElement().setAttribute("data-track-theme", theme);
+    public void setLabelText(String text) {
+        label.setText(text);
+    }
+
+    @Override
+    public void setText(String text) {
+        setLabelText(text);
+    }
+
+    @Override
+    public JQMSlider withText(String text) {
+        setText(text);
+        return this;
+    }
+
+    public Double getStep() {
+        String v = input.getElement().getAttribute("step");
+        if (v == null || v.isEmpty()) return 1d;
+        return Double.valueOf(v);
+    }
+
+    public void setStep(Double value) {
+        String s = doubleToNiceStr(value);
+        JQMCommon.setAttribute(input, "step", s);
+        ignoreChange = true;
+        try {
+            refreshStep(input.getElement().getId(), s);
+        } finally {
+            ignoreChange = false;
+        }
+    }
+
+    /**
+     * Returns the max value of the slider
+     */
+    public Double getMax() {
+        String v = input.getElement().getAttribute("max");
+        if (v == null || v.isEmpty()) return null;
+        return Double.valueOf(v);
+    }
+
+    /**
+     * Returns the min value of the slider
+     */
+    public Double getMin() {
+        String v = input.getElement().getAttribute("min");
+        if (v == null || v.isEmpty()) return null;
+        return Double.valueOf(v);
+    }
+
+    /**
+     * Sets the new max range for the slider.
+     *
+     * @param max the new max range
+     */
+    public void setMax(Double max) {
+        String maxStr = doubleToNiceStr(max);
+        JQMCommon.setAttribute(input, "max", maxStr);
+        refreshMax(input.getElement().getId(), maxStr);
+        validateValue();
+    }
+
+    public void setMax(int max) {
+        setMax(new Double(max));
+    }
+
+    /**
+     * Sets the new min range for the slider
+     *
+     * @param min the new min range
+     */
+    public void setMin(Double min) {
+        String minStr = doubleToNiceStr(min);
+        JQMCommon.setAttribute(input, "min", minStr);
+        refreshMin(input.getElement().getId(), minStr);
+        validateValue();
+    }
+
+    public void setMin(int min) {
+        setMin(new Double(min));
+    }
+
+    private void validateValue() {
+        Double val = getValue();
+        if (val != null) {
+            Double min = getMin();
+            if (min != null && val.compareTo(min) < 0) {
+                setValue(min);
+                return;
+            }
+            Double max = getMax();
+            if (max != null && val.compareTo(max) > 0) {
+                setValue(max);
+                return;
+            }
+        }
+    }
+
+    private static String doubleToNiceStr(Double value) {
+        final String valStr;
+        if (value != null) {
+            double d = value.doubleValue();
+            int i = (int) d;
+            valStr = i == d ? String.valueOf(i) : String.valueOf(d);
+        } else {
+            valStr = null;
+        }
+        return valStr;
+    }
+
+    private void setInputValueAttr(Double value) {
+        JQMCommon.setAttribute(input, "value", doubleToNiceStr(value));
     }
 
     /**
      * Sets the value of the slider to the given value
      *
-     * @param value the new value of the slider, must be in the range of the
-     *              slider
+     * @param value the new value of the slider, must be in the range of the slider
      */
     @Override
-    public void setValue(Integer value) {
+    public void setValue(Double value) {
         setValue(value, false);
     }
 
+    public void setValue(int value) {
+        setValue(new Double(value));
+    }
+
     /**
      * Sets the value of the slider to the given value
      *
-     * @param value the new value of the slider, must be in the range of the
-     *              slider
+     * @param value the new value of the slider, must be in the range of the slider
      */
     @Override
-    public void setValue(Integer value, boolean ignored) {
-        getValue(input.getElement().getId());
-        input.getElement().setAttribute("value", String.valueOf(value));
-        refresh(getId(), value);
+    public void setValue(Double value, boolean fireEvents) {
+        Double old = getValue();
+        if (old == value || old != null && old.equals(value)) return;
+        internVal = value;
+        setInputValueAttr(value);
+        ignoreChange = true;
+        try {
+            refresh(input.getElement().getId(), doubleToNiceStr(value));
+        } finally {
+            ignoreChange = false;
+        }
+        if (fireEvents) ValueChangeEvent.fire(this, value);
     }
 }

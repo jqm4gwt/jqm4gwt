@@ -17,37 +17,37 @@ import com.sksamuel.jqm4gwt.JQMWidget;
  */
 public class JQMFieldContainer extends JQMWidget {
 
-	/**
-	 * The panel to delegate this composite to
-	 */
-	protected final FlowPanel flow;
+    /**
+     * The panel to delegate this composite to
+     */
+    protected final FlowPanel flow;
 
-	protected JQMFieldContainer() {
-		flow = new FlowPanel();
-		initWidget(flow);
-		setId();
-		setDataRole("fieldcontain");
-		addStyleName("jqm4gwt-fieldcontain");
-	}
+    protected JQMFieldContainer() {
+        flow = new FlowPanel();
+        initWidget(flow);
+        setId();
+        setDataRole("fieldcontain");
+        addStyleName("jqm4gwt-fieldcontain");
+    }
 
-	protected void add(Widget widget) {
-		flow.add(widget);
-	}
+    protected void add(Widget widget) {
+        flow.add(widget);
+    }
 
-	protected void remove(Widget widget) {
-		flow.remove(widget);
-	}
+    protected void remove(Widget widget) {
+        flow.remove(widget);
+    }
 
-	public boolean isLabelHidden() {
-	    return JQMCommon.isLabelHidden(this);
-	}
+    public boolean isLabelHidden() {
+        return JQMCommon.isLabelHidden(this);
+    }
 
-	/**
+    /**
      * Label/Legend/Text can be hidden for form elements.
-	 * <p><a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/forms/form-hide-label.html">
-	 * Field containers, hide label/legend</a></p>
-	 */
-	public void setLabelHidden(boolean value) {
-	    JQMCommon.setLabelHidden(this, value);
+     * <p><a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/forms/form-hide-label.html">
+     * Field containers, hide label/legend</a></p>
+     */
+    public void setLabelHidden(boolean value) {
+        JQMCommon.setLabelHidden(this, value);
     }
 }

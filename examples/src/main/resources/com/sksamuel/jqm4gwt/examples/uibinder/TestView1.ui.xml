@@ -152,14 +152,21 @@
                     <jqm:form.elements.JQMSelect.Option text="option4Text" value="option4value"/>
                 </jqm:option>
             </jqm:form.elements.JQMSelect>
-            <jqm:form.elements.JQMSlider min="5" max="8" labelText="sliderLabelText" ui:field="slider"/>
-            <jqm:button.JQMButton builtInIcon="MINUS" ui:field="disableSliderButton" text="Disable Slider"/>
-            <jqm:button.JQMButton builtInIcon="PLUS" ui:field="enableSliderButton" text="Enable Slider"/>
+            <jqm:form.elements.JQMSlider min="5" max="8" labelText="sliderLabelText" ui:field="slider" />
+              <!-- highlight="true" mini="true" theme="a" /-->
+            <g:FlowPanel>
+              <jqm:button.JQMButton builtInIcon="MINUS" ui:field="disableSliderButton" text="Disable Slider" inline="true" mini="true" />
+              <jqm:button.JQMButton builtInIcon="PLUS" ui:field="enableSliderButton" text="Enable Slider" inline="true" mini="true" />
+              <jqm:button.JQMButton ui:field="getSliderValueBtn" text="Get Slider Value" inline="true" mini="true" />
+              <jqm:button.JQMButton ui:field="setSliderNullBtn" text="Set Slider Value to null" inline="true" mini="true" />
+              <jqm:button.JQMButton ui:field="setSliderMinBtn" text="Set Slider Value to min" inline="true" mini="true" />
+              <jqm:button.JQMButton ui:field="setSliderMinTo6Btn" text="Set Slider Min to 6" inline="true" mini="true" />
+              <jqm:button.JQMButton ui:field="setSliderStepBtn" text="Set Slider Step to 0.5" inline="true" mini="true" />
+            </g:FlowPanel> 
             <jqm:form.elements.JQMTelephone text="telephoneText"/>
             <jqm:form.elements.JQMText text="textText" ui:field="text"/>
             <jqm:button.JQMButton builtInIcon="MINUS" ui:field="disableTextButton" text="Disable Text"/>
             <jqm:button.JQMButton builtInIcon="PLUS" ui:field="enableTextButton" text="Enable Text"/>
-
 
             <!-- TODO fix col/rows setter <jqm:form.elements.JQMTextArea text="textAreaText" columns="40" rows="20"/>-->
             <jqm:form.elements.JQMTextArea text="textAreaText"/>

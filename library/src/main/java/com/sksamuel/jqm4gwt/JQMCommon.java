@@ -25,6 +25,7 @@ public class JQMCommon {
     private static final String DATA_ICON = "data-icon";
     private static final String DATA_ICONPOS = "data-iconpos";
     private static final String DATA_CLEAR_BTN = "data-clear-btn";
+    private static final String DATA_MINI = "data-mini";
 
     public static boolean isVisible(Widget widget) {
         return widget != null && Mobile.isVisible(widget.getElement());
@@ -312,6 +313,23 @@ public class JQMCommon {
 
     public static void setClearButton(Widget widget, boolean value) {
         setClearButton(widget.getElement(), value);
+    }
+
+    public static boolean isMini(Element elt) {
+        return "true".equals(getAttribute(elt, DATA_MINI));
+    }
+
+    public static boolean isMini(Widget widget) {
+        return isMini(widget.getElement());
+    }
+
+    public static void setMini(Element elt, boolean mini) {
+        if (mini) setAttribute(elt, DATA_MINI, "true");
+        else removeAttribute(elt, DATA_MINI);
+    }
+
+    public static void setMini(Widget widget, boolean mini) {
+        setMini(widget.getElement(), mini);
     }
 
 }
