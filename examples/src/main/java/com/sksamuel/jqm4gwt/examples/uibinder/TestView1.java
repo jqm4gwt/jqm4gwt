@@ -20,6 +20,7 @@ import com.sksamuel.jqm4gwt.form.SubmissionHandler;
 import com.sksamuel.jqm4gwt.form.elements.JQMCheckbox;
 import com.sksamuel.jqm4gwt.form.elements.JQMFlip;
 import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
+import com.sksamuel.jqm4gwt.form.elements.JQMRangeSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
 import com.sksamuel.jqm4gwt.list.JQMList;
@@ -84,6 +85,21 @@ public class TestView1 {
 
     @UiField
     JQMButton setSliderStepBtn;
+
+    @UiField
+    JQMRangeSlider rangeSlider;
+
+    @UiField
+    JQMButton disableRangeSliderBtn;
+
+    @UiField
+    JQMButton enableRangeSliderBtn;
+
+    @UiField
+    JQMButton rangeSliderGetValuesBtn;
+
+    @UiField
+    JQMButton setRangeSliderNullBtn;
 
     @UiField
     JQMForm form;
@@ -243,6 +259,28 @@ public class TestView1 {
     @UiHandler("setSliderStepBtn")
     void setSliderStepBtnClick(ClickEvent e) {
         slider.setStep(0.5d);
+    }
+
+    @UiHandler("disableRangeSliderBtn")
+    void handleDisableRangeSliderBtnClick(ClickEvent e) {
+        rangeSlider.disable();
+    }
+
+    @UiHandler("enableRangeSliderBtn")
+    void handleEnableRangeSliderBtnClick(ClickEvent e) {
+        rangeSlider.enable();
+    }
+
+    @UiHandler("rangeSliderGetValuesBtn")
+    void rangeSliderGetValuesBtnClick(ClickEvent e) {
+        Window.alert(String.valueOf(rangeSlider.getLoValue()) + " - "
+                + String.valueOf(rangeSlider.getHiValue()));
+    }
+
+    @UiHandler("setRangeSliderNullBtn")
+    void setRangeSliderNullBtnClick(ClickEvent e) {
+        rangeSlider.setLoValue(null);
+        rangeSlider.setHiValue(null);
     }
 
     @UiHandler("busyButton")

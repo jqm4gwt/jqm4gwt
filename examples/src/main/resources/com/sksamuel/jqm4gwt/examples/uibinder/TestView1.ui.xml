@@ -152,7 +152,7 @@
                     <jqm:form.elements.JQMSelect.Option text="option4Text" value="option4value"/>
                 </jqm:option>
             </jqm:form.elements.JQMSelect>
-            <jqm:form.elements.JQMSlider min="5" max="8" labelText="sliderLabelText" ui:field="slider" />
+            <jqm:form.elements.JQMSlider min="5.0" max="8.0" labelText="sliderLabelText" ui:field="slider" />
               <!-- highlight="true" mini="true" theme="a" /-->
             <g:FlowPanel>
               <jqm:button.JQMButton builtInIcon="MINUS" ui:field="disableSliderButton" text="Disable Slider" inline="true" mini="true" />
@@ -163,6 +163,15 @@
               <jqm:button.JQMButton ui:field="setSliderMinTo6Btn" text="Set Slider Min to 6" inline="true" mini="true" />
               <jqm:button.JQMButton ui:field="setSliderStepBtn" text="Set Slider Step to 0.5" inline="true" mini="true" />
             </g:FlowPanel> 
+            <jqm:form.elements.JQMRangeSlider ui:field="rangeSlider" text="Range Slider"
+              intMin="20" intMax="80" loValue="30.0" hiValue="70.0"  
+              step="0.5" highlight="true" mini="false" theme="a" trackTheme="b" labelHidden="false" />
+            <g:FlowPanel>
+              <jqm:button.JQMButton builtInIcon="MINUS" ui:field="disableRangeSliderBtn" text="Disable Range Slider" inline="true" mini="true" />
+              <jqm:button.JQMButton builtInIcon="PLUS" ui:field="enableRangeSliderBtn" text="Enable Range Slider" inline="true" mini="true" />
+              <jqm:button.JQMButton ui:field="rangeSliderGetValuesBtn" text="Get Values" inline="true" mini="true" />
+              <jqm:button.JQMButton ui:field="setRangeSliderNullBtn" text="Set Range Slider Values to null" inline="true" mini="true" /> 
+            </g:FlowPanel>  
             <jqm:form.elements.JQMTelephone text="telephoneText"/>
             <jqm:form.elements.JQMText text="textText" ui:field="text"/>
             <jqm:button.JQMButton builtInIcon="MINUS" ui:field="disableTextButton" text="Disable Text"/>

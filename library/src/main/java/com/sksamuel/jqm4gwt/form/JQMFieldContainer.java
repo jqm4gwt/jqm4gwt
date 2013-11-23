@@ -30,6 +30,10 @@ public class JQMFieldContainer extends JQMWidget {
         addStyleName("jqm4gwt-fieldcontain");
     }
 
+    protected JQMFieldContainer(FlowPanel externFlow) {
+        flow = externFlow;
+    }
+
     protected void add(Widget widget) {
         flow.add(widget);
     }

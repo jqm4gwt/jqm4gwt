@@ -11,6 +11,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextBox;
 import com.sksamuel.jqm4gwt.HasMini;
@@ -52,6 +53,16 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
      * Create a new {@link JQMSlider} with no label and default values for the min and max
      */
     public JQMSlider() {
+        super();
+        init();
+    }
+
+    public JQMSlider(FlowPanel externFlow) {
+        super(externFlow);
+        init();
+    }
+
+    private void init() {
         String id = Document.get().createUniqueId();
         label.setFor(id);
         input.getElement().setId(id);
@@ -307,6 +318,10 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
         }
     }
 
+    public void setIntStep(int value) {
+        setStep(new Double(value));
+    }
+
     /**
      * Returns the max value of the slider
      */
@@ -337,7 +352,7 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
         validateValue();
     }
 
-    public void setMax(int max) {
+    public void setIntMax(int max) {
         setMax(new Double(max));
     }
 
@@ -353,7 +368,7 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
         validateValue();
     }
 
-    public void setMin(int min) {
+    public void setIntMin(int min) {
         setMin(new Double(min));
     }
 
