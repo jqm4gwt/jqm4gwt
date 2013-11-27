@@ -42,7 +42,6 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
      */
     private final TextBox input = new TextBox();
 
-    private boolean valueChangeHandlerInitialized;
     private boolean ignoreChange;
 
     // There is null internal state, but no such/corresponding UI state.
@@ -77,7 +76,12 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
             @Override
             public void onChange(ChangeEvent event) {
                 if (!ignoreChange) {
+                    Double old = internVal;
                     internVal = getUiValue();
+                    // in case of JQMRangeSlider this onChange() occurs for both Lo and Hi sliders,
+                    // even if only one of them was changed, so we have to check if it's really changed.
+                    boolean eq = internVal == old || internVal != null && internVal.equals(old);
+                    if (!eq) ValueChangeEvent.fire(JQMSlider.this, getValue());
                 }
             }
         });
@@ -129,17 +133,6 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Double> handler) {
-        // Initialization code
-        if (!valueChangeHandlerInitialized) {
-            valueChangeHandlerInitialized = true;
-            addChangeHandler(new ChangeHandler() {
-                @Override
-                public void onChange(ChangeEvent event) {
-                    if (!ignoreChange) return;
-                    ValueChangeEvent.fire(JQMSlider.this, getValue());
-                }
-            });
-        }
         return addHandler(handler, ValueChangeEvent.getType());
     }
 
@@ -318,8 +311,22 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
         }
     }
 
-    public void setIntStep(int value) {
+    public int getStepInt() {
+        Double v = getStep();
+        return v == null ? 0 : v.intValue();
+    }
+
+    public void setStepInt(int value) {
         setStep(new Double(value));
+    }
+
+    public double getStepDouble() {
+        Double v = getStep();
+        return v == null ? 0 : v.doubleValue();
+    }
+
+    public void setStepDouble(double value) {
+        setStep(value);
     }
 
     /**
@@ -352,8 +359,22 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
         validateValue();
     }
 
-    public void setIntMax(int max) {
+    public int getMaxInt() {
+        Double v = getMax();
+        return v == null ? 0 : v.intValue();
+    }
+
+    public void setMaxInt(int max) {
         setMax(new Double(max));
+    }
+
+    public double getMaxDouble() {
+        Double v = getMax();
+        return v == null ? 0 : v.doubleValue();
+    }
+
+    public void setMaxDouble(double max) {
+        setMax(max);
     }
 
     /**
@@ -368,8 +389,22 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
         validateValue();
     }
 
-    public void setIntMin(int min) {
+    public int getMinInt() {
+        Double v = getMin();
+        return v == null ? 0 : v.intValue();
+    }
+
+    public void setMinInt(int min) {
         setMin(new Double(min));
+    }
+
+    public double getMinDouble() {
+        Double v = getMin();
+        return v == null ? 0 : v.doubleValue();
+    }
+
+    public void setMinDouble(double min) {
+        setMin(min);
     }
 
     private void validateValue() {
@@ -414,8 +449,24 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
         setValue(value, false);
     }
 
-    public void setValue(int value) {
+    public int getValueInt() {
+        Double v = getValue();
+        return v == null ? 0 : v.intValue();
+    }
+
+    public void setValueInt(int value) {
         setValue(new Double(value));
+    }
+
+    public double getValueDouble() {
+        Double v = getValue();
+        return v == null ? 0 : v.doubleValue();
+    }
+
+    // GWT Designer has strange problem with showing properties, which are defined as Double,
+    // but works just fine with double.
+    public void setValueDouble(double value) {
+        setValue(value);
     }
 
     /**

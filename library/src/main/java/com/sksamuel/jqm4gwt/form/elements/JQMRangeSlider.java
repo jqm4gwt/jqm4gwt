@@ -1,6 +1,8 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasText;
@@ -28,11 +30,44 @@ public class JQMRangeSlider extends JQMFieldContainer implements HasText<JQMRang
         add(range);
 
         lo = new JQMSlider(range);
+        lo.addValueChangeHandler(new ValueChangeHandler<Double>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Double> event) {
+                Double loV = event.getValue();
+                Double hiV = hi.getValue();
+                if (loV == hiV || loV != null && loV.equals(hiV)) return;
+                if (loV != null && loV.compareTo(hiV) > 0) {
+                    hi.setValue(loV, true/*fireEvents*/);
+                    lo.setValue(loV, true/*fireEvents*/); // could be set successfully after hi update only
+                }
+            }
+        });
+
         hi = new JQMSlider(range);
+        hi.addValueChangeHandler(new ValueChangeHandler<Double>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Double> event) {
+                Double loV = lo.getValue();
+                Double hiV = event.getValue();
+                if (hiV == loV || hiV != null && hiV.equals(loV)) return;
+                if (hiV != null && hiV.compareTo(loV) < 0) {
+                    lo.setValue(hiV, true/*fireEvents*/);
+                    hi.setValue(hiV, true/*fireEvents*/); // could be set successfully after lo update only
+                }
+            }
+        });
+    }
+
+    public JQMSlider lo() {
+        return lo;
     }
 
     public JQMSlider getLo() {
         return lo;
+    }
+
+    public JQMSlider hi() {
+        return hi;
     }
 
     public JQMSlider getHi() {
@@ -127,12 +162,46 @@ public class JQMRangeSlider extends JQMFieldContainer implements HasText<JQMRang
         lo.setValue(value);
     }
 
+    public double getLoValueDouble() {
+        return lo.getValueDouble();
+    }
+
+    // GWT Designer has strange problem with showing properties, which are defined as Double,
+    // but works just fine with double.
+    public void setLoValueDouble(double value) {
+        lo.setValueDouble(value);
+    }
+
+    public int getLoValueInt() {
+        return lo.getValueInt();
+    }
+
+    public void setLoValueInt(int value) {
+        lo.setValueInt(value);
+    }
+
     public Double getHiValue() {
         return hi.getValue();
     }
 
     public void setHiValue(Double value) {
         hi.setValue(value);
+    }
+
+    public double getHiValueDouble() {
+        return hi.getValueDouble();
+    }
+
+    public void setHiValueDouble(double value) {
+        hi.setValueDouble(value);
+    }
+
+    public int getHiValueInt() {
+        return hi.getValueInt();
+    }
+
+    public void setHiValueInt(int value) {
+        hi.setValueInt(value);
     }
 
     public Double getStep() {
@@ -144,8 +213,22 @@ public class JQMRangeSlider extends JQMFieldContainer implements HasText<JQMRang
         hi.setStep(value);
     }
 
-    public void setIntStep(int value) {
-        setStep(new Double(value));
+    public int getStepInt() {
+        return lo.getStepInt();
+    }
+
+    public void setStepInt(int value) {
+        lo.setStepInt(value);
+        hi.setStepInt(value);
+    }
+
+    public double getStepDouble() {
+        return lo.getStepDouble();
+    }
+
+    public void setStepDouble(double value) {
+        lo.setStepDouble(value);
+        hi.setStepDouble(value);
     }
 
     public Double getMin() {
@@ -157,8 +240,22 @@ public class JQMRangeSlider extends JQMFieldContainer implements HasText<JQMRang
         hi.setMin(min);
     }
 
-    public void setIntMin(int min) {
-        setMin(new Double(min));
+    public int getMinInt() {
+        return lo.getMinInt();
+    }
+
+    public void setMinInt(int min) {
+        lo.setMinInt(min);
+        hi.setMinInt(min);
+    }
+
+    public double getMinDouble() {
+        return lo.getMinDouble();
+    }
+
+    public void setMinDouble(double min) {
+        lo.setMinDouble(min);
+        hi.setMinDouble(min);
     }
 
     public Double getMax() {
@@ -170,7 +267,21 @@ public class JQMRangeSlider extends JQMFieldContainer implements HasText<JQMRang
         hi.setMax(max);
     }
 
-    public void setIntMax(int max) {
-        setMax(new Double(max));
+    public int getMaxInt() {
+        return lo.getMaxInt();
+    }
+
+    public void setMaxInt(int max) {
+        lo.setMaxInt(max);
+        hi.setMaxInt(max);
+    }
+
+    public double getMaxDouble() {
+        return lo.getMaxDouble();
+    }
+
+    public void setMaxDouble(double max) {
+        lo.setMaxDouble(max);
+        hi.setMaxDouble(max);
     }
 }
