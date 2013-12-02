@@ -41,7 +41,7 @@ Read the [quick start guide](https://github.com/sksamuel/jqm4gwt/wiki/Getting-St
 Getting It
 ========
 
-Latest Release: 1.2.1 Released 22-Dec-2012
+Latest Release: 1.3.3 Released 02-Dec-2013
  * [GWT Module] (http://artifacts.accelerantmobile.com:8081/nexus/service/local/artifact/maven/redirect?r=central&g=com.sksamuel.jqm4gwt&a=jqm4gwt&v=1.2.1&e=jar)
  * [Sources] (http://artifacts.accelerantmobile.com:8081/nexus/service/local/artifact/maven/redirect?r=central&g=com.sksamuel.jqm4gwt&a=jqm4gwt&v=1.2.1&e=jar&c=sources)
 
@@ -50,10 +50,10 @@ Dependencies are available from maven central:
   	<dependency>
 			<groupId>com.sksamuel.jqm4gwt</groupId>
 			<artifactId>jqm4gwt</artifactId>
-			<version>1.2.1</version>
+			<version>1.3.3</version>
   	</dependency>
 
-Latest Stable Build 1.2.2-SNAPSHOT (not in a repo):
+Latest Development Build 1.4.0-SNAPSHOT (not in a repo):
  * [Library](http://ci.accelerantmobile.com:8080/job/jqm4gwt_sksamuel/lastStableBuild/com.sksamuel.jqm4gwt$jqm4gwt/)
  * [Standalone](http://ci.accelerantmobile.com:8080/job/jqm4gwt_sksamuel/lastStableBuild/com.sksamuel.jqm4gwt$jqm4gwt-standalone/)
 
