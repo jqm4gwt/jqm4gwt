@@ -47,7 +47,10 @@ public class JQMColumnToggle extends CustomFlowPanel {
     private static final String REFLOW = "reflow";
 
     // See http://stackoverflow.com/a/2709855
+    @SuppressWarnings("unused")
     private static final String COMMA_SPLIT = "(?<!\\\\),";
+
+    @SuppressWarnings("unused")
     private static final String BACKSLASH_COMMA = "\\\\,";
 
     private final ComplexPanel tHead;
@@ -115,6 +118,54 @@ public class JQMColumnToggle extends CustomFlowPanel {
         return colNames;
     }
 
+    private static String[] commaSplit(String s) {
+        if (s == null) return null;
+        //return s.split(COMMA_SPLIT); - NOT WORKING when compiled to JS
+
+        if (s.isEmpty()) return new String[] { s };
+        List<String> rslt = null;
+        int start = 0;
+        int p = start;
+        do {
+            int j = s.indexOf(',', p);
+            if (j == -1) {
+                if (rslt == null) return new String[] { s };
+                rslt.add(s.substring(start));
+                break;
+            }
+            if (j > 0 && s.charAt(j - 1) == '\\') {
+                p = j + 1;
+                continue;
+            } else {
+                if (rslt == null) rslt = new ArrayList<String>();
+                rslt.add(s.substring(start, j));
+                start = j + 1;
+                p = start;
+            }
+
+        } while (true);
+
+        return rslt != null ? rslt.toArray(new String[0]) : null;
+    }
+
+    private static String replaceAllBackslashCommas(String s) {
+        if (s == null) return null;
+        //return s.replaceAll(BACKSLASH_COMMA, ","); - NOT WORKING when compiled to JS
+
+        if (s.isEmpty()) return s;
+        StringBuilder sb = new StringBuilder(s);
+        int i = sb.length() - 1;
+        while (i >= 1) {
+            if (sb.charAt(i) == ',' && sb.charAt(i - 1) == '\\') {
+                sb.deleteCharAt(i - 1);
+                i = i - 2;
+            } else {
+                i--;
+            }
+        }
+        return sb.toString();
+    }
+
     /**
      * @param colNames - comma separated column names with optional priority (1 = highest, 6 = lowest).
      * If you need comma in name use \, to preserve it.
@@ -132,10 +183,10 @@ public class JQMColumnToggle extends CustomFlowPanel {
             setColumns(null);
             return;
         }
-        String[] arr = this.colNames.split(COMMA_SPLIT);
+        String[] arr = commaSplit(this.colNames);
         Set<ColumnDef> cols = new LinkedHashSet<ColumnDef>();
         for (int i = 0; i < arr.length; i++) {
-            String s = arr[i].trim().replaceAll(BACKSLASH_COMMA, ",");
+            String s = replaceAllBackslashCommas(arr[i].trim());
             cols.add(parseColumnDef(s, false/*colspanExpected*/));
         }
         setColumns(cols);
@@ -183,10 +234,10 @@ public class JQMColumnToggle extends CustomFlowPanel {
             setHeadGroups(null);
             return;
         }
-        String[] arr = this.colGroups.split(COMMA_SPLIT);
+        String[] arr = commaSplit(this.colGroups);
         Set<ColumnDef> groups = new LinkedHashSet<ColumnDef>();
         for (int i = 0; i < arr.length; i++) {
-            String s = arr[i].trim().replaceAll(BACKSLASH_COMMA, ",");
+            String s = replaceAllBackslashCommas(arr[i].trim());
             groups.add(parseColumnDef(s, true/*colspanExpected*/));
         }
         setHeadGroups(groups);
@@ -214,10 +265,10 @@ public class JQMColumnToggle extends CustomFlowPanel {
             setDataStr(null);
             return;
         }
-        String[] arr = this.cells.split(COMMA_SPLIT);
+        String[] arr = commaSplit(this.cells);
         List<String> lst = new ArrayList<String>(arr.length);
         for (int i = 0; i < arr.length; i++) {
-            String s = arr[i].trim().replaceAll(BACKSLASH_COMMA, ",");
+            String s = replaceAllBackslashCommas(arr[i].trim());
             lst.add(s);
         }
         setDataStr(lst);
