@@ -153,8 +153,12 @@ public class JQMColumnToggle extends CustomFlowPanel {
         //return s.replaceAll(BACKSLASH_COMMA, ","); - NOT WORKING when compiled to JS
 
         if (s.isEmpty()) return s;
+        int p = s.lastIndexOf("\\,");
+        if (p == -1) return s;
+
         StringBuilder sb = new StringBuilder(s);
-        int i = sb.length() - 1;
+        sb.deleteCharAt(p);
+        int i = p - 1;
         while (i >= 1) {
             if (sb.charAt(i) == ',' && sb.charAt(i - 1) == '\\') {
                 sb.deleteCharAt(i - 1);
