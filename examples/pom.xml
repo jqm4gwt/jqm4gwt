@@ -26,8 +26,7 @@
 
         <!-- Specify AppEngine version for your project. It should match SDK version
             pointed to by ${gae.home} property (Typically, one used by your Eclipse plug-in) -->
-        <gae.home>${settings.localRepository}/com/google/appengine/appengine-java-sdk/${gae.version}/appengine-java-sdk-${gae.version}
-        </gae.home>
+        <gae.home>/home/sam/development/appengine-java-sdk-1.8.8</gae.home>
         <!--<gae.version>1.6.5</gae.version>-->
         <gae.version>1.7.5</gae.version>
         <gae-runtime.version>1.7.5.1</gae-runtime.version>
@@ -37,7 +36,7 @@
         <!-- port defaults to 8080 -->
         <gae.port>8080</gae.port>
         <!-- The server entry name in settings.xml containing credentials to upload to AppEngine -->
-        <gae.server.id></gae.server.id>
+        <gae.server.id>jqm4gwt-appspot</gae.server.id>
         <webapp.directory>${project.build.directory}/${project.artifactId}-${project.version}</webapp.directory>
     </properties>
 
