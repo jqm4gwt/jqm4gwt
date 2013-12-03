@@ -16,14 +16,14 @@ For more information, see the [Frequently Asked Questions] (https://github.com/s
 
 Please contribute with pull requests! See the [Contributors Guidelines] (https://github.com/sksamuel/jqm4gwt/wiki/Contributors-Guidelines) to assure the health of the project.
 
+[![Build Status](https://travis-ci.org/sksamuel/jqm4gwt.png)](https://travis-ci.org/sksamuel/jqm4gwt)
+
 Examples
 ========
 
 Examples and demos are hosted on a google app engine instance here: http://jqm4gwt.appspot.com/examples.html.
 
 These include the typical hello world and a show case of JQuery Mobile widgets and events.
-
-[![Build Status](https://travis-ci.org/sksamuel/jqm4gwt.png)](https://travis-ci.org/sksamuel/jqm4gwt)
 
 What's Supported
 ========
@@ -41,7 +41,7 @@ Read the [quick start guide](https://github.com/sksamuel/jqm4gwt/wiki/Getting-St
 Getting It
 ========
 
-Latest Release: 1.3.3 Released 02-Dec-2013
+Latest Release: 1.3.4 Released 02-Dec-2013
  * [GWT Module] (http://artifacts.accelerantmobile.com:8081/nexus/service/local/artifact/maven/redirect?r=central&g=com.sksamuel.jqm4gwt&a=jqm4gwt&v=1.2.1&e=jar)
  * [Sources] (http://artifacts.accelerantmobile.com:8081/nexus/service/local/artifact/maven/redirect?r=central&g=com.sksamuel.jqm4gwt&a=jqm4gwt&v=1.2.1&e=jar&c=sources)
 
@@ -50,7 +50,7 @@ Dependencies are available from maven central:
   	<dependency>
 			<groupId>com.sksamuel.jqm4gwt</groupId>
 			<artifactId>jqm4gwt</artifactId>
-			<version>1.3.3</version>
+			<version>1.3.4</version>
   	</dependency>
 
 Latest Development Build 1.4.0-SNAPSHOT (not in a repo):
@@ -72,3 +72,24 @@ Related Projects
 
 If you are looking for a GWT wrapper for the desktop [jQuery UI](http://jqueryui.com) then [gwtquery-ui](http://code.google.com/p/gwtquery-ui/) is where to look.
 For a GWT wrapper of JQuery then [gwtquery](http://code.google.com/p/gwtquery) is where to go.
+
+
+## License
+```
+This software is licensed under the Apache 2 license, quoted below.
+
+Copyright 2013 Stephen Samuel
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations under
+the License.
+```
+
