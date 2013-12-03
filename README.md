@@ -53,12 +53,6 @@ Dependencies are available from maven central:
 			<version>1.3.4</version>
   	</dependency>
 
-Latest Development Build 1.4.0-SNAPSHOT (not in a repo):
- * [Library](http://ci.accelerantmobile.com:8080/job/jqm4gwt_sksamuel/lastStableBuild/com.sksamuel.jqm4gwt$jqm4gwt/)
- * [Standalone](http://ci.accelerantmobile.com:8080/job/jqm4gwt_sksamuel/lastStableBuild/com.sksamuel.jqm4gwt$jqm4gwt-standalone/)
-
-[Current Build Status](http://ci.accelerantmobile.com:8080/job/jqm4gwt_sksamuel/)
-
 Spread the word and join the conversation!
 ================
 
