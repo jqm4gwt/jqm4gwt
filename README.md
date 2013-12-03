@@ -42,8 +42,8 @@ Getting It
 ========
 
 Latest Release: 1.3.4 Released 02-Dec-2013
- * [GWT Module] (http://artifacts.accelerantmobile.com:8081/nexus/service/local/artifact/maven/redirect?r=central&g=com.sksamuel.jqm4gwt&a=jqm4gwt&v=1.2.1&e=jar)
- * [Sources] (http://artifacts.accelerantmobile.com:8081/nexus/service/local/artifact/maven/redirect?r=central&g=com.sksamuel.jqm4gwt&a=jqm4gwt&v=1.2.1&e=jar&c=sources)
+ * [GWT Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.4/jqm4gwt-remote-1.3.4.jar)
+ * [Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.4/jqm4gwt-remote-1.3.4-sources.jar)
 
 Dependencies are available from maven central:
 
