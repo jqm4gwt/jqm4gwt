@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.sksamuel.jqm4gwt</groupId>
         <artifactId>jqm4gwt</artifactId>
-        <version>1.3.2</version>
+        <version>1.3.4</version>
     </parent>
 
     <artifactId>jqm4gwt-examples</artifactId>
