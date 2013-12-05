@@ -1,15 +1,19 @@
 package com.sksamuel.jqm4gwt.panel;
 
 import com.google.gwt.dom.client.Element;
+import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasOrientation;
+import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.Orientation;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 11 Jul 2011 22:09:41
  *         <p/>
  *         An implementation of {@link JQMPanel} for control groups.
  */
-public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMControlGroup>, HasMini<JQMControlGroup> {
+public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMControlGroup>,
+        HasMini<JQMControlGroup>, HasCorners<JQMControlGroup> {
 
     protected JQMControlGroup(Element element, String styleName) {
         super(element, "controlgroup", styleName);
@@ -67,5 +71,29 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
     public JQMControlGroup withVertical() {
         setVertical();
       	return this;
+    }
+
+    public void setOrientation(Orientation value) {
+        HasOrientation.Support.setOrientation(this, value);
+    }
+
+    public Orientation getOrientation() {
+        return HasOrientation.Support.getOrientation(this);
+    }
+
+    @Override
+    public boolean isCorners() {
+        return JQMCommon.isCorners(this);
+    }
+
+    @Override
+    public void setCorners(boolean corners) {
+        JQMCommon.setCorners(this, corners);
+    }
+
+    @Override
+    public JQMControlGroup withCorners(boolean corners) {
+        setCorners(corners);
+        return this;
     }
 }

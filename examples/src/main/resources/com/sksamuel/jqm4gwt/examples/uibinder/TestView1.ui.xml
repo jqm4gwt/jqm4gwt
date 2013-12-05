@@ -68,6 +68,13 @@
                 <jqm:button.JQMButton theme="d" text="Button theme 'd' of group"/>
                 <jqm:button.JQMButton theme="e" text="Button theme 'e' of group"/>
             </jqm:button.JQMButtonGroup>
+            <jqm:button.JQMButtonGroup orientation="HORIZONTAL" mini="true" corners="false">
+                <jqm:button.JQMButton theme="a" text="A"/>
+                <jqm:button.JQMButton theme="b" text="B"/>
+                <jqm:button.JQMButton theme="c" text="C"/>
+                <jqm:button.JQMButton theme="d" text="D"/>
+                <jqm:button.JQMButton theme="e" text="E"/>
+            </jqm:button.JQMButtonGroup>
             <jqm:form.elements.JQMCheckbox ui:field="cb1" name="cb1" text="Checkbox"/>
             <jqm:form.elements.JQMCheckbox ui:field="cb2" name="cb2" text="Mini-Checkbox" mini="true" value="true"/>
             <jqm:form.elements.JQMCheckbox ui:field="cb3" name="cb3" text="Themed Checkbox" theme="a"/>

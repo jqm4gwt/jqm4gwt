@@ -169,7 +169,7 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 			}
         }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
 	}
-	
+
 	@Override
 	public Label addErrorLabel() {
 		return null;
@@ -318,15 +318,11 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
    	}
 
     public void setOrientation(Orientation value) {
-        switch (value) {
-            case HORIZONTAL:
-                setHorizontal();
-                break;
+        HasOrientation.Support.setOrientation(this, value);
+    }
 
-            case VERTICAL:
-                setVertical();
-                break;
-        }
+    public Orientation getOrientation() {
+        return HasOrientation.Support.getOrientation(this);
     }
 
     public IconPos getIconPos() {

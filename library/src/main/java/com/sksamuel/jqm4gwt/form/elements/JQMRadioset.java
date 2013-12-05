@@ -473,15 +473,11 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
     }
 
     public void setOrientation(Orientation value) {
-        switch (value) {
-            case HORIZONTAL:
-                setHorizontal();
-                break;
+        HasOrientation.Support.setOrientation(this, value);
+    }
 
-            case VERTICAL:
-                setVertical();
-                break;
-        }
+    public Orientation getOrientation() {
+        return HasOrientation.Support.getOrientation(this);
     }
 
     public IconPos getIconPos() {
