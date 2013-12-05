@@ -4,6 +4,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMWidget;
 
 /**
@@ -135,40 +136,42 @@ public class JQMPanel extends JQMWidget {
 
 	@Override
 	protected void onLoad() {
-		bindLifecycleEvents(this, getId());
+		Widget parent = getParent();
+		if(parent instanceof JQMPage) bindLifecycleEvents(this, ((JQMPage)parent).getId());
 	}
 	
 	@Override
 	protected void onUnload() {
-		unbindLifecycleEvents(getId());
+		Widget parent = getParent();
+		if(parent instanceof JQMPage) unbindLifecycleEvents(((JQMPage)parent).getId());
 	}
 
-    private native void bindLifecycleEvents(JQMPanel p, String id) /*-{
-	$wnd.$('#' + id).bind("panelbeforeclose",
+    private native void bindLifecycleEvents(JQMPanel p, String id) /*-{ 
+	$wnd.$('div[data-url="' + id + '"]').bind("panelbeforeclose",
 	function(event, ui) {
 	p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::onPanelBeforeClose()();
 	});
 	
-	$wnd.$('#' + id).bind("panelbeforeopen",
+	$wnd.$('div[data-url="' + id + '"]').bind("panelbeforeopen",
 	function(event, ui) {
 	p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::onPanelBeforeOpen()();
 	});
 	
-	$wnd.$('#' + id).bind("panelclose",
+	$wnd.$('div[data-url="' + id + '"]').bind("panelclose",
 	function(event, ui) {
 	p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::onPanelClose()();
 	});
 	
-	$wnd.$('#' + id).bind("panelcreate",
+	$wnd.$('div[data-url="' + id + '"]').bind("panelcreate",
 	function(event, ui) {
 	p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::onPanelCreate()();
 	});
 	
-	$wnd.$('#' + id).bind("panelopen",
+	$wnd.$('div[data-url="' + id + '"]').on("panelopen",
 	function(event, ui) {
 	p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::onPanelOpen()();
 	});	
-	
+
 	}-*/;
 
     private native void unbindLifecycleEvents(String id) /*-{
