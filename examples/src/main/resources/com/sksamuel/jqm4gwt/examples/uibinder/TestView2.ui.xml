@@ -4,6 +4,15 @@
   xmlns:ui='urn:ui:com.google.gwt.uibinder'
   xmlns:jqm='urn:import:com.sksamuel.jqm4gwt' 
   xmlns:e="urn:import:com.sksamuel.jqm4gwt.form.elements">
+  
+  <ui:style>
+    @external .jqm4gwt-page, .ui-content;
+		.jqm4gwt-page[data-url=testPage2] .ui-content[role=main] {
+		  border-width: 1px;
+		  border-style: solid;
+		  border-color: red;
+		}
+  </ui:style>
 
     <jqm:JQMPage ui:field="testPage2" containerId="testPage2"  backButton="true" contentCentered="true"
       contentAddStyleNames="aaa bbb ccc">
@@ -12,6 +21,8 @@
             <jqm:button.JQMButton text="Go To Test Page 1" href="#testPage1" transition="NONE" iconPos="RIGHT" builtInIcon="RIGHT"/>
             <e:JQMCheckbox ui:field="cbContentCentered" name="cbContentCentered" 
               text="Is Content Centered" value="true"/>
+            <e:JQMCheckbox ui:field="cbContentHeight" name="cbContentHeight" 
+              text="Content Height to 75%" value="false"/>  
         </jqm:form.JQMForm>
         <jqm:toolbar.JQMFooter fixed="true">
             <jqm:widget>

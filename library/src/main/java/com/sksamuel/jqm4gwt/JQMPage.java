@@ -45,6 +45,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     private boolean contentCentered;
     private boolean windowResizeInitialized;
 
+    private double contentHeightPercent;
+
     /**
      * Create a new {@link JQMPage}. Using this constructor, the page will not be rendered until a containerID has been
      * assigned.
@@ -123,7 +125,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 	/**
 	 * Logical add operation. If you do this you are responsible for adding it
 	 * to the DOM yourself.
-	 * 
+	 *
 	 * @param child
 	 *            the child widget to be added
 	 */
@@ -141,7 +143,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 	/**
 	 * Logical remove operation. If you do this you are responsible for removing it
 	 * from the DOM yourself.
-	 * 
+	 *
 	 * @param w
 	 *            the child widget to be removed
 	 */
@@ -159,7 +161,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 		}
 		return true;
 	}
-    
+
     /**
      * Sets the header of the page. Alias for setHeader(). Any existing header
      * will be replaced.
@@ -351,13 +353,15 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     protected void doPageShow() {
         onPageShow();
         JQMPageEvent.fire(this, PageState.SHOW);
-        if (contentCentered) {
+        if (contentCentered || contentHeightPercent > 0) {
+            recalcContentHeightPercent();
             centerContent();
             if (!windowResizeInitialized) {
                 windowResizeInitialized = true;
                 Window.addResizeHandler(new ResizeHandler() {
                     @Override
                     public void onResize(ResizeEvent event) {
+                        recalcContentHeightPercent();
                         if (contentCentered) centerContent();
                     }
                 });
@@ -481,9 +485,9 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     public void setHeader(JQMHeader header) {
         removeHeader();
         this.header = header;
-        
+
         addLogical(header);
-        
+
         if(panel == null)
         {
         	getElement().insertBefore(header.getElement(), getElement().getFirstChild());
@@ -561,6 +565,19 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         }
     }
 
+    public double getContentHeightPercent() {
+        return contentHeightPercent;
+    }
+
+    public void setContentHeightPercent(double contentHeightPercent) {
+        double oldVal = this.contentHeightPercent;
+        this.contentHeightPercent = contentHeightPercent;
+        if (oldVal != this.contentHeightPercent && content != null && content.isAttached()) {
+            recalcContentHeightPercent();
+            if (this.contentCentered) centerContent();
+        }
+    }
+
     /**
      * Forcefully centers (just once) page content (needed when content size is changed, because
      * there is no good way to get resize notification for DOM elements).
@@ -576,6 +593,24 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         int marginTop = (windowH - headerH - footerH - contentH) / 2;
         if (marginTop < 0) marginTop = 0;
         content.getElement().getStyle().setProperty("marginTop", String.valueOf(marginTop) + "px");
+    }
+
+    /**
+     * Forcefully recalculates (if defined, and just once) page content height
+     * (needed when content area size is changed, because there is no good way to get resize
+     * notification for DOM elements).
+     */
+    public void recalcContentHeightPercent() {
+        if (contentHeightPercent > 0) {
+            int headerH = header == null ? 0 : header.getOffsetHeight();
+            int footerH = footer == null ? 0 : footer.getOffsetHeight();
+            int windowH = Window.getClientHeight();
+            double h = (windowH - headerH - footerH) * 0.01d * contentHeightPercent;
+            h = Math.floor(h);
+            content.getElement().getStyle().setProperty("minHeight", String.valueOf(Math.round(h)) + "px");
+        } else {
+            content.getElement().getStyle().clearProperty("minHeight");
+        }
     }
 
     /**

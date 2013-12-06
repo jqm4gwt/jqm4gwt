@@ -32,6 +32,9 @@ public class TestView2 {
     @UiField
     JQMCheckbox cbContentCentered;
 
+    @UiField
+    JQMCheckbox cbContentHeight;
+
     {
         form.setSubmissionHandler(new SubmissionHandler<JQMForm>() {
             @Override
@@ -43,6 +46,12 @@ public class TestView2 {
             @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {
                 testPage2.setContentCentered(event.getValue());
+            }
+        });
+        cbContentHeight.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                testPage2.setContentHeightPercent(event.getValue() ? 75d : 0d);
             }
         });
     }
