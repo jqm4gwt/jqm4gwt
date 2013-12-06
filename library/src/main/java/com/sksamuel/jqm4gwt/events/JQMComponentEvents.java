@@ -13,5 +13,6 @@ public interface JQMComponentEvents {
 	// of doing it like GWT does with one interface for each event type depending on component (JQM documentation doesn't say for which component type each one is meant anyway)
 	final String TAP_EVENT = "tap";
 	final String TAP_HOLD_EVENT = "taphold";
-
+	final String VCLICK = "vclick";
+	
 }
