@@ -109,10 +109,13 @@ public class JQMHandlerRegistration<X extends EventHandler> implements
 			// TODO do this nicer somehow - and if possible make this class
 			// "JQueryHandlerRegistration" - so make it work for all jQuery
 			// events
-			if (JQMComponentEvents.TAP_EVENT.equals(jqmEventName))
+			if (JQMComponentEvents.TAP_EVENT.equals(jqmEventName)){
 				TapEvent.fire((HasTapHandlers) listener, jQueryEvent);
-			if (JQMComponentEvents.TAP_HOLD_EVENT.equals(jqmEventName))
+			}else if (JQMComponentEvents.TAP_HOLD_EVENT.equals(jqmEventName)){
 				TapHoldEvent.fire((HasTapHoldHandlers) listener, jQueryEvent);
+			}else {				
+				JQMEvent.fire((HasJQMEventHandlers) listener, jQueryEvent);
+			}
 		}
 	}
 
