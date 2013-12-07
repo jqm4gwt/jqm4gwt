@@ -2,6 +2,8 @@ package com.sksamuel.jqm4gwt.events;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.DomEvent;
+import com.sksamuel.jqm4gwt.events.JQueryBaseEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
 
 /**
  * Represents a JQM tap event.

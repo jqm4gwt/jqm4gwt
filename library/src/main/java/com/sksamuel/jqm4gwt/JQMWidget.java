@@ -1,9 +1,16 @@
 package com.sksamuel.jqm4gwt;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.events.HasJQMEventHandlers;
+import com.sksamuel.jqm4gwt.events.JQMEvent;
+import com.sksamuel.jqm4gwt.events.JQMEventHandler;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 11 Jul 2011 17:02:40
@@ -22,7 +29,7 @@ import com.google.gwt.user.client.ui.Widget;
  *         compose and thus call initWidget() themselves.
  */
 public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>, HasId<JQMWidget>,
-        HasDataRole, HasEnabled {
+        HasDataRole, HasEnabled ,HasJQMEventHandlers{
 
     /**
      * Returns the value of the attribute with the given name
@@ -127,5 +134,16 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
     public boolean isVisible() {
         return super.isVisible() && JQMCommon.isVisible(this);
     }
+    
+	@Override
+	public HandlerRegistration addJQMEventHandler(String eventName ,JQMEventHandler handler){
+		
+	       return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
+				@Override
+				public int getHandlerCountForWidget(Type<?> type) {
+					return getHandlerCount(type);
+				}
+	        }, this, handler, eventName, JQMEvent.getType());
+	}
 
 }
