@@ -96,4 +96,18 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
         setCorners(corners);
         return this;
     }
+
+    protected native void refresh(String id) /*-{
+        $wnd.$("#" + id).controlgroup("refresh");
+    }-*/;
+
+    /**
+     * After dynamic changes to widgets, can be called in conjunction with JQMContext.render().
+     * <p/> Example:
+     * <p/> JQMContext.render(grp.getElement().getId());
+     * <p/> grp.refresh();
+     */
+    public void refresh() {
+        refresh(getElement().getId());
+    }
 }
