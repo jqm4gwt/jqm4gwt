@@ -17,6 +17,10 @@ public class JQMCommon {
 
     private static final String STYLE_UI_DISABLED = "ui-disabled";
     private static final String STYLE_UI_HIDE_LABEL = "ui-hide-label";
+    private static final String STYLE_UI_BTN_ACTIVE = "ui-btn-active";
+
+    private static final String STYLE_UI_ICON_NODISC = "ui-icon-nodisc";
+    private static final String STYLE_UI_ICON_ALT = "ui-icon-alt";
 
     private static final String DATA_ROLE = "data-role";
     private static final String DATA_THEME = "data-theme";
@@ -24,6 +28,7 @@ public class JQMCommon {
     private static final String DATA_CORNERS = "data-corners";
     private static final String DATA_ICON = "data-icon";
     private static final String DATA_ICONPOS = "data-iconpos";
+    private static final String DATA_ICONSHADOW = "data-iconshadow";
     private static final String DATA_CLEAR_BTN = "data-clear-btn";
     private static final String DATA_MINI = "data-mini";
 
@@ -168,6 +173,39 @@ public class JQMCommon {
         }
     }
 
+    public static boolean isIconAlt(Widget widget) {
+        return hasStyle(widget, STYLE_UI_ICON_ALT);
+    }
+
+    public static void setIconAlt(Widget widget, boolean value) {
+        if (isIconAlt(widget) != value) {
+            if (value) widget.addStyleName(STYLE_UI_ICON_ALT);
+            else widget.removeStyleName(STYLE_UI_ICON_ALT);
+        }
+    }
+
+    public static boolean isIconNoDisc(Widget widget) {
+        return hasStyle(widget, STYLE_UI_ICON_NODISC);
+    }
+
+    public static void setIconNoDisc(Widget widget, boolean value) {
+        if (isIconNoDisc(widget) != value) {
+            if (value) widget.addStyleName(STYLE_UI_ICON_NODISC);
+            else widget.removeStyleName(STYLE_UI_ICON_NODISC);
+        }
+    }
+
+    public static boolean isBtnActive(Widget widget) {
+        return hasStyle(widget, STYLE_UI_BTN_ACTIVE);
+    }
+
+    public static void setBtnActive(Widget widget, boolean value) {
+        if (isBtnActive(widget) != value) {
+            if (value) widget.addStyleName(STYLE_UI_BTN_ACTIVE);
+            else widget.removeStyleName(STYLE_UI_BTN_ACTIVE);
+        }
+    }
+
     public static String getAttribute(Element elt, String name) {
         return elt.getAttribute(name);
     }
@@ -296,6 +334,22 @@ public class JQMCommon {
 
     public static void setIconPos(Widget widget, IconPos iconPos) {
         setIconPos(widget.getElement(), iconPos);
+    }
+
+    public static boolean isIconShadow(Element elt) {
+        return !"false".equals(getAttribute(elt, DATA_ICONSHADOW));
+    }
+
+    public static boolean isIconShadow(Widget widget) {
+        return isIconShadow(widget.getElement());
+    }
+
+    public static void setIconShadow(Element elt, boolean value) {
+        setAttribute(elt, DATA_ICONSHADOW, value ? null : "false");
+    }
+
+    public static void setIconShadow(Widget widget, boolean value) {
+        setIconShadow(widget.getElement(), value);
     }
 
     public static boolean isClearButton(Element elt) {

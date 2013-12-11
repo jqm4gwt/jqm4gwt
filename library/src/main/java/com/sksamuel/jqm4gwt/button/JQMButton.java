@@ -1,5 +1,6 @@
 package com.sksamuel.jqm4gwt.button;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -19,6 +20,7 @@ import com.sksamuel.jqm4gwt.HasRel;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.HasTransition;
 import com.sksamuel.jqm4gwt.IconPos;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContainer;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMWidget;
@@ -32,13 +34,17 @@ import com.sksamuel.jqm4gwt.events.TapHandler;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 14:02:24
- *         <p/>
- *         An implementation of a Jquery mobile button
- * @link http://jquerymobile.com/demos/1.2.0/docs/buttons/buttons-types.html
+ * <p/>
+ * An implementation of a Jquery mobile button.
+ * <p/>See <a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/buttons/">Buttons</a>
+ * <p/>See also <a href="http://jquerymobile.com/demos/1.2.1/docs/buttons/buttons-types.html">Button basics</a>
  */
 public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<JQMButton>,
         HasTransition<JQMButton>, HasClickHandlers, HasInline<JQMButton>,
-        HasIcon<JQMButton>, HasCorners<JQMButton>, HasIconShadow<JQMButton>, HasMini<JQMButton>, HasTapHandlers {
+        HasIcon<JQMButton>, HasCorners<JQMButton>, HasIconShadow<JQMButton>, HasMini<JQMButton>,
+        HasTapHandlers {
+
+    private boolean alwaysActive;
 
     /**
      * Create a {@link JQMButton} with the given text that does not link to
@@ -140,11 +146,10 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 			}
         }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
 	}
-	
+
 	@Override
     public IconPos getIconPos() {
-        String string = getAttribute("data-iconpos");
-        return string == null ? null : IconPos.valueOf(string);
+        return JQMCommon.getIconPos(this);
     }
 
     @Override
@@ -171,7 +176,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     @Override
     public boolean isCorners() {
-        return "true".equals(getAttribute("data-corners"));
+        return JQMCommon.isCorners(this);
     }
 
     /**
@@ -186,7 +191,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     @Override
     public boolean isIconShadow() {
-        return "true".equals(getAttribute("data-iconshadow"));
+        return JQMCommon.isIconShadow(this);
     }
 
     /**
@@ -194,12 +199,12 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
      */
     @Override
     public boolean isInline() {
-        return "true".equals(getAttribute("data-inline"));
+        return JQMCommon.isInline(this);
     }
 
     @Override
     public boolean isMini() {
-        return "true".equals(getAttribute("data-mini"));
+        return JQMCommon.isMini(this);
     }
 
     public String getHref() {
@@ -217,7 +222,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     @Override
     public JQMButton removeIcon() {
-        getElement().removeAttribute("data-icon");
+        JQMCommon.setIcon(this, null);
         return this;
     }
 
@@ -235,7 +240,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     @Override
     public void setCorners(boolean corners) {
-        setAttribute("data-corners", String.valueOf(corners));
+        JQMCommon.setCorners(this, corners);
     }
 
     @Override
@@ -269,10 +274,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
      */
     @Override
     public void setBuiltInIcon(DataIcon icon) {
-        if (icon == null)
-            removeIcon();
-        else
-            setIconURL(icon.getJqmValue());
+        JQMCommon.setIcon(this, icon);
     }
 
     @Override
@@ -304,10 +306,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
      */
     @Override
     public void setIconPos(IconPos pos) {
-        if (pos == null)
-            getElement().removeAttribute("data-iconpos");
-        else
-            getElement().setAttribute("data-iconpos", pos.getJqmValue());
+        JQMCommon.setIconPos(this, pos);
     }
 
     /**
@@ -325,7 +324,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
      */
     @Override
     public void setIconShadow(boolean shadow) {
-        setAttribute("data-iconshadow", String.valueOf(shadow));
+        JQMCommon.setIconShadow(this, shadow);
     }
 
     /**
@@ -336,7 +335,6 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         setIconShadow(shadow);
         return this;
     }
-
 
     /**
      * Sets this button to be inline.
@@ -349,10 +347,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
      */
     @Override
     public void setInline(boolean inline) {
-        if (inline)
-            setAttribute("data-inline", "true");
-        else
-            removeAttribute("data-inline");
+        JQMCommon.setInline(this, inline);
     }
 
     /**
@@ -375,7 +370,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
      */
     @Override
     public void setMini(boolean mini) {
-        setAttribute("data-mini", String.valueOf(mini));
+        JQMCommon.setMini(this, mini);
     }
 
     /**
@@ -445,6 +440,48 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         else
             removeAttribute("data-direction");
         return this;
+    }
+
+    public boolean isIconNoDisc() {
+        return JQMCommon.isIconNoDisc(this);
+    }
+
+    public void setIconNoDisc(boolean value) {
+        JQMCommon.setIconNoDisc(this, value);
+    }
+
+    public boolean isIconAlt() {
+        return JQMCommon.isIconAlt(this);
+    }
+
+    /**
+     * @param value - if true "white vs. black" icon style will be used
+     */
+    public void setIconAlt(boolean value) {
+        JQMCommon.setIconAlt(this, value);
+    }
+
+    public boolean isAlwaysActive() {
+        return alwaysActive;
+    }
+
+    /**
+     * @param value - if true button always be highlighted as active.
+     */
+    public void setAlwaysActive(boolean value) {
+        if (alwaysActive == value) return;
+        alwaysActive = value;
+        JQMCommon.setBtnActive(this, alwaysActive);
+        if (alwaysActive) Scheduler.get().scheduleFinally(createAlwaysActiveCmd());
+    }
+
+    private Scheduler.RepeatingCommand createAlwaysActiveCmd() {
+        return new Scheduler.RepeatingCommand() {
+            @Override
+            public boolean execute() {
+                if (alwaysActive) JQMCommon.setBtnActive(JQMButton.this, true);
+                return alwaysActive; // stops when alwaysActive == false
+            }};
     }
 
 }

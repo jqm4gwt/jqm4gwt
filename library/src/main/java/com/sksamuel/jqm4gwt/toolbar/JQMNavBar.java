@@ -12,6 +12,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.Label;
 import com.sksamuel.jqm4gwt.IconPos;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 
@@ -88,7 +89,7 @@ public class JQMNavBar extends JQMWidget implements HasFixedPosition {
     public void addActive(final JQMButton button) {
         if (button == null) return;
         add(button);
-        button.getElement().addClassName("ui-btn-active");
+        JQMCommon.setBtnActive(button, true);
     }
 
     /**
