@@ -47,13 +47,22 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     private double contentHeightPercent;
 
+    private boolean transparent;
+    private Element transparentPrevPage;
+    private boolean transparentPrevPageClearCache;
+
     /**
      * Create a new {@link JQMPage}. Using this constructor, the page will not be rendered until a containerID has been
      * assigned.
      */
     private JQMPage() {
-        setRole("page");
+        setRole(getDfltRole());
         content = createContent();
+    }
+
+    /** Could be overridden by descendants */
+    protected String getDfltRole() {
+        return "page";
     }
 
     /**
@@ -84,7 +93,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     @Override
     public JQMContainer withContainerId() {
-        setContainerId("page" + (counter++));
+        setContainerId(getDfltRole() + (counter++));
         return this;
     }
 
@@ -199,22 +208,22 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
         $wnd.$('div[data-url="' + id + '"]').bind("pageshow",
             function(event, ui) {
-                p.@com.sksamuel.jqm4gwt.JQMPage::doPageShow()();
+                p.@com.sksamuel.jqm4gwt.JQMPage::doPageShow(Lcom/google/gwt/dom/client/Element;)(ui.prevPage.get(0));
             });
 
         $wnd.$('div[data-url="' + id + '"]').bind("pagehide",
             function(event, ui) {
-                p.@com.sksamuel.jqm4gwt.JQMPage::doPageHide()();
+                p.@com.sksamuel.jqm4gwt.JQMPage::doPageHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
             });
 
         $wnd.$('div[data-url="' + id + '"]').bind("pagebeforehide",
             function(event, ui) {
-                p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeHide()();
+                p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
             });
 
         $wnd.$('div[data-url="' + id + '"]').bind("pagebeforeshow",
             function(event, ui) {
-                p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeShow()();
+                p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeShow(Lcom/google/gwt/dom/client/Element;)(ui.prevPage.get(0));
             });
 
     }-*/;
@@ -317,7 +326,10 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     protected void onPageBeforeHide() {
     }
 
-    protected void doPageBeforeHide() {
+    /**
+     * @param nextPage - DOM element that we are transitioning to.
+     */
+    protected void doPageBeforeHide(Element nextPage) {
         onPageBeforeHide();
         JQMPageEvent.fire(this, PageState.BEFORE_HIDE);
     }
@@ -328,9 +340,28 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     protected void onPageBeforeShow() {
     }
 
-    protected void doPageBeforeShow() {
+    /**
+     * @param prevPage - DOM element that we are transitioning away from.
+     * Could be null when the first page is transitioned in during application startup.
+     */
+    protected void doPageBeforeShow(Element prevPage) {
         onPageBeforeShow();
         JQMPageEvent.fire(this, PageState.BEFORE_SHOW);
+
+        if (transparent && prevPage != null) {
+            transparentPrevPage = prevPage;
+            prevPage.addClassName("ui-dialog-background");
+            String s = prevPage.getAttribute("data-dom-cache");
+            if ("true".equals(s)) {
+                transparentPrevPageClearCache = false;
+            } else {
+                transparentPrevPageClearCache = true;
+                prevPage.setAttribute("data-dom-cache", "true");
+            }
+        } else {
+            transparentPrevPage = null;
+            transparentPrevPageClearCache = false;
+        }
     }
 
     /**
@@ -339,9 +370,21 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     protected void onPageHide() {
     }
 
-    protected void doPageHide() {
+    /**
+     * @param nextPage - DOM element that we are transitioning to.
+     */
+    protected void doPageHide(Element nextPage) {
         onPageHide();
         JQMPageEvent.fire(this, PageState.HIDE);
+
+        if (transparentPrevPage != null) {
+            transparentPrevPage.removeClassName("ui-dialog-background");
+            if (transparentPrevPageClearCache) {
+                transparentPrevPage.removeAttribute("data-dom-cache");
+            }
+            transparentPrevPage = null;
+            transparentPrevPageClearCache = false;
+        }
     }
 
     /**
@@ -350,7 +393,11 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     protected void onPageShow() {
     }
 
-    protected void doPageShow() {
+    /**
+     * @param prevPage - DOM element that we are transitioning away from.
+     * Could be null when the first page is transitioned in during application startup.
+     */
+    protected void doPageShow(Element prevPage) {
         onPageShow();
         JQMPageEvent.fire(this, PageState.SHOW);
         if (contentCentered || contentHeightPercent > 0) {
@@ -619,6 +666,112 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     public void clearCenterContent() {
         content.getElement().getStyle().clearProperty("marginTop");
+    }
+
+    public boolean isDlgTransparent() {
+        return transparent;
+    }
+
+    /**
+     * @param transparent - needed when this page is shown in dialog mode,
+     * then true means show faded previous page under dialog window.
+     *
+     * <p/> See <a href="http://tqcblog.com/2012/04/19/transparent-jquery-mobile-dialogs/">Transparent jQuery mobile dialogs</a>
+     */
+    public void setDlgTransparent(boolean transparent) {
+        this.transparent = transparent;
+        String s = "jqm4gwt-dialog-transparent";
+        if (this.transparent) addStyleName(s);
+        else removeStyleName(s);
+    }
+
+    /**
+     * In case of non-transparent dialog its background theme can be changed.
+     */
+    public void setDlgOverlayTheme(String theme) {
+        JQMCommon.setAttribute(this, "data-overlay-theme", theme);
+    }
+
+    public String getDlgOverlayTheme() {
+        return JQMCommon.getAttribute(this, "data-overlay-theme");
+    }
+
+    /**
+     * There is no "correct" way to restore page after it was called as dialog, so this method is ugly hack.
+     */
+    public void restoreRolePage() {
+        JQMCommon.setDataRole(this, "page");
+        removeStyleName("ui-dialog");
+        Element elt = getElement();
+        JQMCommon.removeStylesStartsWith(elt, "ui-overlay-");
+
+        Element dlgContain = JQMCommon.findChild(elt, "ui-dialog-contain");
+        if (dlgContain != null) {
+            JQMCommon.moveChildren(dlgContain, elt);
+            elt.removeChild(dlgContain);
+        }
+        JQMHeader h = getHeader();
+        if (h != null) {
+            Element btn = JQMCommon.findChild(h.getElement(), "ui-btn-icon-notext");
+            if (btn != null && "#".equals(JQMCommon.getAttribute(btn, "href"))
+                    && DataIcon.DELETE == JQMCommon.getIcon(btn)) {
+                h.getElement().removeChild(btn);
+            }
+        }
+    }
+
+    public void openDialog() {
+        JQMContext.changePage(this, true/*dialog*/);
+    }
+
+    public void closeDialog() {
+        String r = JQMCommon.getDataRole(this);
+        if ("dialog".equals(r)) internCloseDialog(getId());
+    }
+
+    private native void internCloseDialog(String id) /*-{
+        $wnd.$('#' + id).dialog("close")
+    }-*/;
+
+    public static enum DlgCloseBtn {
+        RIGHT("right"), NONE("none");
+
+        private final String jqmVal;
+
+        private DlgCloseBtn(String jqmVal) {
+            this.jqmVal = jqmVal;
+        }
+
+        /**
+         * Returns the string value that JQM expects
+         */
+        public String getJqmValue() {
+            return jqmVal;
+        }
+
+        public static DlgCloseBtn fromJqmValue(String jqmValue) {
+            if (jqmValue == null || jqmValue.isEmpty()) return null;
+            for (DlgCloseBtn i : DlgCloseBtn.values()) {
+                if (i.getJqmValue().equals(jqmValue)) return i;
+            }
+            return null;
+        }
+    }
+
+    public DlgCloseBtn getDlgCloseBtn() {
+        return DlgCloseBtn.fromJqmValue(JQMCommon.getAttribute(this, "data-close-btn"));
+    }
+
+    public void setDlgCloseBtn(DlgCloseBtn value) {
+        JQMCommon.setAttribute(this, "data-close-btn", value != null ? value.getJqmValue() : null);
+    }
+
+    public String getDlgCloseBtnText() {
+        return JQMCommon.getAttribute(this, "data-close-btn-text");
+    }
+
+    public void setDlgCloseBtnText(String value) {
+        JQMCommon.setAttribute(this, "data-close-btn-text", value);
     }
 
 }

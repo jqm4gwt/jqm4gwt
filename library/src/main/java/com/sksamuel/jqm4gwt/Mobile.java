@@ -18,15 +18,23 @@ public class Mobile {
     /**
      * Invokes the $.mobile.changePage method
      */
-    private static native void changePage(String url, String t, boolean r, boolean ch) /*-{
-        $wnd.$.mobile.changePage(url, { transition: t, reverse: r, changeHash : ch } );
+    private static native void changePage(String url, String t, boolean r, boolean ch, String rol) /*-{
+        if (rol != null) {
+            $wnd.$.mobile.changePage(url, { transition: t, reverse: r, changeHash: ch, role: rol });
+        } else {
+            $wnd.$.mobile.changePage(url, { transition: t, reverse: r, changeHash: ch });
+        }
     }-*/;
 
     /**
      * Invokes the $.mobile.changePage method
      */
+    static void changePage(String url, Transition t, boolean reverse, boolean changeHash, boolean dialog) {
+        changePage(url, t.getJQMValue(), reverse, changeHash, dialog ? "dialog" : null);
+    }
+
     static void changePage(String url, Transition t, boolean reverse, boolean changeHash) {
-        changePage(url, t.getJQMValue(), reverse, changeHash);
+        changePage(url, t, reverse, changeHash, false/*dialog*/);
     }
 
     /**

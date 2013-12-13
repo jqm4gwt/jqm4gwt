@@ -31,6 +31,7 @@ public class JQMCommon {
     private static final String DATA_ICONSHADOW = "data-iconshadow";
     private static final String DATA_CLEAR_BTN = "data-clear-btn";
     private static final String DATA_MINI = "data-mini";
+    private static final String DATA_POPUP_POSITION = "data-position-to";
 
     public static boolean isVisible(Widget widget) {
         return widget != null && Mobile.isVisible(widget.getElement());
@@ -82,6 +83,18 @@ public class JQMCommon {
             }
         }
         return null;
+    }
+
+    /**
+     * Moves all children of "from" element onto "to" element.
+     */
+    public static void moveChildren(Element from, Element to) {
+        if (from == null || to == null || from == to) return;
+        for (int k = from.getChildCount() - 1; k >= 0; k--) {
+            Node node = from.getChild(k);
+            from.removeChild(node);
+            to.insertFirst(node);
+        }
     }
 
     public static boolean hasStyle(Widget widget, String style) {
@@ -384,6 +397,29 @@ public class JQMCommon {
 
     public static void setMini(Widget widget, boolean mini) {
         setMini(widget.getElement(), mini);
+    }
+
+    public static String getPopupPos(Element elt) {
+        return getAttribute(elt, DATA_POPUP_POSITION);
+    }
+
+    public static String getPopupPos(Widget widget) {
+        return getPopupPos(widget.getElement());
+    }
+
+    public static void setPopupPos(Element elt, String value) {
+        if (value == null) {
+            setAttribute(elt, DATA_POPUP_POSITION, null);
+            return;
+        }
+        if (!value.startsWith("#") && !value.equals("window") && !value.equals("origin")) {
+            throw new IllegalArgumentException("Popup position must be origin, window, or an id selector");
+        }
+        setAttribute(elt, DATA_POPUP_POSITION, value);
+    }
+
+    public static void setPopupPos(Widget widget, String value) {
+        setPopupPos(widget.getElement(), value);
     }
 
 }

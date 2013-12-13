@@ -13,155 +13,168 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class JQMContext {
 
-	private static boolean defaultTransistionDirection = false;
-	private static boolean defaultChangeHash = true;
+    private static boolean defaultTransistionDirection = false;
+    private static boolean defaultChangeHash = true;
 
-	public static native void disableHashListening() /*-{
-		$wnd.$.mobile.hashListeningEnabled = false;
-	}-*/;
+    public static native void disableHashListening() /*-{
+        $wnd.$.mobile.hashListeningEnabled = false;
+    }-*/;
 
-	/**
-	 * Appends the given {@link JQMPage} to the DOM so that JQueryMobile is
-	 * able to manipulate it and render it. This should only be done once per
-	 * page, otherwise duplicate HTML would be added to the DOM and this would
-	 * result in elements with overlapping IDs.
-	 *
-	 */
-	public static void attachAndEnhance(JQMContainer container) {
-		RootPanel.get().add(container);
-		enhance(container);
-		container.setEnhanced(true);
-	}
+    /**
+     * Appends the given {@link JQMPage} to the DOM so that JQueryMobile is
+     * able to manipulate it and render it. This should only be done once per
+     * page, otherwise duplicate HTML would be added to the DOM and this would
+     * result in elements with overlapping IDs.
+     *
+     */
+    public static void attachAndEnhance(JQMContainer container) {
+        RootPanel.get().add(container);
+        enhance(container);
+        container.setEnhanced(true);
+    }
 
-	/**
-	 * Programatically change the displayed page to the given {@link JQMPage}
-	 * instance. This uses the default transition which is Transition.POP
-	 */
-	public static void changePage(JQMContainer container) {
-		changePage(container, getDefaultTransition());
-	}
+    /**
+     * Programatically change the displayed page to the given {@link JQMPage}
+     * instance. This uses the default transition which is Transition.POP
+     */
+    public static void changePage(JQMContainer container) {
+        changePage(container, false/*dialog*/);
+    }
 
-	/**
+    public static void changePage(JQMContainer container, boolean dialog) {
+        changePage(container, dialog, getDefaultTransition());
+    }
+
+    /**
      * Change the displayed page to the given {@link JQMPage} instance using
      * the supplied transition.
-	 */
-	public static void changePage(JQMContainer container, Transition transition) {
-        Mobile.changePage("#" + container.getId(), transition, defaultTransistionDirection, defaultChangeHash);
-	}
+     */
+    public static void changePage(JQMContainer container, Transition transition) {
+        changePage(container, false/*dialog*/, transition);
+    }
 
-	/**
+    public static void changePage(JQMContainer container, boolean dialog, Transition transition) {
+        changePage(container, dialog, transition, defaultTransistionDirection);
+    }
+
+    /**
      * Change the displayed page to the given {@link JQMPage} instance using
      * the supplied transition and reverse setting.
-	 */
+     */
     public static void changePage(JQMContainer container, Transition transition, boolean reverse) {
-        Mobile.changePage("#" + container.getId(), transition, reverse, defaultChangeHash);
-	}
+        changePage(container, false/*dialog*/, transition, reverse);
+    }
 
-	private static void enhance(JQMContainer c) {
-		render(c.getId());
-	}
+    public static void changePage(JQMContainer container, boolean dialog, Transition transition,
+                                  boolean reverse) {
+        Mobile.changePage("#" + container.getId(), transition, reverse, defaultChangeHash, dialog);
+    }
 
-	public static Transition getDefaultTransition() {
-		String val = getDefaultTransitionImpl();
-		Transition t = getTransitionForJQMString(val);
-		return t != null ? t : Transition.FADE;
-	}
+    private static void enhance(JQMContainer c) {
+        render(c.getId());
+    }
 
-	private static Transition getTransitionForJQMString(String val) {
-		if (val != null) {
-			for (Transition t : Transition.values()) {
-				if (val.equalsIgnoreCase(t.getJQMValue())) {
-					return t;
-				}
-			}
-		}
-		return null;
-	}
+    public static Transition getDefaultTransition() {
+        String val = getDefaultTransitionImpl();
+        Transition t = getTransitionForJQMString(val);
+        return t != null ? t : Transition.FADE;
+    }
 
-	private native static String getDefaultTransitionImpl() /*-{
-		return $wnd.$.mobile.defaultPageTransition;
-	}-*/;
+    private static Transition getTransitionForJQMString(String val) {
+        if (val != null) {
+            for (Transition t : Transition.values()) {
+                if (val.equalsIgnoreCase(t.getJQMValue())) {
+                    return t;
+                }
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * Return the pixel offset of an element from the left of the document.
-	 * This can also be thought of as the y coordinate of the top of the
-	 * elements bounding box.
-	 *
-	 * @param id
-	 *            the id of the element to find the offset
-	 */
-	public native static int getLeft(String id) /*-{
-		return $wnd.$("#" + id).offset().left;
-	}-*/;
+    private native static String getDefaultTransitionImpl() /*-{
+        return $wnd.$.mobile.defaultPageTransition;
+    }-*/;
 
-	/**
-	 * Return the pixel offset of an element from the top of the document.
-	 * This can also be thought of as the x coordinate of the left of the
-	 * elements bounding box.
-	 *
-	 * @param id
-	 *            the id of the element to find the offset
-	 */
-	public native static int getTop(String id) /*-{
-		return $wnd.$("#" + id).offset().top;
-	}-*/;
+    /**
+     * Return the pixel offset of an element from the left of the document.
+     * This can also be thought of as the y coordinate of the top of the
+     * elements bounding box.
+     *
+     * @param id
+     *            the id of the element to find the offset
+     */
+    public native static int getLeft(String id) /*-{
+        return $wnd.$("#" + id).offset().left;
+    }-*/;
 
-	public native static void initializePage() /*-{
-		$wnd.$.mobile.initializePage();
-	}-*/;
+    /**
+     * Return the pixel offset of an element from the top of the document.
+     * This can also be thought of as the x coordinate of the left of the
+     * elements bounding box.
+     *
+     * @param id
+     *            the id of the element to find the offset
+     */
+    public native static int getTop(String id) /*-{
+        return $wnd.$("#" + id).offset().top;
+    }-*/;
 
-	/**
-	 * Ask JQuery Mobile to "render" the element with the given id.
-	 */
-	public static void render(String id) {
-		if (id == null || "".equals(id))
-			throw new IllegalArgumentException(
-					"render for empty id not possible");
-		renderImpl(id);
-	}
+    public native static void initializePage() /*-{
+        $wnd.$.mobile.initializePage();
+    }-*/;
 
-	// page() replaced by trigger("create"), see http://stackoverflow.com/a/6848969
-	private static native void renderImpl(String id) /*-{
-		$wnd.$("#" + id).trigger("create");
-	}-*/;
+    /**
+     * Ask JQuery Mobile to "render" the element with the given id.
+     */
+    public static void render(String id) {
+        if (id == null || "".equals(id))
+            throw new IllegalArgumentException(
+                    "render for empty id not possible");
+        renderImpl(id);
+    }
 
-	public static void setDefaultTransition(Transition defaultTransition) {
-		setDefaultTransitionImpl(defaultTransition.getJQMValue());
-	}
+    // page() replaced by trigger("create"), see http://stackoverflow.com/a/6848969
+    private static native void renderImpl(String id) /*-{
+        $wnd.$("#" + id).trigger("create");
+    }-*/;
 
-	public static void setDefaultTransition(Transition defaultTransition,
-			boolean direction) {
-		setDefaultTransitionImpl(defaultTransition.getJQMValue());
-		defaultTransistionDirection = direction;
-	}
+    public static void setDefaultTransition(Transition defaultTransition) {
+        setDefaultTransitionImpl(defaultTransition.getJQMValue());
+    }
 
-	private native static void setDefaultTransitionImpl(String transition) /*-{
-		$wnd.$.mobile.defaultPageTransition = transition;
-	}-*/;
+    public static void setDefaultTransition(Transition defaultTransition,
+            boolean direction) {
+        setDefaultTransitionImpl(defaultTransition.getJQMValue());
+        defaultTransistionDirection = direction;
+    }
 
-	public static void setDefaultChangeHash(boolean defaultChangeHash) {
-		JQMContext.defaultChangeHash = defaultChangeHash;
-	}
+    private native static void setDefaultTransitionImpl(String transition) /*-{
+        $wnd.$.mobile.defaultPageTransition = transition;
+    }-*/;
 
-	/**
-	 * Scroll the page to the y-position of the given element. The element must
-	 * be attached to the DOM (obviously!).
-	 *
-	 * This method will not fire jquery mobile scroll events.
-	 */
-	public static void silentScroll(Element e) {
-		if (e.getId() != null)
-			Mobile.silentScroll(getTop(e.getId()));
-	}
+    public static void setDefaultChangeHash(boolean defaultChangeHash) {
+        JQMContext.defaultChangeHash = defaultChangeHash;
+    }
 
-	/**
-	 * Scroll the page to the y-position of the given widget. The widget must be
-	 * attached to the DOM (obviously!)
-	 *
-	 * This method will not fire jquery mobile scroll events.
-	 */
-	public static void silentScroll(Widget widget) {
-		silentScroll(widget.getElement());
-	}
+    /**
+     * Scroll the page to the y-position of the given element. The element must
+     * be attached to the DOM (obviously!).
+     *
+     * This method will not fire jquery mobile scroll events.
+     */
+    public static void silentScroll(Element e) {
+        if (e.getId() != null)
+            Mobile.silentScroll(getTop(e.getId()));
+    }
+
+    /**
+     * Scroll the page to the y-position of the given widget. The widget must be
+     * attached to the DOM (obviously!)
+     *
+     * This method will not fire jquery mobile scroll events.
+     */
+    public static void silentScroll(Widget widget) {
+        silentScroll(widget.getElement());
+    }
 
 }

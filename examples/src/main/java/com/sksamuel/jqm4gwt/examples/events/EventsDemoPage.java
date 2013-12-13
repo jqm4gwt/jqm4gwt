@@ -20,8 +20,8 @@ import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 9 Jul 2011 18:00:50
- * 
- * 
+ *
+ *
  */
 public class EventsDemoPage extends JQMPage {
 
@@ -32,12 +32,12 @@ public class EventsDemoPage extends JQMPage {
 		JQMButton right = new JQMButton("View source",
 				"https://github.com/sksamuel/jqm4gwt-examples/blob/master/src/main/java/com/sksamuel/jqm4gwt/examples/events/EventsDemoPage.java");
 		right.withBuiltInIcon(DataIcon.GEAR);
-		right.setExternal();
+		right.setExternal(true);
 		header.setRightButton(right);
 
 		final JQMButton left = new JQMButton("ClickMe");
 		left.withBuiltInIcon(DataIcon.STAR);
-		left.setExternal();
+		left.setExternal(true);
 		left.addClickHandler(new ClickHandler() {
 
 			@Override

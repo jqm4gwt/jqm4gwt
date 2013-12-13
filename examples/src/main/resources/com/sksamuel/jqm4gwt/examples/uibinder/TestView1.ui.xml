@@ -39,6 +39,8 @@
         color: #fff;
         text-shadow: none;
       }
+      
+      .tooltipPop { max-width: 350px; }
     </ui:style>
              
     <jqm:JQMPage containerId="testPage1" backButton="true">
@@ -61,7 +63,16 @@
                 corners="false" alwaysActive="true" />
             </jqm:html.Div>
         <jqm:form.JQMForm ui:field="form">
-            <jqm:button.JQMButton text="Go To Test Page 2" href="#testPage2" transition="NONE" iconPos="RIGHT" builtInIcon="RIGHT"/>
+            <jqm:button.JQMButton text="Go To Test Page 2" href="#testPage2" 
+              transition="NONE" iconPos="RIGHT" builtInIcon="RIGHT"/>
+            <g:FlowPanel>
+              <jqm:button.JQMButton ui:field="page2AsDialog" text="Show Page 2 as Dialog (programmatic)" 
+                mini="true" inline="true" />
+              <jqm:button.JQMButton text="Show Page 2 as Dialog (declarative)" 
+                mini="true" inline="true" dialog="true" href="#testPage2" />
+              <jqm:button.JQMButton ui:field="page2RestoreRolePage" text="Restore Page 2 as page" 
+                mini="true" inline="true" />  
+            </g:FlowPanel>
             <jqm:button.JQMButtonGroup>
                 <jqm:button.JQMButton theme="a" text="Button theme 'a' of group"/>
                 <jqm:button.JQMButton theme="b" text="Button theme 'b' of group"/>
@@ -367,6 +378,27 @@
             <jqm:button.JQMButton builtInIcon="MINUS" ui:field="popupCloseButton" text="Close Pop-up"/>
         </jqm:JQMPopup>
         <jqm:button.JQMButton builtInIcon="INFO" ui:field="popupOpenButton" text="Pop-up example..."/>
+        
+        <jqm:JQMPopup containerId="tooltipPop" theme="e" padding="true" addStyleNames="{style.tooltipPop}">
+          <g:HTML 
+            HTML="&lt;p&gt;Here is a &lt;strong&gt;tiny popup&lt;/strong&gt; being used like a tooltip. The text will wrap to multiple lines as needed.&lt;/p&gt;">
+          </g:HTML>
+        </jqm:JQMPopup>
+        <jqm:html.Heading.H3 addStyleNames="{style.inlineBlock}">Text with a tooltip.</jqm:html.Heading.H3>
+        <jqm:button.JQMButton href="#tooltipPop" popup="true" inline="true" builtInIcon="INFO"
+          iconPos="NOTEXT" iconAlt="true" theme="e" transition="POP" text="More Info..."  />
+          
+        <jqm:html.Paragraph />
+        <jqm:JQMPopup containerId="popupAsDialog" dialog="true" corners="false" theme="d" overlayTheme="a">
+          <jqm:button.JQMButton iconPos="NOTEXT" builtInIcon="DELETE" back="true" text="Close" 
+            addStyleNames="ui-btn-right" />
+          <jqm:html.ImageLink src="http://upload.wikimedia.org/wikipedia/commons/0/09/NYC_Montage_8.jpg" 
+            height="500px" />
+        </jqm:JQMPopup>
+        <jqm:button.JQMButton builtInIcon="BARS" text="Pop-up as dialog example..."
+          href="#popupAsDialog" popup="true" popupPos="window" mini="true" inline="true" />  
+        
+        <jqm:button.JQMButton builtInIcon="INFO" ui:field="dlgButton" text="Dialog example..."/>
         <jqm:LoadingIndicator/>
         <jqm:button.JQMButton builtInIcon="INFO" ui:field="busyButton" text="Application Busy example..."/>
         

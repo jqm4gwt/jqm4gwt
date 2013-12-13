@@ -16,10 +16,11 @@ public class JQMPopup extends JQMContainer {
         this("popup-" + (counter++));
     }
 
-    public JQMPopup(String id) {
-        super(id, "popup");
-        getElement().setId(getId());
-        removeAttribute("data-url");
+    /**
+     * Creates a new {@link JQMPopup} with explicitly defined id.
+     */
+    public JQMPopup(String popupId) {
+        super(popupId, "popup");
     }
 
     public JQMPopup(Widget... widgets) {
@@ -27,22 +28,28 @@ public class JQMPopup extends JQMContainer {
         add(widgets);
     }
 
+    @Override
+    public void setContainerId(String containerId) {
+        super.setContainerId(containerId);
+        removeAttribute("data-url");
+    }
+
     /**
      * Automatically assigns an id in the form popup-xx where XX is an incrementing number.
      */
     @Override
     public JQMContainer withContainerId() {
-        super.setContainerId("popup-" + (counter++));
+        setContainerId("popup-" + (counter++));
         return this;
     }
 
     private native void _close(String id) /*-{
         $wnd.$('#' + id).popup("close")
-								}-*/;
+    }-*/;
 
     private native void _open(String id) /*-{
         $wnd.$('#' + id).popup("open")
-								}-*/;
+    }-*/;
 
     public JQMPopup close() {
         _close(id);
@@ -59,24 +66,42 @@ public class JQMPopup extends JQMContainer {
         return this;
     }
 
-    public JQMPopup setOverlayTheme(String theme) {
+    public String getOverlayTheme() {
+        return getAttribute("data-overlay-theme");
+    }
+
+    public void setOverlayTheme(String theme) {
         setAttribute("data-overlay-theme", theme);
+    }
+
+    public JQMPopup withOverlayTheme(String theme) {
+        setOverlayTheme(theme);
         return this;
     }
 
-    public JQMPopup setPadding(boolean padding) {
+    public boolean isPadding() {
+        return JQMCommon.hasStyle(this, "ui-content");
+    }
+
+    public void setPadding(boolean padding) {
         if (padding) {
             addStyleName("ui-content");
         } else {
             removeStyleName("ui-content");
         }
+    }
+
+    public JQMPopup withPadding(boolean padding) {
+        setPadding(padding);
         return this;
     }
 
+    public String getPosition() {
+        return JQMCommon.getPopupPos(this);
+    }
+
     public void setPosition(String pos) {
-        if (!pos.startsWith("#") && !pos.equals("window") && !pos.equals("origin"))
-            throw new IllegalArgumentException("Position must be origin, window, or an id selector");
-        setAttribute("data-position-to", pos);
+        JQMCommon.setPopupPos(this, pos);
     }
 
     @Override
@@ -84,4 +109,16 @@ public class JQMPopup extends JQMContainer {
         return "JQMPopup [id=" + id + "]";
     }
 
+    public boolean isDialog() {
+        String s = JQMCommon.getAttribute(this, "data-dismissible");
+        return "false".equals(s);
+    }
+
+    /**
+     * @param value - if true creates a modal style dialog, to prevent the click-outside-to-close
+     * behavior so people need to interact with popup buttons to close it.
+     */
+    public void setDialog(boolean value) {
+        JQMCommon.setAttribute(this, "data-dismissible", value ? "false" : null);
+    }
 }

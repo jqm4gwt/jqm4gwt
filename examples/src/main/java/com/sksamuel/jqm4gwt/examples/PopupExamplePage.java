@@ -41,13 +41,13 @@ public class PopupExamplePage extends JQMPage {
 
 		{
 
-			popup = new JQMPopup(new Label("No transition")).setPadding(true);
+			popup = new JQMPopup(new Label("No transition")).withPadding(true);
 			add(popup);
 			add(new JQMButton("No transition", popup).withInline(true));
 
 			for (Transition t : Transition.values()) {
 
-				popup = new JQMPopup(new Label("I am a " + t.getJQMValue() + " transition")).setPadding(true);
+				popup = new JQMPopup(new Label("I am a " + t.getJQMValue() + " transition")).withPadding(true);
 				add(popup.withTransition(t));
 				add(new JQMButton(t.getJQMValue(), popup).withInline(true));
 

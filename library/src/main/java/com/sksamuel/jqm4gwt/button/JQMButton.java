@@ -180,13 +180,36 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     }
 
     /**
-     * Returns true if this button is set to load the linked page as a dialog
-     * page
+     * Returns true if this button is set to load the linked page as a dialog page
      *
      * @return true if this link will show as a dialog
      */
     public boolean isDialog() {
-        return "true".equals(getAttribute("data-rel"));
+        return "dialog".equals(getAttribute("data-rel"));
+    }
+
+    /**
+     * Returns true if this button is set to load a popup
+     */
+    public boolean isPopup() {
+        return "popup".equals(getAttribute("data-rel"));
+    }
+
+    public void setPopup(boolean popup) {
+        setRel(popup ? "popup" : null);
+    }
+
+    public JQMButton withPopup(boolean popup) {
+        setPopup(popup);
+        return this;
+    }
+
+    public String getPopupPos() {
+        return JQMCommon.getPopupPos(this);
+    }
+
+    public void setPopupPos(String pos) {
+        JQMCommon.setPopupPos(this, pos);
     }
 
     @Override
@@ -230,11 +253,12 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
      * Sets this buttom to be a back button. This will override any URL set on
      * the button.
      */
-    public JQMButton setBack(boolean back) {
-        if (back)
-            getElement().setAttribute("data-rel", "back");
-        else
-            getElement().removeAttribute("data-rel");
+    public void setBack(boolean back) {
+        setRel(back ? "back" : null);
+    }
+
+    public JQMButton withBack(boolean back) {
+        setBack(back);
         return this;
     }
 
@@ -253,19 +277,24 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
      * Sets this buttom to be a dialog button. This changes the look and feel
      * of the page that is loaded as a consequence of clicking on this button.
      */
-    public JQMButton setDialog(boolean dialog) {
-        if (dialog)
-            setAttribute("data-rel", "dialog");
-        else
-            removeAttribute("data-rel");
+    public JQMButton withDialog(boolean dialog) {
+        setDialog(dialog);
         return this;
+    }
+
+    public void setDialog(boolean dialog) {
+        setRel(dialog ? "dialog" : null);
     }
 
     /**
      * Short cut for withRel("external");
      */
-    public JQMButton setExternal() {
-        withRel("external");
+    public void setExternal(boolean external) {
+        setRel(external ? "external" : null);
+    }
+
+    public JQMButton withExternal(boolean external) {
+        setExternal(external);
         return this;
     }
 
@@ -384,10 +413,8 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     @Override
     public void setRel(String rel) {
-        if (rel == null)
-            getElement().removeAttribute("data-rel");
-        else
-            getElement().setAttribute("data-rel", rel);
+        if (rel == null) getElement().removeAttribute("data-rel");
+        else getElement().setAttribute("data-rel", rel);
     }
 
     @Override
@@ -434,11 +461,13 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         return this;
     }
 
-    public JQMButton setTransitionReverse(boolean reverse) {
-        if (reverse)
-            setAttribute("data-direction", "reverse");
-        else
-            removeAttribute("data-direction");
+    public void setTransitionReverse(boolean reverse) {
+        if (reverse) setAttribute("data-direction", "reverse");
+        else removeAttribute("data-direction");
+    }
+
+    public JQMButton withTransitionReverse(boolean reverse) {
+        setTransitionReverse(reverse);
         return this;
     }
 

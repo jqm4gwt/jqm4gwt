@@ -93,7 +93,7 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
      */
     @Override
     public void setWidth(String width) {
-        img.setAttribute("width", width);
+        img.getStyle().setProperty("width", width);
     }
 
     /**
@@ -101,7 +101,7 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
      */
     @Override
     public void setHeight(String height) {
-        img.setAttribute("height", height);
+        img.getStyle().setProperty("height", height);
     }
 
     public Orientation getImageResizePriority() {

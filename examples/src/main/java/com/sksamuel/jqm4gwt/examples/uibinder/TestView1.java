@@ -11,7 +11,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.sksamuel.jqm4gwt.JQMContext;
+import com.sksamuel.jqm4gwt.JQMDialog;
 import com.sksamuel.jqm4gwt.JQMPage;
+import com.sksamuel.jqm4gwt.JQMPage.DlgCloseBtn;
 import com.sksamuel.jqm4gwt.JQMPopup;
 import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.button.JQMButton;
@@ -26,6 +28,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMText;
 import com.sksamuel.jqm4gwt.list.JQMList;
 import com.sksamuel.jqm4gwt.list.JQMListItem;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox;
+import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
 
 /**
  * @author jraymond
@@ -44,6 +47,8 @@ public class TestView1 {
 
     private TestView2 nextView = new TestView2();
 
+    private static final JQMDialog dlg = new JQMDialog(new JQMHeader("Dialog Test"));
+
     @UiField
     JQMPopup popup;
 
@@ -52,6 +57,15 @@ public class TestView1 {
 
     @UiField
     JQMButton popupCloseButton;
+
+    @UiField
+    JQMButton page2AsDialog;
+
+    @UiField
+    JQMButton page2RestoreRolePage;
+
+    @UiField
+    JQMButton dlgButton;
 
     @UiField
     JQMText text;
@@ -366,6 +380,26 @@ public class TestView1 {
     @UiHandler("headerTestBtn2")
     void headerTestBtn2Click(ClickEvent e) {
         Window.alert(headerTestBtn2.getText() + " is clicked!");
+    }
+
+    @UiHandler("page2AsDialog")
+    void page2AsDialogClick(ClickEvent e) {
+        nextView.testPage2.setDlgTransparent(true);
+        nextView.testPage2.openDialog();
+    }
+
+    @UiHandler("page2RestoreRolePage")
+    void page2RestoreRolePageClick(ClickEvent e) {
+        nextView.testPage2.restoreRolePage();
+    }
+
+    @UiHandler("dlgButton")
+    void dlgButtonClick(ClickEvent e) {
+        dlg.setDlgTransparent(true);
+        dlg.setCorners(false);
+        dlg.setDlgCloseBtn(DlgCloseBtn.RIGHT);
+        dlg.setDlgCloseBtnText("Close me");
+        dlg.openDialog();
     }
 
     @UiHandler("setListItemTextBtn")

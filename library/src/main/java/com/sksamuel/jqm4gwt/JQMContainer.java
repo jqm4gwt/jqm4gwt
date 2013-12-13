@@ -13,7 +13,8 @@ import com.google.gwt.user.client.ui.Widget;
  * which are directly attached to the DOM.
  * It is meant to contain the common functionality for showing these containers.
  */
-public abstract class JQMContainer extends ComplexPanel implements HasId<JQMContainer>, HasTheme<JQMContainer>, HasTransition<JQMContainer> {
+public abstract class JQMContainer extends ComplexPanel implements HasId<JQMContainer>,
+        HasTheme<JQMContainer>, HasTransition<JQMContainer>, HasCorners<JQMContainer> {
 
     public static native void triggerCreate() /*-{
         $wnd.$('body').trigger('create');
@@ -62,6 +63,7 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
         if (containerId.contains(" "))
             throw new IllegalArgumentException("id for JQMContainer cannot contain space");
         this.id = containerId;
+        getElement().setId(this.id);
         setAttribute("data-url", containerId);
     }
 
@@ -190,4 +192,21 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
     public boolean isVisible() {
         return super.isVisible() && JQMCommon.isVisible(this);
     }
+
+    @Override
+    public boolean isCorners() {
+        return JQMCommon.isCorners(this);
+    }
+
+    @Override
+    public void setCorners(boolean corners) {
+        JQMCommon.setCorners(this, corners);
+    }
+
+    @Override
+    public JQMContainer withCorners(boolean corners) {
+        setCorners(corners);
+        return this;
+    }
+
 }
