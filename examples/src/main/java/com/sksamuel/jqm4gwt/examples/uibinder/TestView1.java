@@ -49,6 +49,8 @@ public class TestView1 {
 
     private static final JQMDialog dlg = new JQMDialog(new JQMHeader("Dialog Test"));
 
+    private static final TestDialog1 dlg1 = new TestDialog1();
+
     @UiField
     JQMPopup popup;
 

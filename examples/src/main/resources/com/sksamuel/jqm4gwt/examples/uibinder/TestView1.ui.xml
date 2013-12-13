@@ -398,7 +398,12 @@
         <jqm:button.JQMButton builtInIcon="BARS" text="Pop-up as dialog example..."
           href="#popupAsDialog" popup="true" popupPos="window" mini="true" inline="true" />  
         
-        <jqm:button.JQMButton builtInIcon="INFO" ui:field="dlgButton" text="Dialog example..."/>
+        <jqm:button.JQMButton builtInIcon="INFO" ui:field="dlgButton" text="Dialog example..."
+          inline="true" />
+        <jqm:button.JQMButton builtInIcon="INFO" text="Dialog defined in UiBinder example..."
+          href="#testDialog1" inline="true" />
+          
+        <jqm:html.Paragraph />
         <jqm:LoadingIndicator/>
         <jqm:button.JQMButton builtInIcon="INFO" ui:field="busyButton" text="Application Busy example..."/>
         

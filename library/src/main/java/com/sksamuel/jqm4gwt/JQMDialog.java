@@ -20,8 +20,7 @@ public class JQMDialog extends JQMPage {
      * @param containerId the id to use as this dialog's id
      */
     public @UiConstructor JQMDialog(String containerId) {
-        super();
-        this.setContainerId(containerId);
+        super(containerId);
     }
 
     /**

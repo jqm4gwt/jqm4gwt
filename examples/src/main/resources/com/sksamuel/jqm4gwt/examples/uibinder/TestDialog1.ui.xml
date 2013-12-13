@@ -1,0 +1,15 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder 
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:g='urn:import:com.google.gwt.user.client.ui'
+  xmlns:jqm='urn:import:com.sksamuel.jqm4gwt'>
+  
+  <jqm:JQMDialog containerId="testDialog1" dlgTransparent="true" corners="false" 
+    dlgCloseBtn="RIGHT" dlgCloseBtnText="Discard Dialog">
+    <jqm:toolbar.JQMHeader text="Test Dialog 1 Header" />
+    <g:FlowPanel>
+      <jqm:html.Heading.H3 text="Some content could be placed here..."/>
+    </g:FlowPanel>
+  </jqm:JQMDialog>
+</ui:UiBinder>
