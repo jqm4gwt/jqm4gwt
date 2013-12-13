@@ -61,6 +61,8 @@
             <jqm:html.Div>
               <jqm:button.JQMButton text="Always Active Button in div" inline="true" mini="true" 
                 corners="false" alwaysActive="true" />
+              <jqm:button.JQMButton text="Always Hover Button in div" inline="true" mini="true" 
+                corners="false" alwaysHover="true" />  
             </jqm:html.Div>
         <jqm:form.JQMForm ui:field="form">
             <jqm:button.JQMButton text="Go To Test Page 2" href="#testPage2" 

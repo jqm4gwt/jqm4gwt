@@ -45,6 +45,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         HasTapHandlers {
 
     private boolean alwaysActive;
+    private boolean alwaysHover;
 
     /**
      * Create a {@link JQMButton} with the given text that does not link to
@@ -510,6 +511,29 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
             public boolean execute() {
                 if (alwaysActive) JQMCommon.setBtnActive(JQMButton.this, true);
                 return alwaysActive; // stops when alwaysActive == false
+            }};
+    }
+
+    public boolean isAlwaysHover() {
+        return alwaysHover;
+    }
+
+    /**
+     * @param value - if true button always be highlighted as hover.
+     */
+    public void setAlwaysHover(boolean value) {
+        if (alwaysHover == value) return;
+        alwaysHover = value;
+        JQMCommon.setBtnHover(this, alwaysHover);
+        if (alwaysHover) Scheduler.get().scheduleFinally(createAlwaysHoverCmd());
+    }
+
+    private Scheduler.RepeatingCommand createAlwaysHoverCmd() {
+        return new Scheduler.RepeatingCommand() {
+            @Override
+            public boolean execute() {
+                if (alwaysHover) JQMCommon.setBtnHover(JQMButton.this, true);
+                return alwaysHover; // stops when alwaysHover == false
             }};
     }
 

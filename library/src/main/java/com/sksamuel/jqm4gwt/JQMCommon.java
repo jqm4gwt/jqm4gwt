@@ -19,6 +19,10 @@ public class JQMCommon {
     private static final String STYLE_UI_HIDE_LABEL = "ui-hide-label";
     private static final String STYLE_UI_BTN_ACTIVE = "ui-btn-active";
 
+    private static final String STYLE_UI_BTN_HOVER = "ui-btn-hover-";
+    private static final String STYLE_UI_BTN_UP = "ui-btn-up-";
+    private static final String STYLE_UI_BTN_DOWN = "ui-btn-down-";
+
     private static final String STYLE_UI_ICON_NODISC = "ui-icon-nodisc";
     private static final String STYLE_UI_ICON_ALT = "ui-icon-alt";
 
@@ -216,6 +220,35 @@ public class JQMCommon {
         if (isBtnActive(widget) != value) {
             if (value) widget.addStyleName(STYLE_UI_BTN_ACTIVE);
             else widget.removeStyleName(STYLE_UI_BTN_ACTIVE);
+        }
+    }
+
+    public static boolean isBtnHover(Widget widget) {
+        if (widget == null) return false;
+        String s = getStyleStartsWith(widget.getElement(), STYLE_UI_BTN_HOVER);
+        return s != null && !s.isEmpty();
+    }
+
+    public static void setBtnHover(Widget widget, boolean value) {
+        if (widget == null) return;
+        if (isBtnHover(widget) != value) {
+            if (value) {
+                String theme = getTheme(widget);
+                if (theme == null || theme.isEmpty()) {
+                    String s = getStyleStartsWith(widget.getElement(), STYLE_UI_BTN_UP);
+                    if (s == null || s.isEmpty()) {
+                        s = getStyleStartsWith(widget.getElement(), STYLE_UI_BTN_DOWN);
+                        if (s != null) theme = s.substring(STYLE_UI_BTN_DOWN.length());
+                    } else {
+                        theme = s.substring(STYLE_UI_BTN_UP.length());
+                    }
+                }
+                if (theme != null && !theme.isEmpty()) {
+                    widget.addStyleName(STYLE_UI_BTN_HOVER + theme);
+                }
+            } else {
+                removeStylesStartsWith(widget.getElement(), STYLE_UI_BTN_HOVER);
+            }
         }
     }
 
