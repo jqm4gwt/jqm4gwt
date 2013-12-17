@@ -55,6 +55,7 @@ public class JQMCalBox extends JQMText {
     private Boolean useTodayButton = null;
     private Boolean squareDateButtons = null;
     private Boolean useClearButton = null;
+    private Boolean editable = true;
 
     Date delayedSetDate = null; // used when isAttached() == false
 
@@ -97,6 +98,12 @@ public class JQMCalBox extends JQMText {
         }
         if (useClearButton != null) {
             sb.append(',').append(USE_CLEAR_BUTTON).append(bool2Str(useClearButton));
+        }
+        if (editable != null && editable == false) {
+            sb.append(',').append("\"openCallback\": \"function(){return false;}\"");
+            getElement().addClassName("jqm4gwt-non-editable");
+        } else {
+            getElement().removeClassName("jqm4gwt-non-editable");
         }
         sb.append('}');
         return sb.toString();
@@ -185,6 +192,18 @@ public class JQMCalBox extends JQMText {
 
     public void setUseClearButton(Boolean useClearButton) {
         this.useClearButton = useClearButton;
+        refreshDataOptions();
+    }
+
+    public Boolean getEditable() {
+        return editable;
+    }
+
+    /**
+     * Read only mode for this widget, if true - open calendar button will be disabled.
+     */
+    public void setEditable(Boolean editable) {
+        this.editable = editable;
         refreshDataOptions();
     }
 

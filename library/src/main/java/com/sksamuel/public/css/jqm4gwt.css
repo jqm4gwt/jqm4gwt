@@ -57,3 +57,9 @@
   position: fixed;
   z-index: 100;
 }
+
+.jqm4gwt-non-editable input {
+  filter: Alpha(Opacity=67);
+  opacity: .67;
+  zoom: 1;
+}
