@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.table;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -94,7 +95,7 @@ public class JQMColumnToggle extends CustomFlowPanel {
     /** populated directly by addColGroupWidget(), probably from UiBinder template */
     private final Map<Widget, ColumnDef> colGroupWidgets = new LinkedHashMap<Widget, ColumnDef>();
 
-    private List<String> dataStr;
+    private Collection<String> dataStr;
     private Map<Widget, Boolean> dataObj;
 
     public JQMColumnToggle() {
@@ -276,6 +277,18 @@ public class JQMColumnToggle extends CustomFlowPanel {
             lst.add(s);
         }
         setDataStr(lst);
+    }
+
+    public Collection<String> getBodyData() {
+        return dataStr;
+    }
+
+    /**
+     * Set and refresh table cells/body. Each string/cell in collection can be valid HTML.
+     */
+    public void setBodyData(Collection<String> data) {
+        this.cells = null;
+        setDataStr(data);
     }
 
     public void refreshBody() {
@@ -550,7 +563,7 @@ public class JQMColumnToggle extends CustomFlowPanel {
         if (r != null) tHead.remove(r);
     }
 
-    private void setDataStr(List<String> lst) {
+    private void setDataStr(Collection<String> lst) {
         dataObj = null;
         dataStr = lst;
         refreshBody();
@@ -564,7 +577,8 @@ public class JQMColumnToggle extends CustomFlowPanel {
     }
 
     /**
-     * @param asTh - &lt;th> will be used for creating cell instead of &lt;td>
+     * @param asTh - &lt;th> will be used for creating cell instead of &lt;td>,
+     * so such cell will be styled differently, like columnNames/header cells.
      */
     @UiChild(tagname = "cell")
     public void addCellWidget(Widget w, Boolean asTh) {
