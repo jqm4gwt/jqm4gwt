@@ -14,6 +14,7 @@ import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMDialog;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMPage.DlgCloseBtn;
+import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.JQMPopup;
 import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.button.JQMButton;
@@ -215,6 +216,15 @@ public class TestView1 {
 
     @UiField
     JQMButton movieTitleBtn;
+
+    public TestView1() {
+        page.addPageHandler(new JQMPageEvent.DefaultHandler() {
+            @Override
+            public void onShow(JQMPageEvent event) {
+                //Window.alert("TestView1.page.onShow() is called");
+            }
+        });
+    }
 
     @UiHandler("popupOpenButton")
     void handlePopupOpenButtonClick(ClickEvent e) {

@@ -1,8 +1,13 @@
 package com.sksamuel.jqm4gwt;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -27,7 +32,10 @@ import com.sksamuel.jqm4gwt.toolbar.JQMPanel;
  */
 public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
-    static int counter = 1;
+    private static int counter = 1;
+
+    /** Needed to find out JQMPage by its Element received usually from JS */
+    private static final Map<Element, JQMPage> allPages = new HashMap<Element, JQMPage>(); // there is no WeakHashMap in GWT
 
     /**
      * The primary content div
@@ -50,12 +58,14 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     private boolean transparent;
     private Element transparentPrevPage;
     private boolean transparentPrevPageClearCache;
+    private boolean transparentDoPrevPageLifecycle;
 
     /**
      * Create a new {@link JQMPage}. Using this constructor, the page will not be rendered until a containerID has been
      * assigned.
      */
     private JQMPage() {
+        allPages.put(getElement(), this);
         setRole(getDfltRole());
         content = createContent();
     }
@@ -358,6 +368,10 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
                 transparentPrevPageClearCache = true;
                 prevPage.setAttribute("data-dom-cache", "true");
             }
+            if (!transparentDoPrevPageLifecycle) {
+                JQMPage prev = allPages.get(transparentPrevPage);
+                if (prev != null) prev.unbindLifecycleEvents(prev.getId());
+            }
         } else {
             transparentPrevPage = null;
             transparentPrevPageClearCache = false;
@@ -381,6 +395,17 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
             transparentPrevPage.removeClassName("ui-dialog-background");
             if (transparentPrevPageClearCache) {
                 transparentPrevPage.removeAttribute("data-dom-cache");
+            }
+            if (!transparentDoPrevPageLifecycle) {
+                final JQMPage prev = allPages.get(transparentPrevPage);
+                if (prev != null) {
+                    Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            prev.bindLifecycleEvents(prev, prev.getId());
+                        }
+                    });
+                }
             }
             transparentPrevPage = null;
             transparentPrevPageClearCache = false;
@@ -633,13 +658,18 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * How to know when an DOM element moves or is resized</a></p>
      */
     public void centerContent() {
+        int contentH = content.getOffsetHeight();
+        if (contentH == 0) {
+            content.getElement().getStyle().clearMarginTop();
+            return;
+        }
         int headerH = header == null ? 0 : header.getOffsetHeight();
         int footerH = footer == null ? 0 : footer.getOffsetHeight();
         int windowH = Window.getClientHeight();
-        int contentH = content.getOffsetHeight();
+
         int marginTop = (windowH - headerH - footerH - contentH) / 2;
-        if (marginTop < 0) marginTop = 0;
-        content.getElement().getStyle().setProperty("marginTop", String.valueOf(marginTop) + "px");
+        if (marginTop <= 0) content.getElement().getStyle().clearMarginTop();
+        else content.getElement().getStyle().setMarginTop(marginTop, Unit.PX);
     }
 
     /**
@@ -674,7 +704,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     /**
      * @param transparent - needed when this page is shown in dialog mode,
-     * then true means show faded previous page under dialog window.
+     * then true means show faded previous page under dialog window
+     * and don't bother prev page with lifecycle events (show, hide, ...).
      *
      * <p/> See <a href="http://tqcblog.com/2012/04/19/transparent-jquery-mobile-dialogs/">Transparent jQuery mobile dialogs</a>
      */
@@ -683,6 +714,19 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         String s = "jqm4gwt-dialog-transparent";
         if (this.transparent) addStyleName(s);
         else removeStyleName(s);
+    }
+
+    public boolean isDlgTransparentDoPrevPageLifecycle() {
+        return transparentDoPrevPageLifecycle;
+    }
+
+    /**
+     * By default all lifecycle events (show, hide, ...) are blocked on previous page
+     * when dlgTransparent is true for this page. This behavior can be disabled by setting
+     * this property to true, so lifecycle events will be called for previous page.
+     */
+    public void setDlgTransparentDoPrevPageLifecycle(boolean transparentDoPrevPageLifecycle) {
+        this.transparentDoPrevPageLifecycle = transparentDoPrevPageLifecycle;
     }
 
     /**
