@@ -103,7 +103,6 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
      */
     public JQMListItem(String text) {
         this();
-        if (text == null) throw new RuntimeException("Cannot create list item with null text");
         setText(text);
     }
 
