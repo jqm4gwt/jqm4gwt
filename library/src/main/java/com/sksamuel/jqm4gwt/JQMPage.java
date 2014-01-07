@@ -13,6 +13,7 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMPageEvent.PageState;
@@ -678,15 +679,26 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * notification for DOM elements).
      */
     public void recalcContentHeightPercent() {
+        com.google.gwt.user.client.Element contentElt = content.getElement();
         if (contentHeightPercent > 0) {
             int headerH = header == null ? 0 : header.getOffsetHeight();
             int footerH = footer == null ? 0 : footer.getOffsetHeight();
             int windowH = Window.getClientHeight();
-            double h = (windowH - headerH - footerH) * 0.01d * contentHeightPercent;
+
+            int clientH = DOM.getElementPropertyInt(contentElt, "clientHeight");
+            int offsetH = DOM.getElementPropertyInt(contentElt, "offsetHeight");
+            int diff = offsetH - clientH; // border, ...
+            if (diff < 0) diff = 0;
+
+            double h = (windowH - headerH - footerH - diff) * 0.01d * contentHeightPercent;
             h = Math.floor(h);
-            content.getElement().getStyle().setProperty("minHeight", String.valueOf(Math.round(h)) + "px");
+            contentElt.getStyle().setProperty("minHeight", String.valueOf(Math.round(h)) + "px");
+            contentElt.getStyle().setProperty("paddingTop", "0");
+            contentElt.getStyle().setProperty("paddingBottom", "0");
         } else {
-            content.getElement().getStyle().clearProperty("minHeight");
+            contentElt.getStyle().clearProperty("minHeight");
+            contentElt.getStyle().clearProperty("paddingTop");
+            contentElt.getStyle().clearProperty("paddingBottom");
         }
     }
 
