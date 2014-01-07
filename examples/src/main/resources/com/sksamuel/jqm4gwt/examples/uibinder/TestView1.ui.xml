@@ -5,6 +5,13 @@
              xmlns:jqm='urn:import:com.sksamuel.jqm4gwt'>
 
     <ui:style>
+			.contentBorder { border: red solid 0px; }
+			.pageContent { 
+	      margin-left: 1%;
+	      margin-right: 1%;
+	      width: 98%;
+	    }
+      
       .bevel { height: 10px; }
       
       @external .jqm4gwt-image-link-a, .ui-btn-inner;
@@ -43,8 +50,10 @@
       .tooltipPop { max-width: 350px; }
     </ui:style>
              
-    <jqm:JQMPage containerId="testPage1" backButton="true">
-        <jqm:toolbar.JQMHeader>
+    <jqm:JQMPage containerId="testPage1" backButton="false" 
+      contentCentered="true" contentHeightPercent="98.0" 
+      contentAddStyleNames="jqm4gwt-scrollable-page-content {style.contentBorder}">
+        <jqm:toolbar.JQMHeader fixed="true">
           <jqm:widget>
             <jqm:html.Heading.H1 text="Test Page 1 Header" />
           </jqm:widget>
@@ -55,9 +64,11 @@
             </g:FlowPanel>
           </jqm:widget>
         </jqm:toolbar.JQMHeader>
-        <jqm:plugins.iscroll.IScrollPanel>
-            <jqm:html.Span text="span text in IScrollPanel"/>
-            <jqm:html.Div text="div text in IScrollPanel" />
+        <!-- jqm:plugins.iscroll.IScrollPanel-->
+        <g:FlowPanel addStyleNames="jqm4gwt-scrollable-main-stage">
+        <g:FlowPanel addStyleNames="{style.pageContent}">
+            <jqm:html.Span text="span text"/>
+            <jqm:html.Div text="div text" />
             <jqm:html.Div>
               <jqm:button.JQMButton text="Always Active Button in div" inline="true" mini="true" 
                 corners="false" alwaysActive="true" />
@@ -514,9 +525,11 @@
           </jqm:colGroup>         
         </jqm:table.JQMColumnToggle>  
         
-        </jqm:plugins.iscroll.IScrollPanel>        
+        <!-- /jqm:plugins.iscroll.IScrollPanel-->
+        </g:FlowPanel>
+        </g:FlowPanel>        
         
-        <jqm:toolbar.JQMFooter>
+        <jqm:toolbar.JQMFooter fixed="true">
             <jqm:widget>
                 <jqm:toolbar.JQMNavBar>
                     <jqm:button>

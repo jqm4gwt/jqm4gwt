@@ -26,3 +26,53 @@
 .ui-loading .ui-loader-background {
   display: block;
 }
+
+
+.ui-dialog-background {
+  opacity: 0.5;
+  display: block !important;
+  -webkit-transition: opacity 0.5s ease-in;
+     -moz-transition: opacity 0.5s ease-in;
+       -o-transition: opacity 0.5s ease-in;
+          transition: opacity 0.5s ease-in;
+}
+ 
+.ui-dialog-background.pop.in {
+  opacity: 1;
+  -webkit-transition: opacity 0.5s ease-in;
+     -moz-transition: opacity 0.5s ease-in;
+       -o-transition: opacity 0.5s ease-in;
+          transition: opacity 0.5s ease-in;
+}
+ 
+.jqm4gwt-dialog-transparent.ui-dialog {
+  min-height: 100% !important;
+  background: transparent !important;
+  
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  margin: 0;
+  position: fixed;
+  z-index: 100;
+}
+
+.jqm4gwt-non-editable input {
+  filter: Alpha(Opacity=67);
+  opacity: .67;
+  zoom: 1;
+}
+
+.jqm4gwt-scrollable-page-content {
+  position: relative;
+}
+.jqm4gwt-scrollable-main-stage {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+}
