@@ -20,7 +20,8 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
         $wnd.$('body').trigger('create');
     }-*/;
 
-    static int counter = 1;
+    private static int counter = 1;
+    private static final String AUTOINC_SUFFIX = "++";
 
     /**
      * Set to true once the container has been enhanced by jQuery Mobile.
@@ -44,12 +45,16 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
         setStyleName("jqm4gwt-" + role);
     }
 
+    private static String generateContainerId() {
+        return "container" + (counter++);
+    }
+
     /**
      * Assigns a default containerId of 'container' followed by the instance number.
      * @return the instance being operated on as part of a Fluent API
      */
     public JQMContainer withContainerId() {
-        setContainerId("container" + (counter++));
+        setContainerId(generateContainerId());
         return this;
     }
 
@@ -62,9 +67,17 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
             throw new IllegalArgumentException("id for JQMContainer cannot be null");
         if (containerId.contains(" "))
             throw new IllegalArgumentException("id for JQMContainer cannot contain space");
-        this.id = containerId;
+
+        if (containerId.isEmpty()) {
+            this.id = generateContainerId();
+        } else if (containerId.endsWith(AUTOINC_SUFFIX)) {
+            this.id = containerId.substring(0, containerId.length() - AUTOINC_SUFFIX.length()) + (counter++);
+        } else {
+            this.id = containerId;
+        }
+
         getElement().setId(this.id);
-        setAttribute("data-url", containerId);
+        setAttribute("data-url", this.id);
     }
 
     /**
