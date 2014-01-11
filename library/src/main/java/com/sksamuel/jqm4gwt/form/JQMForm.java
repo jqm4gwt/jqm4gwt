@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -45,42 +47,35 @@ public class JQMForm extends FlowPanel {
     private static final String STYLE_ERRORCONTAIN = "jqm4gwt-errorcontain";
 
     private static final String JQM4GWT_ERROR_LABEL_STYLENAME = "jqm4gwt-error";
-    /**
-     * The amount to adjust error scroll by so the error is not right at very
-     * top
-     */
+
+    /** The amount to adjust error scroll by so the error is not right at very top */
     private static final int ERROR_SCROLL_OFFSET = 80;
 
     private static final String STYLE_ERROR_TYPE = "jqm4gwt-errortype-";
 
     private final FlowPanel generalErrors = new FlowPanel();
 
-    private final List<Label> errors = new ArrayList();
+    private final List<Label> errors = new ArrayList<Label>();
 
     /**
-     * The SubmissionHandler is invoked when the form is successfully
-     * submitted.
+     * The SubmissionHandler is invoked when the form is successfully submitted.
      */
-    private SubmissionHandler submissionHandler;
+    private SubmissionHandler<?> submissionHandler;
 
-    /**
-     * A mapping between the validators and the labels they use to show errors
-     */
-    private final Map<Validator, Label> validatorLabels = new HashMap();
+    /** A mapping between the validators and the labels they use to show errors */
+    private final Map<Validator, Label> validatorLabels = new HashMap<Validator, Label>();
 
-    /**
-     * A map containing the widgets and the validators that should be invoked
-     * on those
-     */
-    private final Map<JQMFormWidget, Collection<Validator>> widgetValidators = new HashMap();
+    /** A map containing the widgets and the validators that should be invoked on those */
+    private final Map<JQMFormWidget, Collection<Validator>> widgetValidators =
+            new HashMap<JQMFormWidget, Collection<Validator>>();
 
     /**
      * A map containing the validators and the elements/widgets that should
      * have the class changed depending on the result of the validation
      */
-    private final Map<Validator, Widget> notifiedWidgets = new HashMap();
+    private final Map<Validator, Widget> notifiedWidgets = new HashMap<Validator, Widget>();
 
-    protected JQMForm(SubmissionHandler handler) {
+    protected JQMForm(SubmissionHandler<?> handler) {
         this();
         setSubmissionHandler(handler);
     }
@@ -92,11 +87,11 @@ public class JQMForm extends FlowPanel {
         add(generalErrors);
     }
 
-    public SubmissionHandler getSubmissionHandler() {
+    public SubmissionHandler<?> getSubmissionHandler() {
         return submissionHandler;
     }
 
-    public void setSubmissionHandler(SubmissionHandler submissionHandler) {
+    public void setSubmissionHandler(SubmissionHandler<?> submissionHandler) {
         this.submissionHandler = submissionHandler;
     }
 
@@ -154,46 +149,6 @@ public class JQMForm extends FlowPanel {
      *                  be added as a generic error.
      * @param validator the validator that will perform the validation
      */
-    // @Deprecated
-    // public void addValidator(final JQMFormWidget widget, Validator
-    // validator) {
-    // addValidator(validator, widget);
-
-    // final ValidationTuple tuple = new ValidationTuple();
-    // tuple.label = new InlineLabel();
-    // tuple.label.getElement().withId(Document.get().createUniqueId());
-    // tuple.label.setStyleName(JQM4GWT_ERROR_STYLENAME);
-    // tuple.validator = validator;
-    //
-    // if (widget == null) {
-    // generalValidators.add(tuple);
-    // } else {
-    // Collection<ValidationTuple> collection =
-    // widgetValidators.get(widget);
-    // if (collection == null) {
-    // collection = new ArrayList();
-    // widgetValidators.put(widget, collection);
-    // }
-    // collection.add(tuple);
-    // }
-    //
-    // // hide and attach the label to the appropriate place
-    // tuple.label.setVisible(false);
-    // add(tuple.label);
-    //
-    // errors.add(tuple.label);
-    //
-    // // add a blur handler to call validate on this widget
-    // if (widget != null) {
-    // widget.addBlurHandler(new BlurHandler() {
-    //
-    // @Override
-    // public void onBlur(BlurEvent event) {
-    // validate(widget);
-    // }
-    // });
-    // }
-    // }
     @Deprecated
     public void addValidator(JQMFormWidget widget, Validator validator) {
         addValidator(validator, widget);
@@ -227,8 +182,7 @@ public class JQMForm extends FlowPanel {
 
         // create a label that will show the validation error
         Label label = new InlineLabel();
-        // the label must have an ID set because we will need to get the
-        // element later for scrolling
+        // the label must have an ID set because we will need to get the element later for scrolling
         label.getElement().setId(Document.get().createUniqueId());
         label.setStyleName(JQM4GWT_ERROR_LABEL_STYLENAME);
         label.setVisible(false);
@@ -245,8 +199,7 @@ public class JQMForm extends FlowPanel {
         if (notifiedWidget != null)
             notifiedWidgets.put(validator, notifiedWidget);
 
-        // add the error label to the document as the next child of this
-        // form container
+        // add the error label to the document as the next child of this form container
         add(label);
     }
 
@@ -288,8 +241,7 @@ public class JQMForm extends FlowPanel {
 
     private void registerValidatorWithFiringWidget(final JQMFormWidget widget, Validator validator, boolean immediate) {
         // add a blur handler to call validate on this widget but only if
-        // this is the first time this widget has been registered with a
-        // validator
+        // this is the first time this widget has been registered with a validator
         if (immediate)
             if (widgetValidators.get(widget) == null)
                 widget.addBlurHandler(new BlurHandler() {
@@ -301,7 +253,7 @@ public class JQMForm extends FlowPanel {
                 });
 
         if (widgetValidators.get(widget) == null)
-            widgetValidators.put(widget, new ArrayList());
+            widgetValidators.put(widget, new ArrayList<Validator>());
         widgetValidators.get(widget).add(validator);
     }
 
@@ -312,7 +264,7 @@ public class JQMForm extends FlowPanel {
             }
     }
 
-    private void removeStyles(Validator validator, UIObject ui) {
+    private static void removeStyles(Validator validator, UIObject ui) {
         ui.removeStyleName(STYLE_ERROR_TYPE + validator.getClass().getName());
         ui.removeStyleName(STYLE_ERRORCONTAIN);
         ui.removeStyleName(STYLE_VALIDATED);
@@ -335,11 +287,9 @@ public class JQMForm extends FlowPanel {
 
     /**
      * Sets the given widget to be required with a custom message. Then this
-     * field will be checked to ensure it has a value set before the form will
-     * be submitted.
+     * field will be checked to ensure it has a value set before the form will be submitted.
      * <p/>
-     * In effect, setting a field to required adds an implicit
-     * "not null or empty" validator.
+     * In effect, setting a field to required adds an implicit "not null or empty" validator.
      */
     public void setRequired(JQMFormWidget widget, String msg) {
         setRequired(widget, msg, true);
@@ -356,7 +306,7 @@ public class JQMForm extends FlowPanel {
     /**
      * This method is invoked when the form is ready for submission. Typically
      * this method would be called from one of your submission buttons
-     * automatically but it is possible to invoke it programatically.
+     * automatically but it is possible to invoke it programmatically.
      * <p/>
      * Before validation, the general errors are cleared.
      * <p/>
@@ -365,44 +315,39 @@ public class JQMForm extends FlowPanel {
      * shown so that async requests can complete in the background.
      * <p/>
      * The {@link SubmissionHandler} must hide the loading dialog by calling
-     * hideFormProcessingDialog() on the form or by calling
-     * Mobile.hideLoadingDialog()
+     * hideFormProcessingDialog() on the form or by calling Mobile.hideLoadingDialog()
      */
-    public void submit() {
+    public void submit(String... submitMsgs) {
         if (submissionHandler == null)
             throw new IllegalStateException("No SubmissionHandler has been set for this Form and it is in an invalid " +
                     "state for submit() until one has been defined.");
         generalErrors.clear();
         boolean validated = validate();
         if (validated) {
-            showFormProcessingDialog("Submitting form");
-            submissionHandler.onSubmit(this);
+            String s = null;
+            if (submitMsgs.length > 0) s = submitMsgs[0];
+            if (s == null || s.isEmpty()) s = "Submitting form";
+            showFormProcessingDialog(s);
+            @SuppressWarnings("unchecked")
+            SubmissionHandler<JQMForm> h = (SubmissionHandler<JQMForm>) submissionHandler;
+            h.onSubmit(this);
         } else {
             scrollToFirstErorr();
         }
     }
 
     /**
-     * Perform validation for all validators, setting error messages where
-     * appropriate.
+     * Perform validation for all validators, setting error messages where appropriate.
      *
-     * @return true if validation was successful for all validators, otherwise
-     *         false.
+     * @return true if validation was successful for all validators, otherwise false.
      */
     public boolean validate() {
         boolean validated = true;
 
-        // do widget validation first
         for (JQMFormWidget widget : widgetValidators.keySet()) {
             if (!validate(widget))
                 validated = false;
         }
-
-        // now validate the non-widget specific validators
-        // for (ValidationTuple tuple : generalValidators) {
-        // if (!validate(tuple))
-        // validated = false;
-        // }
 
         return validated;
     }
@@ -426,8 +371,7 @@ public class JQMForm extends FlowPanel {
      * Perform validation for a single validator
      *
      * @param ui the {@link UIObject} to change the stylesheet on
-     * @return true if this validator was successfully applied or false
-     *         otherwise
+     * @return true if this validator was successfully applied or false otherwise
      */
     protected boolean validate(Validator validator, UIObject ui) {
 
@@ -436,12 +380,9 @@ public class JQMForm extends FlowPanel {
 
         String msg = validator.validate();
         if (msg == null || msg.length() == 0) {
-
             validationStyles(validator, null, ui, true);
             return true;
-
         } else {
-
             validationStyles(validator, msg, ui, false);
             return false;
         }
@@ -450,11 +391,16 @@ public class JQMForm extends FlowPanel {
     private void validationStyles(Validator validator, String msg, UIObject ui, boolean pass) {
         removeStyles(validator, ui);
 
-        Label label = validatorLabels.get(validator);
+        final Label label = validatorLabels.get(validator);
         if (pass) {
-            label.setText(null);
-            label.setVisible(false);
-
+            // delay cleaning to allow normal button click processing
+            Scheduler.get().scheduleEntry(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    label.setText(null);
+                    label.setVisible(false);
+                }
+            });
         } else {
             label.setVisible(true);
             label.setText(msg);
