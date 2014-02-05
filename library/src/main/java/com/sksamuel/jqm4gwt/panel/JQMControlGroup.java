@@ -1,6 +1,8 @@
 package com.sksamuel.jqm4gwt.panel;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasOrientation;
@@ -17,6 +19,17 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
 
     protected JQMControlGroup(Element element, String styleName) {
         super(element, "controlgroup", styleName);
+    }
+
+    public JQMControlGroup() {
+        this(Document.get().createDivElement(), "jqm4gwt-controlgroup");
+    }
+
+    public JQMControlGroup(Widget... widgets) {
+        this();
+        for (Widget w : widgets) {
+            add(w);
+        }
     }
 
     @Override
