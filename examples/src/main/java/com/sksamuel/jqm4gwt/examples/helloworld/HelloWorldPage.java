@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
+import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.form.elements.JQMCheckbox;
@@ -23,18 +24,18 @@ public class HelloWorldPage extends JQMPage {
 
     private int counter = 1;
 
-	public HelloWorldPage() {
-		super("helloworld");
+    public HelloWorldPage() {
+        super("helloworld");
 
-		JQMHeader h = new JQMHeader("Hello world header");
-		add(h);
+        JQMHeader h = new JQMHeader("Hello world header");
+        add(h);
 
-		add(new Paragraph("Hello world. Boy am I original!"));
+        add(new Paragraph("Hello world. Boy am I original!"));
 
-		JQMButton btn = new JQMButton("Add CheckBox");
-		btn.setMini(true);
-		btn.setInline(true);
-		btn.addClickHandler(new ClickHandler() {
+        JQMButton btn = new JQMButton("Add CheckBox");
+        btn.setMini(true);
+        btn.setInline(true);
+        btn.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 final String s = "Checkbox" + String.valueOf(counter++);
@@ -47,12 +48,13 @@ public class HelloWorldPage extends JQMPage {
                     }
                 });
                 add(check);
+                JQMContext.render(HelloWorldPage.this.getElement().getId());
             }
         });
-		add(btn);
+        add(btn);
 
-		JQMFooter f = new JQMFooter("Hello world footer");
-		add(f);
-	}
+        JQMFooter f = new JQMFooter("Hello world footer");
+        add(f);
+    }
 
 }

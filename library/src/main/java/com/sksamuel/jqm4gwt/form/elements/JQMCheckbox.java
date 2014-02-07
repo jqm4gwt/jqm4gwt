@@ -2,8 +2,8 @@ package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -98,9 +98,9 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
         // Initialization code
         if (!valueChangeHandlerInitialized) {
             valueChangeHandlerInitialized = true;
-            input.addChangeHandler(new ChangeHandler() {
+            input.addClickHandler(new ClickHandler() {
                 @Override
-                public void onChange(ChangeEvent event) {
+                public void onClick(ClickEvent event) {
                     ValueChangeEvent.fire(JQMCheckbox.this, getValue());
                 }
             });
@@ -207,9 +207,9 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
 
     public void setInput(TextBox input) {
         this.input = input;
-        input.addChangeHandler(new ChangeHandler() {
+        input.addClickHandler(new ClickHandler() {
             @Override
-            public void onChange(ChangeEvent event) {
+            public void onClick(ClickEvent event) {
                 internVal = isChecked(); // user touched the checkbox, we must take current ui value
                 //showMsg("setInput: " + (internVal ? "checked" : "unchecked"));
             }
