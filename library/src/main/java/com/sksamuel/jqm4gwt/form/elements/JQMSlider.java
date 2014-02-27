@@ -14,6 +14,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextBox;
+import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMCommon;
@@ -30,10 +31,10 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * @author Stephen K Samuel samspade79@gmail.com 10 May 2011 00:24:06
  *
  * <p/> An implementation of a jquery mobile "slider" widget.
- * <p/> See <a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/sliders/">Slider</a>
+ * <p/> See <a href="http://demos.jquerymobile.com/1.4.1/slider/">Slider</a>
  */
 public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, HasMini<JQMSlider>,
-        HasText<JQMSlider>, HasChangeHandlers, HasClickHandlers, HasTapHandlers {
+        HasText<JQMSlider>, HasCorners<JQMSlider>, HasChangeHandlers, HasClickHandlers, HasTapHandlers {
 
     private final FormLabel label = new FormLabel();
 
@@ -487,5 +488,21 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
             ignoreChange = false;
         }
         if (fireEvents) ValueChangeEvent.fire(this, value);
+    }
+
+    @Override
+    public boolean isCorners() {
+        return JQMCommon.isCorners(input);
+    }
+
+    @Override
+    public void setCorners(boolean corners) {
+        JQMCommon.setCorners(input, corners);
+    }
+
+    @Override
+    public JQMSlider withCorners(boolean corners) {
+        setCorners(corners);
+        return this;
     }
 }

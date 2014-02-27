@@ -19,7 +19,7 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.DataIcon;
@@ -81,7 +81,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
     }
 
     private LiControlGroup controlGroup;
-    private FlowPanel controlGroupRoot;
+    private ComplexPanel controlGroupRoot;
     private TextBox checkBoxInput;
 
     private HandlerRegistration clickHandler;
@@ -171,6 +171,12 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         e.setInnerHTML(html);
         attachChild(e);
         return this;
+    }
+
+    private void insertFirstChild(Element elem) {
+        if (anchor == null) getElement().insertFirst(elem);
+        else if (controlGroup != null) controlGroup.getElement().insertFirst(elem);
+        else anchor.insertFirst(elem);
     }
 
     private void attachChild(Element elem) {
@@ -267,6 +273,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
             getElement().removeChild(imageElem);
             imageElem = null;
         }
+        getElement().removeClassName("ui-li-has-thumb");
         return this;
     }
 
@@ -334,39 +341,54 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         return this;
     }
 
-    /**
-     * Sets the image to be used to the given src. The image will be set as an
-     * icon.
-     */
-    public JQMListItem setIcon(String src) {
-        setImage(src, true);
-        return this;
-    }
-
     private JQMListItem setId() {
         getElement().setId(Document.get().createUniqueId());
         return this;
     }
 
     /**
-     * Sets the image on this list item to the image at the given src. If icon
-     * is true then the image will be set as an icon, otherwise it will be set
-     * as a thumbnail.
+     * Sets the image to be used to the given source url.
+     * <p/> The same as setImage(), but image is marked as icon class.
      */
-    public JQMListItem setImage(String src, boolean icon) {
-        if (src == null)
+    public JQMListItem setIcon(String src) {
+        setImage(src);
+        if (imageElem != null) {
+            imageElem.removeClassName("jqm4gwt-listitem-thumb");
+            imageElem.addClassName("jqm4gwt-listitem-icon");
+        }
+        return this;
+    }
+
+    /**
+     * Sets the image to be used to the given source url.
+     * <p/> The same as setImage(), but image is marked as thumbnail class.
+     */
+    public JQMListItem setThumbnail(String src) {
+        setImage(src);
+        if (imageElem != null) {
+            imageElem.removeClassName("jqm4gwt-listitem-icon");
+            imageElem.addClassName("jqm4gwt-listitem-thumb");
+        }
+        return this;
+    }
+
+    /**
+     * Sets the image on this list item to the given source url.
+     * <p/> Neither 'jqm4gwt-listitem-thumb' nor 'jqm4gwt-listitem-icon' class is adeed.
+     */
+    public JQMListItem setImage(String src) {
+        if (src == null) {
             throw new RuntimeException("Cannot set image to null. Call removeImage() if you wanted to remove the image");
+        }
 
         if (imageElem == null) {
             imageElem = Document.get().createImageElement();
-            attachChild(imageElem);
+            insertFirstChild(imageElem); // must be first child according to jquery.mobile-1.4.1.css
         }
         imageElem.setAttribute("src", src);
 
-        if (icon)
-            imageElem.setAttribute("class", "ui-li-icon");
-        else
-            imageElem.removeAttribute("class");
+        getElement().addClassName("ui-li-has-thumb");
+
         return this;
     }
 
@@ -444,15 +466,6 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
             attachChild(headerElem);
         }
         headerElem.setInnerText(text);
-    }
-
-    /**
-     * Sets the image element to type thumbnail and uses the @param src for
-     * the source url of the image
-     */
-    public JQMListItem setThumbnail(String src) {
-        setImage(src, false);
-        return this;
     }
 
     /**

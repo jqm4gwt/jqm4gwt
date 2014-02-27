@@ -12,7 +12,6 @@ import com.sksamuel.jqm4gwt.examples.lists.ListViewDemoPage;
 import com.sksamuel.jqm4gwt.examples.showcase.FormShowcasePage;
 import com.sksamuel.jqm4gwt.examples.transition.TransitionDemoPage;
 import com.sksamuel.jqm4gwt.examples.uibinder.TestView1;
-import com.sksamuel.jqm4gwt.examples.uibinder.TestView2;
 import com.sksamuel.jqm4gwt.html.Paragraph;
 import com.sksamuel.jqm4gwt.toolbar.JQMFooter;
 import com.sksamuel.jqm4gwt.toolbar.JQMHeader;

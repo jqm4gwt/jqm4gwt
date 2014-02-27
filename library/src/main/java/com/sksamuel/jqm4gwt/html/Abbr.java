@@ -1,5 +1,6 @@
 package com.sksamuel.jqm4gwt.html;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasText;
@@ -14,7 +15,8 @@ import com.sksamuel.jqm4gwt.HasText;
 public class Abbr extends Widget implements HasText<Abbr> {
 
     public Abbr() {
-        setElement(DOM.createElement("abbr"));
+        Element elt = DOM.createElement("abbr");
+        setElement(elt);
     }
 
     @Override

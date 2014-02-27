@@ -103,7 +103,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         add(select);
 
         setText(text);
-        setStyleName(SELECT_STYLENAME);
+        addStyleName(SELECT_STYLENAME);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 			}
         }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
 	}
-	
+
     @Override
     public Label addErrorLabel() {
         return null;

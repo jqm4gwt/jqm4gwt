@@ -26,8 +26,8 @@ public class JQMFieldContainer extends JQMWidget {
         flow = new FlowPanel();
         initWidget(flow);
         setId();
-        setDataRole("fieldcontain");
         addStyleName("jqm4gwt-fieldcontain");
+        addStyleName("ui-field-contain");
     }
 
     protected JQMFieldContainer(FlowPanel externFlow) {
@@ -48,7 +48,7 @@ public class JQMFieldContainer extends JQMWidget {
 
     /**
      * Label/Legend/Text can be hidden for form elements.
-     * <p><a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/forms/form-hide-label.html">
+     * <p><a href="http://demos.jquerymobile.com/1.4.1/forms-label-hidden-accessible/">
      * Field containers, hide label/legend</a></p>
      */
     public void setLabelHidden(boolean value) {

@@ -1,10 +1,10 @@
 package com.sksamuel.jqm4gwt.layout;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiChild;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMContext;
@@ -27,7 +27,7 @@ import com.sksamuel.jqm4gwt.JQMWidget;
  *
  * <p/>    Tables must have at least 2 and at most 5 columns
  *
- * <p>See <a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/grids/">Grids</a></p>
+ * <p>See <a href="http://demos.jquerymobile.com/1.4.1/grids/">Grids</a></p>
  *
  */
 public class JQMTable extends JQMWidget {

@@ -6,7 +6,7 @@ import com.google.gwt.dom.client.Element;
  * @author Stephen K Samuel samspade79@gmail.com 13 May 2011 11:14:24
  * <p/>
  *         Utility methods. The static methods in this class map through to the
- *         equivilent JQM method in $.mobile
+ *         equivalent JQM method in $.mobile
  *
  */
 public class Mobile {
@@ -20,9 +20,11 @@ public class Mobile {
      */
     private static native void changePage(String url, String t, boolean r, boolean ch, String rol) /*-{
         if (rol != null) {
-            $wnd.$.mobile.changePage(url, { transition: t, reverse: r, changeHash: ch, role: rol });
+            $wnd.$("body").pagecontainer("change", url,
+                    { transition: t, reverse: r, changeHash: ch, role: rol });
         } else {
-            $wnd.$.mobile.changePage(url, { transition: t, reverse: r, changeHash: ch });
+            $wnd.$("body").pagecontainer("change", url,
+                    { transition: t, reverse: r, changeHash: ch });
         }
     }-*/;
 
@@ -49,11 +51,11 @@ public class Mobile {
      * <p> So &lt;div class="ui-loader-background">&lt;/div> must be added to html body. </p>
      */
     public static native void disableUI() /*-{
-        $wnd.$('body').addClass('ui-disabled');
+        $wnd.$('body').addClass('ui-state-disabled');
     }-*/;
 
     public static native void enableUI() /*-{
-        $wnd.$('body').removeClass('ui-disabled');
+        $wnd.$('body').removeClass('ui-state-disabled');
     }-*/;
 
     /**

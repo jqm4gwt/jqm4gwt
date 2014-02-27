@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt;
 import java.util.Collection;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -15,10 +16,6 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class JQMContainer extends ComplexPanel implements HasId<JQMContainer>,
         HasTheme<JQMContainer>, HasTransition<JQMContainer>, HasCorners<JQMContainer> {
-
-    public static native void triggerCreate() /*-{
-        $wnd.$('body').trigger('create');
-    }-*/;
 
     private static int counter = 1;
     private static final String AUTOINC_SUFFIX = "++";
@@ -41,8 +38,10 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
     }
 
     protected void setRole(String role) {
+        String s = JQMCommon.getDataRole(this);
+        if (s != null && !s.isEmpty()) removeStyleName("jqm4gwt-" + s);
         JQMCommon.setDataRole(this, role);
-        setStyleName("jqm4gwt-" + role);
+        addStyleName("jqm4gwt-" + role);
     }
 
     private static String generateContainerId() {
@@ -99,7 +98,8 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
 
     @Override
     public void add(Widget w) {
-        add(w, getElement());
+        Element elt = getElement();
+        add(w, elt);
     }
 
     /**

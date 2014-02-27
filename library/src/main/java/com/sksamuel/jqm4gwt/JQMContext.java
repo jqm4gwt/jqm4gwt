@@ -1,5 +1,7 @@
 package com.sksamuel.jqm4gwt;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -7,7 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 9 Jul 2011 12:57:43
  *
- *         The {@link JQMContent} provides methods that facilitate interaction
+ * <p/>    The {@link JQMContext} provides methods that facilitate interaction
  *         between GWT, JQM and the DOM.
  *
  */
@@ -124,18 +126,19 @@ public class JQMContext {
     }-*/;
 
     /**
-     * Ask JQuery Mobile to "render" the element with the given id.
+     * Ask JQuery Mobile to "render" the child elements of the element with the given id.
      */
     public static void render(String id) {
-        if (id == null || "".equals(id))
-            throw new IllegalArgumentException(
-                    "render for empty id not possible");
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("render() for empty id is not possible");
+        }
         renderImpl(id);
     }
 
-    // page() replaced by trigger("create"), see http://stackoverflow.com/a/6848969
+    // page() was replaced by trigger("create"), see http://stackoverflow.com/a/6848969
+    // trigger("create") was replaced by enhanceWithin(), see http://jquerymobile.com/upgrade-guide/1.4/#enhancewithin
     private static native void renderImpl(String id) /*-{
-        $wnd.$("#" + id).trigger("create");
+        $wnd.$("#" + id).enhanceWithin();
     }-*/;
 
     public static void setDefaultTransition(Transition defaultTransition) {
@@ -176,5 +179,97 @@ public class JQMContext {
     public static void silentScroll(Widget widget) {
         silentScroll(widget.getElement());
     }
+
+    public static JsArrayString getJsArrayString(String... strings) {
+        JsArrayString jsStrs = (JsArrayString) JavaScriptObject.createArray();
+        for (String s : strings) {
+            jsStrs.push(s);
+        }
+        return jsStrs;
+    }
+
+    /**
+     * See <a href="http://stackoverflow.com/a/12629050">Read :hover pseudo class with javascript</a>
+     * <p/>
+     * @param rule - substring for css rule search
+     * @param props - requested property names
+     * @param regexProps - regular expressions for requested properties, see the following links:
+     *
+     * <p/> <a href="http://www.w3schools.com/jsref/jsref_obj_regexp.asp">JavaScript RegExp Object</a>
+     * <p/> <a href="http://www.regular-expressions.info/javascriptexample.html">Regex Tester</a>
+     * <p/> <a href="http://www.regular-expressions.info/anchors.html">Start of String and End of String Anchors</a>
+     * <p/>
+     *
+     * @return - property/value javascript object
+     */
+    public static native JavaScriptObject getCssForRule(String rule, JsArrayString props, JsArrayString regexProps) /*-{
+        var sheets = $wnd.document.styleSheets;
+        var slen = sheets.length;
+        for (var i = 0; i < slen; i++) {
+            var rules = $wnd.document.styleSheets[i].cssRules;
+            var rlen = rules.length;
+            for (var j = 0; j < rlen; j++) {
+                var selectorText = rules[j].selectorText;
+                if (selectorText === undefined || selectorText === null) { continue; }
+                if (selectorText.indexOf(rule) >= 0) {
+                    var ret = {};
+                    var styleDefs = rules[j].style;
+                    for (var k = 0, dlen = styleDefs.length; k < dlen; k++) {
+                        var def = styleDefs[k];
+                        var found = props === null && regexProps === null;
+                        if (props !== null) {
+                            for (n = 0, plen = props.length; n < plen; n++) {
+                                if (def === props[n]) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!found && regexProps !== null) {
+                            for (n = 0, plen = regexProps.length; n < plen; n++) {
+                                if (def.match(regexProps[n])) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!found) { continue; }
+                        ret[def] = styleDefs.getPropertyValue(def);
+                    }
+                    return ret;
+                }
+            }
+        }
+        return null;
+    }-*/;
+
+    /**
+     * Example: jsObjToString(css, ":", ";") returns <b> color:red;background-color:yellow; </b>
+     *
+     * @param jsObj - property/value javascript object
+     * @param propValueSeparator - will be used to separate property and value, i.e. aaa:33
+     * @param propsSeparator - will be used to separate property/value pairs, i.e. aaa:33;bbb:44;
+     * @return - string representation of property/value javascript object, i.e. aaa:33;bbb:44;
+     */
+    public static native String jsObjToString(JavaScriptObject jsObj, String propValueSeparator,
+                                              String propsSeparator) /*-{
+        var rslt = '';
+        for (var prop in jsObj) {
+            rslt += prop + propValueSeparator + jsObj[prop] + propsSeparator;
+        }
+        return rslt;
+    }-*/;
+
+    public static native JsArrayString getJsObjKeys(JavaScriptObject jsObj) /*-{
+        var keys = [];
+        for (var key in jsObj) {
+            keys.push(key);
+        }
+        return keys;
+    }-*/;
+
+    public static native String getJsObjValue(JavaScriptObject jsObj, String key) /*-{
+        return jsObj[key];
+    }-*/;
 
 }

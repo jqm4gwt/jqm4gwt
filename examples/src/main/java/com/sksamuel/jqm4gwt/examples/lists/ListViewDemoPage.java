@@ -34,12 +34,13 @@ import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
  */
 public class ListViewDemoPage extends JQMPage {
 
-	private static final String	SOURCE_URL	= "http://code.google.com/p/jqm4gwt/source/browse/src/com/sksamuel/jqm4gwt/examples/lists/ListViewDemoPage.java?repo=examples";
-	protected List<String>		items		= getCountries();
+	private static final String	SOURCE_URL = "https://github.com/sksamuel/jqm4gwt/blob/master/examples/src/main/java/com/sksamuel/jqm4gwt/examples/lists/ListViewDemoPage.java";
+	protected List<String> items = getCountries();
 
 	public ListViewDemoPage() {
 		JQMHeader header = new JQMHeader("List View Demo");
 		header.setRightButton("View source", SOURCE_URL, DataIcon.GEAR);
+		header.setBackButton(true);
 		add(header);
 
 		add(new Paragraph(
@@ -93,6 +94,9 @@ public class ListViewDemoPage extends JQMPage {
 		item.addText("Starsailor teamed up with Phil Spector for their second album Silence is Easy, which was recorded in Los Angeles. The collaboration came about following Spector's daughter Nicole attending one of the band's American concerts in the Winter of 2002.");
 		item.setThumbnail("http://www.gazette.uwo.ca/2004/January/29/Pics/08D%20Starsailor.jpg");
 
+	    item = formattedList.addItem("California");
+	    item.setIcon("http://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Flag_of_California.svg/320px-Flag_of_California.svg.png");
+
 		button = new JQMButton("Refresh");
 		add(button);
 		button.addClickHandler(new ClickHandler() {
@@ -145,7 +149,7 @@ public class ListViewDemoPage extends JQMPage {
 		radioSet.addRadio("the big bear.", "yogi@yellowsrock.net");
 		radioSet.addRadio("the little bear.", "bubu@yellowsrock.net");
 		radioSet.addRadio("the ranger.", "ranger@yellowsrock.net");
-		radioSet.addStyleName("ui-hide-label");
+		radioSet.setLabelHidden(true);
 		item.addWidget(radioSet);
 
 		JQMButton send = new JQMButton("Send email");

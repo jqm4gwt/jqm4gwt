@@ -1,0 +1,19 @@
+/* See custom size flipswitch from http://demos.jquerymobile.com/1.4.1/flipswitch */
+.size10flipswitch.ui-flipswitch {
+  width: 10.875em !important;
+}
+.size10flipswitch.ui-flipswitch.ui-flipswitch-active {
+  padding-left: 9em;
+  width: 1.875em !important;
+}
+.size10flipswitch.ui-flipswitch .ui-btn.ui-flipswitch-on {
+  text-indent: -8.5em; /* to center text in active state */
+}
+.size10flipswitch.ui-flipswitch .ui-flipswitch-off {
+  text-indent: 0.5em; /* to center text in off/regular state */
+}
+@media (min-width: 28em) {
+  .ui-field-contain > label + .size10flipswitch.ui-flipswitch {
+    width: 10.875em; /* repeat the same value as .ui-flipswitch */
+  }
+}

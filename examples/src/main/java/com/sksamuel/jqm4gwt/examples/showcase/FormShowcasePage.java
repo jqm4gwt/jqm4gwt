@@ -13,15 +13,17 @@ import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 9 Jul 2011 18:43:06
- * 
+ *
  *         The showcase page is a single page with every element/event/etc under
  *         the sun all crammed in !
- * 
+ *
  */
 public class FormShowcasePage extends JQMPage {
 
 	public FormShowcasePage() {
-		add(new JQMHeader("Showcase"));
+		JQMHeader h = new JQMHeader("Form Showcase");
+		h.setBackButton(true);
+	    add(h);
 		add(new Paragraph("This page shows all the different form elements in use."));
 
 		add(new JQMText("A text field"));

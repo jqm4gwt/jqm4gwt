@@ -3,7 +3,6 @@ package com.sksamuel.jqm4gwt;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -15,27 +14,31 @@ public class JQMCommon {
 
     private JQMCommon() {} // static class, not supposed to be instantiated
 
-    private static final String STYLE_UI_DISABLED = "ui-disabled";
+    private static final String STYLE_UI_DISABLED = "ui-state-disabled";
+
+    // TODO: Deprecated in 1.4, quite serious refactoring is needed to switch to ui-hidden-accessible
+    // See https://github.com/jquery/jquery-mobile/issues/6405
     private static final String STYLE_UI_HIDE_LABEL = "ui-hide-label";
+
     private static final String STYLE_UI_BTN_ACTIVE = "ui-btn-active";
 
-    private static final String STYLE_UI_BTN_HOVER = "ui-btn-hover-";
-    private static final String STYLE_UI_BTN_UP = "ui-btn-up-";
-    private static final String STYLE_UI_BTN_DOWN = "ui-btn-down-";
+    private static final String STYLE_UI_ICON = "ui-icon-";
+    private static final String STYLE_UI_NODISC_ICON = "ui-nodisc-icon";
+    private static final String STYLE_UI_ALT_ICON = "ui-alt-icon";
+    private static final String STYLE_UI_SHADOW_ICON = "ui-shadow-icon";
 
-    private static final String STYLE_UI_ICON_NODISC = "ui-icon-nodisc";
-    private static final String STYLE_UI_ICON_ALT = "ui-icon-alt";
-
+    private static final String ROLE = "role";
     private static final String DATA_ROLE = "data-role";
     private static final String DATA_THEME = "data-theme";
     private static final String DATA_INLINE = "data-inline";
     private static final String DATA_CORNERS = "data-corners";
     private static final String DATA_ICON = "data-icon";
     private static final String DATA_ICONPOS = "data-iconpos";
-    private static final String DATA_ICONSHADOW = "data-iconshadow";
     private static final String DATA_CLEAR_BTN = "data-clear-btn";
     private static final String DATA_MINI = "data-mini";
     private static final String DATA_POPUP_POSITION = "data-position-to";
+    private static final String DATA_DIALOG = "data-dialog";
+    private static final String DATA_WRAPPER = "data-wrapper-class";
 
     public static boolean isVisible(Widget widget) {
         return widget != null && Mobile.isVisible(widget.getElement());
@@ -43,6 +46,27 @@ public class JQMCommon {
 
     public static boolean isHidden(Widget widget) {
         return widget != null && Mobile.isHidden(widget.getElement());
+    }
+
+    /**
+     * Converts aaa-bbb-ccc to aaaBbbCcc
+     */
+    public static String hyphenToCamelCase(String hyphenStr) {
+        if (hyphenStr == null || hyphenStr.isEmpty()) return hyphenStr;
+        int p = hyphenStr.indexOf('-');
+        if (p == -1) return hyphenStr;
+        StringBuilder sb = new StringBuilder(hyphenStr);
+        do {
+            int i = p + 1;
+            if (i < sb.length()) {
+                sb.setCharAt(i, Character.toUpperCase(sb.charAt(i)));
+            }
+            sb.deleteCharAt(p);
+            p = sb.indexOf("-", p);
+            if (p == -1) break;
+        } while (true);
+
+        return sb.toString();
     }
 
     /**
@@ -109,15 +133,13 @@ public class JQMCommon {
 
     public static boolean hasStyle(Element elt, String style) {
         if (elt == null) return false;
-        String styles = DOM.getElementProperty(elt.<com.google.gwt.user.client.Element> cast(),
-                                               "className");
+        String styles = elt.getPropertyString("className");
         return styles != null && (indexOfName(styles, style) >= 0);
     }
 
     public static void removeStylesStartsWith(Element elt, String startsWith) {
         if (elt == null || startsWith == null || startsWith.isEmpty()) return;
-        String styles = DOM.getElementProperty(elt.<com.google.gwt.user.client.Element> cast(),
-                                               "className");
+        String styles = elt.getPropertyString("className");
         if (styles == null || styles.isEmpty()) return;
         boolean changed = false;
         int p = 0;
@@ -139,15 +161,13 @@ public class JQMCommon {
         } while (true);
 
         if (changed) {
-            DOM.setElementProperty(elt.<com.google.gwt.user.client.Element> cast(),
-                                   "className", styles);
+            elt.setPropertyString("className", styles);
         }
     }
 
-    public static String getStyleStartsWith(Element elt, String startsWith) {
+    public static String getStyleStartsWith(Element elt, String startsWith, String... excludes) {
         if (elt == null || startsWith == null || startsWith.isEmpty()) return null;
-        String styles = DOM.getElementProperty(elt.<com.google.gwt.user.client.Element> cast(),
-                                               "className");
+        String styles = elt.getPropertyString("className");
         if (styles == null || styles.isEmpty()) return null;
         int p = 0;
         do {
@@ -159,7 +179,21 @@ public class JQMCommon {
                     if (styles.charAt(j) == ' ') break;
                     j++;
                 }
-                return styles.substring(p, j);
+                String s = styles.substring(p, j);
+                if (excludes.length > 0) {
+                    boolean excluded = false;
+                    for (String excl : excludes) {
+                        if (s.equals(excl)) {
+                            p = j + 1;
+                            excluded = true;
+                            break;
+                        }
+                    }
+                    if (!excluded) return s;
+                } else {
+                    return s;
+                }
+
             } else {
                 p += startsWith.length();
             }
@@ -191,24 +225,35 @@ public class JQMCommon {
     }
 
     public static boolean isIconAlt(Widget widget) {
-        return hasStyle(widget, STYLE_UI_ICON_ALT);
+        return hasStyle(widget, STYLE_UI_ALT_ICON);
     }
 
     public static void setIconAlt(Widget widget, boolean value) {
         if (isIconAlt(widget) != value) {
-            if (value) widget.addStyleName(STYLE_UI_ICON_ALT);
-            else widget.removeStyleName(STYLE_UI_ICON_ALT);
+            if (value) widget.addStyleName(STYLE_UI_ALT_ICON);
+            else widget.removeStyleName(STYLE_UI_ALT_ICON);
         }
     }
 
     public static boolean isIconNoDisc(Widget widget) {
-        return hasStyle(widget, STYLE_UI_ICON_NODISC);
+        return hasStyle(widget, STYLE_UI_NODISC_ICON);
     }
 
     public static void setIconNoDisc(Widget widget, boolean value) {
         if (isIconNoDisc(widget) != value) {
-            if (value) widget.addStyleName(STYLE_UI_ICON_NODISC);
-            else widget.removeStyleName(STYLE_UI_ICON_NODISC);
+            if (value) widget.addStyleName(STYLE_UI_NODISC_ICON);
+            else widget.removeStyleName(STYLE_UI_NODISC_ICON);
+        }
+    }
+
+    public static boolean isIconShadow(Widget widget) {
+        return hasStyle(widget, STYLE_UI_SHADOW_ICON);
+    }
+
+    public static void setIconShadow(Widget widget, boolean value) {
+        if (isIconShadow(widget) != value) {
+            if (value) widget.addStyleName(STYLE_UI_SHADOW_ICON);
+            else widget.removeStyleName(STYLE_UI_SHADOW_ICON);
         }
     }
 
@@ -220,35 +265,6 @@ public class JQMCommon {
         if (isBtnActive(widget) != value) {
             if (value) widget.addStyleName(STYLE_UI_BTN_ACTIVE);
             else widget.removeStyleName(STYLE_UI_BTN_ACTIVE);
-        }
-    }
-
-    public static boolean isBtnHover(Widget widget) {
-        if (widget == null) return false;
-        String s = getStyleStartsWith(widget.getElement(), STYLE_UI_BTN_HOVER);
-        return s != null && !s.isEmpty();
-    }
-
-    public static void setBtnHover(Widget widget, boolean value) {
-        if (widget == null) return;
-        if (isBtnHover(widget) != value) {
-            if (value) {
-                String theme = getTheme(widget);
-                if (theme == null || theme.isEmpty()) {
-                    String s = getStyleStartsWith(widget.getElement(), STYLE_UI_BTN_UP);
-                    if (s == null || s.isEmpty()) {
-                        s = getStyleStartsWith(widget.getElement(), STYLE_UI_BTN_DOWN);
-                        if (s != null) theme = s.substring(STYLE_UI_BTN_DOWN.length());
-                    } else {
-                        theme = s.substring(STYLE_UI_BTN_UP.length());
-                    }
-                }
-                if (theme != null && !theme.isEmpty()) {
-                    widget.addStyleName(STYLE_UI_BTN_HOVER + theme);
-                }
-            } else {
-                removeStylesStartsWith(widget.getElement(), STYLE_UI_BTN_HOVER);
-            }
         }
     }
 
@@ -275,6 +291,26 @@ public class JQMCommon {
 
     public static void removeAttribute(Widget widget, String name) {
         setAttribute(widget.getElement(), name, null);
+    }
+
+    public static String getRole(Element elt) {
+        return getAttribute(elt, ROLE);
+    }
+
+    public static String getRole(Widget widget) {
+        return getRole(widget.getElement());
+    }
+
+    public static void setRole(Element elt, String value) {
+        setAttribute(elt, ROLE, value);
+    }
+
+    public static void setRole(Widget widget, String value) {
+        setRole(widget.getElement(), value);
+    }
+
+    public static void removeRole(Widget widget) {
+        removeAttribute(widget, ROLE);
     }
 
     public static String getDataRole(Element elt) {
@@ -335,7 +371,9 @@ public class JQMCommon {
     }
 
     public static boolean isCorners(Element elt) {
-        return "true".equals(getAttribute(elt, DATA_CORNERS));
+        String s = getAttribute(elt, DATA_CORNERS);
+        if (s == null || s.isEmpty()) return true; // corners are ON by default
+        return "true".equals(s);
     }
 
     public static boolean isCorners(Widget widget) {
@@ -348,6 +386,23 @@ public class JQMCommon {
 
     public static void setCorners(Widget widget, boolean corners) {
         setCorners(widget.getElement(), corners);
+    }
+
+    public static DataIcon getStyleIcon(Element elt) {
+        String s = getStyleStartsWith(elt, STYLE_UI_ICON);
+        if (s == null || s.isEmpty()) return null;
+        return DataIcon.fromJqmValue(s.substring(STYLE_UI_ICON.length()));
+    }
+
+    public static void setStyleIcon(Element elt, DataIcon icon) {
+        if (icon == null) {
+            removeStylesStartsWith(elt, STYLE_UI_ICON);
+            return;
+        }
+        String s = STYLE_UI_ICON + icon.getJqmValue();
+        if (hasStyle(elt, s)) return;
+        removeStylesStartsWith(elt, STYLE_UI_ICON);
+        elt.addClassName(s);
     }
 
     public static DataIcon getIcon(Element elt) {
@@ -380,22 +435,6 @@ public class JQMCommon {
 
     public static void setIconPos(Widget widget, IconPos iconPos) {
         setIconPos(widget.getElement(), iconPos);
-    }
-
-    public static boolean isIconShadow(Element elt) {
-        return !"false".equals(getAttribute(elt, DATA_ICONSHADOW));
-    }
-
-    public static boolean isIconShadow(Widget widget) {
-        return isIconShadow(widget.getElement());
-    }
-
-    public static void setIconShadow(Element elt, boolean value) {
-        setAttribute(elt, DATA_ICONSHADOW, value ? null : "false");
-    }
-
-    public static void setIconShadow(Widget widget, boolean value) {
-        setIconShadow(widget.getElement(), value);
     }
 
     public static boolean isClearButton(Element elt) {
@@ -453,6 +492,39 @@ public class JQMCommon {
 
     public static void setPopupPos(Widget widget, String value) {
         setPopupPos(widget.getElement(), value);
+    }
+
+    public static boolean isDataDialog(Element elt) {
+        return "true".equals(getAttribute(elt, DATA_DIALOG));
+    }
+
+    public static boolean isDataDialog(Widget widget) {
+        return isDataDialog(widget.getElement());
+    }
+
+    public static void setDataDialog(Element elt, boolean value) {
+        if (value) setAttribute(elt, DATA_DIALOG, "true");
+        else removeAttribute(elt, DATA_DIALOG);
+    }
+
+    public static void setDataDialog(Widget widget, boolean value) {
+        setDataDialog(widget.getElement(), value);
+    }
+
+    public static String getDataWrapper(Element elt) {
+        return getAttribute(elt, DATA_WRAPPER);
+    }
+
+    public static String getDataWrapper(Widget widget) {
+        return getDataWrapper(widget.getElement());
+    }
+
+    public static void setDataWrapper(Element elt, String wrapper) {
+        setAttribute(elt, DATA_WRAPPER, wrapper);
+    }
+
+    public static void setDataWrapper(Widget widget, String wrapper) {
+        setDataWrapper(widget.getElement(), wrapper);
     }
 
 }

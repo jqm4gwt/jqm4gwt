@@ -1,7 +1,6 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -27,7 +26,6 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasClearButton;
 import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasMini;
@@ -36,8 +34,6 @@ import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
 import com.sksamuel.jqm4gwt.HasReadOnly;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMCommon;
-import com.sksamuel.jqm4gwt.JQMPage;
-import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.events.HasTapHandlers;
 import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
@@ -342,60 +338,14 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasF
         return this;
     }
 
-    // In JQM 1.4.0 all this tricky "corners" code won't be needed anymore,
-    // see https://github.com/jquery/jquery-mobile/commit/698ffb210b06cfcef5fa0f86d5b9b4826e307ba3
-
-    private static final String UI_CORNER_ALL = "ui-corner-all";
-    private Boolean corners = null;
-
     @Override
     public boolean isCorners() {
-        if (!isAttached()) return corners != null ? corners : false;
-        if (JQMCommon.hasStyle(input, UI_CORNER_ALL)) return true;
-        Element p = input.getElement().getParentElement();
-        if (p != null && p != flow.getElement() && p.getParentElement() == flow.getElement()) {
-            if (JQMCommon.hasStyle(p, UI_CORNER_ALL)) return true;
-        }
-        return false;
+        return JQMCommon.isCorners(input);
     }
 
     @Override
     public void setCorners(boolean corners) {
-        this.corners = corners;
-        if (corners) {
-            input.getElement().addClassName(UI_CORNER_ALL);
-            Element p = input.getElement().getParentElement();
-            if (p != null && p != flow.getElement() && p.getParentElement() == flow.getElement()) {
-                p.addClassName(UI_CORNER_ALL);
-            }
-        } else {
-            input.getElement().removeClassName(UI_CORNER_ALL);
-            Element p = input.getElement().getParentElement();
-            if (p != null && p != flow.getElement() && p.getParentElement() == flow.getElement()) {
-                p.removeClassName(UI_CORNER_ALL);
-            }
-        }
-    }
-
-    @Override
-    protected void onLoad() {
-        super.onLoad();
-        if (corners != null) {
-            Widget p = getParent();
-            while (p != null) {
-                if (p instanceof JQMPage) {
-                    ((JQMPage) p).addPageHandler(new JQMPageEvent.DefaultHandler() {
-                        @Override
-                        public void onInit(JQMPageEvent event) {
-                            super.onInit(event);
-                            setCorners(corners);
-                        }
-                    });
-                    break;
-                }
-                p = p.getParent();
-            }
-        }
+        JQMCommon.setCorners(input, corners);
     }
 
     @Override

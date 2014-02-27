@@ -19,14 +19,15 @@ import com.sksamuel.jqm4gwt.JQMWidget;
  *         collapsible panel, then any others will be closed automatically.
  * @link http://jquerymobile.com/demos/1.2.0/docs/content/content-collapsible-set.html
  */
-public class JQMCollapsibleSet extends JQMWidget implements HasIconPos, HasMini, HasInset<JQMCollapsibleSet> {
+public class JQMCollapsibleSet extends JQMWidget implements HasIconPos<JQMCollapsibleSet>,
+        HasMini<JQMCollapsibleSet>, HasInset<JQMCollapsibleSet> {
 
     private final FlowPanel flow;
 
     public JQMCollapsibleSet() {
         flow = new FlowPanel();
         initWidget(flow);
-        setDataRole("collapsible-set");
+        setDataRole("collapsibleset");
         setId();
     }
 

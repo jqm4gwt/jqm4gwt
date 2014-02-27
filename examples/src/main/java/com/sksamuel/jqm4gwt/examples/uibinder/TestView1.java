@@ -217,6 +217,12 @@ public class TestView1 {
     @UiField
     JQMButton movieTitleBtn;
 
+    @UiField
+    JQMButton alwaysHoverBtn;
+
+    @UiField
+    JQMButton toggleAlwaysHoverBtn;
+
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
             @Override
@@ -471,6 +477,11 @@ public class TestView1 {
     @UiHandler("movieTitleBtn")
     void movieTitleBtnClick(ClickEvent e) {
         Window.alert("'" + movieTitleBtn.getText() + "' button is clicked.");
+    }
+
+    @UiHandler("toggleAlwaysHoverBtn")
+    void handleToggleAlwaysHoverBtnClick(ClickEvent e) {
+        alwaysHoverBtn.setAlwaysHover(!alwaysHoverBtn.isAlwaysHover());
     }
 
     {

@@ -1,127 +1,123 @@
 package com.sksamuel.jqm4gwt.events;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * This class is responsible for registering and unregistering JQM events.
- * 
+ *
  * @author Andrei Costescu costescuandrei@gmail.com 31 Oct 2013
  */
 public class JQMHandlerRegistration<X extends EventHandler> implements
-		HandlerRegistration {
+        HandlerRegistration {
 
-	private String jqmEventName;
-	private HandlerRegistration defaultRegistration;
-	private WidgetHandlerCounter counter;
-	private Type<X> type;
-	private Widget widget;
-	private X handler;
-	private HandlerRegistration attachHandlerRegistration;
+    private String jqmEventName;
+    private HandlerRegistration defaultRegistration;
+    private WidgetHandlerCounter counter;
+    private Type<X> type;
+    private Widget widget;
+    private X handler;
+    private HandlerRegistration attachHandlerRegistration;
 
-	public static interface WidgetHandlerCounter {
-		int getHandlerCountForWidget(GwtEvent.Type<?> type);
-	}
+    public static interface WidgetHandlerCounter {
+        int getHandlerCountForWidget(GwtEvent.Type<?> type);
+    }
 
-	protected JQMHandlerRegistration() {
-	}
+    protected JQMHandlerRegistration() {
+    }
 
-	public static <X extends EventHandler> JQMHandlerRegistration<X> registerJQueryHandler(
-			WidgetHandlerCounter counter, Widget widget, X handler,
-			String jqmEventName, Type<X> type) {
+    public static <X extends EventHandler> JQMHandlerRegistration<X> registerJQueryHandler(
+            WidgetHandlerCounter counter, Widget widget, X handler,
+            String jqmEventName, Type<X> type) {
 
-		JQMHandlerRegistration<X> reg = new JQMHandlerRegistration<X>();
-		reg.addHandler(counter, widget, handler, jqmEventName, type);
-		return reg;
-	}
+        JQMHandlerRegistration<X> reg = new JQMHandlerRegistration<X>();
+        reg.addHandler(counter, widget, handler, jqmEventName, type);
+        return reg;
+    }
 
-	protected void addHandler(WidgetHandlerCounter counter, Widget widget,
-			X handler, String jqmEventName, Type<X> type) {
+    protected void addHandler(WidgetHandlerCounter counter, Widget widget,
+            X handler, String jqmEventName, Type<X> type) {
 
-		this.widget = widget;
-		this.counter = counter;
-		this.jqmEventName = jqmEventName;
-		this.type = type;
-		this.handler = handler;
+        this.widget = widget;
+        this.counter = counter;
+        this.jqmEventName = jqmEventName;
+        this.type = type;
+        this.handler = handler;
 
-		if (widget.isAttached()) {
-			attachIfNeeded();
-		}
+        if (widget.isAttached()) {
+            attachIfNeeded();
+        }
 
-		attachHandlerRegistration = widget
-				.addAttachHandler(new AttachEvent.Handler() {
+        attachHandlerRegistration = widget
+                .addAttachHandler(new AttachEvent.Handler() {
 
-					@Override
-					public void onAttachOrDetach(AttachEvent event) {
-						if (event.isAttached())
-							attachIfNeeded();
-						else
-							detachIfNeeded();
-					}
+                    @Override
+                    public void onAttachOrDetach(AttachEvent event) {
+                        if (event.isAttached())
+                            attachIfNeeded();
+                        else
+                            detachIfNeeded();
+                    }
 
-				});
-	}
+                });
+    }
 
-	public void attachIfNeeded() {
-		boolean addInJS = counter.getHandlerCountForWidget(type) == 0;
-		this.defaultRegistration = widget.addHandler(handler, type);
-		if (addInJS) {
-			addJQueryEvent(widget.getElement(), jqmEventName);
-		}
-	}
+    public void attachIfNeeded() {
+        boolean addInJS = counter.getHandlerCountForWidget(type) == 0;
+        this.defaultRegistration = widget.addHandler(handler, type);
+        if (addInJS) {
+            addJQueryEvent(widget.getElement(), jqmEventName);
+        }
+    }
 
-	public void detachIfNeeded() {
-		if (defaultRegistration != null) {
-			defaultRegistration.removeHandler();
-			defaultRegistration = null;
-			if (counter.getHandlerCountForWidget(type) == 0)
-				removeJQueryEventHandler(widget.getElement(), jqmEventName);
-		}
-	}
+    public void detachIfNeeded() {
+        if (defaultRegistration != null) {
+            defaultRegistration.removeHandler();
+            defaultRegistration = null;
+            if (counter.getHandlerCountForWidget(type) == 0)
+                removeJQueryEventHandler(widget.getElement(), jqmEventName);
+        }
+    }
 
-	@Override
-	public void removeHandler() {
-		detachIfNeeded();
-		attachHandlerRegistration.removeHandler();
-	}
+    @Override
+    public void removeHandler() {
+        detachIfNeeded();
+        attachHandlerRegistration.removeHandler();
+    }
 
-	public static native JavaScriptObject addJQueryEvent(Element element,
-			String jqmEventName) /*-{
-		$wnd
-				.$(element)
-				.on(
-						jqmEventName + ".jqm4gwt.s",
-						$entry(function(event) {
-							@com.sksamuel.jqm4gwt.events.JQMHandlerRegistration::dispatchJQMEvent(Ljava/lang/String;Lcom/google/gwt/user/client/EventListener;Lcom/google/gwt/core/client/JavaScriptObject;)(jqmEventName, element.__listener, event);
-						}));
-	}-*/;
+    public static native JavaScriptObject addJQueryEvent(Element element, String jqmEventName) /*-{
+        $wnd.$(element).on(jqmEventName + ".jqm4gwt.s",
+            $entry(function(event) {
+                       @com.sksamuel.jqm4gwt.events.JQMHandlerRegistration::dispatchJQMEvent(Ljava/lang/String;Lcom/google/gwt/user/client/EventListener;Lcom/google/gwt/core/client/JavaScriptObject;)(jqmEventName, element.__listener, event);
+                   }));
+    }-*/;
 
-	public static final void dispatchJQMEvent(String jqmEventName,
-			EventListener listener, JavaScriptObject jQueryEvent) {
-		if (listener != null) {
-			// TODO do this nicer somehow - and if possible make this class
-			// "JQueryHandlerRegistration" - so make it work for all jQuery
-			// events
-			if (JQMComponentEvents.TAP_EVENT.equals(jqmEventName)){
-				TapEvent.fire((HasTapHandlers) listener, jQueryEvent);
-			}else if (JQMComponentEvents.TAP_HOLD_EVENT.equals(jqmEventName)){
-				TapHoldEvent.fire((HasTapHoldHandlers) listener, jQueryEvent);
-			}else {				
-				JQMEvent.fire((HasJQMEventHandlers) listener, jQueryEvent);
-			}
-		}
-	}
+    public static final void dispatchJQMEvent(String jqmEventName,
+            EventListener listener, JavaScriptObject jQueryEvent) {
+        if (listener != null) {
+            // TODO do this nicer somehow - and if possible make this class
+            // "JQueryHandlerRegistration" - so make it work for all jQuery
+            // events
+            if (JQMComponentEvents.TAP_EVENT.equals(jqmEventName)){
+                TapEvent.fire((HasTapHandlers) listener, jQueryEvent);
+            }else if (JQMComponentEvents.TAP_HOLD_EVENT.equals(jqmEventName)){
+                TapHoldEvent.fire((HasTapHoldHandlers) listener, jQueryEvent);
+            }else {
+                JQMEvent.fire((HasJQMEventHandlers) listener, jQueryEvent);
+            }
+        }
+    }
 
-	public static native void removeJQueryEventHandler(Element element,
-			String jqmEventName) /*-{
-		$wnd.$(element).off(jqmEventName + ".jqm4gwt.s");
-	}-*/;
+    public static native void removeJQueryEventHandler(Element element,
+            String jqmEventName) /*-{
+        $wnd.$(element).off(jqmEventName + ".jqm4gwt.s");
+    }-*/;
 
 }

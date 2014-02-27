@@ -1,7 +1,17 @@
 package com.sksamuel.jqm4gwt.button;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -22,6 +32,7 @@ import com.sksamuel.jqm4gwt.HasTransition;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContainer;
+import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.Transition;
@@ -36,7 +47,7 @@ import com.sksamuel.jqm4gwt.events.TapHandler;
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 14:02:24
  * <p/>
  * An implementation of a Jquery mobile button.
- * <p/>See <a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/buttons/">Buttons</a>
+ * <p/>See <a href="http://demos.jquerymobile.com/1.4.1/button-markup/">Buttons</a>
  * <p/>See also <a href="http://jquerymobile.com/demos/1.2.1/docs/buttons/buttons-types.html">Button basics</a>
  */
 public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<JQMButton>,
@@ -44,8 +55,67 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         HasIcon<JQMButton>, HasCorners<JQMButton>, HasIconShadow<JQMButton>, HasMini<JQMButton>,
         HasTapHandlers {
 
+    private static final String[] HOVER_PROPS = { "background-color", "color", "border-color", "text-shadow" };
+
+    private static final String[] HOVER_REGEX = { "^border-\\S*color$", "^border-\\S*color-value$" };
+
+    /** FindRegex/Replacement pairs */
+    private static final String[] HOVER_REPLACE = { "color-value", "color" };
+
+    /** Heuristics based on jquery.mobile.css definitions */
+    private static final Map<String, String> currentThemeSearch = new LinkedHashMap<String, String>();
+
+    private static final Map<String, JavaScriptObject> cachedCssRules = new HashMap<String, JavaScriptObject>();
+
     private boolean alwaysActive;
     private boolean alwaysHover;
+    private JavaScriptObject hoverStyle = null;
+
+    private class StyleItem {
+        public final String property;
+        public final String oldValue;
+        public final String newValue;
+
+        public StyleItem(String property, String oldValue, String newValue) {
+            this.property = property;
+            this.oldValue = oldValue;
+            this.newValue = newValue;
+        }
+    }
+
+    private List<StyleItem> hoverStyleApplied = null;
+
+    static {
+        currentThemeSearch.put("ui-group-theme-", null);
+        currentThemeSearch.put("ui-body-", "ui-body-inherit");
+        currentThemeSearch.put("ui-bar-", "ui-bar-inherit");
+        currentThemeSearch.put("ui-page-theme-", null);
+    }
+
+    private static String getCurrentTheme(Element elt) {
+        if (elt == null) return null;
+        for (Entry<String, String> i : currentThemeSearch.entrySet()) {
+            String v = i.getValue();
+            String s = v == null ? JQMCommon.getStyleStartsWith(elt, i.getKey())
+                                 : JQMCommon.getStyleStartsWith(elt, i.getKey(), v);
+            if (s != null && !s.isEmpty()) {
+                return s.substring(i.getKey().length());
+            }
+        }
+        return null;
+    }
+
+    private String getCurrentTheme() {
+        String s = getTheme();
+        if (s != null && !s.isEmpty()) return s;
+        Element elt = getElement().getParentElement();
+        while (elt != null) {
+            s = getCurrentTheme(elt);
+            if (s != null) return s;
+            elt = elt.getParentElement();
+        }
+        return "a"; // just meaningful default value
+    }
 
     /**
      * Create a {@link JQMButton} with the given text that does not link to
@@ -524,17 +594,72 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     public void setAlwaysHover(boolean value) {
         if (alwaysHover == value) return;
         alwaysHover = value;
-        JQMCommon.setBtnHover(this, alwaysHover);
-        if (alwaysHover) Scheduler.get().scheduleFinally(createAlwaysHoverCmd());
+        if (alwaysHover) {
+            prepareHoverStyle();
+            applyHoverStyle();
+        } else {
+            removeHoverStyle();
+        }
     }
 
-    private Scheduler.RepeatingCommand createAlwaysHoverCmd() {
-        return new Scheduler.RepeatingCommand() {
-            @Override
-            public boolean execute() {
-                if (alwaysHover) JQMCommon.setBtnHover(JQMButton.this, true);
-                return alwaysHover; // stops when alwaysHover == false
-            }};
+    private void applyHoverStyle() {
+        if (hoverStyle == null) return;
+        Style st = getElement().getStyle();
+        if (hoverStyleApplied == null) {
+            hoverStyleApplied = new ArrayList<StyleItem>();
+            JsArrayString keys = JQMContext.getJsObjKeys(hoverStyle);
+            if (keys == null) return;
+            for (int i = 0; i < keys.length(); i++) {
+                String val = JQMContext.getJsObjValue(hoverStyle, keys.get(i));
+                if (val == null) continue;
+                String prop = keys.get(i);
+                for (int j = 0; j < HOVER_REPLACE.length - 1; j = j + 2) {
+                    prop = prop.replaceAll(HOVER_REPLACE[j], HOVER_REPLACE[j + 1]);
+                }
+                prop = JQMCommon.hyphenToCamelCase(prop);
+                String oldVal = st.getProperty(prop);
+                String newVal = val.toString();
+                if (newVal.equals(oldVal)) continue;
+                hoverStyleApplied.add(new StyleItem(prop, oldVal, newVal));
+            }
+        }
+        for (StyleItem item : hoverStyleApplied) {
+            st.setProperty(item.property, item.newValue);
+        }
+    }
+
+    private void removeHoverStyle() {
+        if (hoverStyleApplied != null) {
+            Style st = getElement().getStyle();
+            for (StyleItem item : hoverStyleApplied) {
+                st.setProperty(item.property, item.oldValue);
+            }
+        }
+        hoverStyleApplied = null;
+        hoverStyle = null;
+    }
+
+    private void prepareHoverStyle() {
+        if (hoverStyle != null) return;
+
+        String theme = getCurrentTheme();
+        String rule = ".ui-btn.ui-btn-" + theme + ":hover";
+        hoverStyle = cachedCssRules.get(rule);
+        if (hoverStyle != null) return;
+
+        String ruleIE = ".ui-btn-" + theme + ".ui-btn:hover"; // IE9 changes/rearranges css rules!
+        hoverStyle = cachedCssRules.get(ruleIE);
+        if (hoverStyle != null) return;
+
+        JsArrayString jsStrs = JQMContext.getJsArrayString(HOVER_PROPS);
+        JsArrayString jsRegex = JQMContext.getJsArrayString(HOVER_REGEX);
+        hoverStyle = JQMContext.getCssForRule(rule, jsStrs, jsRegex);
+        if (hoverStyle != null) {
+            cachedCssRules.put(rule, hoverStyle);
+        } else {
+            hoverStyle = JQMContext.getCssForRule(ruleIE, jsStrs, jsRegex);
+            if (hoverStyle != null) cachedCssRules.put(ruleIE, hoverStyle);
+        }
     }
 
 }

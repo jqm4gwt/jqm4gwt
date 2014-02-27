@@ -13,7 +13,6 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMPageEvent.PageState;
@@ -212,7 +211,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     private native void bindLifecycleEvents(JQMPage p, String id) /*-{
 
-        $wnd.$('div[data-url="' + id + '"]').bind("pageinit",
+        $wnd.$('div[data-url="' + id + '"]').bind("pagecreate",
             function(event, ui) {
                 p.@com.sksamuel.jqm4gwt.JQMPage::doPageInit()();
             });
@@ -240,7 +239,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }-*/;
 
     private native void unbindLifecycleEvents(String id) /*-{
-        $wnd.$('div[data-url="' + id + '"]').unbind("pageinit");
+        $wnd.$('div[data-url="' + id + '"]').unbind("pagecreate");
         $wnd.$('div[data-url="' + id + '"]').unbind("pageshow");
         $wnd.$('div[data-url="' + id + '"]').unbind("pagehide");
         $wnd.$('div[data-url="' + id + '"]').unbind("pagebeforehide");
@@ -249,14 +248,12 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }-*/;
 
     @Override
-    protected void onLoad()
-    {
+    protected void onLoad() {
         bindLifecycleEvents(this, getId());
     }
 
     @Override
-    protected void onUnload()
-    {
+    protected void onUnload() {
     	unbindLifecycleEvents(getId());
     }
 
@@ -272,7 +269,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     public JQMContent createContent() {
         JQMContent content = new JQMContent();
-        add(content, getElement());
+        Element elt = getElement();
+        add(content, elt);
         return content;
     }
 
@@ -323,7 +321,16 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * Returns true if this page has an auto generated back button
      */
     public boolean isBackButton() {
-        return "true".equals(getAttribute("data-add-back-btn"));
+        JQMHeader h = getHeader();
+        return h != null && h.isBackButton();
+    }
+
+    /**
+     * See {@link JQMHeader#setBackButton(boolean)}
+     */
+    public void setBackButton(boolean value) {
+        JQMHeader h = getHeader();
+        if (h != null) h.setBackButton(value);
     }
 
     @Override
@@ -359,23 +366,31 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         onPageBeforeShow();
         JQMPageEvent.fire(this, PageState.BEFORE_SHOW);
 
-        if (transparent && prevPage != null) {
-            transparentPrevPage = prevPage;
-            prevPage.addClassName("ui-dialog-background");
-            String s = prevPage.getAttribute("data-dom-cache");
-            if ("true".equals(s)) {
-                transparentPrevPageClearCache = false;
+        if (JQMCommon.hasStyle(getElement(), "ui-dialog")) {
+            if (transparent && prevPage != null) {
+                transparentPrevPage = prevPage;
+                prevPage.addClassName("ui-dialog-background");
+                String s = prevPage.getAttribute("data-dom-cache");
+                if ("true".equals(s)) {
+                    transparentPrevPageClearCache = false;
+                } else {
+                    transparentPrevPageClearCache = true;
+                    prevPage.setAttribute("data-dom-cache", "true");
+                }
+                if (!transparentDoPrevPageLifecycle) {
+                    JQMPage prev = allPages.get(transparentPrevPage);
+                    if (prev != null) prev.unbindLifecycleEvents(prev.getId());
+                }
+                if (content != null) content.addStyleName("ui-body-inherit");
+                Element dlgContain = JQMCommon.findChild(getElement(), "ui-dialog-contain");
+                if (dlgContain != null) dlgContain.addClassName("ui-body-inherit");
             } else {
-                transparentPrevPageClearCache = true;
-                prevPage.setAttribute("data-dom-cache", "true");
+                transparentPrevPage = null;
+                transparentPrevPageClearCache = false;
+                if (content != null) content.removeStyleName("ui-body-inherit");
+                Element dlgContain = JQMCommon.findChild(getElement(), "ui-dialog-contain");
+                if (dlgContain != null) dlgContain.removeClassName("ui-body-inherit");
             }
-            if (!transparentDoPrevPageLifecycle) {
-                JQMPage prev = allPages.get(transparentPrevPage);
-                if (prev != null) prev.unbindLifecycleEvents(prev.getId());
-            }
-        } else {
-            transparentPrevPage = null;
-            transparentPrevPageClearCache = false;
         }
     }
 
@@ -506,23 +521,6 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     /**
-     * Sets whether or not this page should have an auto generated back
-     * button. If so, it will be placed in the left slot and override any left
-     * button already there.
-     * <p/>
-     * If you want a back button in the right, then programatically create a
-     * button, set it to back using setBack(), and call setRightButton() with
-     * the button as the param.
-     */
-    public void setBackButton(boolean backButton) {
-        if (backButton) {
-            getElement().setAttribute("data-add-back-btn", "true");
-        } else {
-            getElement().removeAttribute("data-add-back-btn");
-        }
-    }
-
-    /**
      * Sets the footer element, overriding an existing footer if any.
      */
     public void setFooter(JQMFooter footer) {
@@ -573,6 +571,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     public JQMHeader setHeader(String text) {
         JQMHeader header = new JQMHeader(text);
+        header.setBackButton(true);
         setHeader(header);
         return header;
     }
@@ -679,14 +678,14 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * notification for DOM elements).
      */
     public void recalcContentHeightPercent() {
-        com.google.gwt.user.client.Element contentElt = content.getElement();
+        Element contentElt = content.getElement();
         if (contentHeightPercent > 0) {
             int headerH = header == null ? 0 : header.getOffsetHeight();
             int footerH = footer == null ? 0 : footer.getOffsetHeight();
             int windowH = Window.getClientHeight();
 
-            int clientH = DOM.getElementPropertyInt(contentElt, "clientHeight");
-            int offsetH = DOM.getElementPropertyInt(contentElt, "offsetHeight");
+            int clientH = contentElt.getPropertyInt("clientHeight");
+            int offsetH = contentElt.getPropertyInt("offsetHeight");
             int diff = offsetH - clientH; // border, ...
             if (diff < 0) diff = 0;
 
@@ -759,8 +758,6 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         JQMCommon.setDataRole(this, "page");
         removeStyleName("ui-dialog");
         Element elt = getElement();
-        JQMCommon.removeStylesStartsWith(elt, "ui-overlay-");
-
         Element dlgContain = JQMCommon.findChild(elt, "ui-dialog-contain");
         if (dlgContain != null) {
             JQMCommon.moveChildren(dlgContain, elt);
@@ -770,7 +767,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         if (h != null) {
             Element btn = JQMCommon.findChild(h.getElement(), "ui-btn-icon-notext");
             if (btn != null && "#".equals(JQMCommon.getAttribute(btn, "href"))
-                    && DataIcon.DELETE == JQMCommon.getIcon(btn)) {
+                    && (DataIcon.DELETE == JQMCommon.getIcon(btn)
+                        || DataIcon.DELETE == JQMCommon.getStyleIcon(btn))) {
                 h.getElement().removeChild(btn);
             }
         }

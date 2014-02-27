@@ -78,7 +78,8 @@ public class JQMPanel extends ComplexPanel implements HasId<JQMPanel>, HasTheme<
 
     @Override
     public void add(Widget w) {
-        add(w, getElement());
+        Element elt = getElement();
+        add(w, elt);
     }
 
     @Override
@@ -117,7 +118,8 @@ public class JQMPanel extends ComplexPanel implements HasId<JQMPanel>, HasTheme<
     }
 
     public void insert(Widget w, int beforeIndex) {
-        insert(w, getElement(), beforeIndex, true);
+        Element elt = getElement();
+        insert(w, elt, beforeIndex, true);
     }
 
     protected void removeAttribute(String name) {

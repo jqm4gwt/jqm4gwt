@@ -10,15 +10,68 @@ import java.util.Map;
  *
  * <p/>To see what the icon set looks like, visit the following site:
  *
- * <p><a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/icons/">JQM Icons</a></p>
+ * <p><a href="http://demos.jquerymobile.com/1.4.1/icons/">JQM Icons</a></p>
  *
  */
 public enum DataIcon {
 
-    BARS("bars"), EDIT("edit"), LEFT("arrow-l"), RIGHT("arrow-r"), UP("arrow-u"), DOWN("arrow-d"),
-    DELETE("delete"), PLUS("plus"), MINUS("minus"), CHECK("check"), GEAR("gear"), REFRESH("refresh"),
-    FORWARD("forward"), BACK("back"), GRID("grid"), STAR("star"), ALERT("alert"), INFO("info"),
-    HOME("home"), SEARCH("search"), CUSTOM("custom"), NONE("false");
+    ACTION("action"),
+    ALERT("alert"),
+
+    DOWN("arrow-d"),
+    DOWNLEFT("arrow-d-l"),
+    DOWNRIGHT("arrow-d-r"),
+    LEFT("arrow-l"),
+    RIGHT("arrow-r"),
+    UP("arrow-u"),
+    UPLEFT("arrow-u-l"),
+    UPRIGHT("arrow-u-r"),
+
+    AUDIO("audio"),
+    BACK("back"),
+    BARS("bars"),
+    BULLETS("bullets"),
+    CALENDAR("calendar"),
+    CAMERA("camera"),
+
+    DOWNCARAT("carat-d"),
+    LEFTCARAT("carat-l"),
+    RIGHTCARAT("carat-r"),
+    UPCARAT("carat-u"),
+
+    CHECK("check"),
+    CLOCK("clock"),
+    CLOUD("cloud"),
+    COMMENT("comment"),
+    DELETE("delete"),
+    EDIT("edit"),
+    EYE("eye"),
+    FORBIDDEN("forbidden"),
+    FORWARD("forward"),
+    GEAR("gear"),
+    GRID("grid"),
+    HEART("heart"),
+    HOME("home"),
+    INFO("info"),
+    LOCATION("location"),
+    LOCK("lock"),
+    MAIL("mail"),
+    MINUS("minus"),
+    NAVIGATION("navigation"),
+    PHONE("phone"),
+    PLUS("plus"),
+    POWER("power"),
+    RECYCLE("recycle"),
+    REFRESH("refresh"),
+    SEARCH("search"),
+    SHOP("shop"),
+    STAR("star"),
+    TAG("tag"),
+    USER("user"),
+    VIDEO("video"),
+
+    CUSTOM("custom"),
+    NONE("false");
 
     private static final Map<String, DataIcon> jqmToIcon = new HashMap<String, DataIcon>();
 

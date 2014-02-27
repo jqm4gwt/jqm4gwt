@@ -24,7 +24,7 @@ import com.sksamuel.jqm4gwt.button.JQMButton;
  *         within a header or footer.
  *
  *
- * <p><a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/navbar/">Navbar</a></p>
+ * <p><a href="http://demos.jquerymobile.com/1.4.1/navbar/">Navbar</a></p>
  *
  *
  */
@@ -53,9 +53,8 @@ public class JQMNavBar extends JQMWidget implements HasFixedPosition {
 		ul.appendChild(li);
 
 		// button.addClickHandler(...) is not working without the following code
-		com.google.gwt.user.client.Element elt = li.cast();
-		DOM.sinkEvents(elt, Event.ONCLICK);
-        DOM.setEventListener(elt, new EventListener() {
+		DOM.sinkEvents(li, Event.ONCLICK);
+        DOM.setEventListener(li, new EventListener() {
             @Override
             public void onBrowserEvent(Event event) {
                 checkHighlightLastClicked();

@@ -14,14 +14,16 @@ import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 10 Jul 2011 23:23:36
- * 
+ *
  */
 public class DynamicTableDemoPage extends JQMPage {
 
 	private JQMTable	table;
 
 	public DynamicTableDemoPage() {
-		add(new JQMHeader("Dynamic Table"));
+		JQMHeader h = new JQMHeader("Dynamic Table");
+		h.setBackButton(true);
+	    add(h);
 		add(new Paragraph(
 				"This example shows how a JQMTable can be combined with event handlers to dynamically adjust the table and cells."));
 		add(new Paragraph("Click 'add new cell' and a new cell will be added to the end of the table. "

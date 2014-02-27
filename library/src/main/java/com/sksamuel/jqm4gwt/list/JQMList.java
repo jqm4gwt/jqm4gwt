@@ -16,6 +16,7 @@ import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasInset;
 import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.events.HasTapHandlers;
@@ -386,9 +387,9 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
         recreate(getId());
     }
 
-    protected native void recreate(String id) /*-{
-      $wnd.$("#" + id).trigger('create');
-    }-*/;
+    protected void recreate(String id) {
+        JQMContext.render(id);
+    }
 
     /**
      * Remove the divider with the given text. This method will search all the dividers and remove the first divider

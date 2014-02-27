@@ -29,6 +29,7 @@ public class HelloWorldPage extends JQMPage {
 
         JQMHeader h = new JQMHeader("Hello world header");
         add(h);
+        h.setBackButton(true);
 
         add(new Paragraph("Hello world. Boy am I original!"));
 

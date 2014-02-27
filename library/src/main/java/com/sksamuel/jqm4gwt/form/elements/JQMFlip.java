@@ -1,7 +1,6 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -29,10 +28,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 18 May 2011 04:21:09
  *
- *         <p>Implementation of a JQuery Model Flip element. This is like a two
- *         element {@link JQMRadioset} that is rendered like a "toggle" on an iPhone.</p>
- *
- * <p><a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/sliders/switch.html">Flip switch</a></p>
+ * <p><a href="http://demos.jquerymobile.com/1.4.1/flipswitch/">Flip switch</a></p>
  *
  */
 public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasValue<String>,
@@ -51,6 +47,9 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
     // There are three internal states: null, value1, value2 AND only two ui states: value1, value2.
     // Three internal states are needed to properly support data binding libraries (Errai for example).
     private String internVal;
+
+    /** setValue() in progress */
+    private boolean inSetValue;
 
     /**
      * Creates a new {@link JQMFlip} widget with the given label text and
@@ -104,10 +103,11 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
         label.setFor(id);
         select.setName(id);
         select.getElement().setId(id);
-        select.getElement().setAttribute("data-role", "slider");
+        JQMCommon.setDataRole(select.getElement(), "flipswitch");
         addChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
+                if (inSetValue) return;
                 switch (getSelectedIndex()) {
                 case 0:
                     internVal = getValue1();
@@ -166,7 +166,7 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
 			}
         }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
 	}
-	
+
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
         // Initialization code
@@ -218,7 +218,7 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
     }
 
     private native void refresh(String id) /*-{
-		$wnd.$("#" + id).slider("refresh");
+		$wnd.$("#" + id).flipswitch("refresh");
     }-*/;
 
     /**
@@ -244,8 +244,7 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
     }
 
     public void setTextHidden(boolean value) {
-        if (value) addStyleName("ui-hide-label");
-        else removeStyleName("ui-hide-label");
+        JQMCommon.setLabelHidden(this, value);
     }
 
     /**
@@ -266,7 +265,15 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
         int oldIdx = getSelectedIndex();
         String oldVal = fireEvents ? getValue() : null;
         internVal = value;
-        if (oldIdx != newIdx) setSelectedIndex(newIdx);
+        if (oldIdx != newIdx) {
+            inSetValue = true;
+            try {
+                setSelectedIndex(newIdx);
+            } finally {
+                inSetValue = false;
+            }
+        }
+
         if (fireEvents) {
             boolean eq = internVal == oldVal || internVal != null && internVal.equals(oldVal);
             if (!eq) ValueChangeEvent.fire(this, internVal);
@@ -297,8 +304,7 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
 
     @Override
     public boolean isMini() {
-        Element e = select.getElement();
-        return "true".equals(e.getAttribute("data-mini"));
+        return JQMCommon.isMini(select);
     }
 
     /**
@@ -306,8 +312,7 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
      */
     @Override
     public void setMini(boolean mini) {
-        Element e = select.getElement();
-        e.setAttribute("data-mini", String.valueOf(mini));
+        JQMCommon.setMini(select, mini);
     }
 
     /**
@@ -321,13 +326,20 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
 
     @Override
     public String getTheme() {
-        return select.getElement().getAttribute("data-theme");
+        return JQMCommon.getTheme(select);
     }
 
     @Override
     public void setTheme(String themeName) {
         JQMCommon.applyTheme(select, themeName);
-        JQMCommon.setAttribute(select, "data-track-theme", themeName);
+    }
+
+    public String getDataWrapper() {
+        return JQMCommon.getDataWrapper(select);
+    }
+
+    public void setDataWrapper(String wrapper) {
+        JQMCommon.setDataWrapper(select, wrapper);
     }
 
 }

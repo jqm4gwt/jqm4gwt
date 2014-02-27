@@ -1,8 +1,6 @@
 package com.sksamuel.jqm4gwt.examples;
 
-import com.google.gwt.junit.client.GWTTestCase;
 import com.sksamuel.jqm4gwt.examples.uibinder.TestView1;
-import com.sksamuel.jqm4gwt.examples.uibinder.TestView2;
 
 /**
  * GWT JUnit <b>integration</b> tests must extend GWTTestCase.

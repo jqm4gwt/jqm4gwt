@@ -10,31 +10,31 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.uibinder.client.UiChild;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
 
 /**
- * See <a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/">Table: Column Toggle</a>
- * <p/> See <a href="http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-reflow/">Table: Reflow</a>
+ * See <a href="http://demos.jquerymobile.com/1.4.1/table-column-toggle/">Table: Column Toggle</a>
+ * <p/> See <a href="http://demos.jquerymobile.com/1.4.1/table-reflow/">Table: Reflow</a>
+ *
  * <p/> See also <a href="http://jquerymobile.com/demos/1.3.0-rc.1/docs/tables/">Responsive tables</a>
  * <p/> See also <a href="http://jquerymobile.com/demos/1.3.0-beta.1/docs/demos/tables/financial-grouped-columns.html">Grouped column headers</a>
- * <p/><b>WARNING!</b> You'd better use fixed jQuery Mobile 1.3.2 from "jqm4gwt\standalone\misc\fixed jquery mobile",
- * because critical "columns stay hidden when shrinking and resizing the browser window"
- * bug is not fixed in official 1.3.2 version.
  *
  * @author slavap
  *
  */
 public class JQMColumnToggle extends CustomFlowPanel {
 
+    //TODO: table-stroke and table-stripe are deprecated in 1.4, so custom CSS will be needed in 1.5
     public static final String STD_ROW_LINES = "table-stroke";
     public static final String STD_ROW_STRIPES = "table-stripe";
+
     public static final String STD_RESPONSIVE = "ui-responsive";
 
     public static final String JQM4GWT_COL_PERSISTENT = "jqm4gwt-col-persistent";
