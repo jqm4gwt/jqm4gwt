@@ -560,7 +560,8 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
 
     private void checkSplitPadding() {
         if (anchor == null || controlGroup == null) return;
-        anchor.getStyle().setPaddingRight(split == null ? 0 : 42, Unit.PX);
+        // Not needed anymore in jqm 1.4.1
+        // anchor.getStyle().setPaddingRight(split == null ? 0 : 42, Unit.PX);
     }
 
     private void prepareAnchorForControlGroup() {

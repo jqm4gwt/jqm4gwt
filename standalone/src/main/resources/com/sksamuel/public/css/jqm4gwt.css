@@ -84,3 +84,7 @@
   top: .9em !important;
   margin-right: 10px !important;
 }
+
+.jqm4gwt-listitem a.ui-btn > .ui-checkbox {
+  margin: 0;
+}
