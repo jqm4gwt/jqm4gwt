@@ -10,7 +10,7 @@ import java.util.Map;
  *
  * <p/>To see what the icon set looks like, visit the following site:
  *
- * <p><a href="http://demos.jquerymobile.com/1.4.1/icons/">JQM Icons</a></p>
+ * <p><a href="http://demos.jquerymobile.com/1.4.2/icons/">JQM Icons</a></p>
  *
  */
 public enum DataIcon {

@@ -11,9 +11,23 @@ import com.google.gwt.dom.client.Element;
  */
 public class Mobile {
 
+    /**
+     * See <a href="http://api.jquerymobile.com/pagecontainer/#method-change">Pagecontainer.change -> options.role</a>
+     * <p/> The data-role value to be used when displaying the page.
+     * By default this is undefined which means rely on the value of the data-role attribute defined on the element.
+     * <p/> For example: pagecontainer.change() with dialog option is not deprecated, and as result of
+     * such call page's data-role will be set to "dialog" and cause conflict with explicitly
+     * defined data-dialog property.
+     */
+    public static final String DATA_ROLE_DIALOG = "dialog";
+
     public static String pleaseWaitMsg = "Please Wait...";
 
     private Mobile() {} // static class, should not be instantiated
+
+    public static native void back() /*-{
+        $wnd.$.mobile.back();
+    }-*/;
 
     /**
      * Invokes the $.mobile.changePage method
@@ -32,7 +46,7 @@ public class Mobile {
      * Invokes the $.mobile.changePage method
      */
     static void changePage(String url, Transition t, boolean reverse, boolean changeHash, boolean dialog) {
-        changePage(url, t.getJQMValue(), reverse, changeHash, dialog ? "dialog" : null);
+        changePage(url, t.getJQMValue(), reverse, changeHash, dialog ? DATA_ROLE_DIALOG : null);
     }
 
     static void changePage(String url, Transition t, boolean reverse, boolean changeHash) {
@@ -44,6 +58,10 @@ public class Mobile {
      */
     public static native void hideLoadingDialog() /*-{
         $wnd.$.mobile.loading('hide');
+    }-*/;
+
+    public static native void showLoadingDialog(String msg) /*-{
+        $wnd.$.mobile.loading('show', {text: msg, textVisible: true});
     }-*/;
 
     /**
@@ -81,18 +99,9 @@ public class Mobile {
     }
 
     /**
+     * Scroll to a particular Y position without triggering scroll event listeners.
      *
-     */
-    public static native void showLoadingDialog(String msg) /*-{
-        $wnd.$.mobile.loading('show', {text: msg, textVisible: true});
-    }-*/;
-
-    /**
-     * Scroll to a particular Y position without triggering scroll event
-     * listeners.
-     *
-     * @param y
-     *              Pass any number to scroll to that Y location.
+     * @param y - Pass any number to scroll to that Y location.
      */
     public static native void silentScroll(int y) /*-{
         $wnd.$.mobile.silentScroll(y);

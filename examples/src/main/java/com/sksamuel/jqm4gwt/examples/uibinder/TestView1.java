@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.examples.uibinder;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiField;
@@ -26,6 +27,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.form.elements.JQMRangeSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
+import com.sksamuel.jqm4gwt.html.Paragraph;
 import com.sksamuel.jqm4gwt.list.JQMList;
 import com.sksamuel.jqm4gwt.list.JQMListItem;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox;
@@ -49,6 +51,7 @@ public class TestView1 {
     private TestView2 nextView = new TestView2();
 
     private static final JQMDialog dlg = new JQMDialog(new JQMHeader("Dialog Test"));
+    private static JQMDialog dlgMsg = null;
 
     private static final TestDialog1 dlg1 = new TestDialog1();
 
@@ -68,7 +71,13 @@ public class TestView1 {
     JQMButton page2RestoreRolePage;
 
     @UiField
+    JQMButton page2RestoreRoleDialog;
+
+    @UiField
     JQMButton dlgButton;
+
+    @UiField
+    JQMButton dlgButton1;
 
     @UiField
     JQMText text;
@@ -411,6 +420,11 @@ public class TestView1 {
         nextView.testPage2.restoreRolePage();
     }
 
+    @UiHandler("page2RestoreRoleDialog")
+    void page2RestoreRoleDialogClick(ClickEvent e) {
+        nextView.testPage2.restoreRoleDialog();
+    }
+
     @UiHandler("dlgButton")
     void dlgButtonClick(ClickEvent e) {
         dlg.setDlgTransparent(true);
@@ -418,6 +432,33 @@ public class TestView1 {
         dlg.setDlgCloseBtn(DlgCloseBtn.RIGHT);
         dlg.setDlgCloseBtnText("Close me");
         dlg.openDialog();
+    }
+
+    @UiHandler("dlgButton1")
+    void dlgButton1Click(ClickEvent e) {
+        if (dlgMsg == null) {
+            dlgMsg = new JQMDialog();
+            dlgMsg.setCorners(false);
+            dlgMsg.setHeader(new JQMHeader("Message"));
+            dlgMsg.setDlgTransparent(true);
+            dlgMsg.setDlgCloseBtn(DlgCloseBtn.RIGHT);
+            FlowPanel p = new FlowPanel();
+            Paragraph messageText = new Paragraph("Some text message here.");
+            p.add(messageText);
+            messageText.getElement().getStyle().setPadding(1, Unit.EM);
+            dlgMsg.add(p);
+            p = new FlowPanel();
+            JQMButton b = new JQMButton("Close");
+            b.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    dlgMsg.closeDialog();
+                }
+            });
+            p.add(b);
+            dlgMsg.add(p);
+        }
+        dlgMsg.openDialog();
     }
 
     @UiHandler("setListItemTextBtn")

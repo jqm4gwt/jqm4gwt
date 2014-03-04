@@ -35,6 +35,7 @@ import com.sksamuel.jqm4gwt.JQMContainer;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.Transition;
 import com.sksamuel.jqm4gwt.events.HasTapHandlers;
 import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
@@ -47,7 +48,7 @@ import com.sksamuel.jqm4gwt.events.TapHandler;
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 14:02:24
  * <p/>
  * An implementation of a Jquery mobile button.
- * <p/>See <a href="http://demos.jquerymobile.com/1.4.1/button-markup/">Buttons</a>
+ * <p/>See <a href="http://demos.jquerymobile.com/1.4.2/button-markup/">Buttons</a>
  * <p/>See also <a href="http://jquerymobile.com/demos/1.2.1/docs/buttons/buttons-types.html">Button basics</a>
  */
 public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<JQMButton>,
@@ -256,7 +257,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
      * @return true if this link will show as a dialog
      */
     public boolean isDialog() {
-        return "dialog".equals(getAttribute("data-rel"));
+        return Mobile.DATA_ROLE_DIALOG.equals(getAttribute("data-rel"));
     }
 
     /**
@@ -354,7 +355,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     }
 
     public void setDialog(boolean dialog) {
-        setRel(dialog ? "dialog" : null);
+        setRel(dialog ? Mobile.DATA_ROLE_DIALOG : null);
     }
 
     /**

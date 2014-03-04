@@ -32,6 +32,10 @@ import com.sksamuel.jqm4gwt.toolbar.JQMPanel;
  */
 public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
+    private static final String STYLE_UI_DIALOG = "ui-dialog";
+    private static final String UI_DIALOG_CONTAIN = "ui-dialog-contain";
+    private static final String UI_DIALOG_BACKGROUND = "ui-dialog-background";
+
     private static int counter = 1;
 
     /** Needed to find out JQMPage by its Element received usually from JS */
@@ -366,10 +370,10 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         onPageBeforeShow();
         JQMPageEvent.fire(this, PageState.BEFORE_SHOW);
 
-        if (JQMCommon.hasStyle(getElement(), "ui-dialog")) {
+        if (JQMCommon.hasStyle(getElement(), STYLE_UI_DIALOG)) {
             if (transparent && prevPage != null) {
                 transparentPrevPage = prevPage;
-                prevPage.addClassName("ui-dialog-background");
+                prevPage.addClassName(UI_DIALOG_BACKGROUND);
                 String s = prevPage.getAttribute("data-dom-cache");
                 if ("true".equals(s)) {
                     transparentPrevPageClearCache = false;
@@ -382,13 +386,13 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
                     if (prev != null) prev.unbindLifecycleEvents(prev.getId());
                 }
                 if (content != null) content.addStyleName("ui-body-inherit");
-                Element dlgContain = JQMCommon.findChild(getElement(), "ui-dialog-contain");
+                Element dlgContain = JQMCommon.findChild(getElement(), UI_DIALOG_CONTAIN);
                 if (dlgContain != null) dlgContain.addClassName("ui-body-inherit");
             } else {
                 transparentPrevPage = null;
                 transparentPrevPageClearCache = false;
                 if (content != null) content.removeStyleName("ui-body-inherit");
-                Element dlgContain = JQMCommon.findChild(getElement(), "ui-dialog-contain");
+                Element dlgContain = JQMCommon.findChild(getElement(), UI_DIALOG_CONTAIN);
                 if (dlgContain != null) dlgContain.removeClassName("ui-body-inherit");
             }
         }
@@ -408,7 +412,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         JQMPageEvent.fire(this, PageState.HIDE);
 
         if (transparentPrevPage != null) {
-            transparentPrevPage.removeClassName("ui-dialog-background");
+            transparentPrevPage.removeClassName(UI_DIALOG_BACKGROUND);
             if (transparentPrevPageClearCache) {
                 transparentPrevPage.removeAttribute("data-dom-cache");
             }
@@ -752,13 +756,15 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     /**
-     * There is no "correct" way to restore page after it was called as dialog, so this method is ugly hack.
+     * There is no "correct" way to restore page after it was called as dialog,
+     * so this method is ugly hack, but it's useful and working.
      */
     public void restoreRolePage() {
         JQMCommon.setDataRole(this, "page");
-        removeStyleName("ui-dialog");
+        JQMCommon.setDataDialog(this, false);
+        removeStyleName(STYLE_UI_DIALOG);
         Element elt = getElement();
-        Element dlgContain = JQMCommon.findChild(elt, "ui-dialog-contain");
+        Element dlgContain = JQMCommon.findChild(elt, UI_DIALOG_CONTAIN);
         if (dlgContain != null) {
             JQMCommon.moveChildren(dlgContain, elt);
             elt.removeChild(dlgContain);
@@ -774,17 +780,42 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         }
     }
 
+    /**
+     * There is no "correct" way to restore dialog after it was called as page,
+     * so this method is ugly hack, but it's useful and working.
+     */
+    public void restoreRoleDialog() {
+        JQMCommon.setDataRole(this, Mobile.DATA_ROLE_DIALOG);
+        internPageEnchance(getId());
+    }
+
+    /** Again it's ugly hack, actually partial copy of mobile.page._enhance() method. */
+    private native void internPageEnchance(String id) /*-{
+        var p = $wnd.$('#' + id);
+        var corners = p.page("option", "corners");
+        p.addClass("ui-dialog").wrapInner($wnd.$( "<div/>", { "role" : "dialog",
+                "class" : "ui-dialog-contain ui-overlay-shadow" + (corners ? " ui-corner-all" : "")
+        }));
+    }-*/;
+
     public void openDialog() {
-        JQMContext.changePage(this, true/*dialog*/);
+        if (JQMCommon.isDataDialog(getElement())) {
+            JQMContext.changePage(this);
+        } else {
+            JQMContext.changePage(this, true/*dialog*/);
+        }
     }
 
     public void closeDialog() {
-        String r = JQMCommon.getDataRole(this);
-        if ("dialog".equals(r)) internCloseDialog(getId());
+        if (JQMCommon.hasStyle(this, STYLE_UI_DIALOG)) {
+            Mobile.back();
+        } else if (Mobile.DATA_ROLE_DIALOG.equals(JQMCommon.getDataRole(this))) {
+            internCloseDialog(getId());
+        }
     }
 
     private native void internCloseDialog(String id) /*-{
-        $wnd.$('#' + id).dialog("close")
+        $wnd.$('#' + id).dialog("close");
     }-*/;
 
     public static enum DlgCloseBtn {

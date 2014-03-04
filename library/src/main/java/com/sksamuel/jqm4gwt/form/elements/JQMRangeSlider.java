@@ -10,7 +10,7 @@ import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 
 /**
- * See <a href="http://demos.jquerymobile.com/1.4.1/rangeslider/">Range Slider</a>
+ * See <a href="http://demos.jquerymobile.com/1.4.2/rangeslider/">Range Slider</a>
  *
  * @author slavap
  *
