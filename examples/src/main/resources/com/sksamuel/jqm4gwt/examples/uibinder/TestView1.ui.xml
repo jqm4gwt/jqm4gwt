@@ -59,6 +59,8 @@
             <g:FlowPanel ui:field="headerPanel1">
                 <jqm:button.JQMButton ui:field="headerTestBtn1" text="Header Test Button1" inline="true" />
                 <jqm:button.JQMButton ui:field="headerTestBtn2" text="Header Test Button2" inline="true" />
+                <jqm:button.JQMButton text="" 
+                  html="&lt;b>Button&lt;/b> with &lt;i>HTML&lt;/i> content" inline="true" />
             </g:FlowPanel>
           </jqm:widget>
         </jqm:toolbar.JQMHeader>
