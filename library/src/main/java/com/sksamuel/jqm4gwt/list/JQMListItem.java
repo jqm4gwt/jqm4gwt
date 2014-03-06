@@ -220,9 +220,24 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         return headerElem != null ? headerElem.getInnerText() : null;
     }
 
-    private void moveAnchorChildrenTo(Element elt) {
+    private void moveAnchorChildrenTo(Element elt, Element... excludes) {
+        List<Node> move = new ArrayList<Node>();
         for (int k = 0; k < anchor.getChildCount(); k++) {
             Node node = anchor.getChild(k);
+            if (excludes.length > 0) {
+                boolean exclude = false;
+                for (int n = 0; n < excludes.length; n++) {
+                    if (node == excludes[n]) {
+                        exclude = true;
+                        break;
+                    }
+                }
+                if (exclude) continue;
+            }
+            move.add(node);
+        }
+        for (int i = 0; i < move.size(); i++) {
+            Node node = move.get(i);
             anchor.removeChild(node);
             elt.appendChild(node);
         }
@@ -270,7 +285,8 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
      */
     public JQMListItem removeImage() {
         if (imageElem != null) {
-            getElement().removeChild(imageElem);
+            if (anchor != null) anchor.removeChild(imageElem);
+            else removeChild(imageElem);
             imageElem = null;
         }
         getElement().removeClassName("ui-li-has-thumb");
@@ -383,7 +399,9 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
 
         if (imageElem == null) {
             imageElem = Document.get().createImageElement();
-            insertFirstChild(imageElem); // must be first child according to jquery.mobile-1.4.2.css
+            // must be first child according to jquery.mobile-1.4.2.css
+            if (anchor != null) anchor.insertFirst(imageElem);
+            else insertFirstChild(imageElem);
         }
         imageElem.setAttribute("src", src);
 
@@ -594,7 +612,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         LiControlGroup grp = new LiControlGroup(fldSet, "jqm4gwt-li-controls");
         groupRoot.add(grp);
 
-        if (anchor != null) moveAnchorChildrenTo(fldSet);
+        if (anchor != null) moveAnchorChildrenTo(fldSet, imageElem/*exclude*/);
         controlGroupRoot = groupRoot;
         controlGroup = grp;
         if (anchor != null) checkAnchorPanel();
