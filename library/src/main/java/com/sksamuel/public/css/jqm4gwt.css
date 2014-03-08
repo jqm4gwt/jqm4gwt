@@ -1,5 +1,5 @@
 .jqm4gwt-image-link-a[data-role='button'].ui-btn {
-  padding: 3px 3px 0px 3px !important; /* bottom 0px because there is excessive space in the bottom */
+  padding: 3px !important;
 }
 .jqm4gwt-image-link-img[data-resize-priority='horizontal'] {
   max-width: 100%;
@@ -26,7 +26,6 @@
 .ui-loading .ui-loader-background {
   display: block;
 }
-
 
 .ui-dialog-background {
   opacity: 0.5;

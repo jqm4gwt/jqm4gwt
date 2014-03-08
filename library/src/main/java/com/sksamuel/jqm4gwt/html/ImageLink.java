@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt.html;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -54,6 +55,7 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
     protected void initImg() {
         setStyleName(img, JQM4GWT_IMAGE_LINK_IMG);
         setImageResizePriority(Orientation.HORIZONTAL);
+        img.getStyle().setVerticalAlign(VerticalAlign.MIDDLE); // eliminates excessive/strange margin at the bottom
     }
 
     public ImageLink(String href, String src) {
