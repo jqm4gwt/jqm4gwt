@@ -16,7 +16,12 @@
 
     <jqm:JQMPage ui:field="testPage2" containerId="testPage2"  backButton="true" contentCentered="true"
       dlgTransparent="true" contentAddStyleNames="aaa bbb ccc">
-        <jqm:toolbar.JQMHeader text="Test Page 2 Header" fixed="true" />
+        <jqm:toolbar.JQMHeader text="Test Page 2 Header" fixed="true">
+          <jqm:rightButton>
+            <jqm:button.JQMButton text="Open Global Panel" href="#globalPanel1" builtInIcon="BARS" 
+              inline="true" ui:field="showGlobalPanelBtn"/>
+          </jqm:rightButton>
+        </jqm:toolbar.JQMHeader>
         <jqm:form.JQMForm ui:field="form">
             <jqm:button.JQMButton text="Go To Test Page 1" href="#testPage1" transition="NONE" iconPos="RIGHT" builtInIcon="RIGHT"/>
             <e:JQMCheckbox ui:field="cbContentCentered" name="cbContentCentered" 

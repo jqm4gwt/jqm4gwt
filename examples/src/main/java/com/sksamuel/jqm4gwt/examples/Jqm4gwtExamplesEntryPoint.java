@@ -11,6 +11,7 @@ import com.sksamuel.jqm4gwt.examples.helloworld.HelloWorldPage;
 import com.sksamuel.jqm4gwt.examples.lists.ListViewDemoPage;
 import com.sksamuel.jqm4gwt.examples.showcase.FormShowcasePage;
 import com.sksamuel.jqm4gwt.examples.transition.TransitionDemoPage;
+import com.sksamuel.jqm4gwt.examples.uibinder.TestPanel1;
 import com.sksamuel.jqm4gwt.examples.uibinder.TestView1;
 import com.sksamuel.jqm4gwt.html.Paragraph;
 import com.sksamuel.jqm4gwt.toolbar.JQMFooter;
@@ -24,7 +25,7 @@ public class Jqm4gwtExamplesEntryPoint implements EntryPoint {
 	/**
 	 * This is the entry point method.
 	 */
-	@Override
+    @Override
 	public void onModuleLoad() {
 
 		JQMContext.disableHashListening();
@@ -32,6 +33,7 @@ public class Jqm4gwtExamplesEntryPoint implements EntryPoint {
 		JQMPage page = new JQMPage("examples");
 
 		page.add(new JQMHeader("Examples"));
+
 		page.add(new Paragraph("Welcome to the jqm4gwt examples and demo gallery. Choose a demo below to show. "
 				+ "All these demos were built using the jqm4gwt project."));
 		page.add(new Paragraph("Don't just test on a browser, test in your mobile or tablet device!"));
@@ -47,7 +49,9 @@ public class Jqm4gwtExamplesEntryPoint implements EntryPoint {
 
 		page.add(new JQMFooter("jqm4gwt open source project"));
 
-		JQMContext.changePage(page);
+		@SuppressWarnings("unused")
+        TestPanel1 pa = new TestPanel1();
 
+		JQMContext.changePage(page);
 	}
 }

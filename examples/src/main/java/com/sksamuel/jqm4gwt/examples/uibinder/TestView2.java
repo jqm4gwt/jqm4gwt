@@ -6,6 +6,8 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiField;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMPage;
+import com.sksamuel.jqm4gwt.JQMPageEvent;
+import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.form.JQMForm;
 import com.sksamuel.jqm4gwt.form.SubmissionHandler;
 import com.sksamuel.jqm4gwt.form.elements.JQMCheckbox;
@@ -34,6 +36,18 @@ public class TestView2 {
 
     @UiField
     JQMCheckbox cbContentHeight;
+
+    @UiField
+    JQMButton showGlobalPanelBtn;
+
+    public TestView2() {
+        page.addPageHandler(new JQMPageEvent.DefaultHandler() {
+            @Override
+            public void onShow(JQMPageEvent event) {
+                showGlobalPanelBtn.setEnabled(!page.isDialog());
+            }
+        });
+    }
 
     {
         form.setSubmissionHandler(new SubmissionHandler<JQMForm>() {

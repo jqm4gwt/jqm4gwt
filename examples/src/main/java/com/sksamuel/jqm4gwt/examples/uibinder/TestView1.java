@@ -547,7 +547,7 @@ public class TestView1 {
         headerPanel1.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                Window.alert("headerPanel1 is clicked!");
+                //Window.alert("headerPanel1 is clicked!");
             }}, ClickEvent.getType());
 
         unorderedList.addClickHandler(new ClickHandler() {

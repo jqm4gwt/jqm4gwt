@@ -362,6 +362,10 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     protected void onPageBeforeShow() {
     }
 
+    public boolean isDialog() {
+        return JQMCommon.hasStyle(getElement(), STYLE_UI_DIALOG);
+    }
+
     /**
      * @param prevPage - DOM element that we are transitioning away from.
      * Could be null when the first page is transitioned in during application startup.
@@ -370,7 +374,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         onPageBeforeShow();
         JQMPageEvent.fire(this, PageState.BEFORE_SHOW);
 
-        if (JQMCommon.hasStyle(getElement(), STYLE_UI_DIALOG)) {
+        if (isDialog()) {
             if (transparent && prevPage != null) {
                 transparentPrevPage = prevPage;
                 prevPage.addClassName(UI_DIALOG_BACKGROUND);
@@ -807,7 +811,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     public void closeDialog() {
-        if (JQMCommon.hasStyle(this, STYLE_UI_DIALOG)) {
+        if (isDialog()) {
             Mobile.back();
         } else if (Mobile.DATA_ROLE_DIALOG.equals(JQMCommon.getDataRole(this))) {
             internCloseDialog(getId());

@@ -1,197 +1,314 @@
 package com.sksamuel.jqm4gwt.toolbar;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.uibinder.client.UiChild;
+import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.toolbar.JQMPanelEvent.PanelState;
 
 /**
  * @author Gabi Boros gabi.boros@gmail.com 7 June 2013 15:24:13
- * 
- *         This class models a Jquery Mobile panel element.
- * 
- * @link 
- *       http://jquerymobile.com/demos/1.3.0/docs/widgets/panels/
- * 
+ *
+ * <p/> This class models a Jquery Mobile
+ *
+ * <a href="http://demos.jquerymobile.com/1.4.2/panel/">Panel Widget</a>
+ * <p/> See also <a href="http://api.jquerymobile.com/panel/">API for Panel Widget</a>
+ *
+ *
  */
 public class JQMPanel extends JQMWidget {
 
-	public static final String DISPLAY_REVEAL = "reveal";
-	public static final String DISPLAY_PUSH = "push";
-	public static final String DISPLAY_OVERLAY = "overlay";
+    public static final String DISPLAY_REVEAL = "reveal";
+    public static final String DISPLAY_PUSH = "push";
+    public static final String DISPLAY_OVERLAY = "overlay";
 
-	public static final String POSITION_LEFT = "left";
-	public static final String POSITION_RIGHT = "right";
+    public static final String POSITION_LEFT = "left";
+    public static final String POSITION_RIGHT = "right";
 
-	private SimplePanel flowPanelContainer;
-	private FlowPanel flowPanel;
-	
-	public JQMPanel()
-	{
-		this(Document.get().createUniqueId());
-	}
+    private SimplePanel flowPanelContainer;
+    private FlowPanel flowPanel;
 
-	public JQMPanel(String id) {
-		flowPanel = new FlowPanel();
-		flowPanel.setStylePrimaryName("ui-panel-inner");
-		flowPanelContainer = new  SimplePanel();
-		flowPanelContainer.add(flowPanel);
-		initWidget(flowPanelContainer);
-		setId(id);
-		setDataRole("panel");
-	}
-	
-	public void add(Widget w) {
-		flowPanel.add(w);
-	}
+    public JQMPanel() {
+        this(Document.get().createUniqueId());
+    }
 
-	public void remove(Widget w) {
-		flowPanel.remove(w);
-	}
-	
-	public Widget[] getWidgets() {
-		Widget[] widgets = new Widget[flowPanel.getWidgetCount()];
-		for (int k = 0; k < flowPanel.getWidgetCount(); k++) {
-			widgets[k] = flowPanel.getWidget(k);
-		}
-		return widgets;
-	}
-	
-	public void setAnimate(boolean animate) {
-		setAttribute("data-animate", String.valueOf(animate));
-	}
-	
-	public boolean isAnimate() {
-		return "true".equals(getAttribute("data-animate"));
-	}
-	
-	public void setDisplay(String display) {
-		setAttribute("data-display", display);
-	}
-	
-	public String getDisplay() {
-		return getAttribute("data-display");
-	}
-	
-	public void setPosition(String position) {
-		setAttribute("data-position", position);
-	}
-	
-	public String getPosition() {
-		return getAttribute("data-position");
-	}	
-	
-	public void setPositionFixed(boolean positionFixed) {
-		setAttribute("data-position-fixed", String.valueOf(positionFixed));
-	}
-	
-	public boolean isPositionFixed() {
-		return "true".equals(getAttribute("data-position-fixed"));
-	}
-	
-	public void setSwipeClose(boolean swipeClose) {
-		setAttribute("data-swipe-close", String.valueOf(swipeClose));
-	}
-	
-	public boolean isSwipeClose() {
-		return "true".equals(getAttribute("data-swipe-close"));
-	}	
-	
-	public void setDismissible(boolean dismissible) {
-		setAttribute("data-dismissible", String.valueOf(dismissible));
-	}
-	
-	public boolean isDismissible() {
-		return "true".equals(getAttribute("data-dismissible"));
-	}	
-	
-	public void open() {
-		_open(getId());
-	}
-	
-	public void close() {
-		_close(getId());
-	}
-	
-	public void toggle() {
-		_toggle(getId());
-	}
+    public @UiConstructor JQMPanel(String panelId) {
+        flowPanel = new FlowPanel();
+        flowPanel.setStylePrimaryName("ui-panel-inner");
+        flowPanelContainer = new SimplePanel();
+        flowPanelContainer.add(flowPanel);
+        initWidget(flowPanelContainer);
+        if (panelId == null || panelId.isEmpty()) setId(Document.get().createUniqueId());
+        else setId(panelId);
+        setDataRole("panel");
+    }
 
-	protected void onPanelBeforeClose() {		
-	}
-	
-	protected void onPanelBeforeOpen() {		
-	}
-	
-	protected void onPanelClose() {		
-	}
-	
-	protected void onPanelCreate() {		
-	}
-	
-	protected void onPanelOpen() {		
-	}
+    @UiChild(tagname="widget")
+    public void add(Widget w) {
+        flowPanel.add(w);
+    }
 
-	@Override
-	protected void onLoad() {
-		Widget parent = getParent();
-		if(parent instanceof JQMPage) bindLifecycleEvents(this, ((JQMPage)parent).getId());
-	}
-	
-	@Override
-	protected void onUnload() {
-		Widget parent = getParent();
-		if(parent instanceof JQMPage) unbindLifecycleEvents(((JQMPage)parent).getId());
-	}
+    public void remove(Widget w) {
+        flowPanel.remove(w);
+    }
 
-    private native void bindLifecycleEvents(JQMPanel p, String id) /*-{ 
-	$wnd.$('div[data-url="' + id + '"]').bind("panelbeforeclose",
-	function(event, ui) {
-	p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::onPanelBeforeClose()();
-	});
-	
-	$wnd.$('div[data-url="' + id + '"]').bind("panelbeforeopen",
-	function(event, ui) {
-	p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::onPanelBeforeOpen()();
-	});
-	
-	$wnd.$('div[data-url="' + id + '"]').bind("panelclose",
-	function(event, ui) {
-	p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::onPanelClose()();
-	});
-	
-	$wnd.$('div[data-url="' + id + '"]').bind("panelcreate",
-	function(event, ui) {
-	p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::onPanelCreate()();
-	});
-	
-	$wnd.$('div[data-url="' + id + '"]').on("panelopen",
-	function(event, ui) {
-	p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::onPanelOpen()();
-	});	
+    public Widget[] getWidgets() {
+        Widget[] widgets = new Widget[flowPanel.getWidgetCount()];
+        for (int k = 0; k < flowPanel.getWidgetCount(); k++) {
+            widgets[k] = flowPanel.getWidget(k);
+        }
+        return widgets;
+    }
 
-	}-*/;
+    /**
+     * When you dynamically add content to a panel or make hidden content visible
+     * while the panel is open, you have to call refresh().
+     */
+    public void refresh() {
+        updateLayout(getId());
+    }
+
+    private static native void updateLayout(String id) /*-{
+        $wnd.$(id).trigger("updatelayout");
+    }-*/;
+
+    public void setAnimate(boolean animate) {
+        setAttribute("data-animate", String.valueOf(animate));
+    }
+
+    public boolean isAnimate() {
+        return "true".equals(getAttribute("data-animate"));
+    }
+
+    /**
+     * @param display - reveal, overlay, push
+     */
+    public void setDisplay(String display) {
+        setAttribute("data-display", display);
+    }
+
+    public String getDisplay() {
+        return getAttribute("data-display");
+    }
+
+    /**
+     * @param position - left or right
+     * */
+    public void setPosition(String position) {
+        setAttribute("data-position", position);
+    }
+
+    public String getPosition() {
+        return getAttribute("data-position");
+    }
+
+    /**
+     * @param positionFixed - if true contents will appear no matter how far down the page you're scrolled.
+     * <p/> The framework also checks to see if the panel contents will fit within the viewport before
+     * applying the fixed positioning because this property would prevent the panel contents from
+     * scrolling and make it inaccessible.
+     */
+    public void setPositionFixed(boolean positionFixed) {
+        setAttribute("data-position-fixed", String.valueOf(positionFixed));
+    }
+
+    public boolean isPositionFixed() {
+        return "true".equals(getAttribute("data-position-fixed"));
+    }
+
+    public void setSwipeClose(boolean swipeClose) {
+        setAttribute("data-swipe-close", String.valueOf(swipeClose));
+    }
+
+    public boolean isSwipeClose() {
+        return "true".equals(getAttribute("data-swipe-close"));
+    }
+
+    /**
+     * @param dismissible - if false then panel cannot be closed by clicking outside the panel
+     * onto the page contents.
+     */
+    public void setDismissible(boolean dismissible) {
+        setAttribute("data-dismissible", String.valueOf(dismissible));
+    }
+
+    public boolean isDismissible() {
+        return "true".equals(getAttribute("data-dismissible"));
+    }
+
+    public void open() {
+        _open(getId());
+    }
+
+    public void close() {
+        _close(getId());
+    }
+
+    public void toggle() {
+        _toggle(getId());
+    }
+
+    protected void onPanelBeforeClose() {
+    }
+
+    protected void onPanelBeforeOpen() {
+    }
+
+    protected void onPanelClose() {
+    }
+
+    protected void onPanelCreate() {
+    }
+
+    protected void onPanelOpen() {
+    }
+
+    protected void doPanelBeforeClose() {
+        onPanelBeforeClose();
+        JQMPanelEvent.fire(this, PanelState.BEFORE_CLOSE);
+    }
+
+    protected void doPanelBeforeOpen() {
+        onPanelBeforeOpen();
+        JQMPanelEvent.fire(this, PanelState.BEFORE_OPEN);
+    }
+
+    protected void doPanelClose() {
+        onPanelClose();
+        JQMPanelEvent.fire(this, PanelState.CLOSE);
+    }
+
+    protected void doPanelCreate() {
+        onPanelCreate();
+        JQMPanelEvent.fire(this, PanelState.CREATE);
+    }
+
+    protected void doPanelOpen() {
+        onPanelOpen();
+        JQMPanelEvent.fire(this, PanelState.OPEN);
+    }
+
+    @Override
+    protected void onLoad() {
+        Widget parent = getParent();
+        if (parent instanceof JQMPage) bindLifecycleEvents(this, ((JQMPage) parent).getId());
+    }
+
+    @Override
+    protected void onUnload() {
+        Widget parent = getParent();
+        if (parent instanceof JQMPage) unbindLifecycleEvents(((JQMPage) parent).getId());
+    }
+
+    private native void bindLifecycleEvents(JQMPanel p, String id) /*-{
+        $wnd.$('div[data-url="' + id + '"]').bind("panelbeforeclose",
+            function(event, ui) { p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelBeforeClose()(); });
+
+        $wnd.$('div[data-url="' + id + '"]').bind("panelbeforeopen",
+            function(event, ui) { p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelBeforeOpen()(); });
+
+        $wnd.$('div[data-url="' + id + '"]').bind("panelclose",
+            function(event, ui) { p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelClose()(); });
+
+        $wnd.$('div[data-url="' + id + '"]').bind("panelcreate",
+            function(event, ui) { p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelCreate()(); });
+
+        $wnd.$('div[data-url="' + id + '"]').bind("panelopen",
+            function(event, ui) { p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelOpen()(); });
+    }-*/;
+
+    private native void bindLifecycleEventsExternal(JQMPanel p, String id) /*-{
+        $wnd.$("body").bind("panelbeforeclose",
+            function(event, ui) {
+                if (event.target.id === id) {
+                    p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelBeforeClose()();
+                }
+            });
+
+        $wnd.$("body").bind("panelbeforeopen",
+            function(event, ui) {
+                if (event.target.id === id) {
+                    p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelBeforeOpen()();
+                }
+            });
+
+        $wnd.$("body").bind("panelclose",
+            function(event, ui) {
+                if (event.target.id === id) {
+                    p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelClose()();
+                }
+            });
+
+        $wnd.$("body").bind("panelcreate",
+            function(event, ui) {
+                if (event.target.id === id) {
+                    p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelCreate()();
+                }
+            });
+
+        $wnd.$("body").bind("panelopen",
+            function(event, ui) {
+                if (event.target.id === id) {
+                    p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelOpen()();
+                }
+            });
+    }-*/;
 
     private native void unbindLifecycleEvents(String id) /*-{
-	$wnd.$('#' + id).unbind("panelbeforeclose");	
-	$wnd.$('#' + id).unbind("panelbeforeopen");
-	$wnd.$('#' + id).unbind("panelclose");
-	$wnd.$('#' + id).unbind("panelcreate");
-	$wnd.$('#' + id).unbind("panelopen");
-	}-*/;
-	
-	
-	private native void _open(String id) /*-{
-    $wnd.$('#' + id).panel("open")
-							}-*/;
+        $wnd.$('#' + id).unbind("panelbeforeclose");
+        $wnd.$('#' + id).unbind("panelbeforeopen");
+        $wnd.$('#' + id).unbind("panelclose");
+        $wnd.$('#' + id).unbind("panelcreate");
+        $wnd.$('#' + id).unbind("panelopen");
+    }-*/;
 
-	private native void _close(String id) /*-{
-    $wnd.$('#' + id).panel("close")
-							}-*/;	
-	
-	private native void _toggle(String id) /*-{
-    $wnd.$('#' + id).panel("toggle")
-							}-*/;		
+    private native void _open(String id) /*-{
+        $wnd.$('#' + id).panel("open")
+    }-*/;
+
+    private native void _close(String id) /*-{
+        $wnd.$('#' + id).panel("close")
+    }-*/;
+
+    private native void _toggle(String id) /*-{
+        $wnd.$('#' + id).panel("toggle")
+    }-*/;
+
+    public boolean isExternal() {
+        NodeList<Node> children = Document.get().getBody().getChildNodes();
+        if (children == null || children.getLength() == 0) return false;
+        for (int i = 0; i < children.getLength(); i++) {
+            if (children.getItem(i) == getElement()) return true;
+        }
+        return false;
+    }
+
+    public void setExternal(boolean value) {
+        if (value == isExternal()) return;
+        if (value) {
+            Document.get().getBody().appendChild(getElement());
+            Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    manualInitialize(getId());
+                    bindLifecycleEventsExternal(JQMPanel.this, getId());
+                }
+            });
+        } else {
+            // TODO (not important): implement unbindLifecycleEventsExternal() through static field & method
+            Document.get().getBody().removeChild(getElement());
+        }
+    }
+
+    private static native void manualInitialize(String id) /*-{
+        $wnd.$("#" + id).panel().enhanceWithin();
+    }-*/;
 }

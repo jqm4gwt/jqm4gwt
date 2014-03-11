@@ -1,5 +1,6 @@
 package com.sksamuel.jqm4gwt.toolbar;
 
+import com.google.gwt.uibinder.client.UiChild;
 import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMCommon;
@@ -118,6 +119,7 @@ public class JQMHeader extends JQMToolbar implements HasText<JQMHeader> {
      *
      * @param button - the button to set on the left slot
      */
+    @UiChild(tagname="leftButton", limit=1)
     public void setLeftButton(JQMButton button) {
         if (left != null) remove(left);
         button.removeStyleName("ui-btn-right");
@@ -244,6 +246,7 @@ public class JQMHeader extends JQMToolbar implements HasText<JQMHeader> {
      *
      * @param button - the button to set on the right slot
      */
+    @UiChild(tagname="rightButton", limit=1)
     public void setRightButton(JQMButton button) {
         if (right != null) remove(right);
         button.removeStyleName("ui-btn-left");
