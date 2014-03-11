@@ -26,12 +26,53 @@ import com.sksamuel.jqm4gwt.toolbar.JQMPanelEvent.PanelState;
  */
 public class JQMPanel extends JQMWidget {
 
-    public static final String DISPLAY_REVEAL = "reveal";
-    public static final String DISPLAY_PUSH = "push";
-    public static final String DISPLAY_OVERLAY = "overlay";
+    public static enum Display {
 
-    public static final String POSITION_LEFT = "left";
-    public static final String POSITION_RIGHT = "right";
+        REVEAL("reveal"), PUSH("push"), OVERLAY("overlay");
+
+        private final String jqmDisplay;
+
+        private Display(String jqmDisplay) {
+            this.jqmDisplay = jqmDisplay;
+        }
+
+        /** Returns the string value that JQM expects */
+        public String getJqmValue() {
+            return jqmDisplay;
+        }
+
+        public static Display fromJqmValue(String jqmValue) {
+            if (jqmValue == null || jqmValue.isEmpty()) return null;
+            for (Display i : Display.values()) {
+                if (i.getJqmValue().equals(jqmValue)) return i;
+            }
+            return null;
+        }
+    }
+
+    public static enum Position {
+
+        LEFT("left"), RIGHT("right");
+
+        private final String jqmPos;
+
+        private Position(String jqmPos) {
+            this.jqmPos = jqmPos;
+        }
+
+        /** Returns the string value that JQM expects */
+        public String getJqmValue() {
+            return jqmPos;
+        }
+
+        public static Position fromJqmValue(String jqmValue) {
+            if (jqmValue == null || jqmValue.isEmpty()) return null;
+            for (Position i : Position.values()) {
+                if (i.getJqmValue().equals(jqmValue)) return i;
+            }
+            return null;
+        }
+    }
 
     private SimplePanel flowPanelContainer;
     private FlowPanel flowPanel;
@@ -91,23 +132,23 @@ public class JQMPanel extends JQMWidget {
     /**
      * @param display - reveal, overlay, push
      */
-    public void setDisplay(String display) {
-        setAttribute("data-display", display);
+    public void setDisplay(Display display) {
+        setAttribute("data-display", display != null ? display.getJqmValue() : null);
     }
 
-    public String getDisplay() {
-        return getAttribute("data-display");
+    public Display getDisplay() {
+        return Display.fromJqmValue(getAttribute("data-display"));
     }
 
     /**
      * @param position - left or right
      * */
-    public void setPosition(String position) {
-        setAttribute("data-position", position);
+    public void setPosition(Position position) {
+        setAttribute("data-position", position != null ? position.getJqmValue() : null);
     }
 
-    public String getPosition() {
-        return getAttribute("data-position");
+    public Position getPosition() {
+        return Position.fromJqmValue(getAttribute("data-position"));
     }
 
     /**
