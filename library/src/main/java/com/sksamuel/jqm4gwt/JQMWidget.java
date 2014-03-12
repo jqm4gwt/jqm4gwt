@@ -1,8 +1,8 @@
 package com.sksamuel.jqm4gwt;
 
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
@@ -103,6 +103,14 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
         getElement().setId(id);
     }
 
+    /**
+     * The same as {@link JQMWidget#setId(String)}, but needed for UiBinder templates
+     * where setId() cannot be used, because id="xxx" has different predefined meaning.
+     */
+    public final void setWidgetId(String id) {
+        setId(id);
+    }
+
     @Override
     public final JQMWidget withId(String id) {
         setId(id);
@@ -134,10 +142,10 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
     public boolean isVisible() {
         return super.isVisible() && JQMCommon.isVisible(this);
     }
-    
+
 	@Override
 	public HandlerRegistration addJQMEventHandler(String eventName ,JQMEventHandler handler){
-		
+
 	       return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
 				@Override
 				public int getHandlerCountForWidget(Type<?> type) {

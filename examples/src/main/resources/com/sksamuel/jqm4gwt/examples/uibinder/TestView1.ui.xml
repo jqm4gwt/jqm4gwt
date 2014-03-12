@@ -50,7 +50,7 @@
       
       .tooltipPop { max-width: 350px; }
     </ui:style>
-             
+    
     <jqm:JQMPage containerId="testPage1" backButton="true" 
       contentCentered="true" contentHeightPercent="98.0" 
       contentAddStyleNames="jqm4gwt-scrollable-page-content {style.contentBorder}">
@@ -395,10 +395,14 @@
             </jqm:plugins.grid960.GridColumn>
         </jqm:plugins.grid960.Grid960Panel>
         
-        <jqm:JQMPopup ui:field="popup">
-            <jqm:button.JQMButton builtInIcon="MINUS" ui:field="popupCloseButton" text="Close Pop-up"/>
+        <jqm:JQMPopup ui:field="popup" arrows="t,b" padding="true" position="#popupOpenButton">
+          <g:FlowPanel>
+            <jqm:html.Heading.H2>Popup with arrows demo</jqm:html.Heading.H2>
+            <jqm:button.JQMButton builtInIcon="MINUS" ui:field="popupCloseButton" text="Close Pop-up" />
+          </g:FlowPanel>  
         </jqm:JQMPopup>
-        <jqm:button.JQMButton builtInIcon="INFO" ui:field="popupOpenButton" text="Pop-up example..."/>
+        <jqm:button.JQMButton widgetId="popupOpenButton" ui:field="popupOpenButton"
+          builtInIcon="INFO" text="Pop-up example..."/>
         
         <jqm:JQMPopup containerId="tooltipPop" theme="b" padding="true" addStyleNames="{style.tooltipPop}">
           <g:HTML 
@@ -407,7 +411,7 @@
         </jqm:JQMPopup>
         <jqm:html.Heading.H3 addStyleNames="{style.inlineBlock}">Text with a tooltip.</jqm:html.Heading.H3>
         <jqm:button.JQMButton href="#tooltipPop" popup="true" inline="true" builtInIcon="INFO"
-          iconPos="NOTEXT" iconAlt="true" theme="a" transition="POP" text="More Info..."  />
+          iconPos="NOTEXT" iconAlt="true" theme="a" transition="POP" title="More Info..." text="" />
           
         <jqm:html.Paragraph />
         <jqm:JQMPopup containerId="popupAsDialog" dialog="true" corners="false" theme="a" overlayTheme="b">

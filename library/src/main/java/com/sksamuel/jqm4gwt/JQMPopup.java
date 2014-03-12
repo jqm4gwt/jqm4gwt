@@ -4,6 +4,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 16 Sep 2012 00:26:35
+ *
+ * <p/> See <a href="http://demos.jquerymobile.com/1.4.2/popup/">Popup<a/>
  */
 public class JQMPopup extends JQMContainer {
 
@@ -100,6 +102,9 @@ public class JQMPopup extends JQMContainer {
         return JQMCommon.getPopupPos(this);
     }
 
+    /**
+     * @param pos - origin, window, or an id selector starts with #
+     */
     public void setPosition(String pos) {
         JQMCommon.setPopupPos(this, pos);
     }
@@ -120,5 +125,32 @@ public class JQMPopup extends JQMContainer {
      */
     public void setDialog(boolean value) {
         JQMCommon.setAttribute(this, "data-dismissible", value ? "false" : null);
+    }
+
+    public String getArrows() {
+        return JQMCommon.getAttribute(this, "data-arrow");
+    }
+
+    /**
+     * @param arrows - possible values: true, false.
+     * Also comma-separated list of edge abbreviations: l t r b
+     * <p/> "l" for left, "t" for top, "r" for right, and "b" for bottom.
+     *
+     * <p/> <b>The order in which the edges are given matters, see explanation below.</b>
+     *
+     * <p/> For each edge given in the list, the framework calculates:
+     * <p/> 1. the distance between the tip of the arrow and the center of the origin
+     * <p/> 2. and whether minimizing the above distance would cause the arrow to appear
+     * too close to one of the corners of the popup along the given edge.
+     *
+     * <p/> If the second condition applies, the edge is discarded as a possible solution
+     * for placing the arrow. Otherwise, the calculated distance is examined.
+     * If it is 0, meaning that the popup can be placed exactly such that the tip of
+     * the arrow points at the center of the origin, no further edges are examined,
+     * and the popup is positioned along the last examined edge.
+     *
+     */
+    public void setArrows(String arrows) {
+        JQMCommon.setAttribute(this, "data-arrow", arrows);
     }
 }

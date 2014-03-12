@@ -93,6 +93,7 @@ public class JQMHeader extends JQMToolbar implements HasText<JQMHeader> {
      * @param button
      *              the new back button
      */
+    @UiChild(tagname="backButton", limit=1)
     public void setBackButton(JQMButton button) {
         button.setBack(true);
         setLeftButton(button);
