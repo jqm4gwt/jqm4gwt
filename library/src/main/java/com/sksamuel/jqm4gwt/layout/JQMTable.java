@@ -25,7 +25,7 @@ import com.sksamuel.jqm4gwt.JQMWidget;
  *         withColumns(int). That can be an expensive operation, see the javadoc
  *         for the withColumns(int) method for more information on why.
  *
- * <p/>    Tables must have at least 2 and at most 5 columns
+ * <p/>    Tables must have at least 1 and at most 5 columns
  *
  * <p>See <a href="http://demos.jquerymobile.com/1.4.2/grids/">Grids</a></p>
  *
@@ -214,8 +214,7 @@ public class JQMTable extends JQMWidget {
      */
     public boolean remove(Widget w) {
         int indexOf = indexOf(w);
-        if (indexOf >= 0)
-            return remove(indexOf);
+        if (indexOf >= 0) return remove(indexOf);
         return false;
     }
 
@@ -242,12 +241,9 @@ public class JQMTable extends JQMWidget {
      * is a no-op call.
      */
     public void setColumns(int n) {
-        if (n < 2)
-            throw new IllegalArgumentException("Min column count is 2");
-        if (n > 5)
-            throw new IllegalArgumentException("Max column count is 5");
-        if (n == columns)
-            return;
+        if (n < 1) throw new IllegalArgumentException("Min column count is 1");
+        if (n > 5) throw new IllegalArgumentException("Max column count is 5");
+        if (n == columns) return;
         this.columns = n;
         refresh(this.columns);
     }
@@ -299,6 +295,9 @@ public class JQMTable extends JQMWidget {
     private void setTableStyleName(int columns) {
         String klass = "ui-grid-";
         switch (columns) {
+        case 1:
+            klass += "solo";
+            break;
         case 2:
             klass += "a";
             break;
@@ -313,6 +312,7 @@ public class JQMTable extends JQMWidget {
             break;
         }
         Element elt = flow.getElement();
+        elt.removeClassName("ui-grid-solo");
         elt.removeClassName("ui-grid-a");
         elt.removeClassName("ui-grid-b");
         elt.removeClassName("ui-grid-c");

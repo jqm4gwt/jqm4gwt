@@ -34,10 +34,12 @@ public class DynamicTableDemoPage extends JQMPage {
 
 		final JQMSelect select = new JQMSelect();
 		select.setText("Choose table size");
+		select.addOption("1");
 		select.addOption("2");
 		select.addOption("3");
 		select.addOption("4");
 		select.addOption("5");
+		select.setValue("2");
 		select.addChangeHandler(new ChangeHandler() {
 
 			@Override
