@@ -3,6 +3,8 @@ package com.sksamuel.jqm4gwt.html;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -11,6 +13,7 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.Orientation;
 import com.sksamuel.jqm4gwt.events.HasTapHandlers;
@@ -23,11 +26,12 @@ import com.sksamuel.jqm4gwt.events.TapHandler;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 17 Jul 2011 15:38:47
  * <p/>
- *         An implementation of an anchor tag that wraps an image tag.
+ *         An implementation of an anchor tag that wraps an image tag and optional text.
  *         <pre> &lt;a href='mylink'>&lt;img src='myimage'/>&lt;/a> </pre>
  *
  */
-public class ImageLink extends Widget implements HasClickHandlers, HasTapHandlers, HasEnabled {
+public class ImageLink extends Widget implements HasClickHandlers, HasTapHandlers, HasEnabled,
+        HasText<ImageLink> {
 
     protected static final String JQM4GWT_IMAGE_LINK_A = "jqm4gwt-image-link-a";
     protected static final String JQM4GWT_IMAGE_LINK_IMG = "jqm4gwt-image-link-img";
@@ -35,6 +39,7 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
 
     protected ImageElement img;
     protected AnchorElement a;
+    protected SpanElement txt;
 
     public ImageLink() {
         a = Document.get().createAnchorElement();
@@ -149,5 +154,33 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
     @Override
     public void setEnabled(boolean enabled) {
         JQMCommon.setEnabled(this, enabled);
+    }
+
+    @Override
+    public String getText() {
+        return txt != null ? txt.getInnerText() : null;
+    }
+
+    @Override
+    public void setText(String text) {
+        boolean emptyText = text == null || text.isEmpty();
+        if (emptyText) {
+            if (txt != null) txt.setInnerText(text);
+            img.getStyle().clearMarginRight();
+            return;
+        }
+        if (txt == null) {
+            txt = Document.get().createSpanElement();
+            txt.getStyle().setVerticalAlign(VerticalAlign.MIDDLE);
+            a.appendChild(txt);
+        }
+        txt.setInnerText(text);
+        img.getStyle().setMarginRight(0.3d, Unit.EM);
+    }
+
+    @Override
+    public ImageLink withText(String text) {
+        setText(text);
+        return this;
     }
 }
