@@ -4,6 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
@@ -150,6 +152,9 @@ public class TestView1 {
 
     @UiField
     JQMRadioset radio1;
+
+    @UiField
+    JQMRadioset gender;
 
     @UiField
     JQMButton radioInfoBtn;
@@ -536,12 +541,24 @@ public class TestView1 {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
                 Window.alert("'" + radio1.getText() + "' value changed: " +event.getValue());
-            }
-        });
+            }});
+
         radio1.addSelectionHandler(new SelectionHandler<String>() {
             @Override
             public void onSelection(SelectionEvent<String> event) {
                 Window.alert("'" + radio1.getText() + "' selected item: " + event.getSelectedItem());
+            }});*/
+
+        gender.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                Window.alert("'" + gender.getText() + "' value changed: " +event.getValue());
+            }});
+
+        /*gender.addSelectionHandler(new SelectionHandler<String>() {
+            @Override
+            public void onSelection(SelectionEvent<String> event) {
+                Window.alert("'" + gender.getText() + "' selected item: " + event.getSelectedItem());
             }});*/
 
         headerPanel1.addDomHandler(new ClickHandler() {

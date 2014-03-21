@@ -6,8 +6,6 @@ import java.util.List;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -117,9 +115,9 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
 
     private void addRadiosBlurHandler(final BlurHandler handler) {
         for (TextBox radio : radios) {
-            blurHandlers.add(radio.addChangeHandler(new ChangeHandler() {
+            blurHandlers.add(radio.addClickHandler(new ClickHandler() {
                 @Override
-                public void onChange(ChangeEvent event) {
+                public void onClick(ClickEvent event) {
                     handler.onBlur(null);
                 }
             }));
@@ -252,9 +250,9 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
         if (!valueChangeHandlerInitialized) {
             valueChangeHandlerInitialized = true;
             for (TextBox radio : radios) {
-                radio.addChangeHandler(new ChangeHandler() {
+                radio.addClickHandler(new ClickHandler() {
                     @Override
-                    public void onChange(ChangeEvent event) {
+                    public void onClick(ClickEvent event) {
                         SelectionEvent.fire(JQMRadioset.this, getValue());
                         ValueChangeEvent.fire(JQMRadioset.this, getValue());
                     }
