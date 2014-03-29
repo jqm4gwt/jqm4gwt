@@ -4,14 +4,15 @@
     <inherits name='com.google.gwt.user.User' />
     <inherits name='com.google.gwt.activity.Activity' />
     
-    <source path='jqm4gwt' />
-    
+    <!-- stylesheet src="css/jquery.mobile-1.4.2.min.css"/-->
     <stylesheet src="css/jqm4gwt.css"/>
+    
+    <!-- script src="js/jquery-2.1.0.min.js"/>
+    <script src="js/jquery.mobile-1.4.2.min.js"/-->
+    
     <script src="js/jquery.actual.min.js"/>
     <script src="js/jqm-fixes.js"/>
     
-    <!-- stylesheet src="css/jquery.mobile-1.4.2.min.css"/>
-    <script src="js/jquery-2.1.0.min.js"/>
-    <script src="js/jquery.mobile-1.4.2.min.js"/-->
+    <source path='jqm4gwt' />
 
 </module>
