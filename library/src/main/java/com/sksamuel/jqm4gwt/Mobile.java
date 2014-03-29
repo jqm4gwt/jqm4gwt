@@ -118,4 +118,12 @@ public class Mobile {
         return $wnd.$(elt).is(':hidden');
     }-*/;
 
+    /**
+     * For some widgets it could be beneficial to prevent jqm's active state removal on each click,
+     * i.e. $.mobile.activeClickedLink.removeClass($.mobile.activeBtnClass) should not be executed.
+     */
+    public static native void clearActiveClickedLink() /*-{
+        $wnd.$.mobile.activeClickedLink = null;
+    }-*/;
+
 }

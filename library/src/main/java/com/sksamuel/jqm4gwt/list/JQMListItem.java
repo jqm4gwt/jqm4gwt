@@ -733,4 +733,14 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         if (controlGroup == null) return null;
         return controlGroup.getWidget(index);
     }
+
+    public boolean isActiveHighlight() {
+        if (anchor == null) return false;
+        return JQMCommon.isBtnActive(anchor);
+    }
+
+    public void setActiveHighlight(boolean value) {
+        if (anchor == null) return;
+        JQMCommon.setBtnActive(anchor, value);
+    }
 }

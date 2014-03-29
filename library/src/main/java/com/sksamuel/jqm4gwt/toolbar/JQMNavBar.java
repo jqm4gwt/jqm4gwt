@@ -1,9 +1,11 @@
 package com.sksamuel.jqm4gwt.toolbar;
 
-import com.google.gwt.dom.client.AnchorElement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.uibinder.client.UiChild;
@@ -14,6 +16,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 
 /**
@@ -30,57 +33,58 @@ import com.sksamuel.jqm4gwt.button.JQMButton;
  */
 public class JQMNavBar extends JQMWidget implements HasFixedPosition {
 
-	private final UListElement ul;
+    private final UListElement ul;
 
-	private boolean highlightLastClicked;
+    private List<JQMButton> buttons;
 
-	/**
-	 * Create a new {@link JQMNavBar} with no content
-	 */
-	public JQMNavBar() {
+    private boolean highlightLastClicked;
 
-		Label label = new Label();
-		initWidget(label);
+    /**
+     * Create a new {@link JQMNavBar} with no content
+     */
+    public JQMNavBar() {
+        Label label = new Label();
+        initWidget(label);
         setDataRole("navbar");
-		ul = Document.get().createULElement();
-		label.getElement().appendChild(ul);
-	}
+        setStyleName("jqm4gwt-navbar");
+        ul = Document.get().createULElement();
+        label.getElement().appendChild(ul);
+    }
 
     @UiChild(limit = 5, tagname = "button")
-	public void add(final JQMButton button) {
-		LIElement li = Document.get().createLIElement();
-		li.appendChild(button.getElement());
-		ul.appendChild(li);
+    public void add(final JQMButton button) {
+        if (button == null) return;
 
-		// button.addClickHandler(...) is not working without the following code
-		DOM.sinkEvents(li, Event.ONCLICK);
+        if (buttons == null) buttons = new ArrayList<JQMButton>();
+        buttons.add(button);
+        IconPos btnP = button.getIconPos();
+        IconPos p = getIconPos();
+        if (btnP == null && p != null) button.setIconPos(p);
+
+        LIElement li = Document.get().createLIElement();
+        li.appendChild(button.getElement());
+        ul.appendChild(li);
+
+        // button.addClickHandler(...) is not working without the following code
+        DOM.sinkEvents(li, Event.ONCLICK);
         DOM.setEventListener(li, new EventListener() {
             @Override
             public void onBrowserEvent(Event event) {
-                checkHighlightLastClicked();
                 DomEvent.fireNativeEvent(event, button);
+                checkHighlightLastClicked(button);
             }
         });
-	}
+    }
 
-    private void checkHighlightLastClicked() {
-        for (int i = 0; i < ul.getChildCount(); i++) {
-            Node child = ul.getChild(i);
-            if (child instanceof LIElement) {
-                LIElement li = child.cast();
-                for (int j = 0; j < li.getChildCount(); j++) {
-                    Node liChild = li.getChild(j);
-                    if (liChild instanceof AnchorElement) {
-                        AnchorElement a = liChild.cast();
-                        String s = a.getHref();
-                        if (highlightLastClicked) {
-                            if (!("#".equals(s))) a.setHref("#");
-                        } else {
-                            if (!("javascript:;".equals(s))) a.setHref("javascript:;");
-                        }
-                    }
+    private void checkHighlightLastClicked(final JQMButton button) {
+        if (highlightLastClicked) {
+            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    Mobile.clearActiveClickedLink();
+                    JQMCommon.setBtnActive(button, true);
                 }
-            }
+            });
         }
     }
 
@@ -102,24 +106,23 @@ public class JQMNavBar extends JQMWidget implements HasFixedPosition {
     }
 
     public void remove(JQMButton button) { // TODO
-	}
+    }
 
-	@Override
-	public boolean isFixed() {
-		return "fixed".equals(getAttribute("data-position"));
-	}
+    @Override
+    public boolean isFixed() {
+        return "fixed".equals(getAttribute("data-position"));
+    }
 
-	@Override
-	public void setFixed(boolean fixed) {
-		if (fixed)
-			setAttribute("data-position", "fixed");
-		else
-			removeAttribute("data-position");
-	}
+    @Override
+    public void setFixed(boolean fixed) {
+        if (fixed)
+            setAttribute("data-position", "fixed");
+        else
+            removeAttribute("data-position");
+    }
 
     public IconPos getIconPos() {
-        String string = getAttribute("data-iconpos");
-        return string == null ? null : IconPos.valueOf(string);
+        return JQMCommon.getIconPos(this);
     }
 
     /**
@@ -127,10 +130,17 @@ public class JQMNavBar extends JQMWidget implements HasFixedPosition {
      * set the position to IconPos.NOTEXT
      */
     public void setIconPos(IconPos pos) {
-        if (pos == null)
-            getElement().removeAttribute("data-iconpos");
-        else
-            getElement().setAttribute("data-iconpos", pos.getJqmValue());
+        if (pos == null) {
+            JQMCommon.setIconPos(this, pos);
+        } else {
+            IconPos oldPos = getIconPos();
+            JQMCommon.setIconPos(this, pos);
+            for (int i = 0; i < buttons.size(); i++) {
+                JQMButton btn = buttons.get(i);
+                IconPos p = btn.getIconPos();
+                if (p == null || p.equals(oldPos)) btn.setIconPos(pos);
+            }
+        }
     }
 
     public boolean isHighlightLastClicked() {
@@ -142,5 +152,13 @@ public class JQMNavBar extends JQMWidget implements HasFixedPosition {
      */
     public void setHighlightLastClicked(boolean highlightLastClicked) {
         this.highlightLastClicked = highlightLastClicked;
+    }
+
+    public int getButtonCount() {
+        return buttons != null ? buttons.size() : 0;
+    }
+
+    public JQMButton getButton(int index) {
+        return (buttons != null && index >= 0 && index < buttons.size()) ? buttons.get(index) : null;
     }
 }

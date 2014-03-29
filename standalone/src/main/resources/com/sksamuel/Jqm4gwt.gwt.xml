@@ -9,6 +9,8 @@
     
     <script src="js/jquery-2.1.0.min.js"/>
     <script src="js/jquery.mobile-1.4.2.min.js"/>
+    <script src="js/jquery.actual.min.js"/>
+    <script src="js/jqm-fixes.js"/>
 
     <source path='jqm4gwt' />
 

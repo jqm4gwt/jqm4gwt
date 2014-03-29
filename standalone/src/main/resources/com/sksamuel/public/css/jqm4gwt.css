@@ -87,3 +87,14 @@
 .jqm4gwt-listitem a.ui-btn > .ui-checkbox {
   margin: 0;
 }
+
+.jqm4gwt-tabs-horizontal .jqm4gwt-tabs-header-list {
+    width: 25%;
+    display: inline-block;
+}
+.jqm4gwt-tabs-horizontal .jqm4gwt-tabs-content {
+    width: 65%;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 3%;
+}

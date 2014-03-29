@@ -5,7 +5,9 @@
   xmlns:g='urn:import:com.google.gwt.user.client.ui'
   xmlns:jqm='urn:import:com.sksamuel.jqm4gwt' 
   xmlns:h="urn:import:com.sksamuel.jqm4gwt.html" 
-  xmlns:b="urn:import:com.sksamuel.jqm4gwt.button">
+  xmlns:b="urn:import:com.sksamuel.jqm4gwt.button" 
+  xmlns:t="urn:import:com.sksamuel.jqm4gwt.toolbar"
+  xmlns:l="urn:import:com.sksamuel.jqm4gwt.list">
 
     <ui:style>
 			.contentBorder { border: red solid 0px; }
@@ -25,6 +27,10 @@
 	      display: block;
 	      text-align: center;
 	    }
+	    
+	    .headerImportantColor {
+        color: #ffa200;
+      }
 	    
 	    .inlineBlock {
         display: inline-block;
@@ -246,13 +252,13 @@
                 </jqm:button>
             </jqm:toolbar.JQMNavBar>
             <jqm:html.Paragraph />
-            <jqm:html.Span text="Navbar with last clicked highlighting" />
+            <jqm:html.Span text="Navbar with last clicked highlighting (icons pos is RIGHT)" />
             <jqm:toolbar.JQMNavBar iconPos="RIGHT" highlightLastClicked="true">
                 <jqm:button>
                     <jqm:button.JQMButton text="Button 1"/>
                 </jqm:button>
                 <jqm:button>
-                    <jqm:button.JQMButton text="Button 2" builtInIcon="GEAR"/>
+                    <jqm:button.JQMButton text="Button 2" builtInIcon="GEAR" />
                 </jqm:button>
                 <jqm:button>
                     <jqm:button.JQMButton text="Button 3"/>
@@ -264,8 +270,105 @@
                     <jqm:button.JQMButton text="Button 5"/>
                 </jqm:buttonActivePersist>
             </jqm:toolbar.JQMNavBar>
+            <jqm:html.Paragraph />
+            <jqm:html.Paragraph />
+            <jqm:html.Heading.H3 text="Tabs widget with headers as buttons"
+              addStyleNames="{style.headerImportantColor}" />
+            <t:JQMTabs iconPos="RIGHT" activeIndex="1" heightStyle="AUTO">
+              <t:button>
+                <b:JQMButton text="Tab1"/>
+              </t:button>
+              <t:button>
+                <b:JQMButton text="Tab2" builtInIcon="GEAR" />
+              </t:button>
+              <t:button>
+                <b:JQMButton text="Tab3"/>
+              </t:button>
+              <t:content>
+                <g:FlowPanel addStyleNames="ui-body-inherit ui-content"> <!-- styles are OPTIONAL -->
+                  <h:Heading.H3 text="Tab1 Content" />
+                </g:FlowPanel>
+              </t:content>
+              <t:content>
+                <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                  <h:Heading.H3 text="Tab2 Content" />
+                  <h:Paragraph />
+                  <h:Heading.H4 text="Foo1" />
+                  <h:Heading.H4 text="Foo2" />
+                  <h:Heading.H4 text="Foo3" />
+                </g:FlowPanel>
+              </t:content>  
+              <t:content>
+                <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                  <h:Heading.H3 text="Tab3 Content" />
+                </g:FlowPanel>
+              </t:content>
+            </t:JQMTabs>
+            <jqm:html.Paragraph />
+            <jqm:html.Paragraph />
+            <jqm:html.Heading.H3 text="Tabs widget with headers as listview"
+              addStyleNames="{style.headerImportantColor}" />
+            <t:JQMTabs collapsible="true" activeIndex="1"> 
+              <!-- tabDisabled="[2]" collapseAll="true" -->
+              <t:listitem>
+                <l:JQMListItem text="Tab1" />
+              </t:listitem>
+              <t:listitem>
+                <l:JQMListItem text="Tab2" dataIcon="GEAR" />
+              </t:listitem>
+              <t:listitem>
+                <l:JQMListItem text="Tab3" />
+              </t:listitem>
+              <t:content>
+                <g:FlowPanel addStyleNames="ui-body-inherit ui-content"> <!-- styles are OPTIONAL -->
+                  <h:Heading.H3 text="Tab1 Content" />
+                </g:FlowPanel>
+              </t:content>
+              <t:content>
+                <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                  <h:Heading.H3 text="Tab2 Content" />
+                </g:FlowPanel>
+              </t:content>  
+              <t:content>
+                <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                  <h:Heading.H3 text="Tab3 Content" />
+                </g:FlowPanel>
+              </t:content>
+            </t:JQMTabs>
+            <jqm:html.Paragraph />
+            <jqm:html.Paragraph />
+            <jqm:html.Heading.H3 text="Tabs widget with headers as listview - horizontal style"
+              addStyleNames="{style.headerImportantColor}" />
+            <t:JQMTabs collapsible="true" activeIndex="0" addStyleNames="jqm4gwt-tabs-horizontal"> 
+              <t:listitem>
+                <l:JQMListItem text="Tab1" />
+              </t:listitem>
+              <t:listitem>
+                <l:JQMListItem text="Tab2" dataIcon="GEAR" />
+              </t:listitem>
+              <t:listitem>
+                <l:JQMListItem text="Tab3" />
+              </t:listitem>
+              <t:content>
+                <g:FlowPanel addStyleNames="ui-body-inherit ui-content"> <!-- styles are OPTIONAL -->
+                  <h:Heading.H3 text="Tab1 Content" />
+                </g:FlowPanel>
+              </t:content>
+              <t:content>
+                <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                  <h:Heading.H3 text="Tab2 Content" />
+                </g:FlowPanel>
+              </t:content>  
+              <t:content>
+                <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                  <h:Heading.H3 text="Tab3 Content" />
+                </g:FlowPanel>
+              </t:content>
+            </t:JQMTabs>
+            <jqm:html.Paragraph />
             <jqm:form.JQMSubmit text="submitButtonText"/>
         </jqm:form.JQMForm>
+        
         <jqm:html.FormLabel for="that" text="formLabelText"/>
         <jqm:html.Heading.H1 text="This should be Heading 1"/>
         <jqm:html.Heading.H2 text="This should be Heading 2"/>

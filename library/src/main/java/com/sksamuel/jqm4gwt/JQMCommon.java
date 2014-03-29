@@ -257,6 +257,10 @@ public class JQMCommon {
         }
     }
 
+    public static boolean isBtnActive(Element elt) {
+        return hasStyle(elt, STYLE_UI_BTN_ACTIVE);
+    }
+
     public static boolean isBtnActive(Widget widget) {
         return hasStyle(widget, STYLE_UI_BTN_ACTIVE);
     }
@@ -265,6 +269,13 @@ public class JQMCommon {
         if (isBtnActive(widget) != value) {
             if (value) widget.addStyleName(STYLE_UI_BTN_ACTIVE);
             else widget.removeStyleName(STYLE_UI_BTN_ACTIVE);
+        }
+    }
+
+    public static void setBtnActive(Element elt, boolean value) {
+        if (isBtnActive(elt) != value) {
+            if (value) elt.addClassName(STYLE_UI_BTN_ACTIVE);
+            else elt.removeClassName(STYLE_UI_BTN_ACTIVE);
         }
     }
 
