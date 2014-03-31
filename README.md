@@ -41,16 +41,16 @@ Read the [quick start guide](https://github.com/jqm4gwt/jqm4gwt/wiki/Getting-Sta
 Getting It
 ========
 
-Latest Release: 1.3.4 Released 02-Dec-2013
- * [GWT Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.4/jqm4gwt-remote-1.3.4.jar)
- * [Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.4/jqm4gwt-remote-1.3.4-sources.jar)
+Latest Release: 1.3.5 Released 14-March-2014
+ * [GWT Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.5/jqm4gwt-remote-1.3.5.jar)
+ * [Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.5/jqm4gwt-remote-1.3.5-sources.jar)
 
 Dependencies are available from maven central:
 
   	<dependency>
 			<groupId>com.sksamuel.jqm4gwt</groupId>
 			<artifactId>jqm4gwt</artifactId>
-			<version>1.3.4</version>
+			<version>1.3.5</version>
   	</dependency>
 
 Spread the word and join the conversation!
