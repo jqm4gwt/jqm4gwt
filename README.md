@@ -7,7 +7,7 @@ Note that because this project is a wrapper into Java, you do not have to invoke
 
 The project mirrors the release cycle of JQuery Mobile. That is, when version x.y is released of JQM we try to then release version x.y of jqm4gwt to match. Bug fixes in our code are released as x.y.z.
 
-There is [full support for GWT's UiBinder](https://github.com/sksamuel/jqm4gwt/wiki/Using-jqm4gwt-with-UiBinder),
+There is [full support for GWT's UiBinder](https://github.com/jqm4gwt/jqm4gwt/wiki/Using-jqm4gwt-with-UiBinder),
  and a self-contained version of the module providing all of the dependent JQueryMobile JavaScript, CSS, and images.
 
 Jqm4gwt also provides a useful form framework that enables rapid prototyping of form pages, including ajax submission and validation. See http://code.google.com/p/jqm4gwt/wiki/FormFramework
@@ -16,7 +16,7 @@ For more information, see the [Frequently Asked Questions] (https://github.com/s
 
 Please contribute with pull requests! See the [Contributors Guidelines] (https://github.com/sksamuel/jqm4gwt/wiki/Contributors-Guidelines) to assure the health of the project.
 
-[![Build Status](https://travis-ci.org/sksamuel/jqm4gwt.png)](https://travis-ci.org/sksamuel/jqm4gwt)
+[![Build Status](https://travis-ci.org/jqm4gwt/jqm4gwt.png)](https://travis-ci.org/sksamuel/jqm4gwt)
 
 Examples
 ========
@@ -36,21 +36,21 @@ JQueryMobile is exposed to GWT users via both a simple [Fluent-style](http://en.
 Getting Started
 ========
 
-Read the [quick start guide](https://github.com/sksamuel/jqm4gwt/wiki/Getting-Started). You will need to be familiar with GWT already.
+Read the [quick start guide](https://github.com/jqm4gwt/jqm4gwt/wiki/Getting-Started). You will need to be familiar with GWT already.
 
 Getting It
 ========
 
-Latest Release: 1.3.4 Released 02-Dec-2013
- * [GWT Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.4/jqm4gwt-remote-1.3.4.jar)
- * [Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.4/jqm4gwt-remote-1.3.4-sources.jar)
+Latest Release: 1.3.5 Released 14-March-2014
+ * [GWT Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.5/jqm4gwt-remote-1.3.5.jar)
+ * [Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.5/jqm4gwt-remote-1.3.5-sources.jar)
 
 Dependencies are available from maven central:
 
   	<dependency>
 			<groupId>com.sksamuel.jqm4gwt</groupId>
 			<artifactId>jqm4gwt</artifactId>
-			<version>1.3.4</version>
+			<version>1.3.5</version>
   	</dependency>
 
 Spread the word and join the conversation!
