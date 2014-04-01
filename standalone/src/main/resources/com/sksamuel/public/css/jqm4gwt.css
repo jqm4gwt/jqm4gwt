@@ -91,10 +91,11 @@
 .jqm4gwt-tabs-horizontal .jqm4gwt-tabs-header-list {
     width: 25%;
     display: inline-block;
+    vertical-align: middle;
 }
 .jqm4gwt-tabs-horizontal .jqm4gwt-tabs-content {
     width: 65%;
     display: inline-block;
-    vertical-align: top;
+    vertical-align: middle;
     margin-left: 3%;
 }

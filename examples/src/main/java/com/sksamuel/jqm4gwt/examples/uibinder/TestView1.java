@@ -13,6 +13,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMDialog;
 import com.sksamuel.jqm4gwt.JQMPage;
@@ -34,6 +35,8 @@ import com.sksamuel.jqm4gwt.list.JQMList;
 import com.sksamuel.jqm4gwt.list.JQMListItem;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox;
 import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
+import com.sksamuel.jqm4gwt.toolbar.JQMTabs;
+import com.sksamuel.jqm4gwt.toolbar.JQMTabsEvent;
 
 /**
  * @author jraymond
@@ -236,6 +239,15 @@ public class TestView1 {
 
     @UiField
     JQMButton toggleAlwaysHoverBtn;
+
+    @UiField
+    JQMTabs horzTabs;
+
+    @UiField
+    JQMCheckbox cbAllowLeavingTab1;
+
+    @UiField
+    FlowPanel horzTabsTab1;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -573,6 +585,19 @@ public class TestView1 {
                 JQMListItem item = unorderedList.getClickItem();
                 boolean isSplit = unorderedList.getClickIsSplit();
                 Window.alert("Clicked: " + item.getText() + "; Split button: " + isSplit);
+            }
+        });
+
+        horzTabs.addTabsHandler(new JQMTabsEvent.DefaultHandler() {
+            @Override
+            public void onBeforeActivate(JQMTabsEvent event) {
+                Widget old = event.getOldTabContent();
+                if (horzTabsTab1.equals(old)
+                        && (cbAllowLeavingTab1.getValue() == null
+                            || cbAllowLeavingTab1.getValue() == false)) {
+                    Window.alert("Cannot leave this tab, checkbox must be checked first!");
+                    throw new RuntimeException();
+                }
             }
         });
     }

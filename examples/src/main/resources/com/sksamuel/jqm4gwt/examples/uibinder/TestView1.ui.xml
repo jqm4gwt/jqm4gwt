@@ -7,7 +7,8 @@
   xmlns:h="urn:import:com.sksamuel.jqm4gwt.html" 
   xmlns:b="urn:import:com.sksamuel.jqm4gwt.button" 
   xmlns:t="urn:import:com.sksamuel.jqm4gwt.toolbar"
-  xmlns:l="urn:import:com.sksamuel.jqm4gwt.list">
+  xmlns:l="urn:import:com.sksamuel.jqm4gwt.list" 
+  xmlns:e="urn:import:com.sksamuel.jqm4gwt.form.elements">
 
     <ui:style>
 			.contentBorder { border: red solid 0px; }
@@ -339,7 +340,9 @@
             <jqm:html.Paragraph />
             <jqm:html.Heading.H3 text="Tabs widget with headers as listview - horizontal style"
               addStyleNames="{style.headerImportantColor}" />
-            <t:JQMTabs collapsible="true" activeIndex="0" addStyleNames="jqm4gwt-tabs-horizontal"> 
+            <g:FlowPanel>
+            <t:JQMTabs ui:field="horzTabs" collapsible="true" activeIndex="0" heightStyle="FILL" 
+              addStyleNames="jqm4gwt-tabs-horizontal"> 
               <t:listitem>
                 <l:JQMListItem text="Tab1" />
               </t:listitem>
@@ -350,8 +353,11 @@
                 <l:JQMListItem text="Tab3" />
               </t:listitem>
               <t:content>
-                <g:FlowPanel addStyleNames="ui-body-inherit ui-content"> <!-- styles are OPTIONAL -->
+                <g:FlowPanel ui:field="horzTabsTab1" 
+                  addStyleNames="ui-body-inherit ui-content"> <!-- styles are OPTIONAL -->
                   <h:Heading.H3 text="Tab1 Content" />
+                  <e:JQMCheckbox ui:field="cbAllowLeavingTab1" name="cbAllowLeavingTab1" 
+                    text="Allow Leaving Tab1" />
                 </g:FlowPanel>
               </t:content>
               <t:content>
@@ -365,6 +371,7 @@
                 </g:FlowPanel>
               </t:content>
             </t:JQMTabs>
+            </g:FlowPanel>
             <jqm:html.Paragraph />
             <jqm:form.JQMSubmit text="submitButtonText"/>
         </jqm:form.JQMForm>

@@ -1,7 +1,9 @@
 package com.sksamuel.jqm4gwt.toolbar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
@@ -9,6 +11,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -21,6 +24,7 @@ import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.list.JQMList;
 import com.sksamuel.jqm4gwt.list.JQMListItem;
+import com.sksamuel.jqm4gwt.toolbar.JQMTabsEvent.TabsState;
 
 /**
  * @author SlavaP
@@ -280,10 +284,19 @@ public class JQMTabs extends JQMWidget {
             tabs.@com.sksamuel.jqm4gwt.toolbar.JQMTabs::doActivate(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)
                     (ui.newTab.attr('id'), ui.oldTab.attr('id'), ui.newPanel.attr('id'), ui.oldPanel.attr('id'));
         });
+        $wnd.$(tabsElt).bind("tabsbeforeactivate", function(event, ui) {
+            var v = tabs.@com.sksamuel.jqm4gwt.toolbar.JQMTabs::doBeforeActivate(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)
+                    (ui.newTab.attr('id'), ui.oldTab.attr('id'), ui.newPanel.attr('id'), ui.oldPanel.attr('id'));
+            if (v === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        });
     }-*/;
 
     private native void unbindEvents(Element tabsElt) /*-{
         $wnd.$(tabsElt).unbind("tabsactivate");
+        $wnd.$(tabsElt).unbind("tabsbeforeactivate");
     }-*/;
 
     protected String hrefToId(String href) {
@@ -294,7 +307,129 @@ public class JQMTabs extends JQMWidget {
         else return href;
     }
 
+    protected List<Widget> findHeaders(boolean byHrefs, String... ids) {
+        if (ids.length == 0) return null;
+        Map<String, Widget> found = new HashMap<String, Widget>();
+
+        if (list != null) {
+            List<JQMListItem> items = list.getItems();
+            for (int i = 0; i < items.size(); i++) {
+                JQMListItem li = items.get(i);
+                if (li == null) continue;
+                for (String id : ids) {
+                    if (id == null || id.isEmpty()) continue;
+                    if (!byHrefs && id.equals(li.getElement().getId())
+                            || byHrefs && id.equals(hrefToId(li.getHref()))) {
+                        found.put(id, li);
+                        break;
+                    }
+                }
+            }
+        } else if (navbar != null) {
+            for (int i = 0; i < navbar.getButtonCount(); i++) {
+                JQMButton btn = navbar.getButton(i);
+                LIElement li = getBtnLi(btn);
+                if (li == null) continue;
+                for (String id : ids) {
+                    if (id == null || id.isEmpty()) continue;
+                    if (!byHrefs && id.equals(li.getId())
+                            || byHrefs && id.equals(hrefToId(btn.getHref()))) {
+                        found.put(id, btn);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (found.isEmpty()) return null;
+        List<Widget> rslt = new ArrayList<Widget>(ids.length);
+        for (String id : ids) {
+            if (id == null || id.isEmpty()) rslt.add(null);
+            else rslt.add(found.get(id));
+        }
+        return rslt;
+    }
+
+    protected List<Widget> findContents(String... ids) {
+        if (ids.length == 0) return null;
+        Map<String, Widget> found = new HashMap<String, Widget>();
+        for (int i = 0; i < flow.getWidgetCount(); i++) {
+            Widget w = flow.getWidget(i);
+            if (w == navbar || w == list) continue;
+            String contentId = w.getElement().getId();
+            for (String id : ids) {
+                if (id == null || id.isEmpty()) continue;
+                if (id.equals(contentId)) {
+                    found.put(id, w);
+                    break;
+                }
+            }
+        }
+        if (found.isEmpty()) return null;
+        List<Widget> rslt = new ArrayList<Widget>(ids.length);
+        for (String id : ids) {
+            if (id == null || id.isEmpty()) rslt.add(null);
+            else rslt.add(found.get(id));
+        }
+        return rslt;
+    }
+
+    /**
+     *  If the tabs are currently collapsed, oldTabHeader and oldTabContent will be null.
+     *  <p/> If the tabs are collapsing, newTabHeader and newTabContent will be null.
+     *
+     * @param newTabHeader - JQMButton or JQMListItem
+     * @param oldTabHeader - JQMButton or JQMListItem
+     * @param newTabContent - Widget
+     * @param oldTabContent - Widget
+     */
+    protected void onActivate(Widget newTabHeader, Widget oldTabHeader,
+                              Widget newTabContent, Widget oldTabContent) {
+    }
+
+    /**
+     *  If the tabs are currently collapsed, oldTabHeader and oldTabContent will be null.
+     *  <p/> If the tabs are collapsing, newTabHeader and newTabContent will be null.
+     *
+     * @param newTabHeader - JQMButton or JQMListItem
+     * @param oldTabHeader - JQMButton or JQMListItem
+     * @param newTabContent - Widget
+     * @param oldTabContent - Widget
+     */
+    protected boolean onBeforeActivate(Widget newTabHeader, Widget oldTabHeader,
+                                       Widget newTabContent, Widget oldTabContent) {
+        return true;
+    }
+
+    protected void execOnActivate(String newTabId, String oldTabId,
+                                  String newPanelId, String oldPanelId) {
+        List<Widget> headers = findHeaders(false/*byHrefs*/, newTabId, oldTabId);
+        if (headers == null) headers = findHeaders(true/*byHrefs*/, newPanelId, oldPanelId);
+        List<Widget> contents = findContents(newPanelId, oldPanelId);
+        if (headers == null || contents == null) return;
+        onActivate(headers.get(0), headers.get(1), contents.get(0), contents.get(1));
+        JQMTabsEvent.fire(this, TabsState.ACTIVATE, headers.get(0), headers.get(1),
+                contents.get(0), contents.get(1));
+    }
+
+    protected boolean execOnBeforeActivate(String newTabId, String oldTabId,
+                                           String newPanelId, String oldPanelId) {
+        List<Widget> headers = findHeaders(false/*byHrefs*/, newTabId, oldTabId);
+        if (headers == null) headers = findHeaders(true/*byHrefs*/, newPanelId, oldPanelId);
+        List<Widget> contents = findContents(newPanelId, oldPanelId);
+        if (headers == null || contents == null) return true;
+        try {
+            JQMTabsEvent.fire(this, TabsState.BEFORE_ACTIVATE, headers.get(0), headers.get(1),
+                    contents.get(0), contents.get(1));
+        } catch (Exception e) {
+            return false; // tabs should not be switched
+        }
+        return onBeforeActivate(headers.get(0), headers.get(1), contents.get(0), contents.get(1));
+    }
+
     protected void doActivate(String newTabId, String oldTabId, String newPanelId, String oldPanelId) {
+        execOnActivate(newTabId, oldTabId, newPanelId, oldPanelId);
+
         final String activeTabId;
         final String activePanId;
 
@@ -351,6 +486,10 @@ public class JQMTabs extends JQMWidget {
                 }
             }
         }
+    }
+
+    protected boolean doBeforeActivate(String newTabId, String oldTabId, String newPanelId, String oldPanelId) {
+        return execOnBeforeActivate(newTabId, oldTabId, newPanelId, oldPanelId);
     }
 
     public boolean isCollapsible() {
@@ -434,6 +573,21 @@ public class JQMTabs extends JQMWidget {
 
     public void setHeightStyle(HeightStyle value) {
         JQMCommon.setAttribute(this, "data-height-style", value != null ? value.getJqmValue() : null);
+    }
+
+    /**
+     * Call to refresh the list after a programmatic change is made.
+     */
+    public void refresh() {
+        refresh(getElement());
+    }
+
+    private native void refresh(Element elt) /*-{
+        $wnd.$(elt).tabs('refresh');
+    }-*/;
+
+    public HandlerRegistration addTabsHandler(JQMTabsEvent.Handler handler) {
+        return addHandler(handler, JQMTabsEvent.getType());
     }
 
 }
