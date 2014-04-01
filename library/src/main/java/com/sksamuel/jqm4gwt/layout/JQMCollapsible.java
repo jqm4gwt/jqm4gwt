@@ -1,22 +1,30 @@
 package com.sksamuel.jqm4gwt.layout;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.sksamuel.jqm4gwt.*;
+import com.sksamuel.jqm4gwt.DataIcon;
+import com.sksamuel.jqm4gwt.HasIconPos;
+import com.sksamuel.jqm4gwt.HasInset;
+import com.sksamuel.jqm4gwt.HasMini;
+import com.sksamuel.jqm4gwt.HasText;
+import com.sksamuel.jqm4gwt.IconPos;
+import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.html.Heading;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 10 May 2011 00:04:18
- *         <p/>
- *         A {@link JQMCollapsible} is a panel that shows a header and can
- *         reveal content once the header is expanded. This is similar to the
- *         GWT {@link DisclosurePanel}.
- * @link http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/content/content-
- * collapsible.html
+ * <p/>
+ * A {@link JQMCollapsible} is a panel that shows a header and can reveal content
+ * once the header is expanded. This is similar to the GWT {@link DisclosurePanel}.
+ *
+ * <p/> See <a href="http://demos.jquerymobile.com/1.4.2/collapsible/">Collapsible</a>
  */
-public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>, HasIconPos<JQMCollapsible>, HasMini<JQMCollapsible>, HasInset<JQMCollapsible> {
+public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>,
+        HasIconPos<JQMCollapsible>, HasMini<JQMCollapsible>, HasInset<JQMCollapsible> {
 
     /**
      * The container for the elements of the collapsible.
@@ -43,7 +51,7 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
 
     /**
      * Creates a new {@link JQMCollapsible} with the given header text and
-     * collapsed if @param collapsed is true.
+     * collapsed if param collapsed is true.
      * <p/>
      * The created header will use a h3 element.
      *
@@ -56,10 +64,9 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
 
     /**
      * Creates a new {@link JQMCollapsible} with the given header text and
-     * collapsed if @param collapsed is true.
+     * collapsed if param collapsed is true.
      * <p/>
-     * The created header will use a <hN> element where N is determined by the @param
-     * headerN.
+     * The created header will use a &lt;hN> element where N is determined by the param headerN.
      * <p/>
      * Once the {@link JQMCollapsible} has been created it is not possible to
      * change the <hN> tag used for the header.
@@ -77,8 +84,7 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
     }
 
     /**
-     * Add a widget to the content part of this {@link JQMCollapsible}
-     * instance
+     * Add a widget to the content part of this {@link JQMCollapsible} instance.
      */
     @UiChild(tagname="widget")
     public void add(Widget widget) {
@@ -86,29 +92,45 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
     }
 
     /**
-     * Removes all Widgets from the content part of this
-     * {@link JQMCollapsible} instance.
+     * Removes all Widgets from the content part of this {@link JQMCollapsible} instance.
      */
     public void clear() {
         flow.clear();
     }
 
-    public String getCollapsedIcon() {
-        return getAttribute("data-collapsed-icon");
+    public DataIcon getCollapsedIcon() {
+        return DataIcon.fromJqmValue(getAttribute("data-collapsed-icon"));
+    }
+
+    public void setCollapsedIcon(DataIcon icon) {
+        setAttribute("data-collapsed-icon", icon != null ? icon.getJqmValue() : null);
+    }
+
+    public DataIcon getExpandedIcon() {
+        return DataIcon.fromJqmValue(getAttribute("data-expanded-icon"));
+    }
+
+    public void setExpandedIcon(DataIcon icon) {
+        setAttribute("data-expanded-icon", icon != null ? icon.getJqmValue() : null);
+    }
+
+    public JQMCollapsible removeCollapsedIcon() {
+        removeAttribute("data-collapsed-icon");
+        return this;
+    }
+
+    public JQMCollapsible removeExpandedIcon() {
+        removeAttribute("data-expanded-icon");
+        return this;
     }
 
     public String getContentTheme() {
         return getAttribute("data-content-theme");
     }
 
-    public String getExpandedIcon() {
-        return getAttribute("data-expanded-icon");
-    }
-
     @Override
     public IconPos getIconPos() {
-        String string = getAttribute("data-iconpos");
-        return string == null ? null : IconPos.valueOf(string);
+        return JQMCommon.getIconPos(this);
     }
 
     /**
@@ -126,6 +148,22 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
         return getAttributeBoolean("data-collapsed");
     }
 
+    /**
+     * Programmatically set the collapsed state of this widget.
+     */
+    public void setCollapsed(boolean collapsed) {
+        if (collapsed) removeAttribute("data-collapsed");
+        else setAttribute("data-collapsed", "false");
+    }
+
+    /**
+     * Programmatically set the collapsed state of this widget.
+     */
+    public JQMCollapsible withCollapsed(boolean collapsed) {
+        setCollapsed(collapsed);
+        return this;
+    }
+
     @Override
     public boolean isInset() {
         return getAttributeBoolean("data-inset");
@@ -133,7 +171,7 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
 
     @Override
     public boolean isMini() {
-        return getAttributeBoolean("data-mini");
+        return JQMCommon.isMini(this);
     }
 
     /**
@@ -146,43 +184,8 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
         return flow.remove(widget);
     }
 
-    public JQMCollapsible removeCollapsedIcon() {
-        removeAttribute("data-collapsed-icon");
-        return this;
-    }
-
-    public JQMCollapsible removeExpandedIcon() {
-        removeAttribute("data-expanded-icon");
-        return this;
-    }
-
-    /**
-     * Programatically set the collapsed state of this widget.
-     */
-    public void setCollapsed(boolean collapsed) {
-        removeAttribute("data-collapsed");
-    }
-
-    /**
-     * Programatically set the collapsed state of this widget.
-     */
-    public JQMCollapsible withCollapsed(boolean collapsed) {
-        setCollapsed(collapsed);
-        return this;
-    }
-
-    public JQMCollapsible setCollapsedIcon(DataIcon icon) {
-        setAttribute("data-collapsed-icon", icon.getJqmValue());
-        return this;
-    }
-
     public JQMCollapsible setContentTheme(String theme) {
         setAttribute("data-content-theme", theme);
-        return this;
-    }
-
-    public JQMCollapsible setExpandedIcon(DataIcon icon) {
-        getElement().setAttribute("data-expanded-icon", icon.getJqmValue());
         return this;
     }
 
@@ -192,7 +195,7 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
      */
     @Override
     public void setIconPos(IconPos pos) {
-        setAttribute("data-iconpos", pos.getJqmValue());
+        JQMCommon.setIconPos(this, pos);
     }
 
     /**
@@ -221,7 +224,7 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
      */
     @Override
     public void setMini(boolean mini) {
-        setAttribute("data-mini", String.valueOf(mini));
+        JQMCommon.setMini(this, mini);
     }
 
     /**
@@ -246,4 +249,20 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
         setText(text);
         return this;
     }
+
+    public void expand() {
+        execExpand(getElement());
+    }
+
+    public void collapse() {
+        execCollapse(getElement());
+    }
+
+    private native void execExpand(Element elt) /*-{
+        $wnd.$(elt).collapsible("expand");
+    }-*/;
+
+    private native void execCollapse(Element elt) /*-{
+        $wnd.$(elt).collapsible("collapse");
+    }-*/;
 }

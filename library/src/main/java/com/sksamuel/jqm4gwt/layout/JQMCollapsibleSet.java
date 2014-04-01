@@ -1,26 +1,29 @@
 package com.sksamuel.jqm4gwt.layout;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.sksamuel.jqm4gwt.DataIcon;
+import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasIconPos;
 import com.sksamuel.jqm4gwt.HasInset;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.IconPos;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMWidget;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 24 Jul 2011 10:44:29
- *         <p/>
- *         An implementation of a group or set of collapsibles. When
- *         {@link JQMCollapsible} widgets are placed inside a
- *         {@link JQMCollapsibleSet} they behave like an accordian widget - that
- *         is only one can be open at any time. If a user opens another
- *         collapsible panel, then any others will be closed automatically.
- * @link http://jquerymobile.com/demos/1.2.0/docs/content/content-collapsible-set.html
+ * <p/>
+ * An implementation of a group or set of collapsibles.
+ * When {@link JQMCollapsible} widgets are placed inside a {@link JQMCollapsibleSet}
+ * they behave like an accordion widget - that is only one can be open at any time.
+ * If a user opens another collapsible panel, then any others will be closed automatically.
+ *
+ * <p/> See <a href="http://demos.jquerymobile.com/1.4.2/collapsibleset/">Collapsible set</a>
  */
 public class JQMCollapsibleSet extends JQMWidget implements HasIconPos<JQMCollapsibleSet>,
-        HasMini<JQMCollapsibleSet>, HasInset<JQMCollapsibleSet> {
+        HasMini<JQMCollapsibleSet>, HasInset<JQMCollapsibleSet>, HasCorners<JQMCollapsibleSet> {
 
     private final FlowPanel flow;
 
@@ -39,22 +42,47 @@ public class JQMCollapsibleSet extends JQMWidget implements HasIconPos<JQMCollap
         flow.add(c);
     }
 
-    public String getCollapsedIcon() {
-        return getAttribute("data-collapsed-icon");
+    public int getCollapsibleCount() {
+        return flow.getWidgetCount();
+    }
+
+    public JQMCollapsible getCollapsible(int index) {
+        return (JQMCollapsible) flow.getWidget(index);
+    }
+
+    public DataIcon getCollapsedIcon() {
+        return DataIcon.fromJqmValue(getAttribute("data-collapsed-icon"));
+    }
+
+    public void setCollapsedIcon(DataIcon icon) {
+        setAttribute("data-collapsed-icon", icon != null ? icon.getJqmValue() : null);
+    }
+
+    public DataIcon getExpandedIcon() {
+        return DataIcon.fromJqmValue(getAttribute("data-expanded-icon"));
+    }
+
+    public void setExpandedIcon(DataIcon icon) {
+        setAttribute("data-expanded-icon", icon != null ? icon.getJqmValue() : null);
+    }
+
+    public JQMCollapsibleSet removeCollapsedIcon() {
+        removeAttribute("data-collapsed-icon");
+        return this;
+    }
+
+    public JQMCollapsibleSet removeExpandedIcon() {
+        removeAttribute("data-expanded-icon");
+        return this;
     }
 
     public String getContentTheme() {
         return getAttribute("data-content-theme");
     }
 
-    public String getExpandedIcon() {
-        return getAttribute("data-expanded-icon");
-    }
-
     @Override
     public IconPos getIconPos() {
-        String string = getAttribute("data-iconpos");
-        return string == null ? null : IconPos.valueOf(string);
+        return JQMCommon.getIconPos(this);
     }
 
     @Override
@@ -64,7 +92,7 @@ public class JQMCollapsibleSet extends JQMWidget implements HasIconPos<JQMCollap
 
     @Override
     public boolean isMini() {
-        return "true".equals(getAttribute("data-mini"));
+        return JQMCommon.isMini(this);
     }
 
     /**
@@ -74,24 +102,8 @@ public class JQMCollapsibleSet extends JQMWidget implements HasIconPos<JQMCollap
         flow.remove(c);
     }
 
-    public void removeCollapsedIcon() {
-        getElement().removeAttribute("data-collapsed-icon");
-    }
-
-    public void removeExpandedIcon() {
-        getElement().removeAttribute("data-expanded-icon");
-    }
-
-    public void setCollapsedIcon(DataIcon icon) {
-        setAttribute("data-collapsed-icon", icon.getJqmValue());
-    }
-
     public void setContentTheme(String theme) {
         setAttribute("data-content-theme", theme);
-    }
-
-    public void setExpandedIcon(DataIcon icon) {
-        getElement().setAttribute("data-expanded-icon", icon.getJqmValue());
     }
 
     /**
@@ -100,10 +112,7 @@ public class JQMCollapsibleSet extends JQMWidget implements HasIconPos<JQMCollap
      */
     @Override
     public void setIconPos(IconPos pos) {
-        if (pos == null)
-            getElement().removeAttribute("data-iconpos");
-        else
-            getElement().setAttribute("data-iconpos", pos.getJqmValue());
+        JQMCommon.setIconPos(this, pos);
     }
 
     /**
@@ -132,7 +141,7 @@ public class JQMCollapsibleSet extends JQMWidget implements HasIconPos<JQMCollap
      */
     @Override
     public void setMini(boolean mini) {
-        setAttribute("data-mini", String.valueOf(mini));
+        JQMCommon.setMini(this, mini);
     }
 
     /**
@@ -143,5 +152,32 @@ public class JQMCollapsibleSet extends JQMWidget implements HasIconPos<JQMCollap
         setMini(mini);
         return this;
     }
+
+    @Override
+    public boolean isCorners() {
+        return JQMCommon.isCorners(this);
+    }
+
+    @Override
+    public void setCorners(boolean corners) {
+        JQMCommon.setCorners(this, corners);
+    }
+
+    @Override
+    public JQMCollapsibleSet withCorners(boolean corners) {
+        setCorners(corners);
+        return this;
+    }
+
+    public void refresh() {
+        refresh(getElement());
+    }
+
+    private static native void refresh(Element elt) /*-{
+        var w = $wnd.$(elt);
+        if (w.data('mobile-collapsibleset') !== undefined) {
+            w.collapsibleset('refresh');
+        }
+    }-*/;
 
 }
