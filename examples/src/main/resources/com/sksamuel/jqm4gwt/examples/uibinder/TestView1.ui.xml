@@ -341,7 +341,8 @@
             <jqm:html.Heading.H3 text="Tabs widget with headers as listview - horizontal style"
               addStyleNames="{style.headerImportantColor}" />
             <g:FlowPanel>
-            <t:JQMTabs ui:field="horzTabs" collapsible="true" activeIndex="0" heightStyle="FILL" 
+            <t:JQMTabs ui:field="horzTabs" collapsible="true" activeIndex="0" heightStyle="FILL"
+              showEffect="SLIDE_DOWN" hideEffect="SLIDE_UP" 
               addStyleNames="jqm4gwt-tabs-horizontal"> 
               <t:listitem>
                 <l:JQMListItem text="Tab1" />

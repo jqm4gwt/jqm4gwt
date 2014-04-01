@@ -75,6 +75,50 @@ public class JQMTabs extends JQMWidget {
         }
     }
 
+    public static enum ShowEffect {
+        FADE_IN("fadeIn"), SLIDE_DOWN("slideDown");
+
+        private final String jqmVal;
+
+        private ShowEffect(String jqmVal) {
+            this.jqmVal = jqmVal;
+        }
+
+        public String getJqmValue() {
+            return jqmVal;
+        }
+
+        public static ShowEffect fromJqmValue(String jqmValue) {
+            if (jqmValue == null || jqmValue.isEmpty()) return null;
+            for (ShowEffect i : ShowEffect.values()) {
+                if (i.getJqmValue().equals(jqmValue)) return i;
+            }
+            return null;
+        }
+    }
+
+    public static enum HideEffect {
+        FADE_OUT("fadeOut"), SLIDE_UP("slideUp");
+
+        private final String jqmVal;
+
+        private HideEffect(String jqmVal) {
+            this.jqmVal = jqmVal;
+        }
+
+        public String getJqmValue() {
+            return jqmVal;
+        }
+
+        public static HideEffect fromJqmValue(String jqmValue) {
+            if (jqmValue == null || jqmValue.isEmpty()) return null;
+            for (HideEffect i : HideEffect.values()) {
+                if (i.getJqmValue().equals(jqmValue)) return i;
+            }
+            return null;
+        }
+    }
+
     private static final String ERROR_HEADER =
             "JQMButton OR JQMListItem can be used for tab headers, but not simultaneously!";
 
@@ -590,4 +634,19 @@ public class JQMTabs extends JQMWidget {
         return addHandler(handler, JQMTabsEvent.getType());
     }
 
+    public ShowEffect getShowEffect() {
+        return ShowEffect.fromJqmValue(JQMCommon.getAttribute(this, "data-show"));
+    }
+
+    public void setShowEffect(ShowEffect value) {
+        JQMCommon.setAttribute(this, "data-show", value != null ? value.getJqmValue() : null);
+    }
+
+    public HideEffect getHideEffect() {
+        return HideEffect.fromJqmValue(JQMCommon.getAttribute(this, "data-hide"));
+    }
+
+    public void setHideEffect(HideEffect value) {
+        JQMCommon.setAttribute(this, "data-hide", value != null ? value.getJqmValue() : null);
+    }
 }
