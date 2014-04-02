@@ -110,8 +110,11 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
         return this;
     }
 
-    protected native void refresh(String id) /*-{
-        $wnd.$("#" + id).controlgroup("refresh");
+    protected native void refresh(Element elt) /*-{
+        var w = $wnd.$(elt);
+        if (w.data('mobile-controlgroup') !== undefined) {
+            w.controlgroup('refresh');
+        }
     }-*/;
 
     /**
@@ -121,6 +124,6 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
      * <p/> grp.refresh();
      */
     public void refresh() {
-        refresh(getElement().getId());
+        refresh(getElement());
     }
 }

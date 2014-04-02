@@ -627,7 +627,10 @@ public class JQMTabs extends JQMWidget {
     }
 
     private native void refresh(Element elt) /*-{
-        $wnd.$(elt).tabs('refresh');
+        var w = $wnd.$(elt);
+        if (w.data('mobile-tabs') !== undefined) {
+            w.tabs('refresh');
+        }
     }-*/;
 
     public HandlerRegistration addTabsHandler(JQMTabsEvent.Handler handler) {

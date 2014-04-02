@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -156,16 +157,16 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
         return flow.addDomHandler(handler, ClickEvent.getType());
     }
 
-	@Override
-	public HandlerRegistration addTapHandler(TapHandler handler) {
+    @Override
+    public HandlerRegistration addTapHandler(TapHandler handler) {
         // this is not a native browser event so we will have to manage it via JS
         return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
-			@Override
-			public int getHandlerCountForWidget(Type<?> type) {
-				return getHandlerCount(type);
-			}
+            @Override
+            public int getHandlerCountForWidget(Type<?> type) {
+                return getHandlerCount(type);
+            }
         }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
-	}
+    }
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
@@ -214,11 +215,14 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
     }
 
     protected void refresh() {
-        refresh(select.getElement().getId());
+        refresh(select.getElement());
     }
 
-    private native void refresh(String id) /*-{
-		$wnd.$("#" + id).flipswitch("refresh");
+    private native void refresh(Element elt) /*-{
+        var w = $wnd.$(elt);
+        if (w.data('mobile-flipswitch') !== undefined) {
+            w.flipswitch('refresh');
+        }
     }-*/;
 
     /**

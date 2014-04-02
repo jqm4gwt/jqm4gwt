@@ -192,7 +192,7 @@
             </jqm:form.elements.JQMRadioset>
             
             <jqm:form.elements.JQMSearch text="searchText"/>
-            <jqm:form.elements.JQMSelect text="selectText">
+            <jqm:form.elements.JQMSelect text="selectText" ui:field="select1">
                 <jqm:option>
                     <jqm:form.elements.JQMSelect.Option text="option1Text" value="option1value"/>
                 </jqm:option>
@@ -206,6 +206,13 @@
                     <jqm:form.elements.JQMSelect.Option text="option4Text" value="option4value"/>
                 </jqm:option>
             </jqm:form.elements.JQMSelect>
+            <g:FlowPanel>
+              <b:JQMButton ui:field="getSelectValBtn" text="Get Dropdown Value" inline="true" mini="true" />
+              <b:JQMButton ui:field="setSelectValBtn" text="Set second Dropdown Value" inline="true" mini="true" />
+              <b:JQMButton ui:field="setSelectValNullBtn" text="Set Dropdown Value to null" inline="true" mini="true" />
+              <b:JQMButton ui:field="addSelectItemsBtn" text="Add Dropdown Items" inline="true" mini="true" />
+            </g:FlowPanel>
+            
             <jqm:form.elements.JQMSlider min="5.0" max="8.0" labelText="sliderLabelText" ui:field="slider" />
               <!-- highlight="true" mini="true" theme="a" /-->
             <g:FlowPanel>

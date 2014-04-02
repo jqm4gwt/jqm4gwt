@@ -28,6 +28,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMCheckbox;
 import com.sksamuel.jqm4gwt.form.elements.JQMFlip;
 import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.form.elements.JQMRangeSlider;
+import com.sksamuel.jqm4gwt.form.elements.JQMSelect;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
 import com.sksamuel.jqm4gwt.html.Paragraph;
@@ -248,6 +249,21 @@ public class TestView1 {
 
     @UiField
     FlowPanel horzTabsTab1;
+
+    @UiField
+    JQMSelect select1;
+
+    @UiField
+    JQMButton getSelectValBtn;
+
+    @UiField
+    JQMButton setSelectValBtn;
+
+    @UiField
+    JQMButton setSelectValNullBtn;
+
+    @UiField
+    JQMButton addSelectItemsBtn;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -542,6 +558,30 @@ public class TestView1 {
         alwaysHoverBtn.setAlwaysHover(!alwaysHoverBtn.isAlwaysHover());
     }
 
+    @UiHandler("getSelectValBtn")
+    void getSelectValBtnClick(ClickEvent e) {
+        Window.alert("Selected index: " + select1.getSelectedIndex() + "  Value: " + select1.getValue());
+    }
+
+    @UiHandler("setSelectValBtn")
+    void setSelectValBtnClick(ClickEvent e) {
+        select1.setSelectedIndex(1);
+    }
+
+    @UiHandler("setSelectValNullBtn")
+    void setSelectValNullBtnClick(ClickEvent e) {
+        select1.setValue(null);
+    }
+
+    @UiHandler("addSelectItemsBtn")
+    void addSelectItemsBtnClick(ClickEvent e) {
+        if (select1.getOptionCount() > 4) return;
+        select1.addOption("option5Text", "option5value");
+        select1.addOption("option6Text", "option6value");
+        select1.addOption("option7Text", "option7value");
+    }
+
+
     {
         form.setSubmissionHandler(new SubmissionHandler<JQMForm>() {
             @Override
@@ -598,6 +638,13 @@ public class TestView1 {
                     Window.alert("Cannot leave this tab, checkbox must be checked first!");
                     throw new RuntimeException();
                 }
+            }
+        });
+
+        select1.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                //Window.alert(event.getValue());
             }
         });
     }

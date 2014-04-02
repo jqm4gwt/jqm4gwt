@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -41,9 +42,8 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 10:58:58
- *         <p/>
- *         An implementation of a jQuery mobile select element.
- * @link http://jquerymobile.com/demos/1.1.1/docs/forms/selects/options.html
+ * <p/> An implementation of a jQuery mobile select element.
+ * <p/> See <a href="http://demos.jquerymobile.com/1.4.2/selectmenu/">Select menu</a>
  */
 public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>, HasText<JQMSelect>,
         HasFocusHandlers, HasChangeHandlers, HasClickHandlers, HasTapHandlers, HasValue<String>, JQMFormWidget,
@@ -163,6 +163,18 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      */
     public void addOption(String value, String text) {
         select.addItem(text, value);
+    }
+
+    public int getOptionCount() {
+        return select.getItemCount();
+    }
+
+    public String getOptionText(int index) {
+        return select.getItemText(index);
+    }
+
+    public String getOptionValue(int index) {
+        return select.getValue(index);
     }
 
     @Override
@@ -304,15 +316,17 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }-*/;
 
     /**
-     * Refreshes the select after a programatic change has taken place.
+     * Refreshes the select after a programmatic change has taken place.
      */
     public void refresh() {
-        refresh(select.getElement().getId());
+        refresh(select.getElement());
     }
 
-    private native void refresh(String id) /*-{
-        var select = $wnd.$("select#" + id);
-        select.selectmenu("refresh");
+    private native void refresh(Element elt) /*-{
+        var w = $wnd.$(elt);
+        if (w.data('mobile-selectmenu') !== undefined) {
+            w.selectmenu('refresh');
+        }
     }-*/;
 
     @Override
@@ -506,25 +520,23 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     /**
      * Change the selection to the option at the given index.
+     * <p/> Setting the selected index programmatically does <em>NOT</em>
+     * cause the {@link ChangeHandler#onChange(ChangeEvent)}
+     * nor {@link ValueChangeHandler#onValueChange(ValueChangeEvent)}
+     * events to be fired.
+     * <p/> Call {@link JQMSelect#setValue(String, boolean)} with <b>true</b> if you need them raised.
      */
     public void setSelectedIndex(int index) {
         select.setSelectedIndex(index);
+        refresh();
     }
 
-    private native void setSelectedIndex(String id, int index) /*-{
-        $wnd.$("#" + id).attr('selectedIndex', index);
-        var select = $wnd.$("select#" + id);
-        select.selectedIndex = index;
-        select.selectmenu("refresh");
-    }-*/;
-
-    /**
-     *
-     */
-    public void setSelectedValue(String value) {
+    public void setSelectedValue(String value, boolean ignoreCase) {
         for (int k = 0; k < select.getItemCount(); k++) {
-            if (select.getValue(k).equalsIgnoreCase(value)) {
-                select.setSelectedIndex(k);
+            boolean eq = ignoreCase ? select.getValue(k).equalsIgnoreCase(value)
+                                    : select.getValue(k).equals(value);
+            if (eq) {
+                setSelectedIndex(k);
                 return;
             }
         }
