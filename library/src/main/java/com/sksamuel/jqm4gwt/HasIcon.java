@@ -13,13 +13,14 @@ package com.sksamuel.jqm4gwt;
  * </pre>
  *
  * Valid values for the icon attribute are defined in @see DataIcon
- * 
+ *
  */
 public interface HasIcon<T> extends HasIconPos<T> {
 
 	/**
-	 * Removes any icon set on the implementing class. If no icon has been set
-	 * then this has no effect.
+	 * Removes any icon previously set on the implementing class, i.e. reverts back to default icon (if any).
+	 * <p/> If no icon has been previously set then this has no effect.
+	 * <p/> To hide icon use {@link HasIcon#setBuiltInIcon(DataIcon)} with DataIcon.NONE parameter.
 	 */
 	T removeIcon();
 
@@ -40,7 +41,7 @@ public interface HasIcon<T> extends HasIconPos<T> {
 
 	/**
 	 * Sets the data icon to use, overriding any previously built-in or URL-defined icons specified.
-	 * 
+	 *
 	 * @param icon
 	 *              of the standard built in icon types
 	 */
@@ -48,7 +49,7 @@ public interface HasIcon<T> extends HasIconPos<T> {
 
 	/**
 	 * Sets the icon to be a custom URL, overriding any previously built-in or URL-defined icons specified.
-	 * 
+	 *
 	 * @param src
 	 *              the src of the custom icon
 	 */

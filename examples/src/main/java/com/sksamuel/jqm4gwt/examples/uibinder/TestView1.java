@@ -29,6 +29,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMFlip;
 import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.form.elements.JQMRangeSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMSelect;
+import com.sksamuel.jqm4gwt.form.elements.JQMSelect.Option;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
 import com.sksamuel.jqm4gwt.html.Paragraph;
@@ -575,10 +576,16 @@ public class TestView1 {
 
     @UiHandler("addSelectItemsBtn")
     void addSelectItemsBtnClick(ClickEvent e) {
-        if (select1.getOptionCount() > 4) return;
+        if (select1.indexOf("option5value") >= 0) return;
         select1.addOption("option5Text", "option5value");
         select1.addOption("option6Text", "option6value");
         select1.addOption("option7Text", "option7value");
+        Option opt = new JQMSelect.Option();
+        opt.setText("option8Text");
+        opt.setValue("option8value");
+        opt.setDisabled(true);
+        select1.addOption(opt);
+        select1.refresh();
     }
 
 

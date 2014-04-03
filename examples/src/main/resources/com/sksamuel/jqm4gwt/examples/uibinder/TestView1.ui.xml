@@ -192,7 +192,11 @@
             </jqm:form.elements.JQMRadioset>
             
             <jqm:form.elements.JQMSearch text="searchText"/>
-            <jqm:form.elements.JQMSelect text="selectText" ui:field="select1">
+            <jqm:form.elements.JQMSelect text="selectText" ui:field="select1" mini="true" 
+              builtInIcon="BARS" iconPos="LEFT" native="false" hidePlaceholderMenuItems="false">
+                <jqm:option>
+                  <jqm:form.elements.JQMSelect.Option text="Select One..." placeholder="true" />
+                </jqm:option>
                 <jqm:option>
                     <jqm:form.elements.JQMSelect.Option text="option1Text" value="option1value"/>
                 </jqm:option>
@@ -200,18 +204,39 @@
                     <jqm:form.elements.JQMSelect.Option text="option2Text" value="option2value"/>
                 </jqm:option>
                 <jqm:option>
-                    <jqm:form.elements.JQMSelect.Option text="option3Text" value="option3value"/>
+                    <jqm:form.elements.JQMSelect.Option text="option3Text" value="option3value"
+                      disabled="true" />
                 </jqm:option>
                 <jqm:option>
-                    <jqm:form.elements.JQMSelect.Option text="option4Text" value="option4value"/>
+                    <jqm:form.elements.JQMSelect.Option text="option4Text" value="option4value"
+                      selected="true" />
                 </jqm:option>
             </jqm:form.elements.JQMSelect>
             <g:FlowPanel>
               <b:JQMButton ui:field="getSelectValBtn" text="Get Dropdown Value" inline="true" mini="true" />
-              <b:JQMButton ui:field="setSelectValBtn" text="Set second Dropdown Value" inline="true" mini="true" />
+              <b:JQMButton ui:field="setSelectValBtn" text="Set SelectedIndex to 1" inline="true" mini="true" />
               <b:JQMButton ui:field="setSelectValNullBtn" text="Set Dropdown Value to null" inline="true" mini="true" />
               <b:JQMButton ui:field="addSelectItemsBtn" text="Add Dropdown Items" inline="true" mini="true" />
             </g:FlowPanel>
+            <h:Paragraph />
+            <e:JQMSelect text="Dropdown with multiple select" mulitple="true" native="false"
+              closeText="Discard" selectInline="true">
+              <e:option>
+                <e:JQMSelect.Option text="One" value="1" />
+              </e:option>
+              <e:option>  
+                <e:JQMSelect.Option text="Two" value="2" />
+              </e:option>
+              <e:option>  
+                <e:JQMSelect.Option text="Three" value="3" />
+              </e:option>
+              <e:option>  
+                <e:JQMSelect.Option text="Four" value="4" />
+              </e:option>
+              <e:option>  
+                <e:JQMSelect.Option text="Five" value="5" />
+              </e:option>
+            </e:JQMSelect>
             
             <jqm:form.elements.JQMSlider min="5.0" max="8.0" labelText="sliderLabelText" ui:field="slider" />
               <!-- highlight="true" mini="true" theme="a" /-->

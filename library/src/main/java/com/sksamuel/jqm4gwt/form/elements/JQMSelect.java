@@ -2,6 +2,9 @@ package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.OptionElement;
+import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -23,7 +26,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasIcon;
-import com.sksamuel.jqm4gwt.HasInline;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasNative;
 import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
@@ -47,13 +49,17 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  */
 public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>, HasText<JQMSelect>,
         HasFocusHandlers, HasChangeHandlers, HasClickHandlers, HasTapHandlers, HasValue<String>, JQMFormWidget,
-        HasIcon<JQMSelect>, HasInline<JQMSelect>, HasPreventFocusZoom, HasCorners<JQMSelect>,
+        HasIcon<JQMSelect>, HasPreventFocusZoom, HasCorners<JQMSelect>,
         HasMini<JQMSelect>, Focusable {
 
 
     public static class Option {
         private String value;
         private String text;
+        private boolean placeholder;
+        private boolean selected;
+        private boolean disabled;
+
         public Option() {}
 
         public String getValue() {
@@ -70,6 +76,30 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
         public void setText(String text) {
             this.text = text;
+        }
+
+        public boolean isPlaceholder() {
+            return placeholder;
+        }
+
+        public void setPlaceholder(boolean placeholder) {
+            this.placeholder = placeholder;
+        }
+
+        public boolean isSelected() {
+            return selected;
+        }
+
+        public void setSelected(boolean selected) {
+            this.selected = selected;
+        }
+
+        public boolean isDisabled() {
+            return disabled;
+        }
+
+        public void setDisabled(boolean disabled) {
+            this.disabled = disabled;
         }
     }
 
@@ -144,8 +174,10 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     @UiChild
     public void addOption(Option option) {
-        addOption(option.value, option.text);
+        addOption(option.value, option.text, option.isPlaceholder(), option.isSelected(),
+                  option.isDisabled());
     }
+
     /**
      * Adds an option with the given text. The text is also used as the value.
      * The option is added at the end of the list of options.
@@ -157,12 +189,27 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         addOption(text, text);
     }
 
+    private void addOption(String value, String text, boolean placeholder, boolean selected,
+                           boolean disabled) {
+        select.addItem(text, value);
+
+        if (value == null || placeholder || selected || disabled) {
+            SelectElement selElt = select.getElement().cast();
+            NodeList<OptionElement> opts = selElt.getOptions();
+            OptionElement opt = opts.getItem(opts.getLength() - 1);
+            if (value == null) JQMCommon.setAttribute(opt, "value", null);
+            if (placeholder) JQMCommon.setAttribute(opt, "data-placeholder", "true");
+            if (selected) JQMCommon.setAttribute(opt, "selected", "selected");
+            if (disabled) JQMCommon.setAttribute(opt, "disabled", "disabled");
+        }
+    }
+
     /**
      * Adds an option with the given value and text. The option is added at
      * the end of the list of options.
      */
     public void addOption(String value, String text) {
-        select.addItem(text, value);
+        addOption(value, text, false/*placeholder*/, false/*selected*/, false/*disabled*/);
     }
 
     public int getOptionCount() {
@@ -192,25 +239,40 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         return addHandler(handler, ValueChangeEvent.getType());
     }
 
-    /**
-     * Programatically close an open select menu
-     */
-    public void close() {
-        close(select.getElement().getId());
-    }
-
-    private native void close(String id) /*-{
-        $wnd.$("#" + id).selectmenu('close');
-    }-*/;
-
     @Override
     public IconPos getIconPos() {
-        String string = getAttribute("data-iconpos");
-        return string == null ? null : IconPos.valueOf(string);
+        return JQMCommon.getIconPos(select);
     }
 
-    public String getPlaceholder() {
-        return getAttribute("data-placeholder");
+    /** Sets the position of the icon. */
+    @Override
+    public void setIconPos(IconPos pos) {
+        JQMCommon.setIconPos(select, pos);
+    }
+
+    /** Sets the position of the icon. */
+    @Override
+    public JQMSelect withIconPos(IconPos pos) {
+        setIconPos(pos);
+        return this;
+    }
+
+    @Override
+    public boolean isMini() {
+        return JQMCommon.isMini(select);
+    }
+
+    /** If set to true then renders a smaller version of the standard-sized element. */
+    @Override
+    public void setMini(boolean mini) {
+        JQMCommon.setMini(select, mini);
+    }
+
+    /** If set to true then renders a smaller version of the standard-sized element. */
+    @Override
+    public JQMSelect withMini(boolean mini) {
+        setMini(mini);
+        return this;
     }
 
     /**
@@ -260,29 +322,42 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      */
     public int indexOf(String value) {
         for (int k = 0; k < select.getItemCount(); k++) {
-            if (value.equals(select.getValue(k)))
+            String v = select.getValue(k);
+            if (value == null) {
+                if (v == null) return k;
+            } else if (value.equals(v)) {
                 return k;
+            }
         }
         return -1;
     }
 
     @Override
     public boolean isCorners() {
-        return "true".equals(getAttribute("data-corners"));
+        return JQMCommon.isCorners(select);
     }
 
     @Override
-    public boolean isInline() {
-        return "true".equals(select.getElement().getAttribute("data-inline"));
+    public void setCorners(boolean corners) {
+        JQMCommon.setCorners(select, corners);
     }
 
     @Override
-    public boolean isMini() {
-        return "true".equals(getAttribute("data-mini"));
+    public JQMSelect withCorners(boolean corners) {
+        setCorners(corners);
+        return this;
     }
 
     public boolean isMultiple() {
-        return "true".equals(select.getElement().getAttribute("multiple"));
+        String s = JQMCommon.getAttribute(select, "multiple");
+        return s != null && !s.isEmpty() && "multiple".equals(s);
+    }
+
+    /**
+     * Sets this select to allow mulitple selections.
+     */
+    public void setMulitple(boolean value) {
+        JQMCommon.setAttribute(select, "multiple", value ? "multiple" : null);
     }
 
     /**
@@ -290,25 +365,61 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      */
     @Override
     public boolean isNative() {
-        // an element is native by default. So this returns true if native
-        // is not set to false.
-        return !"false".equals(select.getElement().getAttribute("data-native-menu"));
+        // an element is native by default. So this returns true if native is not set to false.
+        String s = JQMCommon.getAttribute(select, "data-native-menu");
+        if (s == null || s.isEmpty()) return true;
+        return !"false".equals(s);
+    }
+
+    @Override
+    public void setNative(boolean value) {
+        JQMCommon.setAttribute(select, "data-native-menu", value ? null : "false");
+    }
+
+    @Override
+    public JQMSelect withNative(boolean value) {
+        setNative(value);
+        return this;
     }
 
     @Override
     public boolean isPreventFocusZoom() {
-        return "true".equals(select.getElement().getAttribute("data-prevent-focus-zoom"));
-    }
-
-    public boolean isShadow() {
-        return "true".equals(getAttribute("data-shadow"));
+        return "true".equals(JQMCommon.getAttribute(select, "data-prevent-focus-zoom"));
     }
 
     /**
-     * Programatically open a select menu
+     * This option disables page zoom temporarily when a custom select is focused,
+     * which prevents iOS devices from zooming the page into the select.
+     * By default, iOS often zooms into form controls, and the behavior is often
+     * unnecessary and intrusive in mobile-optimized layouts.
      */
-    public void open() {
+    @Override
+    public void setPreventFocusZoom(boolean b) {
+        JQMCommon.setAttribute(select, "data-prevent-focus-zoom", b ? "true" : null);
+    }
+
+    public boolean isShadow() {
+        String s = JQMCommon.getAttribute(select, "data-shadow");
+        if (s == null || s.isEmpty()) return true;
+        return !"false".equals(s);
+    }
+
+    public void setShadow(boolean value) {
+        JQMCommon.setAttribute(select, "data-shadow", value ? null : "false");
+    }
+
+    /** Programmatically close an open select menu */
+    public void close() {
         close(select.getElement().getId());
+    }
+
+    private native void close(String id) /*-{
+        $wnd.$("#" + id).selectmenu('close');
+    }-*/;
+
+    /** Programmatically open a select menu */
+    public void open() {
+        open(select.getElement().getId());
     }
 
     private native void open(String id) /*-{
@@ -329,12 +440,6 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         }
     }-*/;
 
-    @Override
-    public JQMSelect removeIcon() {
-        getElement().removeAttribute("data-icon");
-        return this;
-    }
-
     /**
      * Remove the first option that matches the given value
      */
@@ -346,6 +451,11 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     public void clear() {
     	select.clear();
+    }
+
+    @Override
+    public String getTheme() {
+        return JQMCommon.getTheme(select);
     }
 
     @Override
@@ -365,19 +475,14 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     @Override
-    public void setCorners(boolean corners) {
-        setAttribute("data-corners", String.valueOf(corners));
-    }
-
-    @Override
-    public JQMSelect withCorners(boolean corners) {
-        setCorners(corners);
-        return this;
-    }
-
-    @Override
     public void setFocus(boolean focused) {
         select.setFocus(focused);
+    }
+
+    @Override
+    public JQMSelect removeIcon() {
+        JQMCommon.setIcon(select, null);
+        return this;
     }
 
     /**
@@ -385,10 +490,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      */
     @Override
     public void setBuiltInIcon(DataIcon icon) {
-        if (icon == null)
-            removeIcon();
-        else
-            setIconURL(icon.getJqmValue());
+        JQMCommon.setIcon(select, icon);
     }
 
     @Override
@@ -396,7 +498,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         if (src == null)
             removeIcon();
         else
-            getElement().setAttribute("data-icon", src);
+            select.getElement().setAttribute("data-icon", src);
     }
 
     /**
@@ -414,108 +516,16 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         return this;
     }
 
-    /**
-     * Sets the position of the icon. If you desire an icon only button then
-     * set the position to IconPos.NOTEXT
-     */
-    @Override
-    public void setIconPos(IconPos pos) {
-        if (pos == null)
-            getElement().removeAttribute("data-iconpos");
-        else
-            getElement().setAttribute("data-iconpos", pos.getJqmValue());
+    public String getOverlayTheme() {
+        return JQMCommon.getAttribute(select, "data-overlay-theme");
     }
 
     /**
-     * Sets the position of the icon. If you desire an icon only button then
-     * set the position to IconPos.NOTEXT
+     * Sets the color of the overlay layer for the dialog-based custom select menus
+     * and the outer border of the smaller custom menus.
      */
-    @Override
-    public JQMSelect withIconPos(IconPos pos) {
-        setIconPos(pos);
-        return this;
-    }
-
-    @Override
-    public void setInline(boolean inline) {
-        if (inline)
-            getElement().setAttribute("data-inline", "true");
-        else
-            getElement().removeAttribute("data-inline");
-    }
-
-    @Override
-    public JQMSelect withInline(boolean inline) {
-        setInline(inline);
-        return this;
-    }
-
-    /**
-     * If set to true then renders a smaller version of the standard-sized element.
-     */
-    @Override
-    public void setMini(boolean mini) {
-        setAttribute("data-mini", String.valueOf(mini));
-    }
-
-    /**
-     * If set to true then renders a smaller version of the standard-sized element.
-     */
-    @Override
-    public JQMSelect withMini(boolean mini) {
-        setMini(mini);
-        return this;
-    }
-
-    /**
-     * Sets this select to allow mulitple selections.
-     */
-    public void setMulitple(boolean m) {
-        if (m)
-            getElement().setAttribute("multiple", "true");
-        else
-            getElement().removeAttribute("multiple");
-    }
-
-    @Override
-    public void setNative(boolean b) {
-        if (b)
-            getElement().removeAttribute("data-menu-native");
-        else
-            getElement().setAttribute("data-menu-native", "false");
-    }
-
-    @Override
-    public JQMSelect withNative(boolean b) {
-        setNative(b);
-        return this;
-    }
-
     public void setOverlayTheme(String theme) {
-        getElement().setAttribute("data-overlay-theme", theme);
-
-    }
-
-    /**
-     * Set the placeholder option value.
-     * <p/>
-     * It's common for developers to include a "null" option in their select
-     * element to force a user to choose an option. If a placeholder option is
-     * present in your markup, jQuery Mobile will hide them in the overlay
-     * menu, showing only valid choices to the user, and display the
-     * placeholder text inside the menu as a header.
-     */
-    public void setPlaceholder(String placeholder) {
-        setAttribute("data-placeholder", placeholder);
-    }
-
-    /**
-     * This option disables page zoom temporarily when a custom select is focused, which prevents iOS devices from zooming the page into the select.
-     * By default, iOS often zooms into form controls, and the behavior is often unnecessary and intrusive in mobile-optimized layouts.
-     */
-    @Override
-    public void setPreventFocusZoom(boolean b) {
-        setAttribute("data-prevent-focus-zoom", String.valueOf(b));
+        JQMCommon.setAttribute(select, "data-overlay-theme", theme);
     }
 
     /**
@@ -533,8 +543,15 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     public void setSelectedValue(String value, boolean ignoreCase) {
         for (int k = 0; k < select.getItemCount(); k++) {
-            boolean eq = ignoreCase ? select.getValue(k).equalsIgnoreCase(value)
-                                    : select.getValue(k).equals(value);
+            String v = select.getValue(k);
+            if (v == null) {
+                if (value == null) {
+                    setSelectedIndex(k);
+                    return;
+                }
+                continue;
+            }
+            boolean eq = ignoreCase ? v.equalsIgnoreCase(value) : v.equals(value);
             if (eq) {
                 setSelectedIndex(k);
                 return;
@@ -587,4 +604,44 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         }
     }
 
+    public String getCloseText() {
+        return JQMCommon.getAttribute(select, "data-close-text");
+    }
+
+    /**
+     * Customizes the text of the close button which is helpful for translating this
+     * into different languages. The close button is displayed as an icon-only button
+     * by default so the text isn't visible on-screen, but is read by screen readers
+     * so this is an important accessibility feature.
+     */
+    public void setCloseText(String value) {
+        JQMCommon.setAttribute(select, "data-close-text", value);
+    }
+
+    public boolean getSelectInline() {
+        return JQMCommon.isInline(select);
+    }
+
+    /** If set to true, this will make the select/dropdown act like an inline widget
+     * so the width is determined by the widget's text.
+     */
+    public void setSelectInline(boolean value) {
+        JQMCommon.setInline(select, value);
+    }
+
+    public boolean isHidePlaceholderMenuItems() {
+        String s = JQMCommon.getAttribute(select, "data-hide-placeholder-menu-items");
+        if (s == null || s.isEmpty()) return true;
+        return !"false".equals(s);
+    }
+
+    /**
+     * Default is true.
+     * <p/> Sets whether placeholder menu items are hidden.
+     * When true, the menu item used as the placeholder for the select menu widget
+     * will not appear in the list of choices.
+     */
+    public void setHidePlaceholderMenuItems(boolean value) {
+        JQMCommon.setAttribute(select, "data-hide-placeholder-menu-items", value ? null : "false");
+    }
 }
