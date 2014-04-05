@@ -40,6 +40,11 @@ public class JQMCommon {
     private static final String DATA_DIALOG = "data-dialog";
     private static final String DATA_WRAPPER = "data-wrapper-class";
 
+    private static final String DATA_FILTER = "data-filter";
+    private static final String DATA_INPUT = "data-input";
+    private static final String DATA_FILTER_TEXT = "data-filtertext";
+    private static final String DATA_FILTER_CHILDREN = "data-children";
+
     public static boolean isVisible(Widget widget) {
         return widget != null && Mobile.isVisible(widget.getElement());
     }
@@ -536,6 +541,60 @@ public class JQMCommon {
 
     public static void setDataWrapper(Widget widget, String wrapper) {
         setDataWrapper(widget.getElement(), wrapper);
+    }
+
+    public static String getDataFilter(Element elt) {
+        return getAttribute(elt, DATA_INPUT);
+    }
+
+    public static String getDataFilter(Widget widget) {
+        return getDataFilter(widget.getElement());
+    }
+
+    public static void setDataFilter(Element elt, String filterSelector) {
+        if (filterSelector == null || filterSelector.isEmpty()) {
+            setAttribute(elt, DATA_FILTER, null);
+            setAttribute(elt, DATA_INPUT, null);
+        } else {
+            setAttribute(elt, DATA_FILTER, "true");
+            setAttribute(elt, DATA_INPUT, filterSelector);
+        }
+    }
+
+    public static void setDataFilter(Widget widget, String filterSelector) {
+        setDataFilter(widget.getElement(), filterSelector);
+    }
+
+    public static String getFilterText(Element elt) {
+        return getAttribute(elt, DATA_FILTER_TEXT);
+    }
+
+    public static String getFilterText(Widget widget) {
+        return getFilterText(widget.getElement());
+    }
+
+    public static void setFilterText(Element elt, String filterText) {
+        setAttribute(elt, DATA_FILTER_TEXT, filterText);
+    }
+
+    public static void setFilterText(Widget widget, String filterText) {
+        setFilterText(widget.getElement(), filterText);
+    }
+
+    public static String getFilterChildren(Element elt) {
+        return getAttribute(elt, DATA_FILTER_CHILDREN);
+    }
+
+    public static String getFilterChildren(Widget widget) {
+        return getFilterChildren(widget.getElement());
+    }
+
+    public static void setFilterChildren(Element elt, String filterChildren) {
+        setAttribute(elt, DATA_FILTER_CHILDREN, filterChildren);
+    }
+
+    public static void setFilterChildren(Widget widget, String filterChildren) {
+        setFilterChildren(widget.getElement(), filterChildren);
     }
 
 }

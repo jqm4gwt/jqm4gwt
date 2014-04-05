@@ -18,7 +18,7 @@
 	      width: 98%;
 	    }
       
-      .bevel { height: 10px; }
+      .bevel { height: 1em; }
       
       .red { background-color: red; color: yellow; }
       .green { background-color: green; color: yellow; }
@@ -154,6 +154,7 @@
             <jqm:form.elements.JQMMonth text="monthText"/>
             <jqm:form.elements.JQMNumber text="numberText"/>
             <jqm:form.elements.JQMPassword text="passwordText"/>
+            <jqm:form.elements.JQMSearch text="searchText"/>
             
             <jqm:form.elements.JQMRadioset ui:field="radio1" text="radiosetText" selectedValue="b">
               <!-- orientation="HORIZONTAL" mini="true" iconPos="RIGHT" theme="a" -->
@@ -191,7 +192,7 @@
               </jqm:radio>
             </jqm:form.elements.JQMRadioset>
             
-            <jqm:form.elements.JQMSearch text="searchText"/>
+            <h:Paragraph />
             <jqm:form.elements.JQMSelect text="selectText" ui:field="select1" mini="true" 
               builtInIcon="BARS" iconPos="LEFT" native="false" hidePlaceholderMenuItems="false">
                 <jqm:option>
@@ -237,6 +238,34 @@
                 <e:JQMSelect.Option text="Five" value="5" />
               </e:option>
             </e:JQMSelect>
+            <h:Paragraph />
+            <h:Heading.H4 text="Filter Select/Dropdown" />
+            <e:JQMFilterable ui:field="fltr3" />
+            <e:JQMSelect text="" labelHidden="true" dataFilter="#{fltr3.getFilterId}" >
+              <e:option><e:JQMSelect.Option text="Zero" value="0" /></e:option>
+              <e:option><e:JQMSelect.Option text="One" value="1" /></e:option>
+              <e:option><e:JQMSelect.Option text="Two" value="2" /></e:option>
+              <e:option><e:JQMSelect.Option text="Three" value="3" /></e:option>
+              <e:option><e:JQMSelect.Option text="Four" value="4" /></e:option>
+              <e:option><e:JQMSelect.Option text="Five" value="5" /></e:option>
+              <e:option><e:JQMSelect.Option text="Six" value="6" /></e:option>
+              <e:option><e:JQMSelect.Option text="Seven" value="7" /></e:option>
+              <e:option><e:JQMSelect.Option text="Eight" value="8" /></e:option>
+              <e:option><e:JQMSelect.Option text="Nine" value="9" /></e:option>
+            </e:JQMSelect>
+            <h:Paragraph />
+            <h:Heading.H4 text="Filter Select/Dropdown Reveal" />
+            <l:JQMList.Unordered inset="true" 
+              filterable="true" filterReveal="true" filterPlaceholder="Search fruits...">
+              <l:item><l:JQMListItem checkBox="LEFT" text="Apple" /></l:item>
+              <l:item><l:JQMListItem checkBox="LEFT" text="Banana" /></l:item>
+              <l:item><l:JQMListItem checkBox="LEFT" text="Cherry" /></l:item>
+              <l:item><l:JQMListItem checkBox="LEFT" text="Cranberry" /></l:item>
+              <l:item><l:JQMListItem checkBox="LEFT" text="Grape" /></l:item>
+              <l:item><l:JQMListItem checkBox="LEFT" text="Orange" /></l:item>
+            </l:JQMList.Unordered>
+            <h:Paragraph />
+            <h:Paragraph addStyleNames="{style.bevel}" />
             
             <jqm:form.elements.JQMSlider min="5.0" max="8.0" labelText="sliderLabelText" ui:field="slider" />
               <!-- highlight="true" mini="true" theme="a" /-->
@@ -405,7 +434,8 @@
               </t:content>
             </t:JQMTabs>
             </g:FlowPanel>
-            <jqm:html.Paragraph />
+            <h:Paragraph />
+            <h:Paragraph addStyleNames="{style.bevel}" />
             <jqm:form.JQMSubmit text="submitButtonText"/>
         </jqm:form.JQMForm>
         
@@ -494,7 +524,8 @@
             </jqm:cell>
           </jqm:layout.JQMTable>
         <jqm:html.Paragraph addStyleNames="{style.bevel}" />
-        <jqm:list.JQMList.Ordered>
+        <e:JQMFilterable ui:field="fltr2" />
+        <jqm:list.JQMList.Ordered dataFilter="#{fltr2.getFilterId}">
             <jqm:item><jqm:list.JQMListItem text="Ordered List Item #1 Text" dataIcon="NONE" /></jqm:item>
             <jqm:item><jqm:list.JQMListItem text="Ordered List Item #2 Text"/></jqm:item>
             <jqm:item><jqm:list.JQMListItem text="Ordered List Item #3 Text" href="http://www.cnn.com"/></jqm:item>
@@ -665,8 +696,11 @@
         
         <jqm:html.Paragraph addStyleNames="{style.bevel}" />
         
-        <jqm:table.JQMColumnToggle columnBtnText="Choose columns..." columnBtnTheme="b" 
-          columnPopupTheme="a" backgroundTheme="a" headerTheme="a"
+        <e:JQMFilterable ui:field="fltr1" />
+        
+        <jqm:table.JQMColumnToggle dataFilter="#{fltr1.getFilterId}" 
+          columnBtnText="Choose columns..." columnBtnTheme="b" columnPopupTheme="a" 
+          backgroundTheme="a" headerTheme="a"
           colNames="Store, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change"
           cells="&lt;th> Boston &lt;/th>,   2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%,
                  &lt;th> Chicago &lt;/th>,  2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%,
@@ -690,7 +724,8 @@
           <jqm:colGroup colspan="3" priority="1">
             <jqm:button.JQMButton text="YTD Totals" inline="true" mini="true" />
           </jqm:colGroup>         
-        </jqm:table.JQMColumnToggle>  
+        </jqm:table.JQMColumnToggle>
+        <h:Paragraph addStyleNames="{style.bevel}" />  
         
         <!-- /jqm:plugins.iscroll.IScrollPanel-->
         </g:FlowPanel>

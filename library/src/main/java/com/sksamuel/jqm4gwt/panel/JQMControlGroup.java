@@ -32,19 +32,17 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
         }
     }
 
+    public Orientation getOrientation() {
+        return HasOrientation.Support.getOrientation(this);
+    }
+
+    public void setOrientation(Orientation value) {
+        HasOrientation.Support.setOrientation(this, value);
+    }
+
     @Override
     public boolean isHorizontal() {
-        return "true".equals(getAttribute("data-type"));
-    }
-
-    @Override
-    public boolean isMini() {
-        return "true".equals(getAttribute("data-mini"));
-    }
-
-    @Override
-    public boolean isVertical() {
-        return !isHorizontal();
+        return "horizontal".equals(getAttribute("data-type"));
     }
 
     @Override
@@ -58,21 +56,9 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
         return this;
     }
 
-    /**
-     * If set to true then renders a smaller version of the standard-sized element.
-     */
     @Override
-    public void setMini(boolean mini) {
-        setAttribute("data-mini", String.valueOf(mini));
-    }
-
-    /**
-     * If set to true then renders a smaller version of the standard-sized element.
-     */
-    @Override
-    public JQMControlGroup withMini(boolean mini) {
-        setMini(mini);
-        return this;
+    public boolean isVertical() {
+        return !isHorizontal();
     }
 
     @Override
@@ -83,15 +69,25 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
     @Override
     public JQMControlGroup withVertical() {
         setVertical();
-      	return this;
+        return this;
     }
 
-    public void setOrientation(Orientation value) {
-        HasOrientation.Support.setOrientation(this, value);
+    @Override
+    public boolean isMini() {
+        return JQMCommon.isMini(this);
     }
 
-    public Orientation getOrientation() {
-        return HasOrientation.Support.getOrientation(this);
+    /** If set to true then renders a smaller version of the standard-sized element. */
+    @Override
+    public void setMini(boolean mini) {
+        JQMCommon.setMini(this, mini);
+    }
+
+    /** If set to true then renders a smaller version of the standard-sized element. */
+    @Override
+    public JQMControlGroup withMini(boolean mini) {
+        setMini(mini);
+        return this;
     }
 
     @Override
@@ -125,5 +121,17 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
      */
     public void refresh() {
         refresh(getElement());
+    }
+
+    public String getDataFilter() {
+        return JQMCommon.getDataFilter(this);
+    }
+
+    /**
+     * @param filterSelector - a jQuery selector that will be used to retrieve the element
+     * that will serve as the input source, UiBinder example: dataFilter="#{fltr1.getFilterId}"
+     */
+    public void setDataFilter(String filterSelector) {
+        JQMCommon.setDataFilter(this, filterSelector);
     }
 }

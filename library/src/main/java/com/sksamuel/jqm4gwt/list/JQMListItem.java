@@ -32,6 +32,7 @@ import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
 import com.sksamuel.jqm4gwt.events.TapEvent;
 import com.sksamuel.jqm4gwt.events.TapHandler;
+import com.sksamuel.jqm4gwt.form.elements.JQMFilterable;
 import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
 import com.sksamuel.jqm4gwt.panel.JQMControlGroup;
 
@@ -742,5 +743,12 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
     public void setActiveHighlight(boolean value) {
         if (anchor == null) return;
         JQMCommon.setBtnActive(anchor, value);
+    }
+
+    /**
+     * @return - true if this item was filtered out by {@link JQMFilterable}.
+     */
+    public boolean isFilteredOut() {
+        return JQMCommon.hasStyle(this, "ui-screen-hidden");
     }
 }

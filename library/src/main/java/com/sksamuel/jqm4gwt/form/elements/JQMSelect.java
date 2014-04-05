@@ -48,8 +48,8 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * <p/> See <a href="http://demos.jquerymobile.com/1.4.2/selectmenu/">Select menu</a>
  */
 public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>, HasText<JQMSelect>,
-        HasFocusHandlers, HasChangeHandlers, HasClickHandlers, HasTapHandlers, HasValue<String>, JQMFormWidget,
-        HasIcon<JQMSelect>, HasPreventFocusZoom, HasCorners<JQMSelect>,
+        HasFocusHandlers, HasChangeHandlers, HasClickHandlers, HasTapHandlers, HasValue<String>,
+        JQMFormWidget, HasIcon<JQMSelect>, HasPreventFocusZoom, HasCorners<JQMSelect>,
         HasMini<JQMSelect>, Focusable {
 
 
@@ -643,5 +643,20 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      */
     public void setHidePlaceholderMenuItems(boolean value) {
         JQMCommon.setAttribute(select, "data-hide-placeholder-menu-items", value ? null : "false");
+    }
+
+    @Override
+    public String getDataFilter() {
+        return JQMCommon.getDataFilter(select);
+    }
+
+    @Override
+    public void setDataFilter(String filterSelector) {
+        JQMCommon.setDataFilter(select, filterSelector);
+    }
+
+    @Override
+    public void setFilterChildren(String filterChildren) {
+        JQMCommon.setFilterChildren(select, filterChildren);
     }
 }

@@ -727,4 +727,16 @@ public class JQMColumnToggle extends CustomFlowPanel {
         if (value) JQMCommon.setAttribute(this, "data-mode", REFLOW);
         else JQMCommon.setAttribute(this, "data-mode", TOGGLE);
     }
+
+    public String getDataFilter() {
+        return JQMCommon.getDataFilter(this);
+    }
+
+    /**
+     * @param filterSelector - a jQuery selector that will be used to retrieve the element
+     * that will serve as the input source, UiBinder example: dataFilter="#{fltr1.getFilterId}"
+     */
+    public void setDataFilter(String filterSelector) {
+        JQMCommon.setDataFilter(this, filterSelector);
+    }
 }

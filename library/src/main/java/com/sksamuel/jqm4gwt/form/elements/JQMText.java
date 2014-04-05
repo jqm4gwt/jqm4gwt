@@ -168,11 +168,6 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasF
     }-*/;
 
     @Override
-    public String getId() {
-        return input.getElement().getId();
-    }
-
-    @Override
     public int getTabIndex() {
         return input.getTabIndex();
     }
@@ -302,6 +297,10 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasF
     public JQMText withPlaceHolder(String placeHolderText) {
         setPlaceHolder(placeHolderText);
         return this;
+    }
+
+    public String getInputId() {
+        return input.getElement().getId();
     }
 
     public void setInputId(String id) {

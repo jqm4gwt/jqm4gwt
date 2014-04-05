@@ -331,12 +331,53 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
         return getAttribute("data-divider-theme");
     }
 
+    /** @return true if this list is set to filterable, false otherwise. */
+    @Override
+    public String isFilterable() {
+        return getAttribute("data-filter");
+    }
+
+    @Override
+    public void setFilterable(boolean filterable) {
+        if (filterable)
+            setAttribute("data-filter", "true");
+        else
+            removeAttribute("data-filter");
+    }
+
+    @Override
+    public JQMList withFilterable(boolean filterable) {
+        setFilterable(filterable);
+        return this;
+    }
+
     public String getFilterPlaceholder() {
         return getAttribute("data-filter-placeholder");
     }
 
+    public void setFilterPlaceholder(String placeholderText) {
+        setAttribute("data-filter-placeholder", placeholderText);
+    }
+
     public String getFilterTheme() {
         return getAttribute("data-filter-theme");
+    }
+
+    /**
+     * Sets the color scheme (swatch) for the search filter bar.
+     * It accepts a single letter from a-z that maps to the swatches included in your theme.
+     */
+    public JQMList setFilterTheme(String theme) {
+        setAttribute("data-filter-theme", theme);
+        return this;
+    }
+
+    public boolean isFilterReveal() {
+        return "true".equals(JQMCommon.getAttribute(this, "data-filter-reveal"));
+    }
+
+    public void setFilterReveal(boolean value) {
+        JQMCommon.setAttribute(this, "data-filter-reveal", value ? "true" : null);
     }
 
     /**
@@ -352,16 +393,6 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
      */
     public List<JQMListItem> getItems() {
         return items;
-    }
-
-    /**
-     * Returns the value of the filterable option on this list.
-     *
-     * @return true if this list is set to filterable, false otherwise.
-     */
-    @Override
-    public String isFilterable() {
-        return getAttribute("data-filter");
     }
 
     @Override
@@ -529,34 +560,6 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
      */
     public JQMList setDividerTheme(String theme) {
         setAttribute("data-divider-theme", theme);
-        return this;
-    }
-
-    @Override
-    public void setFilterable(boolean filterable) {
-        if (filterable)
-            setAttribute("data-filter", "true");
-        else
-            removeAttribute("data-filter");
-    }
-
-    @Override
-    public JQMList withFilterable(boolean filterable) {
-        setFilterable(filterable);
-        return this;
-    }
-
-    public JQMList setFilterPlaceholder(String placeholderText) {
-        setAttribute("data-filter-placeholder", placeholderText);
-        return this;
-    }
-
-    /**
-     * Sets the color scheme (swatch) for the search filter bar. It accepts a single letter from a-z that maps to the
-     * swatches included in your theme.
-     */
-    public JQMList setFilterTheme(String theme) {
-        setAttribute("data-filter-theme", theme);
         return this;
     }
 

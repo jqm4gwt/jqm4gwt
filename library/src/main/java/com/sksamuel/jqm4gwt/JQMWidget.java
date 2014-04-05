@@ -11,6 +11,10 @@ import com.sksamuel.jqm4gwt.events.JQMEvent;
 import com.sksamuel.jqm4gwt.events.JQMEventHandler;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
+import com.sksamuel.jqm4gwt.form.elements.JQMFilterable;
+import com.sksamuel.jqm4gwt.form.elements.JQMSelect;
+import com.sksamuel.jqm4gwt.layout.JQMCollapsibleSet;
+import com.sksamuel.jqm4gwt.list.JQMList;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 11 Jul 2011 17:02:40
@@ -29,7 +33,7 @@ import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
  *         compose and thus call initWidget() themselves.
  */
 public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>, HasId<JQMWidget>,
-        HasDataRole, HasEnabled ,HasJQMEventHandlers{
+        HasDataRole, HasEnabled, HasJQMEventHandlers {
 
     /**
      * Returns the value of the attribute with the given name
@@ -45,14 +49,6 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
     @Override
     public String getDataRole() {
         return JQMCommon.getDataRole(this);
-    }
-
-    /**
-     * Returns the ID set on the main element
-     */
-    @Override
-    public String getId() {
-        return getElement().getId();
     }
 
     @Override
@@ -90,12 +86,23 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
         JQMCommon.setDataRole(this, value);
     }
 
+    /** Returns this widget's ID (set on the main element) */
+    @Override
+    public final String getId() {
+        return getElement().getId();
+    }
+
+    /** The same as {@link JQMWidget#getId()}, but needed for UiBinder templates */
+    public final String getWidgetId() {
+        return getId();
+    }
+
     /**
      * Assigns an automatically generated ID to this widget. This method uses
      * the default GWT id creation methods in Document.get().createUniqueId()
      */
-    protected void setId() {
-        withId(Document.get().createUniqueId());
+    protected final void setId() {
+        setId(Document.get().createUniqueId());
     }
 
     @Override
@@ -143,15 +150,53 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
         return super.isVisible() && JQMCommon.isVisible(this);
     }
 
-	@Override
-	public HandlerRegistration addJQMEventHandler(String eventName ,JQMEventHandler handler){
+    @Override
+    public HandlerRegistration addJQMEventHandler(String eventName ,JQMEventHandler handler){
 
-	       return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
-				@Override
-				public int getHandlerCountForWidget(Type<?> type) {
-					return getHandlerCount(type);
-				}
-	        }, this, handler, eventName, JQMEvent.getType());
-	}
+           return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
+                @Override
+                public int getHandlerCountForWidget(Type<?> type) {
+                    return getHandlerCount(type);
+                }
+            }, this, handler, eventName, JQMEvent.getType());
+    }
+
+    public String getDataFilter() {
+        return JQMCommon.getDataFilter(this);
+    }
+
+    /**
+     * To be used in conjunction with {@link JQMFilterable}.
+     * <p/> May not work for any widget or require override for composite widgets like {@link JQMSelect}.
+     * <p/> But {@link JQMList}, {@link JQMCollapsibleSet}, and others with children collection are supported.
+     *
+     * @param filterSelector - a jQuery selector that will be used to retrieve the element
+     * that will serve as the input source, UiBinder example: dataFilter="#{fltr1.getFilterId}"
+     */
+    public void setDataFilter(String filterSelector) {
+        JQMCommon.setDataFilter(this, filterSelector);
+    }
+
+    public String getFilterChildren() {
+        return JQMCommon.getFilterChildren(this);
+    }
+
+    /**
+     * See <a href="http://api.jquerymobile.com/filterable/#option-children">Filterable Children</a>
+     */
+    public void setFilterChildren(String filterChildren) {
+        JQMCommon.setFilterChildren(this, filterChildren);
+    }
+
+    public String getFilterText() {
+        return JQMCommon.getFilterText(this);
+    }
+
+    /**
+     * {@link JQMFilterable} will use this text when searching through this widget.
+     */
+    public void setFilterText(String filterText) {
+        JQMCommon.setFilterText(this, filterText);
+    }
 
 }
