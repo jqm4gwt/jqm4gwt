@@ -13,10 +13,13 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.HasFilterable;
 import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.form.elements.JQMFilterableEvent;
 import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
 
 /**
@@ -29,7 +32,7 @@ import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
  * @author slavap
  *
  */
-public class JQMColumnToggle extends CustomFlowPanel {
+public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
 
     //TODO: table-stroke and table-stripe are deprecated in 1.4, so custom CSS will be needed in 1.5
     public static final String STD_ROW_LINES = "table-stroke";
@@ -97,6 +100,8 @@ public class JQMColumnToggle extends CustomFlowPanel {
 
     private Collection<String> dataStr;
     private Map<Widget, Boolean> dataObj;
+
+    private boolean boundFilterEvents;
 
     public JQMColumnToggle() {
         super(Document.get().createTableElement());
@@ -369,13 +374,6 @@ public class JQMColumnToggle extends CustomFlowPanel {
             }
             return;
         }
-    }
-
-    @Override
-    protected void onLoad() {
-        super.onLoad();
-        loaded = true;
-        if (tBody.getWidgetCount() == 0 && !colTitleWidgets.isEmpty()) populateBody();
     }
 
     private int getNumOfCols() {
@@ -728,8 +726,24 @@ public class JQMColumnToggle extends CustomFlowPanel {
         else JQMCommon.setAttribute(this, "data-mode", TOGGLE);
     }
 
+    // Filterable support copied from JQMWidget
+
+    private Widget getDataFilterWidget() {
+        return this;
+    }
+
+    /** @return true if this list is set to filterable, false otherwise. */
+    public boolean isFilterable() {
+        return JQMCommon.isFilterable(getDataFilterWidget());
+    }
+
+    public void setFilterable(boolean value) {
+        JQMCommon.setFilterable(getDataFilterWidget(), value);
+        checkFilterEvents();
+    }
+
     public String getDataFilter() {
-        return JQMCommon.getDataFilter(this);
+        return JQMCommon.getDataFilter(getDataFilterWidget());
     }
 
     /**
@@ -737,6 +751,82 @@ public class JQMColumnToggle extends CustomFlowPanel {
      * that will serve as the input source, UiBinder example: dataFilter="#{fltr1.getFilterId}"
      */
     public void setDataFilter(String filterSelector) {
-        JQMCommon.setDataFilter(this, filterSelector);
+        JQMCommon.setDataFilter(getDataFilterWidget(), filterSelector);
+        checkFilterEvents();
+    }
+
+    public String getFilterChildren() {
+        return JQMCommon.getFilterChildren(getDataFilterWidget());
+    }
+
+    /**
+     * See <a href="http://api.jquerymobile.com/filterable/#option-children">Filterable Children</a>
+     */
+    public void setFilterChildren(String filterChildren) {
+        JQMCommon.setFilterChildren(getDataFilterWidget(), filterChildren);
+    }
+
+    @Override
+    public void refreshFilter() {
+        if (isFilterable()) JQMCommon.refreshFilter(getDataFilterWidget());
+    }
+
+    /** @param filter - currently entered filter text */
+    protected void onBeforeFilter(String filter) {
+    }
+
+    @Override
+    public void doBeforeFilter(String filter) {
+        onBeforeFilter(filter);
+        JQMFilterableEvent.fire(this, JQMFilterableEvent.FilterableState.BEFORE_FILTER, filter);
+    }
+
+    public HandlerRegistration addFilterableHandler(JQMFilterableEvent.Handler handler) {
+        return addHandler(handler, JQMFilterableEvent.getType());
+    }
+
+    private native void bindFilterEvents(HasFilterable fltr, Element fltrElt) /*-{
+        $wnd.$(fltrElt).on("filterablebeforefilter", function(event, ui) {
+            var value = ui.input.val();
+            fltr.@com.sksamuel.jqm4gwt.HasFilterable::doBeforeFilter(Ljava/lang/String;)(value);
+        });
+    }-*/;
+
+    private native void unbindFilterEvents(Element fltrElt) /*-{
+        $wnd.$(fltrElt).off("filterablebeforefilter");
+    }-*/;
+
+    private void bindFilterEvents() {
+        if (boundFilterEvents) return;
+        bindFilterEvents(this, getDataFilterWidget().getElement());
+        boundFilterEvents = true;
+    }
+
+    private void unbindFilterEvents() {
+        if (!boundFilterEvents) return;
+        unbindFilterEvents(getDataFilterWidget().getElement());
+        boundFilterEvents = false;
+    }
+
+    private void checkFilterEvents() {
+        if (isAttached()) {
+            boolean b = isFilterable();
+            if (!b) unbindFilterEvents();
+            else bindFilterEvents();
+        }
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        loaded = true;
+        checkFilterEvents();
+        if (tBody.getWidgetCount() == 0 && !colTitleWidgets.isEmpty()) populateBody();
+    }
+
+    @Override
+    protected void onUnload() {
+        unbindFilterEvents();
+        super.onUnload();
     }
 }

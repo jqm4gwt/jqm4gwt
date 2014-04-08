@@ -543,6 +543,22 @@ public class JQMCommon {
         setDataWrapper(widget.getElement(), wrapper);
     }
 
+    public static boolean isFilterable(Element elt) {
+        return "true".equals(getAttribute(elt, DATA_FILTER));
+    }
+
+    public static boolean isFilterable(Widget widget) {
+        return isFilterable(widget.getElement());
+    }
+
+    public static void setFilterable(Element elt, boolean value) {
+        setAttribute(elt, DATA_FILTER, value ? "true" : null);
+    }
+
+    public static void setFilterable(Widget widget, boolean value) {
+        setFilterable(widget.getElement(), value);
+    }
+
     public static String getDataFilter(Element elt) {
         return getAttribute(elt, DATA_INPUT);
     }
@@ -595,6 +611,22 @@ public class JQMCommon {
 
     public static void setFilterChildren(Widget widget, String filterChildren) {
         setFilterChildren(widget.getElement(), filterChildren);
+    }
+
+    public static native void refreshFilter(Element elt) /*-{
+        var w = $wnd.$(elt);
+        if (w.data('mobile-filterable') !== undefined) {
+            w.filterable('refresh');
+        }
+    }-*/;
+
+    /**
+     * Updates the filterable widget.
+     * If you manipulate a filterable widget programmatically (e.g. by adding new children
+     * or removing old ones), you must call the refreshFilter() method on it to update the visuals.
+     */
+    public static void refreshFilter(Widget widget) {
+        refreshFilter(widget.getElement());
     }
 
 }

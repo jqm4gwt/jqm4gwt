@@ -331,20 +331,6 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
         return getAttribute("data-divider-theme");
     }
 
-    /** @return true if this list is set to filterable, false otherwise. */
-    @Override
-    public String isFilterable() {
-        return getAttribute("data-filter");
-    }
-
-    @Override
-    public void setFilterable(boolean filterable) {
-        if (filterable)
-            setAttribute("data-filter", "true");
-        else
-            removeAttribute("data-filter");
-    }
-
     @Override
     public JQMList withFilterable(boolean filterable) {
         setFilterable(filterable);
@@ -402,6 +388,8 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
 
     /**
      * Call to refresh the list after a programmatic change is made.
+     * <p/> In some cases you have to call recreate() first, and then refresh(), for example
+     * when adding complex list items.
      */
     public void refresh() {
         refresh(getElement());
@@ -419,11 +407,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
      * <p>For example after adding complex list items you have to call recreate() and then refresh().</p>
      */
     public void recreate() {
-        recreate(getId());
-    }
-
-    protected void recreate(String id) {
-        JQMContext.render(id);
+        JQMContext.render(getElement());
     }
 
     /**
@@ -496,6 +480,16 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
                     && tag.equals(((JQMListDivider) w).getTag())) {
                 return (JQMListDivider) w;
             }
+        }
+        return null;
+    }
+
+    public JQMListItem findItem(String text) {
+        if (text == null) return null;
+        List<JQMListItem> lst = getItems();
+        for (JQMListItem i : lst) {
+            if (i == null) continue;
+            if (text.equals(i.getText())) return i;
         }
         return null;
     }

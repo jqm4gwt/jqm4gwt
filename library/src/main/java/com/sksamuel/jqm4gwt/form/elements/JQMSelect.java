@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasIcon;
@@ -646,17 +647,8 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     @Override
-    public String getDataFilter() {
-        return JQMCommon.getDataFilter(select);
+    protected Widget getDataFilterWidget() {
+        return select;
     }
 
-    @Override
-    public void setDataFilter(String filterSelector) {
-        JQMCommon.setDataFilter(select, filterSelector);
-    }
-
-    @Override
-    public void setFilterChildren(String filterChildren) {
-        JQMCommon.setFilterChildren(select, filterChildren);
-    }
 }

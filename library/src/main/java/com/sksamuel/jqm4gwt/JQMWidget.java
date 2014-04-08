@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
@@ -12,6 +13,7 @@ import com.sksamuel.jqm4gwt.events.JQMEventHandler;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
 import com.sksamuel.jqm4gwt.form.elements.JQMFilterable;
+import com.sksamuel.jqm4gwt.form.elements.JQMFilterableEvent;
 import com.sksamuel.jqm4gwt.form.elements.JQMSelect;
 import com.sksamuel.jqm4gwt.layout.JQMCollapsibleSet;
 import com.sksamuel.jqm4gwt.list.JQMList;
@@ -33,7 +35,9 @@ import com.sksamuel.jqm4gwt.list.JQMList;
  *         compose and thus call initWidget() themselves.
  */
 public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>, HasId<JQMWidget>,
-        HasDataRole, HasEnabled, HasJQMEventHandlers {
+        HasDataRole, HasEnabled, HasJQMEventHandlers, HasFilterable {
+
+    private boolean boundFilterEvents;
 
     /**
      * Returns the value of the attribute with the given name
@@ -161,42 +165,121 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
             }, this, handler, eventName, JQMEvent.getType());
     }
 
-    public String getDataFilter() {
-        return JQMCommon.getDataFilter(this);
-    }
-
-    /**
-     * To be used in conjunction with {@link JQMFilterable}.
-     * <p/> May not work for any widget or require override for composite widgets like {@link JQMSelect}.
-     * <p/> But {@link JQMList}, {@link JQMCollapsibleSet}, and others with children collection are supported.
-     *
-     * @param filterSelector - a jQuery selector that will be used to retrieve the element
-     * that will serve as the input source, UiBinder example: dataFilter="#{fltr1.getFilterId}"
-     */
-    public void setDataFilter(String filterSelector) {
-        JQMCommon.setDataFilter(this, filterSelector);
-    }
-
-    public String getFilterChildren() {
-        return JQMCommon.getFilterChildren(this);
-    }
-
-    /**
-     * See <a href="http://api.jquerymobile.com/filterable/#option-children">Filterable Children</a>
-     */
-    public void setFilterChildren(String filterChildren) {
-        JQMCommon.setFilterChildren(this, filterChildren);
-    }
-
     public String getFilterText() {
-        return JQMCommon.getFilterText(this);
+        return JQMCommon.getFilterText(getDataFilterWidget());
     }
 
     /**
      * {@link JQMFilterable} will use this text when searching through this widget.
      */
     public void setFilterText(String filterText) {
-        JQMCommon.setFilterText(this, filterText);
+        JQMCommon.setFilterText(getDataFilterWidget(), filterText);
+    }
+
+    /** Can be overridden in descendants to provide proper data filter widget */
+    protected Widget getDataFilterWidget() {
+        return this;
+    }
+
+    /** @return true if this list is set to filterable, false otherwise. */
+    public boolean isFilterable() {
+        return JQMCommon.isFilterable(getDataFilterWidget());
+    }
+
+    public void setFilterable(boolean value) {
+        JQMCommon.setFilterable(getDataFilterWidget(), value);
+        checkFilterEvents();
+    }
+
+    public String getDataFilter() {
+        return JQMCommon.getDataFilter(getDataFilterWidget());
+    }
+
+    /**
+     * To be used in conjunction with {@link JQMFilterable}.
+     * <p/> May not work for any widget or require {@link JQMWidget#getDataFilterWidget()} override
+     * for composite widgets like {@link JQMSelect}.
+     * <p/> But {@link JQMList}, {@link JQMCollapsibleSet}, and others with children collection are supported.
+     *
+     * @param filterSelector - a jQuery selector that will be used to retrieve the element
+     * that will serve as the input source, UiBinder example: dataFilter="#{fltr1.getFilterId}"
+     */
+    public void setDataFilter(String filterSelector) {
+        JQMCommon.setDataFilter(getDataFilterWidget(), filterSelector);
+        checkFilterEvents();
+    }
+
+    public String getFilterChildren() {
+        return JQMCommon.getFilterChildren(getDataFilterWidget());
+    }
+
+    /**
+     * See <a href="http://api.jquerymobile.com/filterable/#option-children">Filterable Children</a>
+     */
+    public void setFilterChildren(String filterChildren) {
+        JQMCommon.setFilterChildren(getDataFilterWidget(), filterChildren);
+    }
+
+    @Override
+    public void refreshFilter() {
+        if (isFilterable()) JQMCommon.refreshFilter(getDataFilterWidget());
+    }
+
+    /** @param filter - currently entered filter text */
+    protected void onBeforeFilter(String filter) {
+    }
+
+    @Override
+    public void doBeforeFilter(String filter) {
+        onBeforeFilter(filter);
+        JQMFilterableEvent.fire(this, JQMFilterableEvent.FilterableState.BEFORE_FILTER, filter);
+    }
+
+    public HandlerRegistration addFilterableHandler(JQMFilterableEvent.Handler handler) {
+        return addHandler(handler, JQMFilterableEvent.getType());
+    }
+
+    private native void bindFilterEvents(HasFilterable fltr, Element fltrElt) /*-{
+        $wnd.$(fltrElt).on("filterablebeforefilter", function(event, ui) {
+            var value = ui.input.val();
+            fltr.@com.sksamuel.jqm4gwt.HasFilterable::doBeforeFilter(Ljava/lang/String;)(value);
+        });
+    }-*/;
+
+    private native void unbindFilterEvents(Element fltrElt) /*-{
+        $wnd.$(fltrElt).off("filterablebeforefilter");
+    }-*/;
+
+    private void bindFilterEvents() {
+        if (boundFilterEvents) return;
+        bindFilterEvents(this, getDataFilterWidget().getElement());
+        boundFilterEvents = true;
+    }
+
+    private void unbindFilterEvents() {
+        if (!boundFilterEvents) return;
+        unbindFilterEvents(getDataFilterWidget().getElement());
+        boundFilterEvents = false;
+    }
+
+    private void checkFilterEvents() {
+        if (isAttached()) {
+            boolean b = isFilterable();
+            if (!b) unbindFilterEvents();
+            else bindFilterEvents();
+        }
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        checkFilterEvents();
+    }
+
+    @Override
+    protected void onUnload() {
+        unbindFilterEvents();
+        super.onUnload();
     }
 
 }

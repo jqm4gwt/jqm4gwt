@@ -1,7 +1,6 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 
@@ -32,21 +31,5 @@ public class JQMFilterable extends SimplePanel {
     public void setFilterId(String id) {
         filter.getElement().setId(id);
     }
-
-    /**
-     * Updates the filterable widget.
-     * If you manipulate a filterable widget programmatically (e.g. by adding new children
-     * or removing old ones), you must call the refresh() method on it to update the visual styling.
-     */
-    public void refresh() {
-        refresh(getElement());
-    }
-
-    private native void refresh(Element elt) /*-{
-        var w = $wnd.$(elt);
-        if (w.data('mobile-filterable') !== undefined) {
-            w.filterable('refresh');
-        }
-    }-*/;
 
 }

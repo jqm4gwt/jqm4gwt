@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMDialog;
 import com.sksamuel.jqm4gwt.JQMPage;
@@ -25,6 +26,7 @@ import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.form.JQMForm;
 import com.sksamuel.jqm4gwt.form.SubmissionHandler;
 import com.sksamuel.jqm4gwt.form.elements.JQMCheckbox;
+import com.sksamuel.jqm4gwt.form.elements.JQMFilterable;
 import com.sksamuel.jqm4gwt.form.elements.JQMFlip;
 import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.form.elements.JQMRangeSlider;
@@ -265,6 +267,21 @@ public class TestView1 {
 
     @UiField
     JQMButton addSelectItemsBtn;
+
+    @UiField
+    JQMButton addFruitsBtn;
+
+    @UiField
+    JQMList fruitsList;
+
+    @UiField
+    JQMButton addNumsBtn;
+
+    @UiField
+    JQMSelect numsList;
+
+    @UiField
+    JQMFilterable numsFltr;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -586,6 +603,27 @@ public class TestView1 {
         opt.setDisabled(true);
         select1.addOption(opt);
         select1.refresh();
+    }
+
+    @UiHandler("addFruitsBtn")
+    void addFruitsBtnClick(ClickEvent e) {
+        if (fruitsList.findItem("Apricot") != null) return;
+        fruitsList.appendItem(new JQMListItem("Apricot", IconPos.LEFT));
+        fruitsList.appendItem(new JQMListItem("Kiwi", IconPos.LEFT));
+        fruitsList.appendItem(new JQMListItem("Mango", IconPos.LEFT));
+        fruitsList.recreate();
+        fruitsList.refresh();
+        fruitsList.refreshFilter();
+    }
+
+    @UiHandler("addNumsBtn")
+    void addNumsBtnClick(ClickEvent e) {
+        if (numsList.indexOf("11") >= 0) return;
+        numsList.addOption("11", "Eleven");
+        numsList.addOption("12", "Twelve");
+        numsList.addOption("13", "Thirteen");
+        numsList.refresh();
+        numsList.refreshFilter();
     }
 
 

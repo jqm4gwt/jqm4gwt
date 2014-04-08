@@ -239,9 +239,12 @@
               </e:option>
             </e:JQMSelect>
             <h:Paragraph />
-            <h:Heading.H4 text="Filter Select/Dropdown" />
-            <e:JQMFilterable ui:field="fltr3" />
-            <e:JQMSelect text="" labelHidden="true" dataFilter="#{fltr3.getFilterId}" >
+            <h:Heading.H4 text="Filter Select/Dropdown" 
+              addStyleNames="{style.inlineBlock} {style.marginRight10}" />
+            <b:JQMButton ui:field="addNumsBtn" text="Add numbers" inline="true" />
+            <e:JQMFilterable ui:field="numsFltr" />
+            <e:JQMSelect ui:field="numsList" text="" labelHidden="true" native="false" 
+              dataFilter="#{numsFltr.getFilterId}" >
               <e:option><e:JQMSelect.Option text="Zero" value="0" /></e:option>
               <e:option><e:JQMSelect.Option text="One" value="1" /></e:option>
               <e:option><e:JQMSelect.Option text="Two" value="2" /></e:option>
@@ -254,8 +257,10 @@
               <e:option><e:JQMSelect.Option text="Nine" value="9" /></e:option>
             </e:JQMSelect>
             <h:Paragraph />
-            <h:Heading.H4 text="Filter Select/Dropdown Reveal" />
-            <l:JQMList.Unordered inset="true" 
+            <h:Heading.H4 text="Filter Select/Dropdown Reveal" 
+              addStyleNames="{style.inlineBlock} {style.marginRight10}" />
+            <b:JQMButton ui:field="addFruitsBtn" text="Add fruits" inline="true" />
+            <l:JQMList.Unordered ui:field="fruitsList" inset="true" 
               filterable="true" filterReveal="true" filterPlaceholder="Search fruits...">
               <l:item><l:JQMListItem checkBox="LEFT" text="Apple" /></l:item>
               <l:item><l:JQMListItem checkBox="LEFT" text="Banana" /></l:item>

@@ -135,10 +135,18 @@ public class JQMContext {
         renderImpl(id);
     }
 
+    public static void render(Element elt) {
+        renderImpl(elt);
+    }
+
     // page() was replaced by trigger("create"), see http://stackoverflow.com/a/6848969
     // trigger("create") was replaced by enhanceWithin(), see http://jquerymobile.com/upgrade-guide/1.4/#enhancewithin
     private static native void renderImpl(String id) /*-{
         $wnd.$("#" + id).enhanceWithin();
+    }-*/;
+
+    private static native void renderImpl(Element elt) /*-{
+        $wnd.$(elt).enhanceWithin();
     }-*/;
 
     public static void setDefaultTransition(Transition defaultTransition) {

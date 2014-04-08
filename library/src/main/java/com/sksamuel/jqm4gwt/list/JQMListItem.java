@@ -116,6 +116,11 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         if (url != null) setUrl(url);
     }
 
+    public JQMListItem(String text, IconPos checkBox) {
+        this(text);
+        setCheckBox(checkBox);
+    }
+
     @Override
     public HandlerRegistration addClickHandler(ClickHandler handler) {
         return addDomHandler(handler, ClickEvent.getType());

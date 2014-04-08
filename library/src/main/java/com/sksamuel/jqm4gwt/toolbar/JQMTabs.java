@@ -324,11 +324,11 @@ public class JQMTabs extends JQMWidget {
     }
 
     private native void bindEvents(JQMTabs tabs, Element tabsElt) /*-{
-        $wnd.$(tabsElt).bind("tabsactivate", function(event, ui) {
+        $wnd.$(tabsElt).on("tabsactivate", function(event, ui) {
             tabs.@com.sksamuel.jqm4gwt.toolbar.JQMTabs::doActivate(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)
                     (ui.newTab.attr('id'), ui.oldTab.attr('id'), ui.newPanel.attr('id'), ui.oldPanel.attr('id'));
         });
-        $wnd.$(tabsElt).bind("tabsbeforeactivate", function(event, ui) {
+        $wnd.$(tabsElt).on("tabsbeforeactivate", function(event, ui) {
             var v = tabs.@com.sksamuel.jqm4gwt.toolbar.JQMTabs::doBeforeActivate(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)
                     (ui.newTab.attr('id'), ui.oldTab.attr('id'), ui.newPanel.attr('id'), ui.oldPanel.attr('id'));
             if (v === false) {
@@ -339,8 +339,8 @@ public class JQMTabs extends JQMWidget {
     }-*/;
 
     private native void unbindEvents(Element tabsElt) /*-{
-        $wnd.$(tabsElt).unbind("tabsactivate");
-        $wnd.$(tabsElt).unbind("tabsbeforeactivate");
+        $wnd.$(tabsElt).off("tabsactivate");
+        $wnd.$(tabsElt).off("tabsbeforeactivate");
     }-*/;
 
     protected String hrefToId(String href) {
