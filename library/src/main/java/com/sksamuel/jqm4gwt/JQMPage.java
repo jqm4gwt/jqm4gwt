@@ -215,27 +215,27 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     private native void bindLifecycleEvents(JQMPage p, String id) /*-{
 
-        $wnd.$('div[data-url="' + id + '"]').bind("pagecreate",
+        $wnd.$('div[data-url="' + id + '"]').on("pagecreate",
             function(event, ui) {
                 p.@com.sksamuel.jqm4gwt.JQMPage::doPageInit()();
             });
 
-        $wnd.$('div[data-url="' + id + '"]').bind("pageshow",
+        $wnd.$('div[data-url="' + id + '"]').on("pageshow",
             function(event, ui) {
                 p.@com.sksamuel.jqm4gwt.JQMPage::doPageShow(Lcom/google/gwt/dom/client/Element;)(ui.prevPage.get(0));
             });
 
-        $wnd.$('div[data-url="' + id + '"]').bind("pagehide",
+        $wnd.$('div[data-url="' + id + '"]').on("pagehide",
             function(event, ui) {
                 p.@com.sksamuel.jqm4gwt.JQMPage::doPageHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
             });
 
-        $wnd.$('div[data-url="' + id + '"]').bind("pagebeforehide",
+        $wnd.$('div[data-url="' + id + '"]').on("pagebeforehide",
             function(event, ui) {
                 p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
             });
 
-        $wnd.$('div[data-url="' + id + '"]').bind("pagebeforeshow",
+        $wnd.$('div[data-url="' + id + '"]').on("pagebeforeshow",
             function(event, ui) {
                 p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeShow(Lcom/google/gwt/dom/client/Element;)(ui.prevPage.get(0));
             });
@@ -243,11 +243,11 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }-*/;
 
     private native void unbindLifecycleEvents(String id) /*-{
-        $wnd.$('div[data-url="' + id + '"]').unbind("pagecreate");
-        $wnd.$('div[data-url="' + id + '"]').unbind("pageshow");
-        $wnd.$('div[data-url="' + id + '"]').unbind("pagehide");
-        $wnd.$('div[data-url="' + id + '"]').unbind("pagebeforehide");
-        $wnd.$('div[data-url="' + id + '"]').unbind("pagebeforeshow");
+        $wnd.$('div[data-url="' + id + '"]').off("pagecreate");
+        $wnd.$('div[data-url="' + id + '"]').off("pageshow");
+        $wnd.$('div[data-url="' + id + '"]').off("pagehide");
+        $wnd.$('div[data-url="' + id + '"]').off("pagebeforehide");
+        $wnd.$('div[data-url="' + id + '"]').off("pagebeforeshow");
 
     }-*/;
 

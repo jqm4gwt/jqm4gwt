@@ -250,52 +250,52 @@ public class JQMPanel extends JQMWidget {
     }
 
     private native void bindLifecycleEvents(JQMPanel p, String id) /*-{
-        $wnd.$('div[data-url="' + id + '"]').bind("panelbeforeclose",
+        $wnd.$('div[data-url="' + id + '"]').on("panelbeforeclose",
             function(event, ui) { p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelBeforeClose()(); });
 
-        $wnd.$('div[data-url="' + id + '"]').bind("panelbeforeopen",
+        $wnd.$('div[data-url="' + id + '"]').on("panelbeforeopen",
             function(event, ui) { p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelBeforeOpen()(); });
 
-        $wnd.$('div[data-url="' + id + '"]').bind("panelclose",
+        $wnd.$('div[data-url="' + id + '"]').on("panelclose",
             function(event, ui) { p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelClose()(); });
 
-        $wnd.$('div[data-url="' + id + '"]').bind("panelcreate",
+        $wnd.$('div[data-url="' + id + '"]').on("panelcreate",
             function(event, ui) { p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelCreate()(); });
 
-        $wnd.$('div[data-url="' + id + '"]').bind("panelopen",
+        $wnd.$('div[data-url="' + id + '"]').on("panelopen",
             function(event, ui) { p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelOpen()(); });
     }-*/;
 
     private native void bindLifecycleEventsExternal(JQMPanel p, String id) /*-{
-        $wnd.$("body").bind("panelbeforeclose",
+        $wnd.$("body").on("panelbeforeclose",
             function(event, ui) {
                 if (event.target.id === id) {
                     p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelBeforeClose()();
                 }
             });
 
-        $wnd.$("body").bind("panelbeforeopen",
+        $wnd.$("body").on("panelbeforeopen",
             function(event, ui) {
                 if (event.target.id === id) {
                     p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelBeforeOpen()();
                 }
             });
 
-        $wnd.$("body").bind("panelclose",
+        $wnd.$("body").on("panelclose",
             function(event, ui) {
                 if (event.target.id === id) {
                     p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelClose()();
                 }
             });
 
-        $wnd.$("body").bind("panelcreate",
+        $wnd.$("body").on("panelcreate",
             function(event, ui) {
                 if (event.target.id === id) {
                     p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelCreate()();
                 }
             });
 
-        $wnd.$("body").bind("panelopen",
+        $wnd.$("body").on("panelopen",
             function(event, ui) {
                 if (event.target.id === id) {
                     p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelOpen()();
@@ -304,11 +304,11 @@ public class JQMPanel extends JQMWidget {
     }-*/;
 
     private native void unbindLifecycleEvents(String id) /*-{
-        $wnd.$('#' + id).unbind("panelbeforeclose");
-        $wnd.$('#' + id).unbind("panelbeforeopen");
-        $wnd.$('#' + id).unbind("panelclose");
-        $wnd.$('#' + id).unbind("panelcreate");
-        $wnd.$('#' + id).unbind("panelopen");
+        $wnd.$('#' + id).off("panelbeforeclose");
+        $wnd.$('#' + id).off("panelbeforeopen");
+        $wnd.$('#' + id).off("panelclose");
+        $wnd.$('#' + id).off("panelcreate");
+        $wnd.$('#' + id).off("panelopen");
     }-*/;
 
     private native void _open(String id) /*-{
