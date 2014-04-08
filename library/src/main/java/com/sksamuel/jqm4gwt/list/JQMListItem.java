@@ -613,6 +613,8 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         st.setBorderWidth(0, Unit.PX);
         st.setMarginTop(0, Unit.PX);
         st.setMarginBottom(0, Unit.PX);
+        st.setPaddingTop(0, Unit.PX);
+        st.setPaddingBottom(0, Unit.PX);
 
         FieldSetElement fldSet = Document.get().createFieldSetElement();
         LiControlGroup grp = new LiControlGroup(fldSet, "jqm4gwt-li-controls");

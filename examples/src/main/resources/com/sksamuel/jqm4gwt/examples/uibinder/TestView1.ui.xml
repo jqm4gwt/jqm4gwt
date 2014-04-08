@@ -270,6 +270,11 @@
               <l:item><l:JQMListItem checkBox="LEFT" text="Orange" /></l:item>
             </l:JQMList.Unordered>
             <h:Paragraph />
+            <h:Heading.H4 text="City Search" addStyleNames="{style.inlineBlock} {style.marginRight10}" />
+            <l:JQMList.Unordered ui:field="cityList" inset="true" 
+              filterable="true" filterReveal="true" filterPlaceholder="Find a city...">
+            </l:JQMList.Unordered>
+            <h:Paragraph />
             <h:Paragraph addStyleNames="{style.bevel}" />
             
             <jqm:form.elements.JQMSlider min="5.0" max="8.0" labelText="sliderLabelText" ui:field="slider" />

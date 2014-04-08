@@ -1,15 +1,19 @@
 package com.sksamuel.jqm4gwt.examples.uibinder;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
@@ -27,6 +31,7 @@ import com.sksamuel.jqm4gwt.form.JQMForm;
 import com.sksamuel.jqm4gwt.form.SubmissionHandler;
 import com.sksamuel.jqm4gwt.form.elements.JQMCheckbox;
 import com.sksamuel.jqm4gwt.form.elements.JQMFilterable;
+import com.sksamuel.jqm4gwt.form.elements.JQMFilterableEvent;
 import com.sksamuel.jqm4gwt.form.elements.JQMFlip;
 import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.form.elements.JQMRangeSlider;
@@ -63,6 +68,9 @@ public class TestView1 {
     private static JQMDialog dlgMsg = null;
 
     private static final TestDialog1 dlg1 = new TestDialog1();
+
+    private static final String CITY_SEARCH_URL = "http://gd.geobytes.com/AutoCompleteCity?q=";
+    private String cityFilter;
 
     @UiField
     JQMPopup popup;
@@ -282,6 +290,9 @@ public class TestView1 {
 
     @UiField
     JQMFilterable numsFltr;
+
+    @UiField
+    JQMList cityList;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -690,6 +701,52 @@ public class TestView1 {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
                 //Window.alert(event.getValue());
+            }
+        });
+
+        cityList.addFilterableHandler(new JQMFilterableEvent.DefaultHandler() {
+            @Override
+            public void onBeforeFilter(JQMFilterableEvent event) {
+                String s = event.getFilterText();
+                if (s != null) s = s.trim();
+                boolean empty1 = cityFilter == null || cityFilter.isEmpty();
+                boolean empty2 = s == null || s.isEmpty();
+                if (empty1 && empty2) return;
+                if (empty2) {
+                    cityFilter = null;
+                    cityList.clear();
+                    cityList.refresh();
+                    return;
+                }
+                if (s != null && s.equals(cityFilter)) return;
+
+                cityFilter = s;
+                if (cityFilter.length() <= 2) {
+                    cityList.clear();
+                    cityList.refresh();
+                    return;
+                }
+                // See http://www.gwtproject.org/doc/latest/tutorial/Xsite.html
+                String url = URL.encode(CITY_SEARCH_URL + cityFilter);
+                JsonpRequestBuilder builder = new JsonpRequestBuilder();
+                builder.requestObject(url, new AsyncCallback<JsArrayString>() {
+                  @Override
+                  public void onFailure(Throwable caught) {
+                      Window.alert(caught.getMessage());
+                  }
+
+                  @Override
+                  public void onSuccess(JsArrayString data) {
+                      cityList.clear();
+                      if (data != null && data.length() > 0) {
+                          for (int i = 0; i < data.length(); i++) {
+                              cityList.appendItem(new JQMListItem(data.get(i), IconPos.LEFT));
+                          }
+                          cityList.recreate();
+                      }
+                      cityList.refresh();
+                  }
+                });
             }
         });
     }
