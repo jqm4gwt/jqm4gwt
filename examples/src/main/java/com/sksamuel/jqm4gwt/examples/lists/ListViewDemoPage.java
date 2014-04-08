@@ -92,7 +92,7 @@ public class ListViewDemoPage extends JQMPage {
 		item = formattedList.addItem("Starsailor");
 		item.addHeaderText(1, "Silence is Easy");
 		item.addText("Starsailor teamed up with Phil Spector for their second album Silence is Easy, which was recorded in Los Angeles. The collaboration came about following Spector's daughter Nicole attending one of the band's American concerts in the Winter of 2002.");
-		item.setThumbnail("http://www.gazette.uwo.ca/2004/January/29/Pics/08D%20Starsailor.jpg");
+		item.setThumbnail("http://img827.imageshack.us/img827/9175/mediumcz.jpg");
 
 	    item = formattedList.addItem("California");
 	    item.setIcon("http://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Flag_of_California.svg/320px-Flag_of_California.svg.png");
