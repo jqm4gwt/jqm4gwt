@@ -136,12 +136,13 @@ public class JQMTabs extends JQMWidget {
         setStyleName("jqm4gwt-tabs");
     }
 
-    private static void clearActiveClicked() {
+    private void clearActiveClicked() {
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
             public void execute() {
                 Mobile.clearActiveClickedLink();
-            }
+                doActiveHighlight(); // fix iOS tabs double highlighting in case of
+            }                        // doBeforeActivate() false result (tabs switch prohibited)
         });
     }
 
@@ -533,7 +534,9 @@ public class JQMTabs extends JQMWidget {
     }
 
     protected boolean doBeforeActivate(String newTabId, String oldTabId, String newPanelId, String oldPanelId) {
-        return execOnBeforeActivate(newTabId, oldTabId, newPanelId, oldPanelId);
+        boolean rslt = execOnBeforeActivate(newTabId, oldTabId, newPanelId, oldPanelId);
+        if (!rslt) clearActiveClicked(); // fix iOS tabs double highlighting
+        return rslt;
     }
 
     public boolean isCollapsible() {
