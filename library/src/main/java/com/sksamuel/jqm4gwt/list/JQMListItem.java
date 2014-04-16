@@ -7,6 +7,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.FieldSetElement;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.Node;
@@ -41,6 +42,8 @@ import com.sksamuel.jqm4gwt.panel.JQMControlGroup;
  */
 public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>, HasClickHandlers,
         HasTapHandlers {
+
+    public static final String STYLE_UI_LI_HAS_THUMB = "ui-li-has-thumb";
 
     /**
      * Element to hold the count bubble
@@ -291,11 +294,10 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
      */
     public JQMListItem removeImage() {
         if (imageElem != null) {
-            if (anchor != null) anchor.removeChild(imageElem);
-            else removeChild(imageElem);
+            imageElem.removeFromParent();
             imageElem = null;
         }
-        getElement().removeClassName("ui-li-has-thumb");
+        getElement().removeClassName(STYLE_UI_LI_HAS_THUMB);
         return this;
     }
 
@@ -372,12 +374,17 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
      * Sets the image to be used to the given source url.
      * <p/> The same as setImage(), but image is marked as icon class.
      */
-    public JQMListItem setIcon(String src) {
+    public void setIcon(String src) {
         setImage(src);
         if (imageElem != null) {
             imageElem.removeClassName("jqm4gwt-listitem-thumb");
             imageElem.addClassName("jqm4gwt-listitem-icon");
         }
+    }
+
+    /** The same as {@link JQMListItem#setIcon(String)} */
+    public JQMListItem withIcon(String src) {
+        setIcon(src);
         return this;
     }
 
@@ -385,20 +392,25 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
      * Sets the image to be used to the given source url.
      * <p/> The same as setImage(), but image is marked as thumbnail class.
      */
-    public JQMListItem setThumbnail(String src) {
+    public void setThumbnail(String src) {
         setImage(src);
         if (imageElem != null) {
             imageElem.removeClassName("jqm4gwt-listitem-icon");
             imageElem.addClassName("jqm4gwt-listitem-thumb");
         }
+    }
+
+    /** The same as {@link JQMListItem#setThumbnail(String)} */
+    public JQMListItem withThumbnail(String src) {
+        setThumbnail(src);
         return this;
     }
 
     /**
      * Sets the image on this list item to the given source url.
-     * <p/> Neither 'jqm4gwt-listitem-thumb' nor 'jqm4gwt-listitem-icon' class is adeed.
+     * <p/> Neither 'jqm4gwt-listitem-thumb' nor 'jqm4gwt-listitem-icon' class is added.
      */
-    public JQMListItem setImage(String src) {
+    public void setImage(String src) {
         if (src == null) {
             throw new RuntimeException("Cannot set image to null. Call removeImage() if you wanted to remove the image");
         }
@@ -410,10 +422,33 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
             else insertFirstChild(imageElem);
         }
         imageElem.setAttribute("src", src);
+        getElement().addClassName(STYLE_UI_LI_HAS_THUMB);
+    }
 
-        getElement().addClassName("ui-li-has-thumb");
-
+    /** The same as {@link JQMListItem#setImage(String)} */
+    public JQMListItem withImage(String src) {
+        setImage(src);
         return this;
+    }
+
+    /**
+     * Adds secondary image to this list item. It's forcefully added directly to &lt;li> element.
+     * <p/> Additional CSS is needed to control appearance of this image, for example right side
+     * icon on the static band can be implemented, see <b>jqm4gwt-list-static-item-img-right</b> CSS rule.
+     */
+    public ImageElement addSecondaryImage(String src) {
+        if (src == null) {
+            throw new RuntimeException("Cannot set secondary image to null.");
+        }
+        ImageElement img = Document.get().createImageElement();
+        img.setAttribute("src", src);
+        getElement().appendChild(img);
+        return img;
+    }
+
+    /** For UiBinder, the same as {@link JQMListItem#addSecondaryImage(String)} */
+    public void setSecondaryImage(String src) {
+        addSecondaryImage(src);
     }
 
     @Override
@@ -620,7 +655,13 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         LiControlGroup grp = new LiControlGroup(fldSet, "jqm4gwt-li-controls");
         groupRoot.add(grp);
 
-        if (anchor != null) moveAnchorChildrenTo(fldSet, imageElem/*exclude*/);
+        if (anchor != null) {
+            if (imageElem != null && anchor.equals(imageElem.getParentElement())) {
+                moveAnchorChildrenTo(fldSet, imageElem/*exclude*/);
+            } else {
+                moveAnchorChildrenTo(fldSet);
+            }
+        }
         controlGroupRoot = groupRoot;
         controlGroup = grp;
         if (anchor != null) checkAnchorPanel();

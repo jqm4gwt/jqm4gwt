@@ -34,141 +34,155 @@ import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
  */
 public class ListViewDemoPage extends JQMPage {
 
-	private static final String	SOURCE_URL = "https://github.com/sksamuel/jqm4gwt/blob/master/examples/src/main/java/com/sksamuel/jqm4gwt/examples/lists/ListViewDemoPage.java";
-	protected List<String> items = getCountries();
+    private static final String SOURCE_URL = "https://github.com/sksamuel/jqm4gwt/blob/master/examples/src/main/java/com/sksamuel/jqm4gwt/examples/lists/ListViewDemoPage.java";
+    protected List<String> items = getCountries();
 
-	public ListViewDemoPage() {
-		JQMHeader header = new JQMHeader("List View Demo");
-		header.setRightButton("View source", SOURCE_URL, DataIcon.GEAR);
-		header.setBackButton(true);
-		add(header);
+    public ListViewDemoPage() {
+        JQMHeader header = new JQMHeader("List View Demo");
+        header.setRightButton("View source", SOURCE_URL, DataIcon.GEAR);
+        header.setBackButton(true);
+        add(header);
 
-		add(new Paragraph(
-				"The first list demo shows how we can dynamically change the elements at runtime using event handlers"));
+        add(new Paragraph(
+                "The first list demo shows how we can dynamically change the elements at runtime using event handlers"));
 
-		final JQMList reversingList = new JQMList();
-		reversingList.withInset(true);
+        final JQMList reversingList = new JQMList();
+        reversingList.withInset(true);
 
-		reversingList.addDivider("Countries");
-		reversingList.addItems(items);
-		add(reversingList);
+        reversingList.addDivider("Countries");
+        reversingList.addItems(items);
+        add(reversingList);
 
-		JQMButton button = new JQMButton("Reverse the list!");
-		add(button);
-		button.addClickHandler(new ClickHandler() {
+        JQMButton button = new JQMButton("Reverse the list!");
+        add(button);
+        button.addClickHandler(new ClickHandler() {
 
-			@Override
-			public void onClick(ClickEvent event) {
+            @Override
+            public void onClick(ClickEvent event) {
 
-				Collections.reverse(items);
-				reversingList.clear();
-				reversingList.addDivider("Countries");
-				reversingList.addItems(items);
-				reversingList.refresh();
-			}
-		});
+                Collections.reverse(items);
+                reversingList.clear();
+                reversingList.addDivider("Countries");
+                reversingList.addItems(items);
+                reversingList.refresh();
+            }
+        });
 
-		add(new Paragraph(
-				"The next list is a demo of a formatted list and how we can adjust the formatting on the fly"));
+        add(new Paragraph(
+                "The next list is a demo of a formatted list and how we can adjust the formatting on the fly"));
 
-		final JQMList formattedList = new JQMList();
-		formattedList.addDivider("Favourite Albums");
-		formattedList.withInset(true);
-		add(formattedList);
+        final JQMList formattedList = new JQMList();
+        formattedList.addDivider("Favourite Albums");
+        formattedList.withInset(true);
+        add(formattedList);
 
-		JQMListItem item = formattedList.addItem("Coldplay");
-		item.addHeaderText(1, "Viva La Vida");
-		item.addHeaderText(4,
-				"Viva la Vida or Death and All His Friends, often referred to as simply Viva la Vida is the fourth studio album by English rock band Coldplay, released on 11 June 2008 on Parlophone.");
-		item.addText("My rating: 5/5");
-		item.setThumbnail("http://www.cokemachineglow.com/images/7705.jpg");
+        JQMListItem item = formattedList.addItem("Coldplay");
+        item.addHeaderText(1, "Viva La Vida");
+        item.addHeaderText(4,
+                "Viva la Vida or Death and All His Friends, often referred to as simply Viva la Vida is the fourth studio album by English rock band Coldplay, released on 11 June 2008 on Parlophone.");
+        item.addText("My rating: 5/5");
+        item.setThumbnail("http://cokemachineglow.com/images/7705.jpg");
 
-		item = formattedList.addItem("Keane");
-		item.addHeaderText(1, "Under the Iron Sea");
-		item.addHeaderText(3,
-				"Under the Iron Sea is the second studio album by English rock band Keane, released in 2006. During its first week on sale in the UK, the album went to #1, selling 222,297 copies according to figures from the Official Chart Company.");
-		item.setThumbnail("http://cdn.pitchfork.com/media/9128-under-the-iron-sea.jpg");
+        item = formattedList.addItem("Keane");
+        item.addHeaderText(1, "Under the Iron Sea");
+        item.addHeaderText(3,
+                "Under the Iron Sea is the second studio album by English rock band Keane, released in 2006. During its first week on sale in the UK, the album went to #1, selling 222,297 copies according to figures from the Official Chart Company.");
+        item.setThumbnail("http://cdn.pitchfork.com/media/9128-under-the-iron-sea.jpg");
 
-		item = formattedList.addItem("Starsailor");
-		item.addHeaderText(1, "Silence is Easy");
-		item.addText("Starsailor teamed up with Phil Spector for their second album Silence is Easy, which was recorded in Los Angeles. The collaboration came about following Spector's daughter Nicole attending one of the band's American concerts in the Winter of 2002.");
-		item.setThumbnail("http://img827.imageshack.us/img827/9175/mediumcz.jpg");
+        item = formattedList.addItem("Starsailor");
+        item.addHeaderText(1, "Silence is Easy");
+        item.addText("Starsailor teamed up with Phil Spector for their second album Silence is Easy, which was recorded in Los Angeles. The collaboration came about following Spector's daughter Nicole attending one of the band's American concerts in the Winter of 2002.");
+        item.setThumbnail("http://img827.imageshack.us/img827/9175/mediumcz.jpg");
 
-	    item = formattedList.addItem("California");
-	    item.setIcon("http://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Flag_of_California.svg/320px-Flag_of_California.svg.png");
+        item = formattedList.addItem("California");
+        item.setIcon("http://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Flag_of_California.svg/320px-Flag_of_California.svg.png");
 
-		button = new JQMButton("Refresh");
-		add(button);
-		button.addClickHandler(new ClickHandler() {
+        button = new JQMButton("Refresh");
+        add(button);
+        button.addClickHandler(new ClickHandler() {
 
-			@Override
-			public void onClick(ClickEvent event) {
-				updateTimes(formattedList);
-			}
-		});
+            @Override
+            public void onClick(ClickEvent event) {
+                updateTimes(formattedList);
+            }
+        });
 
-		button = new JQMButton("Add more text");
-		add(button);
-		button.addClickHandler(new ClickHandler() {
+        button = new JQMButton("Add more text");
+        add(button);
+        button.addClickHandler(new ClickHandler() {
 
-			@Override
-			public void onClick(ClickEvent event) {
-				addText(formattedList);
-			}
-		});
+            @Override
+            public void onClick(ClickEvent event) {
+                addText(formattedList);
+            }
+        });
 
-		updateTimes(formattedList);
+        updateTimes(formattedList);
 
-		add(new Paragraph(
-				"The next list is a demo of control group list item usage"));
+        add(new Paragraph());
+        add(new Paragraph("Secondary image demo"));
+        final JQMList lst = new JQMList();
+        lst.withInset(true);
+        lst.getElement().addClassName("jqm4gwt-list-static-item-img-right");
+        add(lst);
+        item = lst.addItem("New California Republic");
+        item.setThumbnail("http://www.icon100.com/icon/15902/california-flag/72/png");
+        item.setSecondaryImage("http://www.icon100.com/icon/15902/california-flag/32/png");
 
-		final JQMList controlList = new JQMList();
-		controlList.addDivider("Special list items");
-		controlList.withInset(true);
-		add(controlList);
+        item = lst.addItem("Ukraine");
+        item.setThumbnail("http://www.icon100.com/icon/7983/ukraine-flag-country/48/png");
+        item.setSecondaryImage("http://www.icon100.com/icon/7983/ukraine-flag-country/32/png");
 
-		item = controlList.addItem("Checkbox");
-		item.setCheckBox(IconPos.LEFT);
-		final JQMButton cbBtn = new JQMButton("Checkbox with Button");
-		cbBtn.setInline(true);
-		cbBtn.addClickHandler(new ClickHandler() {
+        add(new Paragraph());
+        add(new Paragraph("The next list is a demo of control group list item usage"));
+
+        final JQMList controlList = new JQMList();
+        controlList.addDivider("Special list items");
+        controlList.withInset(true);
+        add(controlList);
+
+        item = controlList.addItem("Checkbox");
+        item.setCheckBox(IconPos.LEFT);
+        final JQMButton cbBtn = new JQMButton("Checkbox with Button");
+        cbBtn.setInline(true);
+        cbBtn.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 Window.alert(cbBtn.getText() + " is clicked.");
             }
         });
-		item.addWidget(cbBtn);
+        item.addWidget(cbBtn);
 
-		item = new JQMListItem();
-		item.setControlGroup(true);
-		item.getControlGroup().setHorizontal(); // no effect yet...
-		controlList.appendItem(item);
+        item = new JQMListItem();
+        item.setControlGroup(true);
+        item.getControlGroup().setHorizontal(); // no effect yet...
+        controlList.appendItem(item);
 
-		final JQMRadioset radioSet = new JQMRadioset();
-		radioSet.setHorizontal();
-		radioSet.addRadio("the big bear.", "yogi@yellowsrock.net");
-		radioSet.addRadio("the little bear.", "bubu@yellowsrock.net");
-		radioSet.addRadio("the ranger.", "ranger@yellowsrock.net");
-		radioSet.setLabelHidden(true);
-		item.addWidget(radioSet);
+        final JQMRadioset radioSet = new JQMRadioset();
+        radioSet.setHorizontal();
+        radioSet.addRadio("the big bear.", "yogi@yellowsrock.net");
+        radioSet.addRadio("the little bear.", "bubu@yellowsrock.net");
+        radioSet.addRadio("the ranger.", "ranger@yellowsrock.net");
+        radioSet.setLabelHidden(true);
+        item.addWidget(radioSet);
 
-		JQMButton send = new JQMButton("Send email");
-		item.addWidget(send);
-		final JQMPopup popup = new JQMPopup();
-		popup.setPosition("#" + radioSet.getId());
-		add(popup);
-		send.addTapHandler(new TapHandler() {
-			@Override
-			public void onTap(TapEvent event) {
-				String value = radioSet.getValue();
-				if (value == null) value = "... no-one?";
-				popup.clear();
-				popup.add(new Label("You almost sent an email to " + value));
-				popup.open();
-			}
-		});
-		final JQMListItem thisRow = item;
-		JQMButton removeUrl = new JQMButton("Make this row/band non-clickable");
+        JQMButton send = new JQMButton("Send email");
+        item.addWidget(send);
+        final JQMPopup popup = new JQMPopup();
+        popup.setPosition("#" + radioSet.getId());
+        add(popup);
+        send.addTapHandler(new TapHandler() {
+            @Override
+            public void onTap(TapEvent event) {
+                String value = radioSet.getValue();
+                if (value == null) value = "... no-one?";
+                popup.clear();
+                popup.add(new Label("You almost sent an email to " + value));
+                popup.open();
+            }
+        });
+        final JQMListItem thisRow = item;
+        JQMButton removeUrl = new JQMButton("Make this row/band non-clickable");
         item.addWidget(removeUrl);
         removeUrl.addTapHandler(new TapHandler() {
             @Override
@@ -235,33 +249,33 @@ public class ListViewDemoPage extends JQMPage {
             item.addWidget(p);
             controlList.appendItem(item);
         }
-	}
+    }
 
-	protected void addText(JQMList list) {
-		for (JQMListItem item : list.getItems()) {
-			if (item == null) continue;
-			item.addText("Some dummy text");
-		}
-	}
+    protected void addText(JQMList list) {
+        for (JQMListItem item : list.getItems()) {
+            if (item == null) continue;
+            item.addText("Some dummy text");
+        }
+    }
 
-	private List<String> getCountries() {
-		final List<String> items = new ArrayList<String>();
-		items.add("United Kingdom");
-		items.add("Spain");
-		items.add("France");
-		items.add("Germany");
-		items.add("Japan");
-		items.add("China");
-		return items;
-	}
+    private List<String> getCountries() {
+        final List<String> items = new ArrayList<String>();
+        items.add("United Kingdom");
+        items.add("Spain");
+        items.add("France");
+        items.add("Germany");
+        items.add("Japan");
+        items.add("China");
+        return items;
+    }
 
-	protected void updateTimes(JQMList list) {
-		String now = DateTimeFormat.getFormat(PredefinedFormat.HOUR_MINUTE_SECOND).format(new Date());
-		for (JQMListItem item : list.getItems()) {
+    protected void updateTimes(JQMList list) {
+        String now = DateTimeFormat.getFormat(PredefinedFormat.HOUR_MINUTE_SECOND).format(new Date());
+        for (JQMListItem item : list.getItems()) {
             if (item != null) {
                 item.setAside(now);
                 item.setCount(item.getCount() == null ? 1 : item.getCount() + 1);
             }
-		}
-	}
+        }
+    }
 }

@@ -85,6 +85,18 @@
   margin-right: 10px !important;
 }
 
+.jqm4gwt-list-static-item-img-right .jqm4gwt-listitem.ui-li-static {
+  padding-bottom: 0;
+  padding-right: 2.5em;
+}
+.jqm4gwt-list-static-item-img-right .jqm4gwt-listitem.ui-li-static > img:last-of-type {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  right: 0;
+}
+
 .jqm4gwt-listitem a.ui-btn > .ui-checkbox {
   margin: 0;
 }
