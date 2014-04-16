@@ -381,6 +381,68 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
         return items;
     }
 
+    /**
+     * @return - true if there is not null {@link JQMListItem} in items.
+     */
+    public boolean isAnyListItem() {
+        for (JQMListItem li : items) {
+            if (li != null) return true;
+        }
+        return false;
+    }
+
+    public interface LiCallback {
+        void on(JQMListItem item);
+    }
+
+    public void forEach(LiCallback callback) {
+        if (callback == null) return;
+        for (JQMListItem li : items) {
+            if (li == null) continue;
+            callback.on(li);
+        }
+    }
+
+    public void setAllChecked(boolean checked) {
+        for (JQMListItem li : items) {
+            if (li == null || li.isChecked() == checked) continue;
+            li.setChecked(checked);
+        }
+    }
+
+    public static enum ListChecked {
+        NONE, ANY, ALL
+    }
+
+    public ListChecked getCheckedInfo() {
+        boolean anyChecked = false;
+        boolean allChecked = true;
+        int cnt = 0;
+        for (JQMListItem li : items) {
+            if (li == null || !li.isCheckBox()) continue;
+            cnt++;
+            if (!li.isChecked()) {
+                allChecked = false;
+                if (anyChecked) break;
+            } else {
+                anyChecked = true;
+                if (!allChecked) break;
+            }
+        }
+        if (cnt == 0) allChecked = false;
+        if (allChecked) return ListChecked.ALL;
+        else if (anyChecked) return ListChecked.ANY;
+        else return ListChecked.NONE;
+    }
+
+    public boolean isAnyChecked() {
+        for (JQMListItem li : items) {
+            if (li == null || !li.isCheckBox()) continue;
+            if (li.isChecked()) return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean isInset() {
         return "true".equals(getElement().getAttribute("inset"));

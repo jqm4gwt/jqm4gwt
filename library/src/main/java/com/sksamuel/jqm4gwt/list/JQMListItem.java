@@ -746,6 +746,10 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         return JQMCommon.getIconPos(controlGroupRoot);
     }
 
+    public boolean isCheckBox() {
+        return checkBoxInput != null;
+    }
+
     public boolean isChecked() {
         if (checkBoxInput == null) return false;
         InputElement cb = checkBoxInput.getElement().cast();
