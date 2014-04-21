@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -205,6 +206,30 @@ public class JQMCommon {
         } while (true);
 
         return null;
+    }
+
+    /**
+     * @param styles - space separated style names
+     */
+    public static void addStyleNames(UIObject o, String styles) {
+        if (o == null || styles == null || styles.isEmpty()) return;
+        String[] arr = styles.split(" ");
+        for (String i : arr) {
+            String s = i.trim();
+            if (!s.isEmpty()) o.addStyleName(s);
+        }
+    }
+
+    /**
+     * @param styles - space separated style names
+     */
+    public static void removeStyleNames(UIObject o, String styles) {
+        if (o == null || styles == null || styles.isEmpty()) return;
+        String[] arr = styles.split(" ");
+        for (String i : arr) {
+            String s = i.trim();
+            if (!s.isEmpty()) o.removeStyleName(s);
+        }
     }
 
     public static boolean isEnabled(Widget widget) {

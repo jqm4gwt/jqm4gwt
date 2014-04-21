@@ -183,6 +183,13 @@ public class JQMTable extends JQMWidget {
         }
     }
 
+    private void updateCellPercents() {
+        for (int k = 0; k < flow.getWidgetCount(); k++) {
+            Widget widget = flow.getWidget(k);
+            prepareCellPercentStyle(k, widget);
+        }
+    }
+
     /**
      * Remove the widget at the given index.
      *
@@ -274,7 +281,7 @@ public class JQMTable extends JQMWidget {
             String s = arr[i];
             percentage[i] = Integer.parseInt(s);
         }
-        if (arr.length == this.columns) refresh(this.columns);
+        if (arr.length == this.columns) updateCellPercents();
         else setColumns(arr.length);
     }
 

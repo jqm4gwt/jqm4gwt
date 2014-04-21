@@ -621,12 +621,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     public void setContentAddStyleNames(String value) {
         if (value == null || value.isEmpty()) return;
-        String[] arr = value.split(" ");
-        for (int i = 0; i < arr.length; i++) {
-            String s = arr[i].trim();
-            if (s.isEmpty()) continue;
-            content.addStyleName(s);
-        }
+        JQMCommon.addStyleNames(content, value);
     }
 
     public boolean isContentCentered() {
