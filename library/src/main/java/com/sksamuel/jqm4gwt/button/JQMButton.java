@@ -221,7 +221,26 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
 	@Override
     public IconPos getIconPos() {
-        return JQMCommon.getIconPos(this);
+        return JQMCommon.getIconPosEx(this, JQMCommon.STYLE_UI_BTN_ICONPOS);
+    }
+
+	/**
+     * Sets the position of the icon. If you desire an icon only button then
+     * set the position to IconPos.NOTEXT
+     */
+    @Override
+    public void setIconPos(IconPos pos) {
+        JQMCommon.setIconPosEx(this, pos, JQMCommon.STYLE_UI_BTN_ICONPOS);
+    }
+
+    /**
+     * Sets the position of the icon. If you desire an icon only button then
+     * set the position to IconPos.NOTEXT
+     */
+    @Override
+    public JQMButton withIconPos(IconPos pos) {
+        setIconPos(pos);
+        return this;
     }
 
     @Override
@@ -244,11 +263,6 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         if (attr == null)
             return null;
         return Transition.valueOf(attr);
-    }
-
-    @Override
-    public boolean isCorners() {
-        return JQMCommon.isCorners(this);
     }
 
     /**
@@ -289,17 +303,26 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         return JQMCommon.isIconShadow(this);
     }
 
-    /**
-     * @return true if this button is set to inline
-     */
+    /** Applies the drop shadow icon style to the select button if set to true. */
     @Override
-    public boolean isInline() {
-        return JQMCommon.isInline(this);
+    public void setIconShadow(boolean shadow) {
+        JQMCommon.setIconShadow(this, shadow);
     }
 
+    /** Applies the drop shadow icon style to the select button if set to true. */
     @Override
-    public boolean isMini() {
-        return JQMCommon.isMini(this);
+    public JQMButton withIconShadow(boolean shadow) {
+        setIconShadow(shadow);
+        return this;
+    }
+
+    public boolean isShadow() {
+        return JQMCommon.isShadow(this);
+    }
+
+    /** Button will have shadow if true */
+    public void setShadow(boolean shadow) {
+        JQMCommon.setShadow(this, shadow);
     }
 
     public String getHref() {
@@ -312,12 +335,6 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     public JQMButton withHref(String url) {
         setHref(url);
-        return this;
-    }
-
-    @Override
-    public JQMButton removeIcon() {
-        JQMCommon.setIcon(this, null);
         return this;
     }
 
@@ -335,8 +352,13 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     }
 
     @Override
+    public boolean isCorners() {
+        return JQMCommon.isCornersEx(this);
+    }
+
+    @Override
     public void setCorners(boolean corners) {
-        JQMCommon.setCorners(this, corners);
+        JQMCommon.setCornersEx(this, corners);
     }
 
     @Override
@@ -370,12 +392,22 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         return this;
     }
 
+    public DataIcon getBuiltInIcon() {
+        return JQMCommon.getIconEx(this);
+    }
+
     /**
      * Sets the icon used by this button. See {@link DataIcon}.
      */
     @Override
     public void setBuiltInIcon(DataIcon icon) {
-        JQMCommon.setIcon(this, icon);
+        JQMCommon.setIconEx(this, icon);
+    }
+
+    @Override
+    public JQMButton removeIcon() {
+        JQMCommon.setIconEx(this, null);
+        return this;
     }
 
     @Override
@@ -402,39 +434,11 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     }
 
     /**
-     * Sets the position of the icon. If you desire an icon only button then
-     * set the position to IconPos.NOTEXT
+     * @return true if this button is set to inline
      */
     @Override
-    public void setIconPos(IconPos pos) {
-        JQMCommon.setIconPos(this, pos);
-    }
-
-    /**
-     * Sets the position of the icon. If you desire an icon only button then
-     * set the position to IconPos.NOTEXT
-     */
-    @Override
-    public JQMButton withIconPos(IconPos pos) {
-        setIconPos(pos);
-        return this;
-    }
-
-    /**
-     * Applies the drop shadow style to the select button if set to true.
-     */
-    @Override
-    public void setIconShadow(boolean shadow) {
-        JQMCommon.setIconShadow(this, shadow);
-    }
-
-    /**
-     * Applies the drop shadow style to the select button if set to true.
-     */
-    @Override
-    public JQMButton withIconShadow(boolean shadow) {
-        setIconShadow(shadow);
-        return this;
+    public boolean isInline() {
+        return JQMCommon.isInlineEx(this, JQMCommon.STYLE_UI_BTN_INLINE);
     }
 
     /**
@@ -448,7 +452,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
      */
     @Override
     public void setInline(boolean inline) {
-        JQMCommon.setInline(this, inline);
+        JQMCommon.setInlineEx(this, inline, JQMCommon.STYLE_UI_BTN_INLINE);
     }
 
     /**
@@ -466,12 +470,17 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         return this;
     }
 
+    @Override
+    public boolean isMini() {
+        return JQMCommon.isMiniEx(this);
+    }
+
     /**
      * If set to true then renders a smaller version of the standard-sized element.
      */
     @Override
     public void setMini(boolean mini) {
-        JQMCommon.setMini(this, mini);
+        JQMCommon.setMiniEx(this, mini);
     }
 
     /**
@@ -675,6 +684,16 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
             hoverStyle = JQMContext.getCssForRule(ruleIE, jsStrs, jsRegex);
             if (hoverStyle != null) cachedCssRules.put(ruleIE, hoverStyle);
         }
+    }
+
+    @Override
+    public String getTheme() {
+        return JQMCommon.getThemeEx(this, JQMCommon.STYLE_UI_BTN);
+    }
+
+    @Override
+    public void setTheme(String themeName) {
+        JQMCommon.setThemeEx(this, themeName, JQMCommon.STYLE_UI_BTN);
     }
 
 }

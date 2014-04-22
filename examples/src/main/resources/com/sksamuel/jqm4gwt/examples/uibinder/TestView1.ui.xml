@@ -39,6 +39,7 @@
       }
       
       .marginRight10 { margin-right: 10px; }
+      .marginRight20 { margin-right: 20px; }
 	    
 	    @external .jqm4gwt-thead-groups, .ui-table-reflow .ui-table-cell-label-top;
 	    .jqm4gwt-thead-groups th, .ui-table-reflow tbody .ui-table-cell-label-top { 
@@ -461,8 +462,21 @@
           text="Google"
           addStyleNames="{style.inlineBlock} {style.marginRight10}" />
         <jqm:html.ImageLinkButton href="http://cnn.com" inline="true" corners="false"
-          src="http://i.cdn.turner.com/cnn/.e/img/3.0/global/header/hdr-main.png" />
-          <!-- imageResizePriority="HORIZONTAL" theme="b" enabled="false" /--> 
+          src="http://i.cdn.turner.com/cnn/.e/img/3.0/global/header/hdr-main.png" 
+          addStyleNames="{style.marginRight20}"/>
+          <!-- imageResizePriority="HORIZONTAL" theme="b" enabled="false" /-->
+        
+        <jqm:html.ImageLinkButton href="http://paypal.com" inline="true" corners="false"
+          compact="false" text="PayPal" 
+          src="https://cdn1.iconfinder.com/data/icons/free-business-desktop-icons/32/Money.png" />
+        
+        <jqm:html.ImageLinkButton href="http://cnn.com" inline="true" corners="false"
+          compact="false" text="Image link as normal button (text only)" />
+          
+        <jqm:html.ImageLinkButton href="http://cnn.com" inline="true" corners="false"
+          mini="true" compact="false" shadow="false" 
+          text="Image link as mini button (text only, no shadow)" />  
+             
         <jqm:html.Legend text="legendText"/>
         <jqm:html.ListWidget.Ordered>
             <jqm:html.Span text="span1Text"/>

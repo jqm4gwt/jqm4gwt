@@ -60,7 +60,7 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
     protected void initImg() {
         setStyleName(img, JQM4GWT_IMAGE_LINK_IMG);
         setImageResizePriority(Orientation.HORIZONTAL);
-        img.getStyle().setVerticalAlign(VerticalAlign.MIDDLE); // eliminates excessive/strange margin at the bottom
+        img.getStyle().setVerticalAlign(VerticalAlign.TOP); // eliminates excessive/strange margin at the bottom
     }
 
     public ImageLink(String href, String src) {
@@ -84,6 +84,22 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
      */
     public void setSrc(String src) {
         img.setAttribute("src", src);
+        refreshPositioning();
+    }
+
+    private void refreshPositioning() {
+        String src = getSrc();
+        String text = getText();
+        if (src == null || src.isEmpty()) {
+            img.getStyle().setVerticalAlign(VerticalAlign.TOP);
+            img.getStyle().clearMarginRight();
+            if (txt != null) txt.getStyle().setVerticalAlign(VerticalAlign.TOP);
+        } else {
+            img.getStyle().setVerticalAlign(VerticalAlign.MIDDLE);
+            if (txt != null) txt.getStyle().setVerticalAlign(VerticalAlign.MIDDLE);
+            if (text == null || text.isEmpty()) img.getStyle().clearMarginRight();
+            else img.getStyle().setMarginRight(0.3d, Unit.EM);
+        }
     }
 
     /**
@@ -166,16 +182,14 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
         boolean emptyText = text == null || text.isEmpty();
         if (emptyText) {
             if (txt != null) txt.setInnerText(text);
-            img.getStyle().clearMarginRight();
-            return;
+        } else {
+            if (txt == null) {
+                txt = Document.get().createSpanElement();
+                a.appendChild(txt);
+            }
+            txt.setInnerText(text);
         }
-        if (txt == null) {
-            txt = Document.get().createSpanElement();
-            txt.getStyle().setVerticalAlign(VerticalAlign.MIDDLE);
-            a.appendChild(txt);
-        }
-        txt.setInnerText(text);
-        img.getStyle().setMarginRight(0.3d, Unit.EM);
+        refreshPositioning();
     }
 
     @Override
