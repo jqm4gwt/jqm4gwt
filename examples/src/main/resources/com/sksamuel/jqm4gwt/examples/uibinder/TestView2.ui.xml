@@ -1,56 +1,65 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
-<ui:UiBinder 
+<ui:UiBinder
   xmlns:ui='urn:ui:com.google.gwt.uibinder'
-  xmlns:jqm='urn:import:com.sksamuel.jqm4gwt' 
-  xmlns:e="urn:import:com.sksamuel.jqm4gwt.form.elements">
-  
+  xmlns:jqm='urn:import:com.sksamuel.jqm4gwt'
+  xmlns:t="urn:import:com.sksamuel.jqm4gwt.toolbar"
+  xmlns:b="urn:import:com.sksamuel.jqm4gwt.button"
+  xmlns:f="urn:import:com.sksamuel.jqm4gwt.form"
+  xmlns:e="urn:import:com.sksamuel.jqm4gwt.form.elements"
+  xmlns:dt="urn:import:com.sksamuel.jqm4gwt.plugins.datebox">
+
   <ui:style>
     @external .jqm4gwt-page, .ui-content;
-		.jqm4gwt-page[data-url=testPage2] .ui-content[role=main] {
-		  border-width: 1px;
-		  border-style: solid;
-		  border-color: red;
-		}
+    .jqm4gwt-page[data-url=testPage2] .ui-content[role=main] {
+      border-width: 1px;
+      border-style: solid;
+      border-color: red;
+    }
   </ui:style>
 
-    <jqm:JQMPage ui:field="testPage2" containerId="testPage2"  backButton="true" contentCentered="true"
-      dlgTransparent="true" contentAddStyleNames="aaa bbb ccc">
-        <jqm:toolbar.JQMHeader text="Test Page 2 Header" fixed="true">
-          <jqm:rightButton>
-            <jqm:button.JQMButton text="Open Global Panel" href="#globalPanel1" builtInIcon="BARS" 
-              inline="true" ui:field="showGlobalPanelBtn"/>
-          </jqm:rightButton>
-        </jqm:toolbar.JQMHeader>
-        <jqm:form.JQMForm ui:field="form">
-            <jqm:button.JQMButton text="Go To Test Page 1" href="#testPage1" transition="NONE" iconPos="RIGHT" builtInIcon="RIGHT"/>
-            <e:JQMCheckbox ui:field="cbContentCentered" name="cbContentCentered" 
-              text="Is Content Centered" value="true"/>
-            <e:JQMCheckbox ui:field="cbContentHeight" name="cbContentHeight" 
-              text="Content Height to 75%" value="false"/>  
-        </jqm:form.JQMForm>
-        <jqm:toolbar.JQMFooter fixed="true">
-            <jqm:widget>
-                <jqm:toolbar.JQMNavBar>
-                    <jqm:button>
-                        <jqm:button.JQMButton builtInIcon="LEFT" href="login" transition="NONE" text="Log Out"
-                                              ui:field="login"/>
-                    </jqm:button>
-                    <jqm:button>
-                        <jqm:button.JQMButton builtInIcon="SEARCH" href="searchRooms" transition="NONE" text="Search"
-                                              ui:field="searchButton"/>
-                    </jqm:button>
-                    <jqm:button>
-                        <jqm:button.JQMButton builtInIcon="SEARCH" href="myReservations" transition="NONE" text="Reservations"
-                                              ui:field="reservationsButton"/>
-                    </jqm:button>
-                    <jqm:button>
-                        <jqm:button.JQMButton builtInIcon="SEARCH" href="settings" transition="NONE" text="Settings"
-                                              ui:field="settingsButton"/>
-                    </jqm:button>
-                </jqm:toolbar.JQMNavBar>
-            </jqm:widget>
-        </jqm:toolbar.JQMFooter>
-    </jqm:JQMPage>
+  <jqm:JQMPage ui:field="testPage2" containerId="testPage2"  backButton="true" contentCentered="true"
+    dlgTransparent="true" contentAddStyleNames="aaa bbb ccc">
+    <t:JQMHeader text="Test Page2 Header" fixed="true">
+      <t:rightButton>
+        <b:JQMButton text="Open Global Panel" href="#globalPanel1" builtInIcon="BARS"
+          inline="true" ui:field="showGlobalPanelBtn" />
+      </t:rightButton>
+    </t:JQMHeader>
+    
+    <f:JQMForm ui:field="form">
+      <b:JQMButton text="Go To Test Page1" href="#testPage1" transition="NONE" 
+        iconPos="RIGHT" builtInIcon="RIGHT" />
+      <e:JQMCheckbox ui:field="cbContentCentered" name="cbContentCentered"
+        text="Is Content Centered" value="true" />
+      <e:JQMCheckbox ui:field="cbContentHeight" name="cbContentHeight"
+        text="Content Height to 75%" value="false" />
+      <dt:JQMCalBox ui:field="datePicker" text="Date Picker"
+        dateFormat="%A %m/%d/%y" value="2013-10-25" useClearButton="true" />
+    </f:JQMForm>
+    
+    <t:JQMFooter fixed="true">
+      <t:widget>
+        <t:JQMNavBar>
+          <t:button>
+            <b:JQMButton builtInIcon="LEFT" href="login" transition="NONE" text="Log In"
+              ui:field="login" />
+          </t:button>
+          <t:button>
+            <b:JQMButton builtInIcon="SEARCH" href="searchRooms" transition="NONE" text="Search"
+              ui:field="searchButton" />
+          </t:button>
+          <t:button>
+            <b:JQMButton builtInIcon="SEARCH" href="myReservations" transition="NONE" text="Reservations"
+              ui:field="reservationsButton"/>
+          </t:button>
+          <t:button>
+            <b:JQMButton builtInIcon="SEARCH" href="settings" transition="NONE" text="Settings"
+              ui:field="settingsButton"/>
+          </t:button>
+        </t:JQMNavBar>
+      </t:widget>
+    </t:JQMFooter>
+  </jqm:JQMPage>
 
 </ui:UiBinder>

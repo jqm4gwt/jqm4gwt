@@ -1,791 +1,730 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
-<ui:UiBinder 
+<ui:UiBinder
   xmlns:ui='urn:ui:com.google.gwt.uibinder'
   xmlns:g='urn:import:com.google.gwt.user.client.ui'
-  xmlns:jqm='urn:import:com.sksamuel.jqm4gwt' 
-  xmlns:h="urn:import:com.sksamuel.jqm4gwt.html" 
-  xmlns:b="urn:import:com.sksamuel.jqm4gwt.button" 
+  xmlns:jqm='urn:import:com.sksamuel.jqm4gwt'
+  xmlns:h="urn:import:com.sksamuel.jqm4gwt.html"
+  xmlns:b="urn:import:com.sksamuel.jqm4gwt.button"
   xmlns:t="urn:import:com.sksamuel.jqm4gwt.toolbar"
-  xmlns:l="urn:import:com.sksamuel.jqm4gwt.list" 
-  xmlns:e="urn:import:com.sksamuel.jqm4gwt.form.elements">
+  xmlns:l="urn:import:com.sksamuel.jqm4gwt.list"
+  xmlns:ly="urn:import:com.sksamuel.jqm4gwt.layout"
+  xmlns:f="urn:import:com.sksamuel.jqm4gwt.form"
+  xmlns:e="urn:import:com.sksamuel.jqm4gwt.form.elements"
+  xmlns:ta="urn:import:com.sksamuel.jqm4gwt.table"
+  xmlns:dt="urn:import:com.sksamuel.jqm4gwt.plugins.datebox"
+  xmlns:gr960="urn:import:com.sksamuel.jqm4gwt.plugins.grid960">
 
-    <ui:style>
-			.contentBorder { border: red solid 0px; }
-			.pageContent { 
-	      margin-left: 1%;
-	      margin-right: 1%;
-	      width: 98%;
-	    }
-      
-      .bevel { height: 1em; }
-      
-      .red { background-color: red; color: yellow; }
-      .green { background-color: green; color: yellow; }
-      .blue { background-color: blue; color: yellow; }
-      .yellow { background-color: yellow; color: red; }
-      .centerText { 
-	      display: block;
-	      text-align: center;
-	    }
-	    
-	    .headerImportantColor {
-        color: #ffa200;
-      }
-	    
-	    .inlineBlock {
-        display: inline-block;
-        vertical-align: middle; /* makes more smooth/uniform line/row */
-      }
-      
-      .marginRight10 { margin-right: 10px; }
-      .marginRight20 { margin-right: 20px; }
-	    
-	    @external .jqm4gwt-thead-groups, .ui-table-reflow .ui-table-cell-label-top;
-	    .jqm4gwt-thead-groups th, .ui-table-reflow tbody .ui-table-cell-label-top { 
-        text-align: center;
-        background-color: rgba(0,0,0,.1);
-        border-right:1px solid #fff;
-      }
-      .ui-table-reflow tbody .ui-table-cell-label-top {
-	      font-weight: bold; 
-      }
-      .jqm4gwt-thead-groups th[data-priority="1"] { 
-        background-color: rgba(0,0,0,.5);
-        color: #fff;
-        text-shadow: none;
-      }
-      
-      .tooltipPop { max-width: 350px; }
-    </ui:style>
-    
-    <jqm:JQMPage containerId="testPage1" backButton="true" 
-      contentCentered="true" contentHeightPercent="98.0" 
-      contentAddStyleNames="jqm4gwt-scrollable-page-content {style.contentBorder}">
-        
-        <jqm:toolbar.JQMHeader fixed="true">
-          <jqm:widget>
-            <jqm:html.Heading.H1 text="Test Page 1 Header" />
-          </jqm:widget>
-          <jqm:widget>
-            <g:FlowPanel ui:field="headerPanel1">
-                <b:JQMButton ui:field="headerTestBtn1" text="Header Test Button1" inline="true" />
-                <b:JQMButton ui:field="headerTestBtn2" text="Header Test Button2" inline="true" />
-                <b:JQMButton text="" 
-                  html="&lt;b&gt;Button&lt;/b&gt; with &lt;i&gt;HTML&lt;/i&gt; content" inline="true" />
-                <b:JQMButton text="Open Panel" href="#testView1Panel" builtInIcon="BARS" inline="true" />  
-                <b:JQMButton text="Open Global Panel" href="#globalPanel1" builtInIcon="BARS" inline="true" />                  
-            </g:FlowPanel>
-          </jqm:widget>
-        </jqm:toolbar.JQMHeader>
-        
-        <!-- jqm:plugins.iscroll.IScrollPanel-->
-        <g:FlowPanel addStyleNames="jqm4gwt-scrollable-main-stage">
-        <g:FlowPanel addStyleNames="{style.pageContent}">
-            <jqm:html.Span text="span text"/>
-            <jqm:html.Div text="div text" />
-            <jqm:html.Div>
-              <jqm:button.JQMButton text="Always Active Button in div" inline="true" mini="true" 
-                corners="false" alwaysActive="true" />
-              <jqm:button.JQMButton text="Always Hover Button in div" inline="true" mini="true" 
-                corners="false" alwaysHover="true" ui:field="alwaysHoverBtn" />
-              <jqm:button.JQMButton text="Toggle 'Always Hover' state" inline="true" mini="true" 
-                corners="false" builtInIcon="LEFT" ui:field="toggleAlwaysHoverBtn" />    
-            </jqm:html.Div>
-        <jqm:form.JQMForm ui:field="form">
-            <jqm:button.JQMButton text="Go To Test Page 2" href="#testPage2" 
-              transition="NONE" iconPos="RIGHT" builtInIcon="RIGHT"/>
-            <g:FlowPanel>
-              <jqm:button.JQMButton ui:field="page2AsDialog" text="Show Page 2 as Dialog (programmatic)" 
-                mini="true" inline="true" />
-              <jqm:button.JQMButton text="Show Page 2 as Dialog (declarative)" 
-                mini="true" inline="true" dialog="true" href="#testPage2" />
-              <jqm:button.JQMButton ui:field="page2RestoreRolePage" text="Restore Page 2 as page" 
-                mini="true" inline="true" />
-              <jqm:button.JQMButton ui:field="page2RestoreRoleDialog" text="Restore Page 2 as dialog" 
-                mini="true" inline="true" />    
-            </g:FlowPanel>
-            <jqm:button.JQMButtonGroup>
-                <jqm:button.JQMButton theme="a" text="Button theme 'a' of group"/>
-                <jqm:button.JQMButton theme="b" text="Button theme 'b' of group"/>
-            </jqm:button.JQMButtonGroup>
-            <jqm:button.JQMButtonGroup orientation="HORIZONTAL" mini="true" corners="false">
-                <jqm:button.JQMButton theme="a" text="A"/>
-                <jqm:button.JQMButton theme="b" text="B"/>
-            </jqm:button.JQMButtonGroup>
-            <jqm:form.elements.JQMCheckbox ui:field="cb1" name="cb1" text="Checkbox"/>
-            <jqm:form.elements.JQMCheckbox ui:field="cb2" name="cb2" text="Mini-Checkbox" mini="true" value="true"/>
-            <jqm:form.elements.JQMCheckbox ui:field="cb3" name="cb3" text="Themed Checkbox" theme="b"/>
-            <jqm:form.elements.JQMCheckbox ui:field="cb4" name="cb4" text="Right Icon and No corners" 
-              corners="false" iconPos="RIGHT" />
-            <jqm:button.JQMButton ui:field="checkboxInfoBtn" text="Show Checkboxes Info" />
-            <jqm:form.elements.JQMCheckset text="Mini Horizontal Checkset" orientation="HORIZONTAL" mini="true">
-                <jqm:check><jqm:form.elements.JQMCheckbox name="cb10" text="Check1"/></jqm:check>
-                <jqm:check><jqm:form.elements.JQMCheckbox name="cb11" text="Check2"/></jqm:check>
-            </jqm:form.elements.JQMCheckset>
-            <jqm:form.elements.JQMCheckset text="Vertical Checkset"> <!-- iconPos="RIGHT" -->
-                <jqm:check><jqm:form.elements.JQMCheckbox name="cb20" text="Check1"/></jqm:check>
-                <jqm:check><jqm:form.elements.JQMCheckbox name="cb21" text="Check2"/></jqm:check>
-            </jqm:form.elements.JQMCheckset>
-            <jqm:form.elements.JQMEmail text="email" corners="false" clearButton="true" />
-            <jqm:form.elements.JQMFile text="File" corners="false" />
-            <jqm:form.elements.JQMFlip ui:field="flip" 
-              label1="Flip1" label2="Flip2" value1="flip1Value" value2="flip2Value" text="flipText"
-              value="flip1Value" />
-              <!-- theme="b" mini="true" textHidden="true" -->
-            <jqm:layout.JQMTable columns="3">
-              <jqm:cell>
-                <jqm:button.JQMButton ui:field="flipInfoBtn" text="Show Flip Info" mini="true" />              
-              </jqm:cell>
-              <jqm:cell>
-                <jqm:button.JQMButton ui:field="setFlipValBtn" text="Set Value to 'Flip2'" mini="true" />
-              </jqm:cell>
-              <jqm:cell>
-                <jqm:button.JQMButton ui:field="setFlipNullBtn" text="Set Value to 'null'" mini="true" />
-              </jqm:cell>
-            </jqm:layout.JQMTable>                                       
-                                       
-            <jqm:plugins.datebox.JQMCalBox ui:field="datePicker" text="Date Picker" 
-              dateFormat="%A %m/%d/%y" value="2013-10-25" useClearButton="true" />
-            <jqm:button.JQMButton ui:field="datePickerGetValueBtn" text="Get Date Picker value" 
-              inline="true" mini="true" />
-            <jqm:button.JQMButton ui:field="datePickerSetNullBtn" text="Set Date Picker value to Null"
-              inline="true" mini="true" />
-            
-            <jqm:form.elements.JQMMonth text="monthText"/>
-            <jqm:form.elements.JQMNumber text="numberText"/>
-            <jqm:form.elements.JQMPassword text="passwordText"/>
-            <jqm:form.elements.JQMSearch text="searchText"/>
-            
-            <jqm:form.elements.JQMRadioset ui:field="radio1" text="radiosetText" selectedValue="b">
-              <!-- orientation="HORIZONTAL" mini="true" iconPos="RIGHT" theme="a" -->
-              <jqm:radio>
-                <jqm:form.elements.JQMRadio text="radio_A_Text" value="a"/>
-              </jqm:radio>
-              <jqm:radio>
-                <jqm:form.elements.JQMRadio text="radio_B_Text" value="b"/>
-              </jqm:radio>
-              <jqm:radio>
-                <jqm:form.elements.JQMRadio text="radio_C_Text" value="c"/>
-              </jqm:radio>
-              <jqm:radio>
-                <jqm:form.elements.JQMRadio text="radio_D_Text" value="d"/>
-              </jqm:radio>
-            </jqm:form.elements.JQMRadioset>
-            <jqm:layout.JQMTable columns="3">
-              <jqm:cell>
-                <jqm:button.JQMButton ui:field="radioInfoBtn" text="Show Radioset Info" />              
-              </jqm:cell>
-              <jqm:cell>
-                <jqm:button.JQMButton ui:field="setRadioValBtn" text="Set Value to 'c'" />
-              </jqm:cell>
-              <jqm:cell>
-                <jqm:button.JQMButton ui:field="setRadioNullBtn" text="Set Value to 'null'" />
-              </jqm:cell>
-            </jqm:layout.JQMTable>
-            <jqm:form.elements.JQMRadioset ui:field="gender" text="Gender" 
-              orientation="HORIZONTAL" labelHidden="true">
-              <jqm:radio>
-                <jqm:form.elements.JQMRadio text="Male" value="M"/>
-              </jqm:radio>
-              <jqm:radio>
-                <jqm:form.elements.JQMRadio text="Female" value="F"/>
-              </jqm:radio>
-            </jqm:form.elements.JQMRadioset>
-            
-            <h:Paragraph />
-            <jqm:form.elements.JQMSelect text="selectText" ui:field="select1" mini="true" 
-              builtInIcon="BARS" iconPos="LEFT" native="false" hidePlaceholderMenuItems="false">
-                <jqm:option>
-                  <jqm:form.elements.JQMSelect.Option text="Select One..." placeholder="true" />
-                </jqm:option>
-                <jqm:option>
-                    <jqm:form.elements.JQMSelect.Option text="option1Text" value="option1value"/>
-                </jqm:option>
-                <jqm:option>
-                    <jqm:form.elements.JQMSelect.Option text="option2Text" value="option2value"/>
-                </jqm:option>
-                <jqm:option>
-                    <jqm:form.elements.JQMSelect.Option text="option3Text" value="option3value"
-                      disabled="true" />
-                </jqm:option>
-                <jqm:option>
-                    <jqm:form.elements.JQMSelect.Option text="option4Text" value="option4value"
-                      selected="true" />
-                </jqm:option>
-            </jqm:form.elements.JQMSelect>
-            <g:FlowPanel>
-              <b:JQMButton ui:field="getSelectValBtn" text="Get Dropdown Value" inline="true" mini="true" />
-              <b:JQMButton ui:field="setSelectValBtn" text="Set SelectedIndex to 1" inline="true" mini="true" />
-              <b:JQMButton ui:field="setSelectValNullBtn" text="Set Dropdown Value to null" inline="true" mini="true" />
-              <b:JQMButton ui:field="addSelectItemsBtn" text="Add Dropdown Items" inline="true" mini="true" />
-            </g:FlowPanel>
-            <h:Paragraph />
-            <e:JQMSelect text="Dropdown with multiple select" mulitple="true" native="false"
-              closeText="Discard" selectInline="true">
-              <e:option>
-                <e:JQMSelect.Option text="One" value="1" />
-              </e:option>
-              <e:option>  
-                <e:JQMSelect.Option text="Two" value="2" />
-              </e:option>
-              <e:option>  
-                <e:JQMSelect.Option text="Three" value="3" />
-              </e:option>
-              <e:option>  
-                <e:JQMSelect.Option text="Four" value="4" />
-              </e:option>
-              <e:option>  
-                <e:JQMSelect.Option text="Five" value="5" />
-              </e:option>
-            </e:JQMSelect>
-            <h:Paragraph />
-            <h:Heading.H4 text="Filter Select/Dropdown" 
-              addStyleNames="{style.inlineBlock} {style.marginRight10}" />
-            <b:JQMButton ui:field="addNumsBtn" text="Add numbers" inline="true" />
-            <e:JQMFilterable ui:field="numsFltr" />
-            <e:JQMSelect ui:field="numsList" text="" labelHidden="true" native="false" 
-              dataFilter="#{numsFltr.getFilterId}" >
-              <e:option><e:JQMSelect.Option text="Zero" value="0" /></e:option>
-              <e:option><e:JQMSelect.Option text="One" value="1" /></e:option>
-              <e:option><e:JQMSelect.Option text="Two" value="2" /></e:option>
-              <e:option><e:JQMSelect.Option text="Three" value="3" /></e:option>
-              <e:option><e:JQMSelect.Option text="Four" value="4" /></e:option>
-              <e:option><e:JQMSelect.Option text="Five" value="5" /></e:option>
-              <e:option><e:JQMSelect.Option text="Six" value="6" /></e:option>
-              <e:option><e:JQMSelect.Option text="Seven" value="7" /></e:option>
-              <e:option><e:JQMSelect.Option text="Eight" value="8" /></e:option>
-              <e:option><e:JQMSelect.Option text="Nine" value="9" /></e:option>
-            </e:JQMSelect>
-            <h:Paragraph />
-            <h:Heading.H4 text="Filter Select/Dropdown Reveal" 
-              addStyleNames="{style.inlineBlock} {style.marginRight10}" />
-            <b:JQMButton ui:field="addFruitsBtn" text="Add fruits" inline="true" />
-            <l:JQMList.Unordered ui:field="fruitsList" inset="true" 
-              filterable="true" filterReveal="true" filterPlaceholder="Search fruits...">
-              <l:item><l:JQMListItem checkBox="LEFT" text="Apple" /></l:item>
-              <l:item><l:JQMListItem checkBox="LEFT" text="Banana" /></l:item>
-              <l:item><l:JQMListItem checkBox="LEFT" text="Cherry" /></l:item>
-              <l:item><l:JQMListItem checkBox="LEFT" text="Cranberry" /></l:item>
-              <l:item><l:JQMListItem checkBox="LEFT" text="Grape" /></l:item>
-              <l:item><l:JQMListItem checkBox="LEFT" text="Orange" /></l:item>
-            </l:JQMList.Unordered>
-            <h:Paragraph />
-            <h:Heading.H4 text="City Search" addStyleNames="{style.inlineBlock} {style.marginRight10}" />
-            <l:JQMList.Unordered ui:field="cityList" inset="true" 
-              filterable="true" filterReveal="true" filterPlaceholder="Find a city...">
-            </l:JQMList.Unordered>
-            <h:Paragraph />
-            <h:Paragraph addStyleNames="{style.bevel}" />
-            
-            <jqm:form.elements.JQMSlider min="5.0" max="8.0" labelText="sliderLabelText" ui:field="slider" />
-              <!-- highlight="true" mini="true" theme="a" /-->
-            <g:FlowPanel>
-              <jqm:button.JQMButton builtInIcon="MINUS" ui:field="disableSliderButton" text="Disable Slider" inline="true" mini="true" />
-              <jqm:button.JQMButton builtInIcon="PLUS" ui:field="enableSliderButton" text="Enable Slider" inline="true" mini="true" />
-              <jqm:button.JQMButton ui:field="getSliderValueBtn" text="Get Slider Value" inline="true" mini="true" />
-              <jqm:button.JQMButton ui:field="setSliderNullBtn" text="Set Slider Value to null" inline="true" mini="true" />
-              <jqm:button.JQMButton ui:field="setSliderMinBtn" text="Set Slider Value to min" inline="true" mini="true" />
-              <jqm:button.JQMButton ui:field="setSliderMinTo6Btn" text="Set Slider Min to 6" inline="true" mini="true" />
-              <jqm:button.JQMButton ui:field="setSliderStepBtn" text="Set Slider Step to 0.5" inline="true" mini="true" />
-            </g:FlowPanel> 
-            <jqm:form.elements.JQMRangeSlider ui:field="rangeSlider" text="Range Slider"
-              minInt="20" maxInt="80" loValue="30.0" hiValue="70.0"  
-              step="0.5" highlight="true" mini="false" theme="a" trackTheme="b" labelHidden="false" />
-            <g:FlowPanel>
-              <jqm:button.JQMButton builtInIcon="MINUS" ui:field="disableRangeSliderBtn" text="Disable Range Slider" inline="true" mini="true" />
-              <jqm:button.JQMButton builtInIcon="PLUS" ui:field="enableRangeSliderBtn" text="Enable Range Slider" inline="true" mini="true" />
-              <jqm:button.JQMButton ui:field="rangeSliderGetValuesBtn" text="Get Values" inline="true" mini="true" />
-              <jqm:button.JQMButton ui:field="setRangeSliderNullBtn" text="Set Range Slider Values to null" inline="true" mini="true" /> 
-            </g:FlowPanel>  
-            <jqm:form.elements.JQMTelephone text="telephoneText"/>
-            <jqm:form.elements.JQMText text="Text (no corners)" ui:field="text" corners="false" />
-            <jqm:button.JQMButton builtInIcon="MINUS" ui:field="disableTextButton" text="Disable Text"/>
-            <jqm:button.JQMButton builtInIcon="PLUS" ui:field="enableTextButton" text="Enable Text"/>
+  <ui:style>
+	  .contentBorder { border: red solid 0px; }
+	  
+	  .pageContent {
+	     margin-left: 1%;
+	     margin-right: 1%;
+	     width: 98%;
+	  }
+	
+		.bevel { height: 1em; }
+		
+		.red { background-color: red; color: yellow; }
+		.green { background-color: green; color: yellow; }
+		.blue { background-color: blue; color: yellow; }
+		.yellow { background-color: yellow; color: red; }
+		.centerText {
+		  display: block;
+		  text-align: center;
+		}
+		
+		.headerImportantColor {
+		  color: #ffa200;
+		}
+		
+		.inlineBlock {
+		  display: inline-block;
+		  vertical-align: middle; /* makes more smooth/uniform line/row */
+		}
+		
+		.marginRight10 { margin-right: 10px; }
+		.marginRight20 { margin-right: 20px; }
+		
+		@external .jqm4gwt-thead-groups, .ui-table-reflow .ui-table-cell-label-top;
+		.jqm4gwt-thead-groups th, .ui-table-reflow tbody .ui-table-cell-label-top {
+		  text-align: center;
+		  background-color: rgba(0,0,0,.1);
+		  border-right:1px solid #fff;
+		}
+		.ui-table-reflow tbody .ui-table-cell-label-top {
+		  font-weight: bold;
+		}
+		.jqm4gwt-thead-groups th[data-priority="1"] {
+		  background-color: rgba(0,0,0,.5);
+		  color: #fff;
+		  text-shadow: none;
+		}
+		
+	  .tooltipPop { max-width: 350px; }
+  </ui:style>
 
-            <!-- TODO fix col/rows setter <jqm:form.elements.JQMTextArea text="textAreaText" columns="40" rows="20"/>-->
-            <jqm:form.elements.JQMTextArea text="textAreaText"/>
-            <jqm:form.elements.JQMUrl text="urlText"/>
-            <jqm:form.JQMFieldContainer/>
-            <jqm:toolbar.JQMNavBar iconPos="LEFT">
-                <jqm:button>
-                    <jqm:button.JQMButton ui:field="navBarBtn1" text="Button 1"/>
-                </jqm:button>
-                <jqm:button>
-                    <jqm:button.JQMButton text="Button 2" builtInIcon="STAR"/>
-                </jqm:button>
-                <jqm:buttonActivePersist>
-                    <jqm:button.JQMButton text="Button 3"/>
-                </jqm:buttonActivePersist>
-                <jqm:button>
-                    <jqm:button.JQMButton text="Button 4"/>
-                </jqm:button>
-                <jqm:button>
-                    <jqm:button.JQMButton text="Button 5"/>
-                </jqm:button>
-            </jqm:toolbar.JQMNavBar>
-            <jqm:html.Paragraph />
-            <jqm:html.Span text="Navbar with last clicked highlighting (icons pos is RIGHT)" />
-            <jqm:toolbar.JQMNavBar iconPos="RIGHT" highlightLastClicked="true">
-                <jqm:button>
-                    <jqm:button.JQMButton text="Button 1"/>
-                </jqm:button>
-                <jqm:button>
-                    <jqm:button.JQMButton text="Button 2" builtInIcon="GEAR" />
-                </jqm:button>
-                <jqm:button>
-                    <jqm:button.JQMButton text="Button 3"/>
-                </jqm:button>
-                <jqm:button>
-                    <jqm:button.JQMButton text="Button 4"/>
-                </jqm:button>
-                <jqm:buttonActivePersist>
-                    <jqm:button.JQMButton text="Button 5"/>
-                </jqm:buttonActivePersist>
-            </jqm:toolbar.JQMNavBar>
-            <jqm:html.Paragraph />
-            <jqm:html.Paragraph />
-            <jqm:html.Heading.H3 text="Tabs widget with headers as buttons"
-              addStyleNames="{style.headerImportantColor}" />
-            <t:JQMTabs iconPos="RIGHT" activeIndex="1" heightStyle="AUTO">
-              <t:button>
-                <b:JQMButton text="Tab1"/>
-              </t:button>
-              <t:button>
-                <b:JQMButton text="Tab2" builtInIcon="GEAR" />
-              </t:button>
-              <t:button>
-                <b:JQMButton text="Tab3"/>
-              </t:button>
-              <t:content>
-                <g:FlowPanel addStyleNames="ui-body-inherit ui-content"> <!-- styles are OPTIONAL -->
-                  <h:Heading.H3 text="Tab1 Content" />
-                </g:FlowPanel>
-              </t:content>
-              <t:content>
-                <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
-                  <h:Heading.H3 text="Tab2 Content" />
-                  <h:Paragraph />
-                  <h:Heading.H4 text="Foo1" />
-                  <h:Heading.H4 text="Foo2" />
-                  <h:Heading.H4 text="Foo3" />
-                </g:FlowPanel>
-              </t:content>  
-              <t:content>
-                <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
-                  <h:Heading.H3 text="Tab3 Content" />
-                </g:FlowPanel>
-              </t:content>
-            </t:JQMTabs>
-            <jqm:html.Paragraph />
-            <jqm:html.Paragraph />
-            <jqm:html.Heading.H3 text="Tabs widget with headers as listview"
-              addStyleNames="{style.headerImportantColor}" />
-            <t:JQMTabs collapsible="true" activeIndex="1"> 
-              <!-- tabDisabled="[2]" collapseAll="true" -->
-              <t:listitem>
-                <l:JQMListItem text="Tab1" />
-              </t:listitem>
-              <t:listitem>
-                <l:JQMListItem text="Tab2" dataIcon="GEAR" />
-              </t:listitem>
-              <t:listitem>
-                <l:JQMListItem text="Tab3" />
-              </t:listitem>
-              <t:content>
-                <g:FlowPanel addStyleNames="ui-body-inherit ui-content"> <!-- styles are OPTIONAL -->
-                  <h:Heading.H3 text="Tab1 Content" />
-                </g:FlowPanel>
-              </t:content>
-              <t:content>
-                <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
-                  <h:Heading.H3 text="Tab2 Content" />
-                </g:FlowPanel>
-              </t:content>  
-              <t:content>
-                <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
-                  <h:Heading.H3 text="Tab3 Content" />
-                </g:FlowPanel>
-              </t:content>
-            </t:JQMTabs>
-            <jqm:html.Paragraph />
-            <jqm:html.Paragraph />
-            <jqm:html.Heading.H3 text="Tabs widget with headers as listview - horizontal style"
-              addStyleNames="{style.headerImportantColor}" />
-            <g:FlowPanel>
-            <t:JQMTabs ui:field="horzTabs" collapsible="true" activeIndex="0" heightStyle="FILL"
-              showEffect="SLIDE_DOWN" hideEffect="SLIDE_UP" 
-              addStyleNames="jqm4gwt-tabs-horizontal"> 
-              <t:listitem>
-                <l:JQMListItem text="Tab1" />
-              </t:listitem>
-              <t:listitem>
-                <l:JQMListItem text="Tab2" dataIcon="GEAR" />
-              </t:listitem>
-              <t:listitem>
-                <l:JQMListItem text="Tab3" />
-              </t:listitem>
-              <t:content>
-                <g:FlowPanel ui:field="horzTabsTab1" 
-                  addStyleNames="ui-body-inherit ui-content"> <!-- styles are OPTIONAL -->
-                  <h:Heading.H3 text="Tab1 Content" />
-                  <e:JQMCheckbox ui:field="cbAllowLeavingTab1" name="cbAllowLeavingTab1" 
-                    text="Allow Leaving Tab1" />
-                </g:FlowPanel>
-              </t:content>
-              <t:content>
-                <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
-                  <h:Heading.H3 text="Tab2 Content" />
-                </g:FlowPanel>
-              </t:content>  
-              <t:content>
-                <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
-                  <h:Heading.H3 text="Tab3 Content" />
-                </g:FlowPanel>
-              </t:content>
-            </t:JQMTabs>
-            </g:FlowPanel>
-            <h:Paragraph />
-            <h:Paragraph addStyleNames="{style.bevel}" />
-            <jqm:form.JQMSubmit text="submitButtonText"/>
-        </jqm:form.JQMForm>
-        
-        <jqm:html.FormLabel for="that" text="formLabelText"/>
-        <jqm:html.Heading.H1 text="This should be Heading 1"/>
-        <jqm:html.Heading.H2 text="This should be Heading 2"/>
-        <jqm:html.Heading.H3 text="This should be Heading 3"/>
-        <jqm:html.Heading.H4 text="This should be Heading 4"/>
-        <jqm:html.Heading.H5 text="This should be Heading 5"/>
-        <jqm:html.Heading.H6 text="This should be Heading 6"/>
-        <jqm:html.ImageLink  href="http://google.com" 
+  <jqm:JQMPage containerId="testPage1" backButton="true"
+    contentCentered="true" contentHeightPercent="98.0"
+    contentAddStyleNames="jqm4gwt-scrollable-page-content {style.contentBorder}">
+
+    <t:JQMHeader fixed="true">
+      <t:widget>
+        <h:Heading.H1 text="Test Page1 Header" />
+      </t:widget>
+      <t:widget>
+        <g:FlowPanel ui:field="headerPanel1">
+          <b:JQMButton ui:field="headerTestBtn1" text="Btn1" inline="true" mini="true" />
+          <b:JQMButton ui:field="headerTestBtn2" text="Btn2" inline="true" mini="true" />
+          <b:JQMButton text="Open Panel" href="#testView1Panel" inline="true" mini="true" />
+          <b:JQMButton text="Global Panel" href="#globalPanel1" inline="true" mini="true" />
+        </g:FlowPanel>
+      </t:widget>
+    </t:JQMHeader>
+
+    <!-- jqm:plugins.iscroll.IScrollPanel-->
+    <g:FlowPanel addStyleNames="jqm4gwt-scrollable-main-stage">
+      <g:FlowPanel addStyleNames="{style.pageContent}">
+        <b:JQMButton text="" html="&lt;b&gt;Button&lt;/b&gt; with &lt;i&gt;HTML&lt;/i&gt; content"
+          mini="true" inline="true" />
+        <h:Div />  
+        <h:Span text="span text"/>
+        <h:Div text="div text" />
+        <h:Div>
+          <b:JQMButton text="Always Active Button in div" inline="true" mini="true"
+            corners="false" alwaysActive="true" />
+          <b:JQMButton text="Always Hover Button in div" inline="true" mini="true"
+            corners="false" alwaysHover="true" ui:field="alwaysHoverBtn" />
+          <b:JQMButton text="Toggle 'Always Hover' state" inline="true" mini="true"
+            corners="false" builtInIcon="LEFT" ui:field="toggleAlwaysHoverBtn" />
+        </h:Div>
+        <f:JQMForm ui:field="form">
+          <b:JQMButton text="Go To Test Page 2" href="#testPage2"
+            transition="NONE" iconPos="RIGHT" builtInIcon="RIGHT"/>
+          <g:FlowPanel>
+            <b:JQMButton ui:field="page2AsDialog" text="Show Page 2 as Dialog (programmatic)"
+              mini="true" inline="true" />
+            <b:JQMButton text="Show Page 2 as Dialog (declarative)"
+              mini="true" inline="true" dialog="true" href="#testPage2" />
+            <b:JQMButton ui:field="page2RestoreRolePage" text="Restore Page 2 as page"
+              mini="true" inline="true" />
+            <b:JQMButton ui:field="page2RestoreRoleDialog" text="Restore Page 2 as dialog"
+              mini="true" inline="true" />
+          </g:FlowPanel>
+          <b:JQMButtonGroup>
+            <b:JQMButton theme="a" text="Button theme 'a' of group"/>
+            <b:JQMButton theme="b" text="Button theme 'b' of group"/>
+          </b:JQMButtonGroup>
+          <b:JQMButtonGroup orientation="HORIZONTAL" mini="true" corners="false">
+            <b:JQMButton theme="a" text="A"/>
+            <b:JQMButton theme="b" text="B"/>
+          </b:JQMButtonGroup>
+          <e:JQMCheckbox ui:field="cb1" name="cb1" text="Checkbox"/>
+          <e:JQMCheckbox ui:field="cb2" name="cb2" text="Mini-Checkbox" mini="true" value="true"/>
+          <e:JQMCheckbox ui:field="cb3" name="cb3" text="Themed Checkbox" theme="b"/>
+          <e:JQMCheckbox ui:field="cb4" name="cb4" text="Right Icon and No corners"
+            corners="false" iconPos="RIGHT" />
+          <b:JQMButton ui:field="checkboxInfoBtn" text="Show Checkboxes Info" />
+          <e:JQMCheckset text="Mini Horizontal Checkset" orientation="HORIZONTAL" mini="true">
+            <e:check><e:JQMCheckbox name="cb10" text="Check1" /></e:check>
+            <e:check><e:JQMCheckbox name="cb11" text="Check2" /></e:check>
+            <e:check><e:JQMCheckbox name="cb12" text="Check3" /></e:check>
+          </e:JQMCheckset>
+          <e:JQMCheckset text="Vertical Checkset"> <!-- iconPos="RIGHT" -->
+            <e:check><e:JQMCheckbox name="cb20" text="Check1" /></e:check>
+            <e:check><e:JQMCheckbox name="cb21" text="Check2" /></e:check>
+          </e:JQMCheckset>
+          <e:JQMEmail text="email" corners="false" clearButton="true" />
+          <e:JQMFile text="File" corners="false" />
+          <e:JQMFlip ui:field="flip"
+            label1="Flip1" label2="Flip2" value1="flip1Value" value2="flip2Value" text="flipText"
+            value="flip1Value" /> <!-- theme="b" mini="true" textHidden="true" -->
+          <ly:JQMTable columns="3">
+            <ly:cell>
+              <b:JQMButton ui:field="flipInfoBtn" text="Show Flip Info" mini="true" />
+            </ly:cell>
+            <ly:cell>
+              <b:JQMButton ui:field="setFlipValBtn" text="Set Value to 'Flip2'" mini="true" />
+            </ly:cell>
+            <ly:cell>
+              <b:JQMButton ui:field="setFlipNullBtn" text="Set Value to 'null'" mini="true" />
+            </ly:cell>
+          </ly:JQMTable>
+  
+          <dt:JQMCalBox ui:field="datePicker" text="Date Picker"
+            dateFormat="%A %m/%d/%y" value="2013-10-25" useClearButton="true" />
+          <b:JQMButton ui:field="datePickerGetValueBtn" text="Get Date Picker value"
+            inline="true" mini="true" />
+          <b:JQMButton ui:field="datePickerSetNullBtn" text="Set Date Picker value to Null"
+            inline="true" mini="true" />
+  
+          <e:JQMMonth text="monthText"/>
+          <e:JQMNumber text="numberText"/>
+          <e:JQMPassword text="passwordText"/>
+          <e:JQMSearch text="searchText"/>
+  
+          <e:JQMRadioset ui:field="radio1" text="radiosetText" selectedValue="b">
+            <!-- orientation="HORIZONTAL" mini="true" iconPos="RIGHT" theme="a" -->
+            <e:radio>
+              <e:JQMRadio text="radio_A_Text" value="a"/>
+            </e:radio>
+            <e:radio>
+              <e:JQMRadio text="radio_B_Text" value="b"/>
+            </e:radio>
+            <e:radio>
+              <e:JQMRadio text="radio_C_Text" value="c"/>
+            </e:radio>
+            <e:radio>
+              <e:JQMRadio text="radio_D_Text" value="d"/>
+            </e:radio>
+          </e:JQMRadioset>
+          <ly:JQMTable columns="3">
+            <ly:cell>
+              <b:JQMButton ui:field="radioInfoBtn" text="Show Radioset Info" />
+            </ly:cell>
+            <ly:cell>
+              <b:JQMButton ui:field="setRadioValBtn" text="Set Value to 'c'" />
+            </ly:cell>
+            <ly:cell>
+              <b:JQMButton ui:field="setRadioNullBtn" text="Set Value to 'null'" />
+            </ly:cell>
+          </ly:JQMTable>
+          <e:JQMRadioset ui:field="gender" text="Gender"
+            orientation="HORIZONTAL" labelHidden="true">
+            <e:radio>
+              <e:JQMRadio text="Male" value="M"/>
+            </e:radio>
+            <e:radio>
+              <e:JQMRadio text="Female" value="F"/>
+            </e:radio>
+          </e:JQMRadioset>
+  
+          <h:Paragraph />
+          <e:JQMSelect text="selectText" ui:field="select1" mini="true"
+            builtInIcon="BARS" iconPos="LEFT" native="false" hidePlaceholderMenuItems="false">
+            <e:option>
+              <e:JQMSelect.Option text="Select One..." placeholder="true" />
+            </e:option>
+            <e:option>
+              <e:JQMSelect.Option text="option1Text" value="option1value"/>
+            </e:option>
+            <e:option>
+              <e:JQMSelect.Option text="option2Text" value="option2value"/>
+            </e:option>
+            <e:option>
+              <e:JQMSelect.Option text="option3Text" value="option3value" disabled="true" />
+            </e:option>
+            <e:option>
+              <e:JQMSelect.Option text="option4Text" value="option4value" selected="true" />
+            </e:option>
+          </e:JQMSelect>
+          <g:FlowPanel>
+            <b:JQMButton ui:field="getSelectValBtn" text="Get Dropdown Value" inline="true" mini="true" />
+            <b:JQMButton ui:field="setSelectValBtn" text="Set SelectedIndex to 1" inline="true" mini="true" />
+            <b:JQMButton ui:field="setSelectValNullBtn" text="Set Dropdown Value to null" inline="true" mini="true" />
+            <b:JQMButton ui:field="addSelectItemsBtn" text="Add Dropdown Items" inline="true" mini="true" />
+          </g:FlowPanel>
+          <h:Paragraph />
+          <e:JQMSelect text="Dropdown with multiple select" mulitple="true" native="false"
+            closeText="Discard" selectInline="true">
+            <e:option><e:JQMSelect.Option text="One" value="1" /></e:option>
+            <e:option><e:JQMSelect.Option text="Two" value="2" /></e:option>
+            <e:option><e:JQMSelect.Option text="Three" value="3" /></e:option>
+            <e:option><e:JQMSelect.Option text="Four" value="4" /></e:option>
+            <e:option><e:JQMSelect.Option text="Five" value="5" /></e:option>
+          </e:JQMSelect>
+          <h:Paragraph />
+          <h:Heading.H4 text="Filter Select/Dropdown"
+            addStyleNames="{style.inlineBlock} {style.marginRight10}" />
+          <b:JQMButton ui:field="addNumsBtn" text="Add numbers" inline="true" />
+          <e:JQMFilterable ui:field="numsFltr" />
+          <e:JQMSelect ui:field="numsList" text="" labelHidden="true" native="false"
+            dataFilter="#{numsFltr.getFilterId}" >
+            <e:option><e:JQMSelect.Option text="Zero" value="0" /></e:option>
+            <e:option><e:JQMSelect.Option text="One" value="1" /></e:option>
+            <e:option><e:JQMSelect.Option text="Two" value="2" /></e:option>
+            <e:option><e:JQMSelect.Option text="Three" value="3" /></e:option>
+            <e:option><e:JQMSelect.Option text="Four" value="4" /></e:option>
+            <e:option><e:JQMSelect.Option text="Five" value="5" /></e:option>
+            <e:option><e:JQMSelect.Option text="Six" value="6" /></e:option>
+            <e:option><e:JQMSelect.Option text="Seven" value="7" /></e:option>
+            <e:option><e:JQMSelect.Option text="Eight" value="8" /></e:option>
+            <e:option><e:JQMSelect.Option text="Nine" value="9" /></e:option>
+          </e:JQMSelect>
+          <h:Paragraph />
+          <h:Heading.H4 text="Filter Select/Dropdown Reveal"
+            addStyleNames="{style.inlineBlock} {style.marginRight10}" />
+          <b:JQMButton ui:field="addFruitsBtn" text="Add fruits" inline="true" />
+          <l:JQMList.Unordered ui:field="fruitsList" inset="true"
+            filterable="true" filterReveal="true" filterPlaceholder="Search fruits...">
+            <l:item><l:JQMListItem checkBox="LEFT" text="Apple" /></l:item>
+            <l:item><l:JQMListItem checkBox="LEFT" text="Banana" /></l:item>
+            <l:item><l:JQMListItem checkBox="LEFT" text="Cherry" /></l:item>
+            <l:item><l:JQMListItem checkBox="LEFT" text="Cranberry" /></l:item>
+            <l:item><l:JQMListItem checkBox="LEFT" text="Grape" /></l:item>
+            <l:item><l:JQMListItem checkBox="LEFT" text="Orange" /></l:item>
+          </l:JQMList.Unordered>
+          <h:Paragraph />
+          <h:Heading.H4 text="City Search" addStyleNames="{style.inlineBlock} {style.marginRight10}" />
+          <l:JQMList.Unordered ui:field="cityList" inset="true"
+            filterable="true" filterReveal="true" filterPlaceholder="Find a city...">
+          </l:JQMList.Unordered>
+          <h:Paragraph />
+          <h:Paragraph addStyleNames="{style.bevel}" />
+  
+          <e:JQMSlider min="5.0" max="8.0" labelText="sliderLabelText" ui:field="slider" />
+            <!-- highlight="true" mini="true" theme="a" /-->
+          <g:FlowPanel>
+            <b:JQMButton builtInIcon="MINUS" ui:field="disableSliderButton" text="Disable Slider" inline="true" mini="true" />
+            <b:JQMButton builtInIcon="PLUS" ui:field="enableSliderButton" text="Enable Slider" inline="true" mini="true" />
+            <b:JQMButton ui:field="getSliderValueBtn" text="Get Slider Value" inline="true" mini="true" />
+            <b:JQMButton ui:field="setSliderNullBtn" text="Set Slider Value to null" inline="true" mini="true" />
+            <b:JQMButton ui:field="setSliderMinBtn" text="Set Slider Value to min" inline="true" mini="true" />
+            <b:JQMButton ui:field="setSliderMinTo6Btn" text="Set Slider Min to 6" inline="true" mini="true" />
+            <b:JQMButton ui:field="setSliderStepBtn" text="Set Slider Step to 0.5" inline="true" mini="true" />
+          </g:FlowPanel>
+          <e:JQMRangeSlider ui:field="rangeSlider" text="Range Slider"
+            minInt="20" maxInt="80" loValue="30.0" hiValue="70.0"
+            step="0.5" highlight="true" mini="false" theme="a" trackTheme="b" labelHidden="false" />
+          <g:FlowPanel>
+            <b:JQMButton builtInIcon="MINUS" ui:field="disableRangeSliderBtn" text="Disable Range Slider" inline="true" mini="true" />
+            <b:JQMButton builtInIcon="PLUS" ui:field="enableRangeSliderBtn" text="Enable Range Slider" inline="true" mini="true" />
+            <b:JQMButton ui:field="rangeSliderGetValuesBtn" text="Get Values" inline="true" mini="true" />
+            <b:JQMButton ui:field="setRangeSliderNullBtn" text="Set Range Slider Values to null" inline="true" mini="true" />
+          </g:FlowPanel>
+          <e:JQMTelephone text="telephoneText"/>
+          <e:JQMText text="Text (no corners)" ui:field="text" corners="false" />
+          <b:JQMButton builtInIcon="MINUS" ui:field="disableTextButton" text="Disable Text"/>
+          <b:JQMButton builtInIcon="PLUS" ui:field="enableTextButton" text="Enable Text"/>
+  
+          <!-- TODO fix col/rows setter <e:JQMTextArea text="textAreaText" columns="40" rows="20"/>-->
+          <e:JQMTextArea text="textAreaText"/>
+          <e:JQMUrl text="urlText"/>
+          <f:JQMFieldContainer/>
+          <t:JQMNavBar iconPos="LEFT">
+            <t:button><b:JQMButton ui:field="navBarBtn1" text="Button 1"/></t:button>
+            <t:button><b:JQMButton text="Button 2" builtInIcon="STAR"/></t:button>
+            <t:buttonActivePersist><b:JQMButton text="Button 3"/></t:buttonActivePersist>
+            <t:button><b:JQMButton text="Button 4"/></t:button>
+            <t:button><b:JQMButton text="Button 5"/></t:button>
+          </t:JQMNavBar>
+          <h:Paragraph />
+          <h:Span text="Navbar with last clicked highlighting (icons pos is RIGHT)" />
+          <t:JQMNavBar iconPos="RIGHT" highlightLastClicked="true">
+            <t:button><b:JQMButton text="Button 1"/></t:button>
+            <t:button><b:JQMButton text="Button 2" builtInIcon="GEAR" /></t:button>
+            <t:button><b:JQMButton text="Button 3"/></t:button>
+            <t:button><b:JQMButton text="Button 4"/></t:button>
+            <t:buttonActivePersist><b:JQMButton text="Button 5"/></t:buttonActivePersist>
+          </t:JQMNavBar>
+          <h:Paragraph />
+          <h:Paragraph />
+          <h:Heading.H3 text="Tabs widget with headers as buttons"
+            addStyleNames="{style.headerImportantColor}" />
+          <t:JQMTabs iconPos="RIGHT" activeIndex="1" heightStyle="AUTO">
+            <t:button>
+              <b:JQMButton text="Tab1"/>
+            </t:button>
+            <t:button>
+              <b:JQMButton text="Tab2" builtInIcon="GEAR" />
+            </t:button>
+            <t:button>
+              <b:JQMButton text="Tab3"/>
+            </t:button>
+            <t:content>
+              <g:FlowPanel addStyleNames="ui-body-inherit ui-content"> <!-- styles are OPTIONAL -->
+                <h:Heading.H3 text="Tab1 Content" />
+              </g:FlowPanel>
+            </t:content>
+            <t:content>
+              <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                <h:Heading.H3 text="Tab2 Content" />
+                <h:Paragraph />
+                <h:Heading.H4 text="Foo1" />
+                <h:Heading.H4 text="Foo2" />
+                <h:Heading.H4 text="Foo3" />
+              </g:FlowPanel>
+            </t:content>
+            <t:content>
+              <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                <h:Heading.H3 text="Tab3 Content" />
+              </g:FlowPanel>
+            </t:content>
+          </t:JQMTabs>
+          <h:Paragraph />
+          <h:Paragraph />
+          <h:Heading.H3 text="Tabs widget with headers as listview"
+            addStyleNames="{style.headerImportantColor}" />
+          <t:JQMTabs collapsible="true" activeIndex="1">
+            <!-- tabDisabled="[2]" collapseAll="true" -->
+            <t:listitem>
+              <l:JQMListItem text="Tab1" />
+            </t:listitem>
+            <t:listitem>
+              <l:JQMListItem text="Tab2" dataIcon="GEAR" />
+            </t:listitem>
+            <t:listitem>
+              <l:JQMListItem text="Tab3" />
+            </t:listitem>
+            <t:content>
+              <g:FlowPanel addStyleNames="ui-body-inherit ui-content"> <!-- styles are OPTIONAL -->
+                <h:Heading.H3 text="Tab1 Content" />
+              </g:FlowPanel>
+            </t:content>
+            <t:content>
+              <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                <h:Heading.H3 text="Tab2 Content" />
+              </g:FlowPanel>
+            </t:content>
+            <t:content>
+              <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                <h:Heading.H3 text="Tab3 Content" />
+              </g:FlowPanel>
+            </t:content>
+          </t:JQMTabs>
+          <h:Paragraph />
+          <h:Paragraph />
+          <h:Heading.H3 text="Tabs widget with headers as listview - horizontal style"
+            addStyleNames="{style.headerImportantColor}" />
+          <g:FlowPanel>
+          <t:JQMTabs ui:field="horzTabs" collapsible="true" activeIndex="0" heightStyle="FILL"
+            showEffect="SLIDE_DOWN" hideEffect="SLIDE_UP"
+            addStyleNames="jqm4gwt-tabs-horizontal">
+            <t:listitem>
+              <l:JQMListItem text="Tab1" />
+            </t:listitem>
+            <t:listitem>
+              <l:JQMListItem text="Tab2" dataIcon="GEAR" />
+            </t:listitem>
+            <t:listitem>
+              <l:JQMListItem text="Tab3" />
+            </t:listitem>
+            <t:content>
+              <g:FlowPanel ui:field="horzTabsTab1"
+                addStyleNames="ui-body-inherit ui-content"> <!-- styles are OPTIONAL -->
+                <h:Heading.H3 text="Tab1 Content" />
+                <e:JQMCheckbox ui:field="cbAllowLeavingTab1" name="cbAllowLeavingTab1"
+                  text="Allow Leaving Tab1" />
+              </g:FlowPanel>
+            </t:content>
+            <t:content>
+              <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                <h:Heading.H3 text="Tab2 Content" />
+              </g:FlowPanel>
+            </t:content>
+            <t:content>
+              <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                <h:Heading.H3 text="Tab3 Content" />
+              </g:FlowPanel>
+            </t:content>
+          </t:JQMTabs>
+          </g:FlowPanel>
+          <h:Paragraph />
+          <h:Paragraph addStyleNames="{style.bevel}" />
+          <f:JQMSubmit text="submitButtonText"/>
+        </f:JQMForm>
+
+        <h:FormLabel for="that" text="formLabelText"/>
+        <h:Heading.H1 text="This should be Heading 1"/>
+        <h:Heading.H2 text="This should be Heading 2"/>
+        <h:Heading.H3 text="This should be Heading 3"/>
+        <h:Heading.H4 text="This should be Heading 4"/>
+        <h:Heading.H5 text="This should be Heading 5"/>
+        <h:Heading.H6 text="This should be Heading 6"/>
+        <h:ImageLink  href="http://google.com"
           src="data:image/png;base64,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"
-          text="Google"
-          addStyleNames="{style.inlineBlock} {style.marginRight10}" />
-        <jqm:html.ImageLinkButton href="http://cnn.com" inline="true" corners="false"
-          src="http://i.cdn.turner.com/cnn/.e/img/3.0/global/header/hdr-main.png" 
-          addStyleNames="{style.marginRight20}"/>
+          text="Google" addStyleNames="{style.inlineBlock} {style.marginRight10}" />
+        <h:ImageLinkButton href="http://cnn.com" inline="true" corners="false"
+          src="http://i.cdn.turner.com/cnn/.e/img/3.0/global/header/hdr-main.png"
+          addStyleNames="{style.marginRight20}" />
           <!-- imageResizePriority="HORIZONTAL" theme="b" enabled="false" /-->
-        
-        <jqm:html.ImageLinkButton href="http://paypal.com" inline="true" corners="false"
-          compact="false" text="PayPal" 
+    
+        <h:ImageLinkButton href="http://paypal.com" inline="true" corners="false"
+          compact="false" text="PayPal"
           src="https://cdn1.iconfinder.com/data/icons/free-business-desktop-icons/32/Money.png" />
-        
-        <jqm:html.ImageLinkButton href="http://cnn.com" inline="true" corners="false"
+    
+        <h:ImageLinkButton href="http://cnn.com" inline="true" corners="false"
           compact="false" text="Image link as normal button (text only)" />
-          
-        <jqm:html.ImageLinkButton href="http://cnn.com" inline="true" corners="false"
-          mini="true" compact="false" shadow="false" 
-          text="Image link as mini button (text only, no shadow)" />  
-             
-        <jqm:html.Legend text="legendText"/>
-        <jqm:html.ListWidget.Ordered>
-            <jqm:html.Span text="span1Text"/>
-            <jqm:html.Span text="span2Text"/>
-            <jqm:html.Span text="spanText"/>
-        </jqm:html.ListWidget.Ordered>
-        <jqm:html.ListWidget.Unordered>
-            <jqm:html.Span text="someSpanText"/>
-            <jqm:html.Span text="moreSpanText"/>
-            <jqm:html.Span text="evenMoreSpanText"/>
-        </jqm:html.ListWidget.Unordered>
-        <jqm:html.Paragraph text="paragraphText"/>
-        <jqm:html.Span text="spanText"/>
-        <jqm:layout.JQMCollapsible text="collapsibleText" collapsed="false">
-            <jqm:widget>
-                <jqm:html.Span text="spanText in Collapsible"/>
-            </jqm:widget>
-        </jqm:layout.JQMCollapsible>
-        <jqm:layout.JQMCollapsibleSet>
-            <jqm:collapsible>
-                <jqm:layout.JQMCollapsible text="collapsible1Text">
-                    <jqm:widget>
-                        <jqm:html.Span text="spanText in Collapsible#1"/>
-                    </jqm:widget>
-                </jqm:layout.JQMCollapsible>
-            </jqm:collapsible>
-            <jqm:collapsible>
-                <jqm:layout.JQMCollapsible text="collapsible2Text">
-                    <jqm:widget>
-                        <jqm:html.Span text="spanText in Collapsible#2"/>
-                    </jqm:widget>
-                </jqm:layout.JQMCollapsible>
-            </jqm:collapsible>
-            <jqm:collapsible>
-                <jqm:layout.JQMCollapsible text="collapsible3Text">
-                    <jqm:widget>
-                        <jqm:html.Span text="spanText in Collapsible#3"/>
-                    </jqm:widget>
-                </jqm:layout.JQMCollapsible>
-            </jqm:collapsible>
-        </jqm:layout.JQMCollapsibleSet>
-        <jqm:layout.JQMTable>
-            <jqm:cell>
-                <jqm:html.Span text="spanText in Table Row#1 Col#1"/>
-            </jqm:cell>
-            <jqm:cell>
-                <jqm:html.Span text="spanText in Table Row#1 Col#2"/>
-            </jqm:cell>
-            <jqm:cell>
-                <jqm:html.Span text="spanText in Table Row#2 Col#1"/>
-            </jqm:cell>
-            <jqm:cell>
-                <jqm:html.Span text="spanText in Table Row#2 Col#2"/>
-            </jqm:cell>
-        </jqm:layout.JQMTable>
-        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
-          <jqm:layout.JQMTable percentageColumns="10,20,40,30">
-            <jqm:cell>
-                <jqm:html.Span text="10%" addStyleNames="{style.red} {style.centerText}"/>
-            </jqm:cell>
-            <jqm:cell>
-                <jqm:html.Span text="20%" addStyleNames="{style.green} {style.centerText}"/>
-            </jqm:cell>
-            <jqm:cell>
-                <jqm:html.Span text="40%" addStyleNames="{style.blue} {style.centerText}"/>
-            </jqm:cell>
-            <jqm:cell>
-                <jqm:html.Span text="30%" addStyleNames="{style.yellow} {style.centerText}"/>
-            </jqm:cell>
-          </jqm:layout.JQMTable>
-        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
+    
+        <h:ImageLinkButton href="http://cnn.com" inline="true" corners="false"
+          mini="true" compact="false" shadow="false"
+          text="Image link as mini button (text only, no shadow)" />
+    
+        <h:Legend text="legendText"/>
+        <h:ListWidget.Ordered>
+          <h:Span text="span1Text"/>
+          <h:Span text="span2Text"/>
+          <h:Span text="spanText"/>
+        </h:ListWidget.Ordered>
+        <h:ListWidget.Unordered>
+          <h:Span text="someSpanText"/>
+          <h:Span text="moreSpanText"/>
+          <h:Span text="evenMoreSpanText"/>
+        </h:ListWidget.Unordered>
+        <h:Paragraph text="paragraphText"/>
+        <h:Span text="spanText"/>
+        <ly:JQMCollapsible text="collapsibleText" collapsed="false">
+          <ly:widget><h:Span text="spanText in Collapsible"/></ly:widget>
+        </ly:JQMCollapsible>
+        <ly:JQMCollapsibleSet>
+          <ly:collapsible>
+            <ly:JQMCollapsible text="collapsible1Text">
+              <ly:widget><h:Span text="spanText in Collapsible#1" /></ly:widget>
+            </ly:JQMCollapsible>
+          </ly:collapsible>
+          <ly:collapsible>
+            <ly:JQMCollapsible text="collapsible2Text">
+              <ly:widget><h:Span text="spanText in Collapsible#2" /></ly:widget>
+            </ly:JQMCollapsible>
+          </ly:collapsible>
+          <ly:collapsible>
+            <ly:JQMCollapsible text="collapsible3Text">
+              <ly:widget><h:Span text="spanText in Collapsible#3" /></ly:widget>
+            </ly:JQMCollapsible>
+          </ly:collapsible>
+        </ly:JQMCollapsibleSet>
+        <ly:JQMTable>
+          <ly:cell><h:Span text="spanText in Table Row#1 Col#1" /></ly:cell>
+          <ly:cell><h:Span text="spanText in Table Row#1 Col#2" /></ly:cell>
+          <ly:cell><h:Span text="spanText in Table Row#2 Col#1" /></ly:cell>
+          <ly:cell><h:Span text="spanText in Table Row#2 Col#2" /></ly:cell>
+        </ly:JQMTable>
+        <h:Paragraph addStyleNames="{style.bevel}" />
+        <ly:JQMTable percentageColumns="10,20,40,30">
+          <ly:cell><h:Span text="10%" addStyleNames="{style.red} {style.centerText}" /></ly:cell>
+          <ly:cell><h:Span text="20%" addStyleNames="{style.green} {style.centerText}" /></ly:cell>
+          <ly:cell><h:Span text="40%" addStyleNames="{style.blue} {style.centerText}" /></ly:cell>
+          <ly:cell><h:Span text="30%" addStyleNames="{style.yellow} {style.centerText}" /></ly:cell>
+        </ly:JQMTable>
+        <h:Paragraph addStyleNames="{style.bevel}" />
         <e:JQMFilterable ui:field="fltr2" />
         <jqm:list.JQMList.Ordered dataFilter="#{fltr2.getFilterId}">
-            <jqm:item><jqm:list.JQMListItem text="Ordered List Item #1 Text" dataIcon="NONE" /></jqm:item>
-            <jqm:item><jqm:list.JQMListItem text="Ordered List Item #2 Text"/></jqm:item>
-            <jqm:item><jqm:list.JQMListItem text="Ordered List Item #3 Text" href="http://www.cnn.com"/></jqm:item>
-            <jqm:divider><jqm:list.JQMListDivider text="Ordered List divider text"/></jqm:divider>
-            <jqm:item><jqm:list.JQMListItem ui:field="listItem4" text="Ordered List Item #4 Text"/></jqm:item>
-            <jqm:item><jqm:list.JQMListItem text="Ordered List Item #5 Text"/></jqm:item>
-            <jqm:item><jqm:list.JQMListItem /></jqm:item> <!-- Could be without text -->
+          <jqm:item><jqm:list.JQMListItem text="Ordered List Item #1 Text" dataIcon="NONE" /></jqm:item>
+          <jqm:item><jqm:list.JQMListItem text="Ordered List Item #2 Text"/></jqm:item>
+          <jqm:item><jqm:list.JQMListItem text="Ordered List Item #3 Text" href="http://www.cnn.com"/></jqm:item>
+          <jqm:divider><jqm:list.JQMListDivider text="Ordered List divider text"/></jqm:divider>
+          <jqm:item><jqm:list.JQMListItem ui:field="listItem4" text="Ordered List Item #4 Text"/></jqm:item>
+          <jqm:item><jqm:list.JQMListItem text="Ordered List Item #5 Text"/></jqm:item>
+          <jqm:item><jqm:list.JQMListItem /></jqm:item> <!-- Could be without text -->
         </jqm:list.JQMList.Ordered>
-        <jqm:html.Paragraph />
-        <jqm:button.JQMButton ui:field="setListItemTextBtn" 
+        <h:Paragraph />
+        <b:JQMButton ui:field="setListItemTextBtn"
           text="Set 'Ordered List Item #4 Text' to 'null'" mini="true" inline="true" />
-        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
+        <h:Paragraph addStyleNames="{style.bevel}" />
         <jqm:list.JQMList.Unordered ui:field="listWithChecked" splitIcon="GEAR" splitTheme="b">
-            <jqm:divider><jqm:list.JQMListDivider text="List with checkBoxes"/></jqm:divider>
-            <jqm:item><jqm:list.JQMListItem ui:field="liCbA" text="Aaa" checkBox="RIGHT"/></jqm:item>
-            <jqm:item><jqm:list.JQMListItem text="Bbb"/></jqm:item>
-            <jqm:item><jqm:list.JQMListItem ui:field="liCbC" text="Ccc" checkBox="RIGHT"
-              splitHref="" />
-            </jqm:item>
-            <jqm:item><jqm:list.JQMListItem ui:field="liCbD" text="Ddd" checkBox="RIGHT"/></jqm:item>
+          <jqm:divider><jqm:list.JQMListDivider text="List with checkBoxes"/></jqm:divider>
+          <jqm:item><jqm:list.JQMListItem ui:field="liCbA" text="Aaa" checkBox="RIGHT"/></jqm:item>
+          <jqm:item><jqm:list.JQMListItem text="Bbb"/></jqm:item>
+          <jqm:item><jqm:list.JQMListItem ui:field="liCbC" text="Ccc" checkBox="RIGHT" splitHref="" /></jqm:item>
+          <jqm:item><jqm:list.JQMListItem ui:field="liCbD" text="Ddd" checkBox="RIGHT"/></jqm:item>
         </jqm:list.JQMList.Unordered>
-        <jqm:html.Paragraph />
-        <jqm:button.JQMButton ui:field="listItemCheckedBtn" text="Show checked list items info" 
+        <h:Paragraph />
+        <b:JQMButton ui:field="listItemCheckedBtn" text="Show checked list items info"
           mini="true" inline="true" />
-        <jqm:button.JQMButton ui:field="listItemSwitchCheckedBtn" text="Switch Ddd checked state" 
-          mini="true" inline="true" />   
-        <jqm:html.Paragraph addStyleNames="{style.bevel}" /> 
+        <b:JQMButton ui:field="listItemSwitchCheckedBtn" text="Switch Ddd checked state"
+          mini="true" inline="true" />
+        <h:Paragraph addStyleNames="{style.bevel}" />
         <jqm:list.JQMList.Unordered ui:field="unorderedList" inset="true" corners="false"
-           splitTheme="a" splitIcon="ALERT">
-            <jqm:item><jqm:list.JQMListItem text="Unordered List Item #1 Text"
-              splitHref="" />
-            </jqm:item>
-            <jqm:divider><jqm:list.JQMListDivider text="Unordered List divider text"/></jqm:divider>
-            <jqm:item><jqm:list.JQMListItem text="Unordered List Item #2 Text"
+          splitTheme="a" splitIcon="ALERT">
+          <jqm:item><jqm:list.JQMListItem text="Unordered List Item #1 Text" splitHref="" /></jqm:item>
+          <jqm:divider><jqm:list.JQMListDivider text="Unordered List divider text"/></jqm:divider>
+          <jqm:item>
+            <jqm:list.JQMListItem text="Unordered List Item #2 Text" 
               splitHref="" splitTheme="b" splitIcon="INFO" />
-            </jqm:item>
+          </jqm:item>
         </jqm:list.JQMList.Unordered>
-        <jqm:html.Paragraph />
-        <jqm:button.JQMButton ui:field="ulBtn" text="Test Dynamic List" 
-          mini="true" inline="true" />
-        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
-        <jqm:plugins.grid960.Grid960Panel>
-            <jqm:plugins.grid960.GridColumn span="4">
-              <jqm:button.JQMButton text="Span4"/>
-            </jqm:plugins.grid960.GridColumn>
-            <jqm:plugins.grid960.GridColumn span="5">
-              <jqm:button.JQMButton text="Span5"/>
-            </jqm:plugins.grid960.GridColumn>
-            <jqm:plugins.grid960.GridColumn span="3">
-              <jqm:button.JQMButton text="Span3"/>
-            </jqm:plugins.grid960.GridColumn>
-        </jqm:plugins.grid960.Grid960Panel>
-        
+        <h:Paragraph />
+        <b:JQMButton ui:field="ulBtn" text="Test Dynamic List" mini="true" inline="true" />
+        <h:Paragraph addStyleNames="{style.bevel}" />
+        <gr960:Grid960Panel>
+          <gr960:GridColumn span="4"><b:JQMButton text="Span4" /></gr960:GridColumn>
+          <gr960:GridColumn span="5"><b:JQMButton text="Span5" /></gr960:GridColumn>
+          <gr960:GridColumn span="3"><b:JQMButton text="Span3" /></gr960:GridColumn>
+        </gr960:Grid960Panel>
+    
         <jqm:JQMPopup ui:field="popup" arrows="t,b" padding="true" position="#popupOpenButton">
           <g:FlowPanel>
-            <jqm:html.Heading.H2>Popup with arrows demo</jqm:html.Heading.H2>
-            <jqm:button.JQMButton builtInIcon="MINUS" ui:field="popupCloseButton" text="Close Pop-up" />
-          </g:FlowPanel>  
+            <h:Heading.H2>Popup with arrows demo</h:Heading.H2>
+            <b:JQMButton builtInIcon="MINUS" ui:field="popupCloseButton" text="Close Pop-up" />
+          </g:FlowPanel>
         </jqm:JQMPopup>
-        <jqm:button.JQMButton widgetId="popupOpenButton" ui:field="popupOpenButton"
+        <b:JQMButton widgetId="popupOpenButton" ui:field="popupOpenButton"
           builtInIcon="INFO" text="Pop-up example..."/>
-        
+    
         <jqm:JQMPopup containerId="tooltipPop" theme="b" padding="true" addStyleNames="{style.tooltipPop}">
-          <g:HTML 
+          <g:HTML
             HTML="&lt;p&gt;Here is a &lt;strong&gt;tiny popup&lt;/strong&gt; being used like a tooltip. The text will wrap to multiple lines as needed.&lt;/p&gt;">
           </g:HTML>
         </jqm:JQMPopup>
-        <jqm:html.Heading.H3 addStyleNames="{style.inlineBlock}">Text with a tooltip.</jqm:html.Heading.H3>
-        <jqm:button.JQMButton href="#tooltipPop" popup="true" inline="true" builtInIcon="INFO"
+        <h:Heading.H3 addStyleNames="{style.inlineBlock}">Text with a tooltip.</h:Heading.H3>
+        <b:JQMButton href="#tooltipPop" popup="true" inline="true" builtInIcon="INFO"
           iconPos="NOTEXT" iconAlt="true" theme="a" transition="POP" title="More Info..." text="" />
-          
-        <jqm:html.Paragraph />
+    
+        <h:Paragraph />
         <jqm:JQMPopup containerId="popupAsDialog" dialog="true" corners="false" theme="a" overlayTheme="b">
-          <jqm:button.JQMButton iconPos="NOTEXT" builtInIcon="DELETE" back="true" text="Close" 
+          <b:JQMButton iconPos="NOTEXT" builtInIcon="DELETE" back="true" text="Close"
             addStyleNames="ui-btn-right" />
-          <jqm:html.ImageLink src="http://upload.wikimedia.org/wikipedia/commons/0/09/NYC_Montage_8.jpg" 
+          <h:ImageLink src="http://upload.wikimedia.org/wikipedia/commons/0/09/NYC_Montage_8.jpg"
             height="500px" />
         </jqm:JQMPopup>
-        <jqm:button.JQMButton builtInIcon="BARS" text="Pop-up as dialog example..."
-          href="#popupAsDialog" popup="true" popupPos="window" mini="true" inline="true" />  
-        
-        <jqm:button.JQMButton builtInIcon="INFO" ui:field="dlgButton" text="Dialog example..."
+        <b:JQMButton builtInIcon="BARS" text="Pop-up as dialog example..."
+          href="#popupAsDialog" popup="true" popupPos="window" mini="true" inline="true" />
+    
+        <b:JQMButton builtInIcon="INFO" ui:field="dlgButton" text="Dialog example..."
           inline="true" />
-        <jqm:button.JQMButton builtInIcon="INFO" ui:field="dlgButton1" text="Dialog Message example..."
-          inline="true" />  
-        <jqm:button.JQMButton builtInIcon="INFO" text="Dialog defined in UiBinder example..."
+        <b:JQMButton builtInIcon="INFO" ui:field="dlgButton1" text="Dialog Message example..."
+          inline="true" />
+        <b:JQMButton builtInIcon="INFO" text="Dialog defined in UiBinder example..."
           href="#testDialog1" inline="true" />
-          
-        <jqm:html.Paragraph />
-        <jqm:LoadingIndicator/>
-        <jqm:button.JQMButton builtInIcon="INFO" ui:field="busyButton" text="Application Busy example..."/>
-        
-        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
-        
-        <jqm:table.JQMColumnToggle colNames="Rank=2, Movie Title, Year=3, &lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
+    
+        <h:Paragraph />
+        <jqm:LoadingIndicator />
+        <b:JQMButton builtInIcon="INFO" ui:field="busyButton" text="Application Busy example..." />
+    
+        <h:Paragraph addStyleNames="{style.bevel}" />
+    
+        <ta:JQMColumnToggle colNames="Rank=2, Movie Title, Year=3, &lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
           cells="&lt;th>1&lt;/th>, The Matrix, 1999, 8.7, 784\,311, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5,  105\,111" />
-        
-        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
-        
+    
+        <h:Paragraph addStyleNames="{style.bevel}" />
+    
         <g:Label text="Reflow Mode Example" />
-        <jqm:table.JQMColumnToggle reflow="true" 
+        <ta:JQMColumnToggle reflow="true"
           colNames="Rank=2, Movie Title, Year=3, &lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
-          cells="&lt;th>1&lt;/th>, The Matrix, 1999, 8.7, 784\,311, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5,  105\,111" />  
-        
-        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
-        
-        <jqm:table.JQMColumnToggle columnBtnText="Choose columns..." columnBtnTheme="b" 
+          cells="&lt;th>1&lt;/th>, The Matrix, 1999, 8.7, 784\,311, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5,  105\,111" />
+    
+        <h:Paragraph addStyleNames="{style.bevel}" />
+    
+        <ta:JQMColumnToggle columnBtnText="Choose columns..." columnBtnTheme="b"
           columnPopupTheme="a" backgroundTheme="a" headerTheme="a">
-          
-          <jqm:colTitle priority="2">
+    
+          <ta:colTitle priority="2">
             <g:Label text="Rank" addStyleNames="{style.inlineBlock}" />
-          </jqm:colTitle>
-          <jqm:colTitle>
-            <jqm:button.JQMButton ui:field="movieTitleBtn" text="Movie Title" inline="true" mini="true" />
-          </jqm:colTitle>
-          <jqm:colTitle priority="3">
+          </ta:colTitle>
+          <ta:colTitle>
+            <b:JQMButton ui:field="movieTitleBtn" text="Movie Title" inline="true" mini="true" />
+          </ta:colTitle>
+          <ta:colTitle priority="3">
             <g:Label text="Year" addStyleNames="{style.inlineBlock}" />
-          </jqm:colTitle>
-          <jqm:colTitle priority="1">
-            <jqm:html.Abbr text="Rating" title="Rotten Tomato Rating" />
-          </jqm:colTitle>
-          <jqm:colTitle priority="5">
-            <jqm:button.JQMButton text="Reviews" inline="true" mini="true" />
-          </jqm:colTitle>
-          
-          <jqm:cell asTh="true">
+          </ta:colTitle>
+          <ta:colTitle priority="1">
+            <h:Abbr text="Rating" title="Rotten Tomato Rating" />
+          </ta:colTitle>
+          <ta:colTitle priority="5">
+            <b:JQMButton text="Reviews" inline="true" mini="true" />
+          </ta:colTitle>
+    
+          <ta:cell asTh="true">
             <g:Label text="1" addStyleNames="{style.inlineBlock}" />
-          </jqm:cell>
-          <jqm:cell>
+          </ta:cell>
+          <ta:cell>
             <g:Label text="The Matrix" addStyleNames="{style.inlineBlock}" />
-          </jqm:cell>
-          <jqm:cell>
-            <jqm:button.JQMButton ui:field="movieYearBtn" text="1999" inline="true" mini="true" />
-          </jqm:cell>
-          <jqm:cell>
-            <jqm:button.JQMButton text="8.7" inline="true" mini="true" builtInIcon="STAR" />
-          </jqm:cell>
-          <jqm:cell>
+          </ta:cell>
+          <ta:cell>
+            <b:JQMButton ui:field="movieYearBtn" text="1999" inline="true" mini="true" />
+          </ta:cell>
+          <ta:cell>
+            <b:JQMButton text="8.7" inline="true" mini="true" builtInIcon="STAR" />
+          </ta:cell>
+          <ta:cell>
             <g:Anchor text="784,311" href="http://www.imdb.com/title/tt0133093/" />
-          </jqm:cell>
-          
-          <jqm:cell asTh="true">
+          </ta:cell>
+    
+          <ta:cell asTh="true">
             <g:Label text="2" addStyleNames="{style.inlineBlock}" />
-          </jqm:cell>
-          <jqm:cell>
+          </ta:cell>
+          <ta:cell>
             <g:Label text="Falling Down" addStyleNames="{style.inlineBlock}" />
-          </jqm:cell>
-          <jqm:cell>
-            <jqm:button.JQMButton text="1993" inline="true" mini="true" />
-          </jqm:cell>
-          <jqm:cell>
-            <jqm:button.JQMButton text="7.5" inline="true" mini="true" builtInIcon="STAR" />
-          </jqm:cell>
-          <jqm:cell>
+          </ta:cell>
+          <ta:cell>
+            <b:JQMButton text="1993" inline="true" mini="true" />
+          </ta:cell>
+          <ta:cell>
+            <b:JQMButton text="7.5" inline="true" mini="true" builtInIcon="STAR" />
+          </ta:cell>
+          <ta:cell>
             <g:Anchor text="105,111" href="http://www.imdb.com/title/tt0106856/" />
-          </jqm:cell>
-        </jqm:table.JQMColumnToggle>
-        
-        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
-        
-        <jqm:table.JQMColumnToggle 
+          </ta:cell>
+        </ta:JQMColumnToggle>
+    
+        <h:Paragraph addStyleNames="{style.bevel}" />
+    
+        <ta:JQMColumnToggle
           colNames="Store, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change"
           colGroups="1==, 3=Q1 2012=5, 3=Q2 2012=4, 3=Q3 2012=3, 3=Q4 2012=2, 3=YTD Totals=1"
           cells="&lt;th> Boston &lt;/th>,   2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%,
                  &lt;th> Chicago &lt;/th>,  2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%,
                  &lt;th> New York &lt;/th>, 2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%">
-        </jqm:table.JQMColumnToggle>
-        
-        <jqm:html.Paragraph addStyleNames="{style.bevel}" />
-        
+        </ta:JQMColumnToggle>
+    
+        <h:Paragraph addStyleNames="{style.bevel}" />
+    
         <e:JQMFilterable ui:field="fltr1" />
-        
-        <jqm:table.JQMColumnToggle dataFilter="#{fltr1.getFilterId}" 
-          columnBtnText="Choose columns..." columnBtnTheme="b" columnPopupTheme="a" 
+    
+        <ta:JQMColumnToggle dataFilter="#{fltr1.getFilterId}"
+          columnBtnText="Choose columns..." columnBtnTheme="b" columnPopupTheme="a"
           backgroundTheme="a" headerTheme="a"
           colNames="Store, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change"
           cells="&lt;th> Boston &lt;/th>,   2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%,
                  &lt;th> Chicago &lt;/th>,  2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%,
                  &lt;th> New York &lt;/th>, 2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%">
-          
-          <jqm:colGroup>
+    
+          <ta:colGroup>
             <g:Label addStyleNames="{style.inlineBlock}" />
-          </jqm:colGroup>
-          <jqm:colGroup colspan="3" priority="5">
-            <jqm:button.JQMButton text="Q1 2012" inline="true" mini="true" />
-          </jqm:colGroup>
-          <jqm:colGroup colspan="3" priority="4">
-            <jqm:button.JQMButton text="Q2 2012" inline="true" mini="true" />
-          </jqm:colGroup>
-          <jqm:colGroup colspan="3" priority="3">
-            <jqm:button.JQMButton text="Q3 2012" inline="true" mini="true" />
-          </jqm:colGroup>
-          <jqm:colGroup colspan="3" priority="2">
-            <jqm:button.JQMButton text="Q4 2012" inline="true" mini="true" />
-          </jqm:colGroup>
-          <jqm:colGroup colspan="3" priority="1">
-            <jqm:button.JQMButton text="YTD Totals" inline="true" mini="true" />
-          </jqm:colGroup>         
-        </jqm:table.JQMColumnToggle>
-        <h:Paragraph addStyleNames="{style.bevel}" />  
-        
-        <!-- /jqm:plugins.iscroll.IScrollPanel-->
-        </g:FlowPanel>
-        </g:FlowPanel>        
-        
-        <jqm:toolbar.JQMFooter fixed="true">
-            <jqm:widget>
-                <jqm:toolbar.JQMNavBar>
-                    <jqm:button>
-                        <jqm:button.JQMButton builtInIcon="LEFT" href="login" transition="NONE" text="Log Out"
-                                              ui:field="login"/>
-                    </jqm:button>
-                    <jqm:button>
-                        <jqm:button.JQMButton builtInIcon="SEARCH" href="searchRooms" transition="NONE" text="Search"
-                                              ui:field="searchButton"/>
-                    </jqm:button>
-                    <jqm:button>
-                        <jqm:button.JQMButton builtInIcon="ALERT" href="actions" transition="NONE" text="Actions"
-                                              ui:field="actionsButton"/>
-                    </jqm:button>
-                    <jqm:button>
-                        <jqm:button.JQMButton builtInIcon="GEAR" href="settings" transition="NONE" text="Settings"
-                                              ui:field="settingsButton"/>
-                    </jqm:button>
-                </jqm:toolbar.JQMNavBar>
-            </jqm:widget>
-        </jqm:toolbar.JQMFooter>
-        
-        <jqm:toolbar.JQMPanel panelId="testView1Panel">
-          <jqm:widget>
-            <h:Heading.H3>Test Page 1 Panel Widget</h:Heading.H3>
-          </jqm:widget>
-          <jqm:widget>
-            <b:JQMButton text="Close" builtInIcon="DELETE" rel="close" />
-          </jqm:widget>
-        </jqm:toolbar.JQMPanel>
-    </jqm:JQMPage>
+          </ta:colGroup>
+          <ta:colGroup colspan="3" priority="5">
+            <b:JQMButton text="Q1 2012" inline="true" mini="true" />
+          </ta:colGroup>
+          <ta:colGroup colspan="3" priority="4">
+            <b:JQMButton text="Q2 2012" inline="true" mini="true" />
+          </ta:colGroup>
+          <ta:colGroup colspan="3" priority="3">
+            <b:JQMButton text="Q3 2012" inline="true" mini="true" />
+          </ta:colGroup>
+          <ta:colGroup colspan="3" priority="2">
+            <b:JQMButton text="Q4 2012" inline="true" mini="true" />
+          </ta:colGroup>
+          <ta:colGroup colspan="3" priority="1">
+            <b:JQMButton text="YTD Totals" inline="true" mini="true" />
+          </ta:colGroup>
+        </ta:JQMColumnToggle>
+        <h:Paragraph addStyleNames="{style.bevel}" />
+      </g:FlowPanel>
+    </g:FlowPanel>
+    <!-- /jqm:plugins.iscroll.IScrollPanel-->
+
+    <t:JQMFooter fixed="true">
+      <t:widget>
+        <t:JQMNavBar iconPos="LEFT">
+          <t:button>
+            <b:JQMButton builtInIcon="LEFT" href="login" transition="NONE" text="Log In"
+              ui:field="login" mini="true" />
+          </t:button>
+          <t:button>
+            <b:JQMButton builtInIcon="SEARCH" href="searchRooms" transition="NONE" text="Search"
+              ui:field="searchButton" mini="true" />
+          </t:button>
+          <t:button>
+            <b:JQMButton builtInIcon="ALERT" href="actions" transition="NONE" text="Actions"
+              ui:field="actionsButton" mini="true" />
+          </t:button>
+          <t:button>
+            <b:JQMButton builtInIcon="GEAR" href="settings" transition="NONE" text="Settings"
+              ui:field="settingsButton" mini="true" />
+          </t:button>
+        </t:JQMNavBar>
+      </t:widget>
+    </t:JQMFooter>
+
+    <t:JQMPanel panelId="testView1Panel">
+      <t:widget>
+        <h:Heading.H3>Test Page 1 Panel Widget</h:Heading.H3>
+      </t:widget>
+      <t:widget>
+        <b:JQMButton text="Close" builtInIcon="DELETE" rel="close" />
+      </t:widget>
+    </t:JQMPanel>
+  </jqm:JQMPage>
 
 </ui:UiBinder>

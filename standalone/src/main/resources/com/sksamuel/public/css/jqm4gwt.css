@@ -122,13 +122,18 @@
 }
 
 .jqm4gwt-tabs-horizontal .jqm4gwt-tabs-header-list {
-    width: 25%;
+    width: 28%;
     display: inline-block;
     vertical-align: middle;
 }
 .jqm4gwt-tabs-horizontal .jqm4gwt-tabs-content {
-    width: 65%;
+    width: 66%;
     display: inline-block;
     vertical-align: middle;
     margin-left: 3%;
+    
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
 }

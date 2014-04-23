@@ -1,0 +1,5 @@
+@media (max-width: 27.95em) { /* https://github.com/jquery/jquery-mobile/issues/7337 */
+  .ui-field-contain .ui-controlgroup-horizontal .ui-controlgroup-controls {
+    display: block;
+  }
+}
