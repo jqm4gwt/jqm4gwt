@@ -285,18 +285,15 @@ public class JQMCommon {
         else widget.removeStyleName(STYLE_UI_SHADOW_ICON);
     }
 
-    public static boolean isShadow(Element elt) {
-        String s = getAttribute(elt, DATA_SHADOW);
-        if (s == null || s.isEmpty()) return true; // shadow is ON by default
-        return "true".equals(s);
-        // TODO switch to className: hasStyle(widget, STYLE_UI_SHADOW);
+    public static boolean isShadowEx(Element elt) {
+        return hasStyle(elt, STYLE_UI_SHADOW);
     }
 
-    public static boolean isShadow(Widget widget) {
-        return isShadow(widget.getElement());
+    public static boolean isShadowEx(Widget widget) {
+        return isShadowEx(widget.getElement());
     }
 
-    public static void setShadow(Element elt, boolean value) {
+    public static void setShadowEx(Element elt, boolean value) {
         if (value) {
             elt.addClassName(STYLE_UI_SHADOW);
             setAttribute(elt, DATA_SHADOW, null);
@@ -307,8 +304,8 @@ public class JQMCommon {
         }
     }
 
-    public static void setShadow(Widget widget, boolean value) {
-        setShadow(widget.getElement(), value);
+    public static void setShadowEx(Widget widget, boolean value) {
+        setShadowEx(widget.getElement(), value);
     }
 
     public static boolean isBtnActive(Element elt) {
@@ -415,7 +412,9 @@ public class JQMCommon {
     }
 
     public static String getThemeEx(Element elt, String prefix) {
-        return getAttribute(elt, DATA_THEME); // TODO switch to className
+        String s = getStyleStartsWith(elt, prefix);
+        if (s == null || s.isEmpty()) return null;
+        return s.substring(prefix.length());
     }
 
     public static String getThemeEx(Widget w, String prefix) {
@@ -451,7 +450,7 @@ public class JQMCommon {
     }
 
     public static boolean isInlineEx(Element elt, String className) {
-        return "true".equals(getAttribute(elt, DATA_INLINE)); // TODO switch to className
+        return hasStyle(elt, className);
     }
 
     public static boolean isInlineEx(Widget widget, String className) {
@@ -492,9 +491,7 @@ public class JQMCommon {
     }
 
     public static boolean isCornersEx(Element elt) {
-        String s = getAttribute(elt, DATA_CORNERS); // TODO switch to className
-        if (s == null || s.isEmpty()) return true; // corners are ON by default
-        return "true".equals(s);
+        return hasStyle(elt, STYLE_UI_CORNER_ALL);
     }
 
     public static boolean isCornersEx(Widget widget) {
@@ -549,7 +546,15 @@ public class JQMCommon {
     }
 
     public static DataIcon getIconEx(Element elt) {
-        return DataIcon.fromJqmValue(getAttribute(elt, DATA_ICON)); // TODO switch to className (and special processing for DataIcon.NONE)
+        String s = getStyleStartsWith(elt, STYLE_UI_ICON);
+        if (s != null && !s.isEmpty()) {
+            s = s.substring(STYLE_UI_ICON.length());
+            return DataIcon.fromJqmValue(s);
+        }
+        s = getAttribute(elt, DATA_ICON);
+        DataIcon icon = DataIcon.fromJqmValue(s);
+        if (DataIcon.NONE.equals(icon)) return icon; // NONE has no className, but stored in attribute
+        return null;
     }
 
     public static DataIcon getIconEx(Widget widget) {
@@ -582,9 +587,14 @@ public class JQMCommon {
     }
 
     public static IconPos getIconPosEx(Element elt, String prefix) {
-        return IconPos.fromJqmValue(getAttribute(elt, DATA_ICONPOS));
-        // TODO switch to className, but className is present only if STYLE_UI_ICON is defined,
+        String s = getStyleStartsWith(elt, prefix);
+        if (s != null && !s.isEmpty()) {
+            s = s.substring(prefix.length());
+            return IconPos.fromJqmValue(s);
+        }
+        // className is present only if STYLE_UI_ICON is defined,
         // so first check className and if empty then attribute
+        return IconPos.fromJqmValue(getAttribute(elt, DATA_ICONPOS));
     }
 
     public static IconPos getIconPosEx(Widget widget, String prefix) {
@@ -616,7 +626,7 @@ public class JQMCommon {
             } else {
                 String newClass = prefix + v;
                 if (oldClass != null && !newClass.equals(oldClass)) elt.removeClassName(oldClass);
-                elt.addClassName(newClass); // TODO move under if (!newClass.equals(oldClass)) when getIconPosEx() switched to className
+                elt.addClassName(newClass); // we have to be absolutely sure that newClass is added (attribute -> className case when icon added)
             }
             setAttribute(elt, DATA_ICONPOS, v);
         } else {
@@ -664,7 +674,7 @@ public class JQMCommon {
     }
 
     public static boolean isMiniEx(Element elt) {
-        return "true".equals(getAttribute(elt, DATA_MINI)); // TODO switch to className
+        return hasStyle(elt, STYLE_UI_MINI);
     }
 
     public static boolean isMiniEx(Widget widget) {

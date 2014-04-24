@@ -103,11 +103,11 @@ public class ImageLinkButton extends ImageLink implements HasInline<ImageLink>,
     }
 
     public boolean isShadow() {
-        return JQMCommon.isShadow(this);
+        return JQMCommon.isShadowEx(this);
     }
 
     /** Button will have shadow if true */
     public void setShadow(boolean shadow) {
-        JQMCommon.setShadow(this, shadow);
+        JQMCommon.setShadowEx(this, shadow);
     }
 }
