@@ -1,39 +1,19 @@
 package com.sksamuel.jqm4gwt.form;
 
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.SubmitButton;
-import com.sksamuel.jqm4gwt.DataIcon;
-import com.sksamuel.jqm4gwt.HasIcon;
-import com.sksamuel.jqm4gwt.HasText;
-import com.sksamuel.jqm4gwt.HasTransition;
-import com.sksamuel.jqm4gwt.IconPos;
-import com.sksamuel.jqm4gwt.JQMWidget;
-import com.sksamuel.jqm4gwt.Transition;
-import com.sksamuel.jqm4gwt.events.HasTapHandlers;
-import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
-import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
-import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
-import com.sksamuel.jqm4gwt.events.TapEvent;
-import com.sksamuel.jqm4gwt.events.TapHandler;
+import com.sksamuel.jqm4gwt.button.JQMButton;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 18 May 2011 04:17:45
- * 
+ *
  *         An implementation of a submit button. Submit buttons are tightly
  *         integrated with forms and have special semantics when added to a
  *         {@link JQMForm}
- * 
+ *
  */
-public class JQMSubmit extends JQMWidget implements HasText<JQMSubmit>, HasClickHandlers, HasTapHandlers, HasTransition<JQMSubmit>, HasIcon<JQMSubmit> {
+public class JQMSubmit extends JQMButton {
 
-	private final SubmitButton	submit;
-
-    /**
-     * Nullary constructor.
-     */
+    /** Nullary constructor. */
     public JQMSubmit() {
         this(null);
     }
@@ -42,128 +22,7 @@ public class JQMSubmit extends JQMWidget implements HasText<JQMSubmit>, HasClick
 	 * Create a {@link JQMSubmit} with the given label
 	 */
 	public JQMSubmit(String text) {
-
-		submit = new SubmitButton(text);
-		initWidget(submit);
-
-		setStyleName("jqm4gwt-submit");
-		setDataRole("button");
+		super(new SubmitButton(text));
+		addStyleName("jqm4gwt-submit");
 	}
-
-	@Override
-	public HandlerRegistration addClickHandler(ClickHandler handler) {
-		return submit.addClickHandler(handler);
-	}
-
-	@Override
-	public HandlerRegistration addTapHandler(TapHandler handler) {
-        // this is not a native browser event so we will have to manage it via JS
-        return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
-			@Override
-			public int getHandlerCountForWidget(Type<?> type) {
-				return getHandlerCount(type);
-			}
-        }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
-	}
-	
-	@Override
-	public String getText() {
-		return submit.getText();
-	}
-
-	@Override
-	public void setText(String text) {
-		submit.setText(text);
-	}
-
-    @Override
-    public JQMSubmit withText(String text) {
-        setText(text);
-        return this;
-    }
-
-    @Override
-    public Transition getTransition() {
-        String attr = getElement().getAttribute("data-transition");
-        if (attr == null)
-            return null;
-        return Transition.valueOf(attr);
-    }
-
-    @Override
-    public void setTransition(Transition transition) {
-        if (transition != null)
-            setAttribute("data-transition", transition.getJQMValue());
-        else
-            removeAttribute("data-transition");
-    }
-
-    @Override
-    public JQMSubmit withTransition(Transition transition) {
-        setTransition(transition);
-        return this;
-    }
-
-    @Override
-    public JQMSubmit removeIcon() {
-        getElement().removeAttribute("data-icon");
-        return this;
-    }
-
-    @Override
-    public void setBuiltInIcon(DataIcon icon) {
-        if (icon == null)
-            removeIcon();
-        else
-            setIconURL(icon.getJqmValue());
-    }
-
-    @Override
-    public void setIconURL(String src) {
-        if (src == null)
-            removeIcon();
-        else
-            getElement().setAttribute("data-icon", src);
-    }
-
-    @Override
-    public JQMSubmit withBuiltInIcon(DataIcon icon) {
-        setBuiltInIcon(icon);
-        return this;
-    }
-
-    @Override
-    public JQMSubmit withIconURL(String src) {
-        setIconURL(src);
-        return this;
-    }
-
-    @Override
-    public IconPos getIconPos() {
-        String string = getAttribute("data-iconpos");
-        return string == null ? null : IconPos.valueOf(string);
-    }
-
-    /**
-     * Sets the position of the icon. If you desire an icon only button then
-     * set the position to IconPos.NOTEXT
-     */
-    @Override
-    public void setIconPos(IconPos pos) {
-        if (pos == null)
-            getElement().removeAttribute("data-iconpos");
-        else
-            getElement().setAttribute("data-iconpos", pos.getJqmValue());
-    }
-
-    /**
-     * Sets the position of the icon. If you desire an icon only button then
-     * set the position to IconPos.NOTEXT
-     */
-    @Override
-    public JQMSubmit withIconPos(IconPos pos) {
-        setIconPos(pos);
-        return this;
-    }
-
 }
