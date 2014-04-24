@@ -15,8 +15,8 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
@@ -40,9 +40,9 @@ import com.sksamuel.jqm4gwt.Transition;
 import com.sksamuel.jqm4gwt.events.HasTapHandlers;
 import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
-import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
 import com.sksamuel.jqm4gwt.events.TapEvent;
 import com.sksamuel.jqm4gwt.events.TapHandler;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 14:02:24
@@ -196,10 +196,22 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
             withTransition(t);
     }
 
+    public static void initEltAsButton(Element elt) {
+        //JQMCommon.setDataRole("button"); - performance and buttonMarkup() is deprecated as of 1.4 and will be removed in 1.5
+
+        JQMCommon.setDataRole(elt, null);
+        elt.addClassName("ui-btn");
+        String tag = elt.getTagName();
+        if (tag == null || !tag.equals("BUTTON")) JQMCommon.setRole(elt, "button");
+        // TODO - defaults should be set based on $.fn.buttonMarkup.defaults
+        JQMCommon.setShadow(elt, true);
+        JQMCommon.setCornersEx(elt, true);
+    }
+
     protected JQMButton(Widget widget) {
         initWidget(widget);
         setStyleName("jqm4gwt-button");
-        setDataRole("button");
+        initEltAsButton(getElement());
         setId();
     }
 
@@ -402,6 +414,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     @Override
     public void setBuiltInIcon(DataIcon icon) {
         JQMCommon.setIconEx(this, icon);
+        JQMCommon.invalidateIconPosEx(getElement(), JQMCommon.STYLE_UI_BTN_ICONPOS);
     }
 
     @Override

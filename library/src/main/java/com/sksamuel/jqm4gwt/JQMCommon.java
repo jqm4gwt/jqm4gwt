@@ -285,23 +285,30 @@ public class JQMCommon {
         else widget.removeStyleName(STYLE_UI_SHADOW_ICON);
     }
 
-    public static boolean isShadow(Widget widget) {
-        Element elt = widget.getElement();
+    public static boolean isShadow(Element elt) {
         String s = getAttribute(elt, DATA_SHADOW);
         if (s == null || s.isEmpty()) return true; // shadow is ON by default
         return "true".equals(s);
         // TODO switch to className: hasStyle(widget, STYLE_UI_SHADOW);
     }
 
-    public static void setShadow(Widget widget, boolean value) {
+    public static boolean isShadow(Widget widget) {
+        return isShadow(widget.getElement());
+    }
+
+    public static void setShadow(Element elt, boolean value) {
         if (value) {
-            widget.addStyleName(STYLE_UI_SHADOW);
-            setAttribute(widget.getElement(), DATA_SHADOW, null);
+            elt.addClassName(STYLE_UI_SHADOW);
+            setAttribute(elt, DATA_SHADOW, null);
         }
         else {
-            widget.removeStyleName(STYLE_UI_SHADOW);
-            setAttribute(widget.getElement(), DATA_SHADOW, "false");
+            elt.removeClassName(STYLE_UI_SHADOW);
+            setAttribute(elt, DATA_SHADOW, "false");
         }
+    }
+
+    public static void setShadow(Widget widget, boolean value) {
+        setShadow(widget.getElement(), value);
     }
 
     public static boolean isBtnActive(Element elt) {
@@ -495,9 +502,13 @@ public class JQMCommon {
     }
 
     public static void setCornersEx(Element elt, boolean corners) {
-        if (corners) elt.addClassName(STYLE_UI_CORNER_ALL);
-        else elt.removeClassName(STYLE_UI_CORNER_ALL);
-        setAttribute(elt, DATA_CORNERS, String.valueOf(corners));
+        if (corners) {
+            elt.addClassName(STYLE_UI_CORNER_ALL);
+            setAttribute(elt, DATA_CORNERS, null);
+        } else {
+            elt.removeClassName(STYLE_UI_CORNER_ALL);
+            setAttribute(elt, DATA_CORNERS, "false");
+        }
     }
 
     public static void setCornersEx(Widget widget, boolean corners) {
@@ -511,7 +522,7 @@ public class JQMCommon {
     }
 
     public static void setStyleIcon(Element elt, DataIcon icon) {
-        if (icon == null) {
+        if (icon == null || DataIcon.NONE.equals(icon)) {
             removeStylesStartsWith(elt, STYLE_UI_ICON);
             return;
         }
@@ -538,7 +549,7 @@ public class JQMCommon {
     }
 
     public static DataIcon getIconEx(Element elt) {
-        return DataIcon.fromJqmValue(getAttribute(elt, DATA_ICON)); // TODO switch to className
+        return DataIcon.fromJqmValue(getAttribute(elt, DATA_ICON)); // TODO switch to className (and special processing for DataIcon.NONE)
     }
 
     public static DataIcon getIconEx(Widget widget) {
@@ -571,11 +582,27 @@ public class JQMCommon {
     }
 
     public static IconPos getIconPosEx(Element elt, String prefix) {
-        return IconPos.fromJqmValue(getAttribute(elt, DATA_ICONPOS)); // TODO switch to className
+        return IconPos.fromJqmValue(getAttribute(elt, DATA_ICONPOS));
+        // TODO switch to className, but className is present only if STYLE_UI_ICON is defined,
+        // so first check className and if empty then attribute
     }
 
     public static IconPos getIconPosEx(Widget widget, String prefix) {
         return getIconPosEx(widget.getElement(), prefix);
+    }
+
+    public static void invalidateIconPosEx(Element elt, String prefix) {
+        IconPos pos = getIconPosEx(elt, prefix);
+        if (pos == null) return;
+        String clazz = prefix + pos.getJqmValue();
+        String v = pos.getJqmValue();
+        String icon = getStyleStartsWith(elt, STYLE_UI_ICON);
+        if (icon == null || icon.isEmpty()) {
+            elt.removeClassName(clazz);
+        } else {
+            elt.addClassName(clazz);
+        }
+        setAttribute(elt, DATA_ICONPOS, v);
     }
 
     public static void setIconPosEx(Element elt, IconPos iconPos, String prefix) {
@@ -583,9 +610,14 @@ public class JQMCommon {
         String oldClass = old != null ? prefix + old.getJqmValue() : null;
         if (iconPos != null) {
             String v = iconPos.getJqmValue();
-            String newClass = prefix + v;
-            if (oldClass != null && !newClass.equals(oldClass)) elt.removeClassName(oldClass);
-            elt.addClassName(newClass); // TODO move under if (!newClass.equals(oldClass)) when getIconPosEx() switched to className
+            String icon = getStyleStartsWith(elt, STYLE_UI_ICON);
+            if (icon == null || icon.isEmpty()) {
+                if (oldClass != null) elt.removeClassName(oldClass);
+            } else {
+                String newClass = prefix + v;
+                if (oldClass != null && !newClass.equals(oldClass)) elt.removeClassName(oldClass);
+                elt.addClassName(newClass); // TODO move under if (!newClass.equals(oldClass)) when getIconPosEx() switched to className
+            }
             setAttribute(elt, DATA_ICONPOS, v);
         } else {
             if (oldClass != null) elt.removeClassName(oldClass);

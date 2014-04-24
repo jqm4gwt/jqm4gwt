@@ -5,6 +5,7 @@ import com.sksamuel.jqm4gwt.HasInline;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasTheme;
 import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.button.JQMButton;
 
 /**
  * Image with look and feel as button, to clearly indicate users on touch devices that it's clickable.
@@ -20,7 +21,7 @@ public class ImageLinkButton extends ImageLink implements HasInline<ImageLink>,
     @Override
     protected void initA() {
         super.initA();
-        JQMCommon.setDataRole(a, "button");
+        JQMButton.initEltAsButton(a);
         a.addClassName(COMPACT_BTN);
     }
 
