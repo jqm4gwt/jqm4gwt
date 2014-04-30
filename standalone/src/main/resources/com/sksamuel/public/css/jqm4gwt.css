@@ -131,8 +131,18 @@
     display: inline-block;
     vertical-align: middle;
     margin-left: 3%;
-    
+
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+.jqm4gwt-table-img-cell td.img-only,
+.jqm4gwt-table-img-cell th.img-only {
+  padding: 0;
+  text-align: center;
+}
+.jqm4gwt-table-img-cell td.img-only > img,
+.jqm4gwt-table-img-cell th.img-only > img {
+  vertical-align: middle;
 }
