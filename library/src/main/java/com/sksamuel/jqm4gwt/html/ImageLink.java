@@ -4,6 +4,8 @@ import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -61,6 +63,7 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
         setStyleName(img, JQM4GWT_IMAGE_LINK_IMG);
         setImageResizePriority(Orientation.HORIZONTAL);
         img.getStyle().setVerticalAlign(VerticalAlign.TOP); // eliminates excessive/strange margin at the bottom
+        img.getStyle().setDisplay(Display.NONE);
     }
 
     public ImageLink(String href, String src) {
@@ -90,15 +93,18 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
     private void refreshPositioning() {
         String src = getSrc();
         String text = getText();
+        Style imgSt = img.getStyle();
         if (src == null || src.isEmpty()) {
-            img.getStyle().setVerticalAlign(VerticalAlign.TOP);
-            img.getStyle().clearMarginRight();
+            imgSt.setVerticalAlign(VerticalAlign.TOP);
+            imgSt.clearMarginRight();
+            imgSt.setDisplay(Display.NONE);
             if (txt != null) txt.getStyle().setVerticalAlign(VerticalAlign.TOP);
         } else {
-            img.getStyle().setVerticalAlign(VerticalAlign.MIDDLE);
+            imgSt.setVerticalAlign(VerticalAlign.MIDDLE);
+            imgSt.clearDisplay();
             if (txt != null) txt.getStyle().setVerticalAlign(VerticalAlign.MIDDLE);
-            if (text == null || text.isEmpty()) img.getStyle().clearMarginRight();
-            else img.getStyle().setMarginRight(0.3d, Unit.EM);
+            if (text == null || text.isEmpty()) imgSt.clearMarginRight();
+            else imgSt.setMarginRight(0.3d, Unit.EM);
         }
     }
 

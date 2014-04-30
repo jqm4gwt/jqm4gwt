@@ -450,6 +450,9 @@
         <h:ImageLinkButton href="http://cnn.com" inline="true" corners="false"
           mini="true" compact="false" shadow="false"
           text="Image link as mini button (text only, no shadow)" />
+        
+        <h:ImageLinkButton inline="true" corners="false"
+          mini="true" compact="false" shadow="false" title="No image, No text" />  
     
         <h:Legend text="legendText"/>
         <h:ListWidget.Ordered>
