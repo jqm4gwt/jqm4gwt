@@ -11,6 +11,7 @@ import java.util.Set;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -50,11 +51,11 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
     private static final String TOGGLE = "columntoggle";
     private static final String REFLOW = "reflow";
 
+    private static final String IMG_ONLY = "img-only";
+
     // See http://stackoverflow.com/a/2709855
-    @SuppressWarnings("unused")
     private static final String COMMA_SPLIT = "(?<!\\\\),";
 
-    @SuppressWarnings("unused")
     private static final String BACKSLASH_COMMA = "\\\\,";
 
     private final ComplexPanel tHead;
@@ -349,6 +350,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
         if (col == null) return null;
         setColPriority(col, priority);
         col.getElement().setInnerHTML(title);
+        applyImgOnly(col);
         return col;
     }
 
@@ -408,6 +410,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
         setColPriority(col, grp.priority);
         col.getElement().setInnerHTML(addTh ? removeTh(grp.title) : grp.title);
         if (grp.colspan > 1) JQMCommon.setAttribute(col, "colspan", String.valueOf(grp.colspan));
+        applyImgOnly(col);
         return col;
     }
 
@@ -427,6 +430,31 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
         return s.substring("<th>".length(), s.length() - "</th>".length()).trim();
     }
 
+    private static boolean isImgOnly(Element elt) {
+        if (elt == null) return false;
+        String s = elt.getInnerHTML();
+        if (s == null || s.isEmpty()) return false;
+        int p = s.indexOf('<');
+        if (p == -1) return false;
+        int endP = p + 1 + ImageElement.TAG.length();
+        String t = s.substring(p + 1, endP);
+        if (!ImageElement.TAG.equalsIgnoreCase(t)) return false;
+        for (int i = endP; i < s.length(); i++) {
+            if (s.charAt(i) == '>') {
+                p = s.indexOf('<', i + 1);
+                return p == -1;
+            }
+        }
+        return false;
+    }
+
+    private static void applyImgOnly(Widget w) {
+        if (w == null) return;
+        Element elt = w.getElement();
+        if (isImgOnly(elt)) elt.addClassName(IMG_ONLY);
+        else elt.removeClassName(IMG_ONLY);
+    }
+
     private void addToBody(String cell, int index) {
         if (cell == null || index < 0 || getNumOfCols() <= 0) return;
         int row = index / getNumOfCols();
@@ -442,6 +470,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
         } else {
             c.getElement().setInnerHTML(cell);
         }
+        applyImgOnly(c);
     }
 
     private void addToBody(Widget w, int index, boolean addTh) {
@@ -454,6 +483,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
         if (c == null) return;
         c.clear();
         if (w != null) c.add(w);
+        applyImgOnly(c);
     }
 
     private static boolean isTag(String tag, Element elt) {
@@ -567,7 +597,6 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
         refreshBody();
     }
 
-    @SuppressWarnings("unused")
     private void setDataObj(Map<Widget, Boolean> lst) {
         dataObj = lst;
         dataStr = null;
