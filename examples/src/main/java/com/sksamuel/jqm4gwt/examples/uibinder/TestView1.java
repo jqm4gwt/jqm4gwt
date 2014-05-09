@@ -40,6 +40,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMSelect.Option;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
 import com.sksamuel.jqm4gwt.html.Paragraph;
+import com.sksamuel.jqm4gwt.layout.JQMTable;
 import com.sksamuel.jqm4gwt.list.JQMList;
 import com.sksamuel.jqm4gwt.list.JQMListItem;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox;
@@ -293,6 +294,15 @@ public class TestView1 {
 
     @UiField
     JQMList cityList;
+
+    @UiField
+    JQMTable percentCols;
+
+    @UiField
+    JQMButton hidePctColBtn;
+
+    @UiField
+    JQMButton showPctColBtn;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -635,6 +645,16 @@ public class TestView1 {
         numsList.addOption("13", "Thirteen");
         numsList.refresh();
         numsList.refreshFilter();
+    }
+
+    @UiHandler("hidePctColBtn")
+    void hidePctColBtnClick(ClickEvent e) {
+        percentCols.hidePercentageColumns(1, 2);
+    }
+
+    @UiHandler("showPctColBtn")
+    void showPctColBtnClick(ClickEvent e) {
+        percentCols.hidePercentageColumns();
     }
 
 

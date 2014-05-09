@@ -494,12 +494,16 @@
           <ly:cell><h:Span text="spanText in Table Row#2 Col#2" /></ly:cell>
         </ly:JQMTable>
         <h:Paragraph addStyleNames="{style.bevel}" />
-        <ly:JQMTable percentageColumns="10,20,40,30">
+        <ly:JQMTable ui:field="percentCols" percentageColumns="10,20,40,30">
           <ly:cell><h:Span text="10%" addStyleNames="{style.red} {style.centerText}" /></ly:cell>
           <ly:cell><h:Span text="20%" addStyleNames="{style.green} {style.centerText}" /></ly:cell>
           <ly:cell><h:Span text="40%" addStyleNames="{style.blue} {style.centerText}" /></ly:cell>
           <ly:cell><h:Span text="30%" addStyleNames="{style.yellow} {style.centerText}" /></ly:cell>
         </ly:JQMTable>
+        <g:FlowPanel>
+          <b:JQMButton ui:field="hidePctColBtn" text="Hide cols 1,2" inline="true" mini="true" />
+          <b:JQMButton ui:field="showPctColBtn" text="Show all cols" inline="true" mini="true" />
+        </g:FlowPanel>
         <h:Paragraph addStyleNames="{style.bevel}" />
         <e:JQMFilterable ui:field="fltr2" />
         <jqm:list.JQMList.Ordered dataFilter="#{fltr2.getFilterId}">

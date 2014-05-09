@@ -296,6 +296,72 @@ public class JQMTable extends JQMWidget {
     }
 
     /**
+     * @param colIndexes - hides specified columns and proportionally spreads their space
+     * to visible columns. If no columns specified, makes all columns visible.
+     */
+    public void hidePercentageColumns(Integer... colIndexes) {
+        if (percentage == null) return;
+        if (colIndexes == null || colIndexes.length == 0) {
+            updateCellPercents();
+            return;
+        }
+        int[] arr = new int[percentage.length];
+        System.arraycopy(percentage, 0, arr, 0, percentage.length);
+        int avl = 0;
+        for (int i = 0; i < colIndexes.length; i++) {
+            Integer idx = colIndexes[i];
+            if (idx == null || idx < 0 || idx >= arr.length) continue;
+            avl += arr[idx];
+            arr[idx] = 0;
+        }
+        if (avl == 0) return; // nothing to spread
+        int minVal = Integer.MAX_VALUE;
+        int minIdx = -1;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] <= 0) continue;
+            if (arr[i] < minVal) {
+                minVal = arr[i];
+                minIdx = i;
+            }
+        }
+        if (minIdx >= 0) {
+            double[] coeffs = new double[arr.length];
+            double coeffsSum = 0;
+            for (int i = 0; i < arr.length; i++) {
+                if (arr[i] <= 0) {
+                    coeffs[i] = 0;
+                } else if (arr[i] == minVal) {
+                    coeffs[i] = 1;
+                } else {
+                    coeffs[i] = ((double) arr[i]) / ((double) minVal);
+                }
+                coeffsSum += coeffs[i];
+            }
+            if (coeffsSum > 0) {
+                double oneChunk = avl / coeffsSum;
+                long incSum = 0;
+                for (int i = 0; i < arr.length; i++) {
+                    if (arr[i] <= 0) continue;
+                    double v = oneChunk * coeffs[i];
+                    long incV = Math.round(Math.floor(v));
+                    incSum += incV;
+                    arr[i] += incV;
+                }
+                if (incSum < avl && minIdx >= 0) {
+                    arr[minIdx] += avl - incSum;
+                }
+            }
+        }
+        int[] saved = percentage;
+        percentage = arr;
+        try {
+            updateCellPercents();
+        } finally {
+            percentage = saved;
+        }
+    }
+
+    /**
      * Sets the style sheet of the container element to the appropriate
      * classname for the given number of columns.
      */
