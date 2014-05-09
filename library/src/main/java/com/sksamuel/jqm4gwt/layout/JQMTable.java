@@ -1,8 +1,12 @@
 package com.sksamuel.jqm4gwt.layout;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -62,6 +66,9 @@ public class JQMTable extends JQMWidget {
         setColumns(columns);
     }
 
+    private static class JQMTableCell extends FlowPanel {
+    }
+
     /**
      * Add the given {@link Widget} into the next available cell. This call
      * will wrap to a new row if the existing row is already filled.
@@ -78,18 +85,35 @@ public class JQMTable extends JQMWidget {
         int size = getElement().getChildCount();
         String klass = getCellStyleName(size);
 
-        FlowPanel widgetWrapper = new FlowPanel();
-        widgetWrapper.getElement().setId(Document.get().createUniqueId());
-        removeAllCellStyles(widgetWrapper.getElement());
-        widgetWrapper.getElement().addClassName(klass);
-        prepareCellPercentStyle(size, widgetWrapper);
-        widgetWrapper.add(widget);
+        JQMTableCell cell = new JQMTableCell();
+        Element cellElt = cell.getElement();
+        cellElt.setId(Document.get().createUniqueId());
+        removeAllCellStyles(cellElt);
+        cellElt.addClassName(klass);
+        prepareCellPercentStyle(size, cell);
+        cell.add(widget);
 
-        flow.add(widgetWrapper);
+        flow.add(cell);
 
-        JQMContext.render(widgetWrapper.getElement().getId());
+        JQMContext.render(cell.getElement().getId());
 
-        return widgetWrapper;
+        return cell;
+    }
+
+    /**
+     * @return - index of column, which contains this widget,
+     *           or -1 if this widget doesn't belong/related to the current table.
+     */
+    public int findParentColumn(Widget widget) {
+        if (widget == null) return -1;
+        Widget w = widget.getParent();
+        while (w != null) {
+            if (w instanceof JQMTableCell) {
+                return flow.getWidgetIndex(w);
+            }
+            w = w.getParent();
+        }
+        return -1;
     }
 
     /**
@@ -129,6 +153,8 @@ public class JQMTable extends JQMWidget {
             int column = pos % columns;
             st.setFloat(Style.Float.LEFT);
             st.setWidth(percentage[column], Unit.PCT);
+            if (percentage[column] == 0) st.setDisplay(Display.NONE);
+            else st.clearDisplay();
         }
     }
 
@@ -359,6 +385,34 @@ public class JQMTable extends JQMWidget {
         } finally {
             percentage = saved;
         }
+    }
+
+    public void showAllPercentageColumns() {
+        hidePercentageColumns();
+    }
+
+    public void hideAllPercentageColumns() {
+        showPercentageColumns();
+    }
+
+    /**
+     * @param colIndexes - shows only specified columns and proportionally spreads hidden columns space
+     * to these columns. If no columns specified, makes all columns hidden.
+     */
+    public void showPercentageColumns(Integer... colIndexes) {
+        if (percentage == null) return;
+        if (colIndexes == null || colIndexes.length == 0) {
+            Integer[] arr = new Integer[percentage.length];
+            for (int i = 0; i < percentage.length; i++) {
+                arr[i] = i;
+            }
+            hidePercentageColumns(arr);
+            return;
+        }
+        Set<Integer> hideCols = new HashSet<Integer>(percentage.length);
+        for (int i = 0; i < percentage.length; i++) hideCols.add(i);
+        for (int i = 0; i < colIndexes.length; i++) hideCols.remove(colIndexes[i]);
+        hidePercentageColumns(hideCols.toArray(new Integer[0]));
     }
 
     /**
