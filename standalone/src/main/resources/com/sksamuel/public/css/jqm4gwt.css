@@ -63,6 +63,13 @@
   zoom: 1;
 }
 
+.jqm4gwt-error {
+  background-color: #FFEC98;
+  color: red;
+  display: block;
+  padding-left: 10px;
+}
+
 .jqm4gwt-scrollable-page-content {
   position: relative;
 }
