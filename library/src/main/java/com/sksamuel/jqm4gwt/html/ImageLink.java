@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt.html;
 
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
@@ -14,6 +15,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasEnabled;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMCommon;
@@ -176,6 +178,16 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
     @Override
     public void setEnabled(boolean enabled) {
         JQMCommon.setEnabled(this, enabled);
+    }
+
+    /**
+     * Gives realistic visibility (parent chain considered, ...)
+     * If you need logical visibility of this particular widget,
+     * use {@link UIObject#isVisible(Element elem)}
+     */
+    @Override
+    public boolean isVisible() {
+        return super.isVisible() && JQMCommon.isVisible(this);
     }
 
     @Override
