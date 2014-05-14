@@ -240,6 +240,38 @@ public class JQMCommon {
         }
     }
 
+    /**
+     * @param attrs - comma separated attr=value pairs. If specified attr= then attr will be removed.
+     */
+    public static void setAttributes(Element elt, String attrs) {
+        if (elt == null || attrs == null || attrs.isEmpty()) return;
+        String[] arr = attrs.split(",");
+        for (String i : arr) {
+            String s = i.trim();
+            if (s.isEmpty()) continue;
+            int p = s.indexOf('=');
+            if (p == -1) continue;
+            String attr = s.substring(0, p).trim();
+            if (attr.isEmpty()) continue;
+            String val = s.substring(p + 1).trim();
+            if (val.isEmpty()) elt.removeAttribute(attr);
+            else elt.setAttribute(attr, val);
+        }
+    }
+
+    /**
+     * @param attrs - comma separated attribute names.
+     */
+    public static void removeAttributes(Element elt, String attrs) {
+        if (elt == null || attrs == null || attrs.isEmpty()) return;
+        String[] arr = attrs.split(",");
+        for (String i : arr) {
+            String s = i.trim();
+            if (s.isEmpty()) continue;
+            elt.removeAttribute(s);
+        }
+    }
+
     public static boolean isEnabled(Widget widget) {
         return !hasStyle(widget, STYLE_UI_DISABLED);
     }

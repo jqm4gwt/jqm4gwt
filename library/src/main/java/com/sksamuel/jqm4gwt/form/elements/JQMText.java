@@ -321,6 +321,14 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasF
         return input.getName();
     }
 
+    public void setInputAttrs(String attrs) {
+        JQMCommon.setAttributes(input.getElement(), attrs);
+    }
+
+    public void removeInputAttrs(String attrs) {
+        JQMCommon.removeAttributes(input.getElement(), attrs);
+    }
+
     @Override
     public boolean isClearButton() {
         return JQMCommon.isClearButton(input);
