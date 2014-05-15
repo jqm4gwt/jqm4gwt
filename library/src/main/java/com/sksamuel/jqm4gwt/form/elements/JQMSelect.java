@@ -106,9 +106,9 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     private static final String SELECT_STYLENAME = "jqm4gwt-select";
 
-    private final ListBox select;
+    protected final ListBox select;
 
-    private final FormLabel label;
+    protected final FormLabel label;
 
     private boolean valueChangeHandlerInitialized;
 
@@ -120,7 +120,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     /**
-     * Creates a new {@link JQMSelect}with the given label text.
+     * Creates a new {@link JQMSelect} with the given label text.
      */
     public JQMSelect(String text) {
         String id = Document.get().createUniqueId();

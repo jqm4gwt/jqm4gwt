@@ -153,3 +153,23 @@
 .jqm4gwt-table-img-cell th.img-only > img {
   vertical-align: middle;
 }
+
+/* jqm4gwt-select-filterable */
+.ui-select-filterable.ui-selectmenu.ui-popup .ui-input-search {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+.ui-select-filterable.ui-selectmenu.ui-popup .ui-selectmenu-list li.ui-first-child .ui-btn {
+  border-top-width: 1px;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.ui-select-filterable.ui-selectmenu.ui-dialog .ui-content {
+  padding-top: 0;
+}
+.ui-select-filterable.ui-selectmenu.ui-dialog .ui-selectmenu-list {
+  margin-top: 0;
+}
+.ui-select-filterable.ui-selectmenu.ui-dialog .ui-header {
+  border-bottom-width: 1px;
+}

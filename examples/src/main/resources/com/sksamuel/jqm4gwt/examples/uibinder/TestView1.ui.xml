@@ -253,6 +253,15 @@
             <e:option><e:JQMSelect.Option text="Nine" value="9" /></e:option>
           </e:JQMSelect>
           <h:Paragraph />
+          <e:JQMSelectFilterable text="Filterable inside Select/Dropdown">
+            <e:option><e:JQMSelect.Option text="San Francisco" value="SFO" /></e:option>
+            <e:option><e:JQMSelect.Option text="Los Angeles" value="LAX" /></e:option>
+            <e:option><e:JQMSelect.Option text="Vancouver" value="YVR" /></e:option>
+            <e:option><e:JQMSelect.Option text="Toronto" value="YYZ" /></e:option>
+            <e:option><e:JQMSelect.Option text="Dnepropetrovsk" value="DNK" /></e:option>
+            <e:option><e:JQMSelect.Option text="San Jose" value="SJC" /></e:option>
+          </e:JQMSelectFilterable>
+          <h:Paragraph />
           <h:Heading.H4 text="Filter Select/Dropdown Reveal"
             addStyleNames="{style.inlineBlock} {style.marginRight10}" />
           <b:JQMButton ui:field="addFruitsBtn" text="Add fruits" inline="true" />
