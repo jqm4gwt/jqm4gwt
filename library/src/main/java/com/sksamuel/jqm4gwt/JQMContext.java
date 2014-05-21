@@ -215,6 +215,7 @@ public class JQMContext {
         var slen = sheets.length;
         for (var i = 0; i < slen; i++) {
             var rules = $wnd.document.styleSheets[i].cssRules;
+            if (rules === undefined || rules === null) { continue; }
             var rlen = rules.length;
             for (var j = 0; j < rlen; j++) {
                 var selectorText = rules[j].selectorText;

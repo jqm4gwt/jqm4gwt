@@ -34,6 +34,7 @@ import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContainer;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMPage;
+import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.Transition;
@@ -631,11 +632,37 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     public void setAlwaysHover(boolean value) {
         if (alwaysHover == value) return;
         alwaysHover = value;
-        if (alwaysHover) {
-            prepareHoverStyle();
-            applyHoverStyle();
-        } else {
-            removeHoverStyle();
+        checkAlwaysHover();
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        Widget p = getParent();
+        while (p != null) {
+            if (p instanceof JQMPage) {
+                ((JQMPage) p).addPageHandler(new JQMPageEvent.DefaultHandler() {
+                    @Override
+                    public void onShow(JQMPageEvent event) {
+                        super.onShow(event);
+                        checkAlwaysHover();
+                    }
+                });
+                break;
+            }
+            p = p.getParent();
+        }
+        if (!(p instanceof JQMPage)) checkAlwaysHover();
+    }
+
+    private void checkAlwaysHover() {
+        if (isAttached()) {
+            if (alwaysHover) {
+                prepareHoverStyle();
+                applyHoverStyle();
+            } else {
+                removeHoverStyle();
+            }
         }
     }
 
@@ -701,7 +728,9 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     @Override
     public String getTheme() {
-        return JQMCommon.getThemeEx(this, JQMCommon.STYLE_UI_BTN);
+        return JQMCommon.getThemeEx(this, JQMCommon.STYLE_UI_BTN,
+                /*excludes:*/ JQMCommon.STYLE_UI_BTN_INLINE, JQMCommon.STYLE_UI_BTN_ICONPOS,
+                JQMCommon.STYLE_UI_BTN_ACTIVE);
     }
 
     @Override

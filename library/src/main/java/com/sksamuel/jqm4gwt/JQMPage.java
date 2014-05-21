@@ -253,12 +253,14 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     @Override
     protected void onLoad() {
+        super.onLoad();
         bindLifecycleEvents(this, getId());
     }
 
     @Override
     protected void onUnload() {
     	unbindLifecycleEvents(getId());
+    	super.onUnload();
     }
 
     @Override

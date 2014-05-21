@@ -18,14 +18,13 @@ public class JQMCommon {
     public static final String STYLE_UI_BTN = "ui-btn-";
     public static final String STYLE_UI_BTN_INLINE = "ui-btn-inline";
     public static final String STYLE_UI_BTN_ICONPOS = "ui-btn-icon-";
+    public static final String STYLE_UI_BTN_ACTIVE = "ui-btn-active";
 
     private static final String STYLE_UI_DISABLED = "ui-state-disabled";
 
     // TODO: Deprecated in 1.4, quite serious refactoring is needed to switch to ui-hidden-accessible
     // See https://github.com/jquery/jquery-mobile/issues/6405
     private static final String STYLE_UI_HIDE_LABEL = "ui-hide-label";
-
-    private static final String STYLE_UI_BTN_ACTIVE = "ui-btn-active";
     private static final String STYLE_UI_SHADOW = "ui-shadow";
     private static final String STYLE_UI_CORNER_ALL = "ui-corner-all";
     private static final String STYLE_UI_MINI = "ui-mini";
@@ -443,14 +442,16 @@ public class JQMCommon {
         setTheme(widget, themeName);
     }
 
-    public static String getThemeEx(Element elt, String prefix) {
-        String s = getStyleStartsWith(elt, prefix);
+    public static String getThemeEx(Element elt, String prefix, String... excludes) {
+        String s = getStyleStartsWith(elt, prefix, excludes);
         if (s == null || s.isEmpty()) return null;
-        return s.substring(prefix.length());
+        s = s.substring(prefix.length());
+        // check length to prevent conflict with ui-btn-inline, ... in case of forgotten excludes
+        return s.length() > 1 ? null : s;
     }
 
-    public static String getThemeEx(Widget w, String prefix) {
-        return getThemeEx(w.getElement(), prefix);
+    public static String getThemeEx(Widget w, String prefix, String... excludes) {
+        return getThemeEx(w.getElement(), prefix, excludes);
     }
 
     public static void setThemeEx(Element elt, String themeName, String prefix) {
