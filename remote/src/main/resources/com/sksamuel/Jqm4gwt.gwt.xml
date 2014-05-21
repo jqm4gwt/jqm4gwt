@@ -10,7 +10,7 @@
     <stylesheet src="http://dev.jtsage.com/cdn/datebox/1.4.0/jqm-datebox-1.4.0.min.css"/>
     <stylesheet src="https://raw.github.com/watusi/jquery-mobile-iscrollview/master/lib/jquery.mobile.iscrollview.css"/>
     
-    <script src="http://code.jquery.com/jquery-2.1.0.min.js"/>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"/>
     <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"/>
     <script src="http://dev.jtsage.com/cdn/datebox/1.4.0/jqm-datebox-1.4.0.comp.calbox.min.js"/>
     <script src="http://dev.jtsage.com/cdn/datebox/i18n/jquery.mobile.datebox.i18n.en_US.utf8.js"/>

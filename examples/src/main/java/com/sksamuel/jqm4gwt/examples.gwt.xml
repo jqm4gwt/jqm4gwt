@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to='examples'>
 
-	<inherits name='com.google.gwt.user.User' />
-	<inherits name='com.sksamuel.Jqm4gwt' />
+    <inherits name='com.google.gwt.user.User' />
+    <inherits name='com.sksamuel.Jqm4gwt' />
     <inherits name='com.sksamuel.Jqm4gwt-iscroll'/>
     <inherits name='com.sksamuel.Jqm4gwt-grid960'/>
     <inherits name='com.sksamuel.Jqm4gwt-datebox'/>
     <!--<inherits name='com.google.gwt.junit.JUnit' />-->
-	<entry-point class='com.sksamuel.jqm4gwt.examples.Jqm4gwtExamplesEntryPoint' />
-	<source path="examples" />
+    
+    <source path="examples" />
+    
+    <entry-point class='com.sksamuel.jqm4gwt.examples.Jqm4gwtExamplesEntryPoint' />
+    
+    <add-linker name="xsiframe" />
 
 </module>
