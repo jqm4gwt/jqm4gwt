@@ -53,7 +53,7 @@
         <module>plugins</module>
         <module>standalone</module>
         <module>remote</module>
-	<module>examples</module>
+        <module>examples</module>
     </modules>
 
     <properties>
@@ -88,6 +88,11 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>jqm4gwt-standalone</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>jqm4gwt-remote</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

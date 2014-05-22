@@ -71,10 +71,20 @@ public class ScriptUtils {
     }
 
     public static void injectCss(String... paths) {
+        injectCss(false, paths);
+    }
+
+    public static void injectCss(boolean noModulePrefix, String... paths) {
         if (paths == null || paths.length == 0) return;
-        checkModuleURL();
-        for (String path : paths) {
-            addCss(moduleURL + path);
+        if (noModulePrefix) {
+            for (String path : paths) {
+                addCss(path);
+            }
+        } else {
+            checkModuleURL();
+            for (String path : paths) {
+                addCss(moduleURL + path);
+            }
         }
     }
 
@@ -86,13 +96,16 @@ public class ScriptUtils {
     }
 
     public static void injectJs(InjectCallback done, String... paths) {
+        injectJs(false, done, paths);
+    }
+
+    public static void injectJs(boolean noModulePrefix, InjectCallback done, String... paths) {
         if (paths == null || paths.length == 0) return;
-        checkModuleURL();
-        /*for (String path : paths) {
-            addJs(moduleURL + path);
-        }*/
         SequentialScriptInjector injector = new SequentialScriptInjector();
-        injector.setUrlPrefix(moduleURL);
+        if (!noModulePrefix) {
+            checkModuleURL();
+            injector.setUrlPrefix(moduleURL);
+        }
         injector.inject(done, paths);
     }
 

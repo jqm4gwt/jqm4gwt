@@ -43,6 +43,7 @@
     <dependencies>
         <dependency>
             <artifactId>jqm4gwt-standalone</artifactId>
+            <!-- artifactId>jqm4gwt-remote</artifactId-->
             <groupId>${project.groupId}</groupId>
             <scope>compile</scope>
         </dependency>

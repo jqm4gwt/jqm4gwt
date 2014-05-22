@@ -1,0 +1,175 @@
+.jqm4gwt-image-link-a.ui-btn.jqm4gwt-compact-btn {
+  padding: 3px !important;
+}
+.jqm4gwt-image-link-img[data-resize-priority='horizontal'] {
+  max-width: 100%;
+  height: auto;
+  width: auto\9; /*ie8*/
+}
+.jqm4gwt-image-link-img[data-resize-priority='vertical'] {
+  max-height: 100%;
+  width: auto;
+  height: auto\9; /*ie8*/
+}
+
+.ui-loader-background {
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  margin: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: none;
+  position: fixed;
+  z-index: 100;
+}
+.ui-loading .ui-loader-background {
+  display: block;
+}
+
+.ui-dialog-background {
+  opacity: 0.5;
+  display: block !important;
+  -webkit-transition: opacity 0.5s ease-in;
+     -moz-transition: opacity 0.5s ease-in;
+       -o-transition: opacity 0.5s ease-in;
+          transition: opacity 0.5s ease-in;
+}
+
+.ui-dialog-background.pop.in {
+  opacity: 1;
+  -webkit-transition: opacity 0.5s ease-in;
+     -moz-transition: opacity 0.5s ease-in;
+       -o-transition: opacity 0.5s ease-in;
+          transition: opacity 0.5s ease-in;
+}
+
+.jqm4gwt-dialog-transparent.ui-dialog {
+  min-height: 100% !important;
+  background: transparent !important;
+
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  margin: 0;
+  position: fixed;
+  z-index: 100;
+}
+
+.jqm4gwt-non-editable input {
+  filter: Alpha(Opacity=67);
+  opacity: .67;
+  zoom: 1;
+}
+
+.jqm4gwt-error {
+  background-color: #FFEC98;
+  color: red;
+  display: block;
+  padding-left: 10px;
+}
+
+.jqm4gwt-scrollable-page-content {
+  position: relative;
+}
+.jqm4gwt-scrollable-main-stage {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll; /* has to be scroll, not auto */
+  -webkit-overflow-scrolling: touch;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+}
+
+.jqm4gwt-listitem-icon {
+  max-height: 16px !important;
+  max-width: 16px !important;
+  left: 10px !important;
+  top: .9em !important;
+  margin-right: 10px !important;
+}
+
+.jqm4gwt-list-static-item-img-right .jqm4gwt-listitem.ui-li-static {
+  padding-bottom: 0;
+  padding-right: 2.5em;
+}
+.jqm4gwt-list-static-item-img-right .jqm4gwt-listitem.ui-li-static > img:last-of-type {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  right: 0;
+}
+
+.jqm4gwt-listitem a.ui-btn > .ui-checkbox {
+  margin: 0;
+}
+
+.jqm4gwt-listitem a.ui-btn > h1:only-child,
+.jqm4gwt-listitem a.ui-btn > h2:only-child,
+.jqm4gwt-listitem a.ui-btn > h3:only-child,
+.jqm4gwt-listitem a.ui-btn > h4:only-child,
+.jqm4gwt-listitem a.ui-btn > h5:only-child,
+.jqm4gwt-listitem a.ui-btn > h6:only-child {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.jqm4gwt-listitem.ui-li-static > h1:only-child,
+.jqm4gwt-listitem.ui-li-static > h2:only-child,
+.jqm4gwt-listitem.ui-li-static > h3:only-child,
+.jqm4gwt-listitem.ui-li-static > h4:only-child,
+.jqm4gwt-listitem.ui-li-static > h5:only-child,
+.jqm4gwt-listitem.ui-li-static > h6:only-child {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.jqm4gwt-tabs-horizontal .jqm4gwt-tabs-header-list {
+    width: 28%;
+    display: inline-block;
+    vertical-align: middle;
+}
+.jqm4gwt-tabs-horizontal .jqm4gwt-tabs-content {
+    width: 66%;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 3%;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.jqm4gwt-table-img-cell td.img-only,
+.jqm4gwt-table-img-cell th.img-only {
+  padding: 0;
+  text-align: center;
+}
+.jqm4gwt-table-img-cell td.img-only > img,
+.jqm4gwt-table-img-cell th.img-only > img {
+  vertical-align: middle;
+}
+
+/* jqm4gwt-select-filterable */
+.ui-select-filterable.ui-selectmenu.ui-popup .ui-input-search {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+.ui-select-filterable.ui-selectmenu.ui-popup .ui-selectmenu-list li.ui-first-child .ui-btn {
+  border-top-width: 1px;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.ui-select-filterable.ui-selectmenu.ui-dialog .ui-content {
+  padding-top: 0;
+}
+.ui-select-filterable.ui-selectmenu.ui-dialog .ui-selectmenu-list {
+  margin-top: 0;
+}
+.ui-select-filterable.ui-selectmenu.ui-dialog .ui-header {
+  border-bottom-width: 1px;
+}
