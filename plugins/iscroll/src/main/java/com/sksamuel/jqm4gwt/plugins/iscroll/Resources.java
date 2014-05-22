@@ -1,5 +1,9 @@
 package com.sksamuel.jqm4gwt.plugins.iscroll;
 
+import com.google.gwt.core.client.Callback;
+import com.sksamuel.jqm4gwt.ScriptUtils;
+import com.sksamuel.jqm4gwt.ScriptUtils.InjectCallback;
+
 public interface Resources {
 
     class Loader {
@@ -8,9 +12,19 @@ public interface Resources {
         private static final String ISCROLL_JS = "js/iscroll.min.js";
         private static final String JQM_ISCROLL_JS = "js/jquery.mobile.iscrollview.min.js";
 
-        public static void injectAll() {
-            com.sksamuel.jqm4gwt.Resources.Loader.injectCss(ISCROLL_CSS);
-            com.sksamuel.jqm4gwt.Resources.Loader.injectJs(ISCROLL_JS, JQM_ISCROLL_JS);
+        public static void injectAll(final InjectCallback done) {
+            ScriptUtils.waitJqmLoaded(new Callback<Void, Void>() {
+
+                @Override
+                public void onSuccess(Void result) {
+                    ScriptUtils.injectCss(ISCROLL_CSS);
+                    ScriptUtils.injectJs(done, ISCROLL_JS, JQM_ISCROLL_JS);
+                }
+
+                @Override
+                public void onFailure(Void reason) {
+                }
+            });
         }
     }
 }

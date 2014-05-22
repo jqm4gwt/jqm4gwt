@@ -107,6 +107,9 @@
                 <directory>${source.staging}</directory>
             </resource>
             <resource>
+                <directory>src/main/java</directory>
+            </resource>
+            <resource>
                 <directory>src/main/resources</directory>
             </resource>
         </resources>

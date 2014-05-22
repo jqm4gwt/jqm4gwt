@@ -6,7 +6,7 @@ public class JQMInitializer implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        Resources.Loader.injectAll();
+        Resources.Loader.injectAll(null);
     }
 
 }
