@@ -71,16 +71,10 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
         }
     }
 
-    /**
-     * The underlying <li>or
-     * <ul>
-     * widget
-     */
+    /** The underlying &lt;li> or &lt;ul> widget */
     private final ListWidget list;
 
-    /**
-     * The index of the last click
-     */
+    /** The index of the last click */
     private int clickIndex;
     private boolean clickIsSplit;
 
@@ -134,9 +128,9 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
         }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
     }
 
-    protected void addDivider(JQMListDivider d) {
-        list.add(d);
-        items.add(null);//to keep the list and items in sync
+    public void addDivider(int index, JQMListDivider d) {
+        list.insert(d, index);
+        items.add(index, null); // to keep the list and items in sync
     }
 
     /**
@@ -147,7 +141,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
      */
     public HasText addDivider(String text) {
         JQMListDivider d = new JQMListDivider(text);
-        addDivider(d);
+        appendDivider(d);
         return d;
     }
 
@@ -156,12 +150,12 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
      */
     @UiChild(tagname = "divider")
     public void appendDivider(JQMListDivider divider) {
-        addDivider(divider);
+        addDivider(items.size(), divider);
     }
 
-    protected void addItem(int index, final JQMListItem item) {
+    public void addItem(int index, final JQMListItem item) {
         list.insert(item, index);
-        items.add(index,item);
+        items.add(index, item);
         item.setList(this);
     }
 
@@ -544,6 +538,37 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
             }
         }
         return null;
+    }
+
+    public int findDividerIdx(JQMListDivider d) {
+        if (d == null) return -1;
+        for (int k = 0; k < list.getWidgetCount(); k++) {
+            Widget w = list.getWidget(k);
+            if (d.equals(w)) return k;
+        }
+        return -1;
+    }
+
+    /**
+     * For given divider finds the index at which new item should be inserted to become a part of
+     * this divider's group.
+     *
+     * @return - proper index for new item insertion, or -1 in case of error
+     *
+     */
+    public int findInsertIdxByDivider(JQMListDivider d) {
+        if (d == null) return -1;
+        int i = findDividerIdx(d);
+        if (i == -1) return -1;
+        List<JQMListItem> lst = getItems();
+        int rslt = i + 1;
+        while (rslt < lst.size()) {
+            if (lst.get(rslt) == null) { // next divider
+                return rslt;
+            }
+            rslt++;
+        }
+        return rslt;
     }
 
     public JQMListItem findItem(String text) {
