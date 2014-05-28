@@ -756,8 +756,13 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         return cb.isChecked();
     }
 
-    private native void setChecked(InputElement e, boolean value) /*-{
-        $wnd.$(e).prop('checked', value).checkboxradio('refresh');
+    private native void setChecked(InputElement elt, boolean value) /*-{
+        var w = $wnd.$(elt);
+        if (w.data('mobile-checkboxradio') !== undefined) {
+            w.prop('checked', value).checkboxradio('refresh');
+        } else {
+            w.prop('checked', value);
+        }
     }-*/;
 
     public void setChecked(boolean value) {

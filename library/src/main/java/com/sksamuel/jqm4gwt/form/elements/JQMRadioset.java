@@ -432,16 +432,26 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
         return $wnd.$("input#" + id).prop("checked") ? true : false;
     }-*/;
 
-    private native void setCheckedAndRefresh(Element e, boolean value) /*-{
-        $wnd.$(e).prop('checked', value).checkboxradio('refresh');
+    private native void setCheckedAndRefresh(Element elt, boolean value) /*-{
+        var w = $wnd.$(elt);
+        if (w.data('mobile-checkboxradio') !== undefined) {
+            w.prop('checked', value).checkboxradio('refresh');
+        } else {
+            w.prop('checked', value);
+        }
     }-*/;
 
-    private native void setChecked(Element e, boolean value) /*-{
-        $wnd.$(e).prop('checked', value);
+    private native void setChecked(Element elt, boolean value) /*-{
+        $wnd.$(elt).prop('checked', value);
     }-*/;
 
     protected native void refreshAll() /*-{
-        $wnd.$("input[type='radio']").checkboxradio("refresh");
+        $wnd.$("input[type='radio']").each(function() {
+            var w = $wnd.$(this);
+            if (w.data('mobile-checkboxradio') !== undefined) {
+                w.checkboxradio('refresh');
+            }
+        });
     }-*/;
 
     @Override

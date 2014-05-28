@@ -197,12 +197,20 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
         }
     }
 
-    private native void setChecked(Element e, boolean value) /*-{
-        $wnd.$(e).prop('checked', value).checkboxradio('refresh');
+    private native void setChecked(Element elt, boolean value) /*-{
+        var w = $wnd.$(elt);
+        if (w.data('mobile-checkboxradio') !== undefined) {
+            w.prop('checked', value).checkboxradio('refresh');
+        } else {
+            w.prop('checked', value);
+        }
     }-*/;
 
-    private native void refresh(Element e) /*-{
-      $wnd.$(e).checkboxradio('refresh');
+    private native void refresh(Element elt) /*-{
+      var w = $wnd.$(elt);
+      if (w.data('mobile-checkboxradio') !== undefined) {
+          w.checkboxradio('refresh');
+      }
     }-*/;
 
     public void setInput(TextBox input) {
