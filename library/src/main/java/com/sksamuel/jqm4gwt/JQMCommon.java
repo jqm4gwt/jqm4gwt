@@ -636,16 +636,21 @@ public class JQMCommon {
 
     public static void invalidateIconPosEx(Element elt, String prefix) {
         IconPos pos = getIconPosEx(elt, prefix);
-        if (pos == null) return;
-        String clazz = prefix + pos.getJqmValue();
-        String v = pos.getJqmValue();
         String icon = getStyleStartsWith(elt, STYLE_UI_ICON);
         if (icon == null || icon.isEmpty()) {
-            elt.removeClassName(clazz);
+            if (pos != null) {
+                String clazz = prefix + pos.getJqmValue();
+                elt.removeClassName(clazz);
+            }
         } else {
+            if (pos == null) pos = IconPos.LEFT; // if icon is defined, iconPos must be defined as well
+            String clazz = prefix + pos.getJqmValue();
             elt.addClassName(clazz);
         }
-        setAttribute(elt, DATA_ICONPOS, v);
+        if (pos != null) {
+            String v = pos.getJqmValue();
+            setAttribute(elt, DATA_ICONPOS, v); // save iconPos in attribute for the possible future usage
+        }
     }
 
     public static void setIconPosEx(Element elt, IconPos iconPos, String prefix) {
