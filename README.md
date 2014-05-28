@@ -1,17 +1,35 @@
 jqm4gwt
 =======
 
-JQuery Mobile wrapper for GWT is a project that wraps the JQuery Mobile framework into a gwt widget library that can be used in a GWT application. This allows GWT developers to develop mobile web apps with and leverage the vibrant jQuery Mobile widgets community without having to hand code javascript. In addition, projects that currently leverage GWT can add a mobile channel with ease.
+JQuery Mobile wrapper for GWT is a project that wraps the JQuery Mobile framework into a gwt widget library
+that can be used in a GWT application. This allows GWT developers to develop mobile web apps with and leverage
+the vibrant jQuery Mobile widgets community without having to hand code javascript. In addition, projects that
+currently leverage GWT can add a mobile channel with ease.
 
-Note that because this project is a wrapper into Java, you do not have to invoke javascript native methods, nor do you have to pass inline javascript to generic methods. You create widgets exactly as you do in the normal GWT widgetset. In fact you don't have to have any understanding of how jquery mobile works behind the scenes (although of course it helps if you do). 
-A quick example to create a jquery mobile enhanced button is `JQMButton button = new JQMButton("Click me")`
+Note that because this project is a wrapper into Java, you do not have to invoke javascript native methods,
+nor do you have to pass inline javascript to generic methods. You create widgets exactly as you do in the
+normal GWT widgetset. In fact you don't have to have any understanding of how jquery mobile works behind
+the scenes (although of course it helps if you do).
 
-The project mirrors the release cycle of JQuery Mobile. That is, when version x.y is released of JQM we try to then release version x.y of jqm4gwt to match. Bug fixes in our code are released as x.y.z.
+A quick example to create a jquery mobile enhanced button is: 
+```java
+JQMButton button = new JQMButton("Click me");
+```
+or the same as UiBinder template:
+```xml
+<ui:UiBinder xmlns:b="urn:import:com.sksamuel.jqm4gwt.button">
+<b:JQMButton text="Click me" />
+```
+
+The project mirrors the release cycle of JQuery Mobile.
+That is, when version x.y is released of JQM we try to then release version x.y of jqm4gwt to match.
+Bug fixes in our code are released as x.y.z.
 
 There is [full support for GWT's UiBinder](https://github.com/jqm4gwt/jqm4gwt/wiki/Using-jqm4gwt-with-UiBinder),
- and a self-contained version of the module providing all of the dependent JQueryMobile JavaScript, CSS, and images.
+and a self-contained version of the module providing all of the dependent JQueryMobile JavaScript, CSS, and images.
 
-Jqm4gwt also provides a useful form framework that enables rapid prototyping of form pages, including ajax submission and validation. See http://code.google.com/p/jqm4gwt/wiki/FormFramework
+Jqm4gwt also provides a useful form framework that enables rapid prototyping of form pages, including ajax submission and validation.
+See http://code.google.com/p/jqm4gwt/wiki/FormFramework
 
 For more information, see the [Frequently Asked Questions] (https://github.com/sksamuel/jqm4gwt/wiki/Frequently-Asked-Questions).
 
@@ -50,11 +68,13 @@ Latest Release: 1.3.5 Released 14-March-2014
 
 Dependencies are available from maven central:
 
+```xml
 <dependency>
   <groupId>com.sksamuel.jqm4gwt</groupId>
   <artifactId>jqm4gwt-remote</artifactId>
   <version>1.3.5</version>
 </dependency>
+```
 
 Spread the word and join the conversation!
 ================
@@ -89,4 +109,3 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 ```
-
