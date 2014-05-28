@@ -1,4 +1,4 @@
-jqm4gwt
+jqm4gwt   [![Build Status](https://travis-ci.org/jqm4gwt/jqm4gwt.png)](https://travis-ci.org/jqm4gwt/jqm4gwt)
 =======
 
 JQuery Mobile wrapper for GWT is a project that wraps the JQuery Mobile framework into a gwt widget library
@@ -35,12 +35,10 @@ For more information, see the [Frequently Asked Questions] (https://github.com/s
 
 Please contribute with pull requests! See the [Contributors Guidelines] (https://github.com/sksamuel/jqm4gwt/wiki/Contributors-Guidelines) to assure the health of the project.
 
-[![Build Status](https://travis-ci.org/jqm4gwt/jqm4gwt.png)](https://travis-ci.org/jqm4gwt/jqm4gwt)
-
 Examples
 ========
 
-Examples and demos are hosted on a google app engine instance here: http://jqm4gwt.appspot.com/examples.html.
+[Examples and demos are hosted on a google app engine instance](http://jqm4gwt.appspot.com/examples.html)
 
 These include the typical hello world and a show case of JQuery Mobile widgets and events.
 
@@ -61,8 +59,8 @@ Getting It
 ========
 
 Latest Release: 1.3.5 Released 14-March-2014
- * [GWT Remote Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.5/jqm4gwt-remote-1.3.5.jar)
- * [GWT Library Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-library/1.3.5/jqm4gwt-library-1.3.5.jar)
+ * [jqm4gwt Remote Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.5/jqm4gwt-remote-1.3.5.jar)
+ * [jqm4gwt Library Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-library/1.3.5/jqm4gwt-library-1.3.5.jar)
  * [Remote Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.5/jqm4gwt-remote-1.3.5-sources.jar)
  * [Library Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-library/1.3.5/jqm4gwt-library-1.3.5-sources.jar)
 
