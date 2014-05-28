@@ -3,7 +3,8 @@ jqm4gwt
 
 JQuery Mobile wrapper for GWT is a project that wraps the JQuery Mobile framework into a gwt widget library that can be used in a GWT application. This allows GWT developers to develop mobile web apps with and leverage the vibrant jQuery Mobile widgets community without having to hand code javascript. In addition, projects that currently leverage GWT can add a mobile channel with ease.
 
-Note that because this project is a wrapper into Java, you do not have to invoke javascript native methods, nor do you have to pass inline javascript to generic methods. You create widgets exactly as you do in the normal GWT widgetset. In fact you don't have to have any understanding of how jquery mobile works behind the scenes (although of course it helps if you do). A quick example to create a jquery mobile enhanced button is `JQMButton button = new JQMButton("Click me")`
+Note that because this project is a wrapper into Java, you do not have to invoke javascript native methods, nor do you have to pass inline javascript to generic methods. You create widgets exactly as you do in the normal GWT widgetset. In fact you don't have to have any understanding of how jquery mobile works behind the scenes (although of course it helps if you do). 
+A quick example to create a jquery mobile enhanced button is `JQMButton button = new JQMButton("Click me")`
 
 The project mirrors the release cycle of JQuery Mobile. That is, when version x.y is released of JQM we try to then release version x.y of jqm4gwt to match. Bug fixes in our code are released as x.y.z.
 
@@ -16,7 +17,7 @@ For more information, see the [Frequently Asked Questions] (https://github.com/s
 
 Please contribute with pull requests! See the [Contributors Guidelines] (https://github.com/sksamuel/jqm4gwt/wiki/Contributors-Guidelines) to assure the health of the project.
 
-[![Build Status](https://travis-ci.org/jqm4gwt/jqm4gwt.png)](https://travis-ci.org/sksamuel/jqm4gwt)
+[![Build Status](https://travis-ci.org/jqm4gwt/jqm4gwt.png)](https://travis-ci.org/jqm4gwt/jqm4gwt)
 
 Examples
 ========
@@ -42,22 +43,24 @@ Getting It
 ========
 
 Latest Release: 1.3.5 Released 14-March-2014
- * [GWT Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.5/jqm4gwt-remote-1.3.5.jar)
- * [Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.5/jqm4gwt-remote-1.3.5-sources.jar)
+ * [GWT Remote Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.5/jqm4gwt-remote-1.3.5.jar)
+ * [GWT Library Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-library/1.3.5/jqm4gwt-library-1.3.5.jar)
+ * [Remote Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.5/jqm4gwt-remote-1.3.5-sources.jar)
+ * [Library Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-library/1.3.5/jqm4gwt-library-1.3.5-sources.jar)
 
 Dependencies are available from maven central:
 
-  	<dependency>
-			<groupId>com.sksamuel.jqm4gwt</groupId>
-			<artifactId>jqm4gwt</artifactId>
-			<version>1.3.5</version>
-  	</dependency>
+<dependency>
+  <groupId>com.sksamuel.jqm4gwt</groupId>
+  <artifactId>jqm4gwt-remote</artifactId>
+  <version>1.3.5</version>
+</dependency>
 
 Spread the word and join the conversation!
 ================
 
 If you like jqm4gwt then [cheer on ohloh](https://www.ohloh.net/stack_entries/new?project_id=jqm4gwt&ref=sample)
-![ohloh logo](https://www.ohloh.net/images/stack/iusethis/static_logo.png).
+[![ohloh logo](https://www.ohloh.net/images/stack/iusethis/static_logo.png)](https://www.ohloh.net/stack_entries/new?project_id=jqm4gwt&ref=sample)
 
 Want to talk about it? Join the [discussion group for jqm4gwt on Google Groups](https://groups.google.com/forum/?fromgroups#!forum/jqm4gwt).
 

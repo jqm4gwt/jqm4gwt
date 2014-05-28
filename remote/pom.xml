@@ -72,7 +72,12 @@
                                     <classifier>sources</classifier>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${source.staging}</outputDirectory>
-                                    <excludes>META-INF/**, **/Jqm4gwt.gwt.xml</excludes>
+                                    <excludes>
+                                      META-INF/**, **/Jqm4gwt.gwt.xml,
+                                      **/jqm4gwt/JQMInitializer.java, **/jqm4gwt/Resources.java,
+                                      **/jqm4gwt/ScriptUtils.java,
+                                      **/jqm4gwt/SequentialScriptInjector.java
+                                    </excludes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
