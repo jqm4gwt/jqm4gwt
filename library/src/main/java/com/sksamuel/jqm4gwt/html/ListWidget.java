@@ -9,11 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 12 Jul 2011 07:24:00
  *
- *         Implementation of an
- *         <ul>
- *         or
- *         <ol>
- *         element.
+ * Implementation of an &lt;ul> or &lt;ol> element.
  *
  */
 public class ListWidget extends ComplexPanel {
@@ -30,30 +26,30 @@ public class ListWidget extends ComplexPanel {
         }
     }
 
-	/**
-	 * Create a new ListWidget. It will have element type UL if ordered is
-	 * false, and OL if ordered is true
-	 */
-	public ListWidget(boolean ordered) {
-		if (ordered)
-			setElement(Document.get().createOLElement());
-		else
-			setElement(Document.get().createULElement());
-	}
+    /**
+     * Create a new ListWidget. It will have element type UL if ordered is
+     * false, and OL if ordered is true
+     */
+    public ListWidget(boolean ordered) {
+        if (ordered)
+            setElement(Document.get().createOLElement());
+        else
+            setElement(Document.get().createULElement());
+    }
 
-	@Override
-	public void add(Widget w) {
-	    Element elt = getElement();
-	    add(w, elt);
-	}
+    @Override
+    public void add(Widget w) {
+        Element elt = getElement();
+        add(w, elt);
+    }
 
-	public void insert(IsWidget w, int beforeIndex) {
-		insert(asWidgetOrNull(w), beforeIndex);
-	}
+    public void insert(IsWidget w, int beforeIndex) {
+        insert(asWidgetOrNull(w), beforeIndex);
+    }
 
-	public void insert(Widget w, int beforeIndex) {
-	    Element elt = getElement();
-	    insert(w, elt, beforeIndex, true);
-	}
+    public void insert(Widget w, int beforeIndex) {
+        Element elt = getElement();
+        insert(w, elt, beforeIndex, true);
+    }
 
 }
