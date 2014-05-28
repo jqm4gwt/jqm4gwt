@@ -18,6 +18,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasValue;
 import com.sksamuel.jqm4gwt.list.JQMList;
+import com.sksamuel.jqm4gwt.list.JQMListDivider;
 import com.sksamuel.jqm4gwt.list.JQMListItem;
 
 /**
@@ -65,6 +66,66 @@ public class JQMListBindable<M> extends JQMList
 
         @Override
         public void onAfterRefresh(JQMListBindable<M> list) {
+        }
+    }
+
+    public static abstract class ListRenderer<M> extends BaseRenderer<M> {
+
+        private final boolean showEmptyMsg;
+
+        private JQMListItem emptyMsg = null;
+
+        public ListRenderer(boolean showEmptyMsg) {
+            this.showEmptyMsg = showEmptyMsg;
+        }
+
+        public ListRenderer() {
+            this(true/*showEmptyMsg*/);
+        }
+
+        protected abstract JQMListItem createListItem(M item);
+
+        protected String getEmptyText() {
+            return "-----";
+        }
+
+        private void addEmptyMsg(JQMListBindable<M> list) {
+            if (!showEmptyMsg || emptyMsg != null) return;
+            List<JQMListItem> items = list.getItems();
+            if (items == null || items.isEmpty()) {
+                JQMListDivider d = (JQMListDivider) list.addDivider("");
+                emptyMsg = list.addItem(getEmptyText());
+                d.setTag(emptyMsg);
+            }
+        }
+
+        private void removeEmptyMsg(JQMListBindable<M> list) {
+            if (!showEmptyMsg || emptyMsg == null) return;
+            list.removeItem(emptyMsg);
+            list.removeDivider(emptyMsg);
+            emptyMsg = null;
+        }
+
+        @Override
+        public JQMListItem addItem(JQMListBindable<M> list, M item) {
+            removeEmptyMsg(list);
+
+            JQMListItem li = createListItem(item);
+            if (li != null) list.appendItem(li);
+            return li;
+        }
+
+        @Override
+        public void removeItem(JQMListBindable<M> list, M item, JQMListItem uiItem) {
+            list.removeItem(uiItem);
+            list.removeDivider(uiItem);
+            addEmptyMsg(list);
+        }
+
+        @Override
+        public void onBeforeRefresh(JQMListBindable<M> list) {
+            addEmptyMsg(list);
+            list.recreate();
         }
     }
 
@@ -260,6 +321,19 @@ public class JQMListBindable<M> extends JQMList
     public void onItemChanged(List<M> oldList, int index, M item) {
         removeDataItem(oldList.get(index));
         insertDataItem(index, item);
+        doRefresh();
+    }
+
+    /**
+     * Needed in case of renderer changed, so list has to be visually reconstructed by new renderer.
+     */
+    public void rerender() {
+        clear();
+        if (dataItems != null) {
+            for (M m : dataItems) {
+                addDataItem(m);
+            }
+        }
         doRefresh();
     }
 
