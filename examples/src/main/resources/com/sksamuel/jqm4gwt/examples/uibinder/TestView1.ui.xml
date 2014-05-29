@@ -579,8 +579,8 @@
         <jqm:JQMPopup containerId="popupAsDialog" dialog="true" corners="false" theme="a" overlayTheme="b">
           <b:JQMButton iconPos="NOTEXT" builtInIcon="DELETE" back="true" text="Close"
             addStyleNames="ui-btn-right" />
-          <h:ImageLink src="http://upload.wikimedia.org/wikipedia/commons/0/09/NYC_Montage_8.jpg"
-            height="500px" />
+          <h:ImageLink src="http://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/NASA-Apollo8-Dec24-Earthrise.jpg/1024px-NASA-Apollo8-Dec24-Earthrise.jpg"
+            height="512px" />
         </jqm:JQMPopup>
         <b:JQMButton builtInIcon="BARS" text="Pop-up as dialog example..."
           href="#popupAsDialog" popup="true" popupPos="window" mini="true" inline="true" />
