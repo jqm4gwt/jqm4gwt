@@ -16,53 +16,51 @@
   xmlns:gr960="urn:import:com.sksamuel.jqm4gwt.plugins.grid960">
 
   <ui:style>
-	  .contentBorder { border: red solid 0px; }
-	  
-	  .pageContent {
-	     margin-left: 1%;
-	     margin-right: 1%;
-	     width: 98%;
-	  }
-	
-		.bevel { height: 1em; }
-		
-		.red { background-color: red; color: yellow; }
-		.green { background-color: green; color: yellow; }
-		.blue { background-color: blue; color: yellow; }
-		.yellow { background-color: yellow; color: red; }
-		.centerText {
-		  display: block;
-		  text-align: center;
-		}
-		
-		.headerImportantColor {
-		  color: #ffa200;
-		}
-		
-		.inlineBlock {
-		  display: inline-block;
-		  vertical-align: middle; /* makes more smooth/uniform line/row */
-		}
-		
-		.marginRight10 { margin-right: 10px; }
-		.marginRight20 { margin-right: 20px; }
-		
-		@external .jqm4gwt-thead-groups, .ui-table-reflow .ui-table-cell-label-top;
-		.jqm4gwt-thead-groups th, .ui-table-reflow tbody .ui-table-cell-label-top {
-		  text-align: center;
-		  background-color: rgba(0,0,0,.1);
-		  border-right:1px solid #fff;
-		}
-		.ui-table-reflow tbody .ui-table-cell-label-top {
-		  font-weight: bold;
-		}
-		.jqm4gwt-thead-groups th[data-priority="1"] {
-		  background-color: rgba(0,0,0,.5);
-		  color: #fff;
-		  text-shadow: none;
-		}
-		
-	  .tooltipPop { max-width: 350px; }
+    .contentBorder { border: red solid 0px; }
+
+    .pageContent {
+      margin-left: 1%;
+      margin-right: 1%;
+      width: 98%;
+    }
+
+    .bevel { height: 1em; }
+
+    .red { background-color: red; color: yellow; }
+    .green { background-color: green; color: yellow; }
+    .blue { background-color: blue; color: yellow; }
+    .yellow { background-color: yellow; color: red; }
+    .centerText {
+      display: block;
+      text-align: center;
+    }
+
+    .headerImportantColor { color: #ffa200; }
+
+    .inlineBlock {
+      display: inline-block;
+      vertical-align: middle; /* makes more smooth/uniform line/row */
+    }
+
+    .marginRight10 { margin-right: 10px; }
+    .marginRight20 { margin-right: 20px; }
+
+    @external .jqm4gwt-thead-groups, .ui-table-reflow .ui-table-cell-label-top;
+    .jqm4gwt-thead-groups th, .ui-table-reflow tbody .ui-table-cell-label-top {
+      text-align: center;
+      background-color: rgba(0,0,0,.1);
+      border-right:1px solid #fff;
+    }
+    .ui-table-reflow tbody .ui-table-cell-label-top {
+      font-weight: bold;
+    }
+    .jqm4gwt-thead-groups th[data-priority="1"] {
+      background-color: rgba(0,0,0,.5);
+      color: #fff;
+      text-shadow: none;
+    }
+
+    .tooltipPop { max-width: 350px; }
   </ui:style>
 
   <jqm:JQMPage containerId="testPage1" backButton="true"
@@ -88,7 +86,7 @@
       <g:FlowPanel addStyleNames="{style.pageContent}">
         <b:JQMButton text="" html="&lt;b&gt;Button&lt;/b&gt; with &lt;i&gt;HTML&lt;/i&gt; content"
           mini="true" inline="true" />
-        <h:Div />  
+        <h:Div />
         <h:Span text="span text"/>
         <h:Div text="div text" />
         <h:Div>
@@ -151,19 +149,19 @@
               <b:JQMButton ui:field="setFlipNullBtn" text="Set Value to 'null'" mini="true" />
             </ly:cell>
           </ly:JQMTable>
-  
+
           <dt:JQMCalBox ui:field="datePicker" text="Date Picker"
             dateFormat="%A %m/%d/%y" value="2013-10-25" useClearButton="true" />
           <b:JQMButton ui:field="datePickerGetValueBtn" text="Get Date Picker value"
             inline="true" mini="true" />
           <b:JQMButton ui:field="datePickerSetNullBtn" text="Set Date Picker value to Null"
             inline="true" mini="true" />
-  
+
           <e:JQMMonth text="monthText"/>
           <e:JQMNumber text="numberText"/>
           <e:JQMPassword text="passwordText"/>
           <e:JQMSearch text="searchText"/>
-  
+
           <e:JQMRadioset ui:field="radio1" text="radiosetText" selectedValue="b">
             <!-- orientation="HORIZONTAL" mini="true" iconPos="RIGHT" theme="a" -->
             <e:radio>
@@ -199,7 +197,7 @@
               <e:JQMRadio text="Female" value="F"/>
             </e:radio>
           </e:JQMRadioset>
-  
+
           <h:Paragraph />
           <e:JQMSelect text="selectText" ui:field="select1" mini="true"
             builtInIcon="BARS" iconPos="LEFT" native="false" hidePlaceholderMenuItems="false">
@@ -281,7 +279,7 @@
           </l:JQMList.Unordered>
           <h:Paragraph />
           <h:Paragraph addStyleNames="{style.bevel}" />
-  
+
           <e:JQMSlider min="5.0" max="8.0" labelText="sliderLabelText" ui:field="slider" />
             <!-- highlight="true" mini="true" theme="a" /-->
           <g:FlowPanel>
@@ -306,7 +304,7 @@
           <e:JQMText text="Text (no corners)" ui:field="text" corners="false" />
           <b:JQMButton builtInIcon="MINUS" ui:field="disableTextButton" text="Disable Text"/>
           <b:JQMButton builtInIcon="PLUS" ui:field="enableTextButton" text="Enable Text"/>
-  
+
           <!-- TODO fix col/rows setter <e:JQMTextArea text="textAreaText" columns="40" rows="20"/>-->
           <e:JQMTextArea text="textAreaText"/>
           <e:JQMUrl text="urlText"/>
@@ -448,21 +446,21 @@
           src="http://i.cdn.turner.com/cnn/.e/img/3.0/global/header/hdr-main.png"
           addStyleNames="{style.marginRight20}" />
           <!-- imageResizePriority="HORIZONTAL" theme="b" enabled="false" /-->
-    
+
         <h:ImageLinkButton href="http://paypal.com" inline="true" corners="false"
           compact="false" text="PayPal"
           src="https://cdn1.iconfinder.com/data/icons/free-business-desktop-icons/32/Money.png" />
-    
+
         <h:ImageLinkButton href="http://cnn.com" inline="true" corners="false"
           compact="false" text="Image link as normal button (text only)" />
-    
+
         <h:ImageLinkButton href="http://cnn.com" inline="true" corners="false"
           mini="true" compact="false" shadow="false"
           text="Image link as mini button (text only, no shadow)" />
-        
+
         <h:ImageLinkButton inline="true" corners="false"
-          mini="true" compact="false" shadow="false" title="No image, No text" />  
-    
+          mini="true" compact="false" shadow="false" title="No image, No text" />
+
         <h:Legend text="legendText"/>
         <h:ListWidget.Ordered>
           <h:Span text="span1Text"/>
@@ -546,7 +544,7 @@
           <jqm:item><jqm:list.JQMListItem text="Unordered List Item #1 Text" splitHref="" /></jqm:item>
           <jqm:divider><jqm:list.JQMListDivider text="Unordered List divider text"/></jqm:divider>
           <jqm:item>
-            <jqm:list.JQMListItem text="Unordered List Item #2 Text" 
+            <jqm:list.JQMListItem text="Unordered List Item #2 Text"
               splitHref="" splitTheme="b" splitIcon="INFO" />
           </jqm:item>
         </jqm:list.JQMList.Unordered>
@@ -558,7 +556,7 @@
           <gr960:GridColumn span="5"><b:JQMButton text="Span5" /></gr960:GridColumn>
           <gr960:GridColumn span="3"><b:JQMButton text="Span3" /></gr960:GridColumn>
         </gr960:Grid960Panel>
-    
+
         <jqm:JQMPopup ui:field="popup" arrows="t,b" padding="true" position="#popupOpenButton">
           <g:FlowPanel>
             <h:Heading.H2>Popup with arrows demo</h:Heading.H2>
@@ -567,7 +565,7 @@
         </jqm:JQMPopup>
         <b:JQMButton widgetId="popupOpenButton" ui:field="popupOpenButton"
           builtInIcon="INFO" text="Pop-up example..."/>
-    
+
         <jqm:JQMPopup containerId="tooltipPop" theme="b" padding="true" addStyleNames="{style.tooltipPop}">
           <g:HTML
             HTML="&lt;p&gt;Here is a &lt;strong&gt;tiny popup&lt;/strong&gt; being used like a tooltip. The text will wrap to multiple lines as needed.&lt;/p&gt;">
@@ -576,7 +574,7 @@
         <h:Heading.H3 addStyleNames="{style.inlineBlock}">Text with a tooltip.</h:Heading.H3>
         <b:JQMButton href="#tooltipPop" popup="true" inline="true" builtInIcon="INFO"
           iconPos="NOTEXT" iconAlt="true" theme="a" transition="POP" title="More Info..." text="" />
-    
+
         <h:Paragraph />
         <jqm:JQMPopup containerId="popupAsDialog" dialog="true" corners="false" theme="a" overlayTheme="b">
           <b:JQMButton iconPos="NOTEXT" builtInIcon="DELETE" back="true" text="Close"
@@ -586,35 +584,35 @@
         </jqm:JQMPopup>
         <b:JQMButton builtInIcon="BARS" text="Pop-up as dialog example..."
           href="#popupAsDialog" popup="true" popupPos="window" mini="true" inline="true" />
-    
+
         <b:JQMButton builtInIcon="INFO" ui:field="dlgButton" text="Dialog example..."
           inline="true" />
         <b:JQMButton builtInIcon="INFO" ui:field="dlgButton1" text="Dialog Message example..."
           inline="true" />
         <b:JQMButton builtInIcon="INFO" text="Dialog defined in UiBinder example..."
           href="#testDialog1" inline="true" />
-    
+
         <h:Paragraph />
         <jqm:LoadingIndicator />
         <b:JQMButton builtInIcon="INFO" ui:field="busyButton" text="Application Busy example..." />
-    
+
         <h:Paragraph addStyleNames="{style.bevel}" />
-    
+
         <ta:JQMColumnToggle colNames="Rank=2, Movie Title, Year=3, &lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
           cells="&lt;th>1&lt;/th>, The Matrix, 1999, 8.7, 784\,311, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5,  105\,111" />
-    
+
         <h:Paragraph addStyleNames="{style.bevel}" />
-    
+
         <g:Label text="Reflow Mode Example" />
         <ta:JQMColumnToggle reflow="true"
           colNames="Rank=2, Movie Title, Year=3, &lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
           cells="&lt;th>1&lt;/th>, The Matrix, 1999, 8.7, 784\,311, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5,  105\,111" />
-    
+
         <h:Paragraph addStyleNames="{style.bevel}" />
-    
+
         <ta:JQMColumnToggle columnBtnText="Choose columns..." columnBtnTheme="b"
           columnPopupTheme="a" backgroundTheme="a" headerTheme="a">
-    
+
           <ta:colTitle priority="2">
             <g:Label text="Rank" addStyleNames="{style.inlineBlock}" />
           </ta:colTitle>
@@ -630,7 +628,7 @@
           <ta:colTitle priority="5">
             <b:JQMButton text="Reviews" inline="true" mini="true" />
           </ta:colTitle>
-    
+
           <ta:cell asTh="true">
             <g:Label text="1" addStyleNames="{style.inlineBlock}" />
           </ta:cell>
@@ -646,7 +644,7 @@
           <ta:cell>
             <g:Anchor text="784,311" href="http://www.imdb.com/title/tt0133093/" />
           </ta:cell>
-    
+
           <ta:cell asTh="true">
             <g:Label text="2" addStyleNames="{style.inlineBlock}" />
           </ta:cell>
@@ -663,9 +661,9 @@
             <g:Anchor text="105,111" href="http://www.imdb.com/title/tt0106856/" />
           </ta:cell>
         </ta:JQMColumnToggle>
-    
+
         <h:Paragraph addStyleNames="{style.bevel}" />
-    
+
         <ta:JQMColumnToggle
           colNames="Store, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change, Income,Profit,Change"
           colGroups="1==, 3=Q1 2012=5, 3=Q2 2012=4, 3=Q3 2012=3, 3=Q4 2012=2, 3=YTD Totals=1"
@@ -673,11 +671,11 @@
                  &lt;th> Chicago &lt;/th>,  2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%,
                  &lt;th> New York &lt;/th>, 2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%">
         </ta:JQMColumnToggle>
-    
+
         <h:Paragraph addStyleNames="{style.bevel}" />
-    
+
         <e:JQMFilterable ui:field="fltr1" />
-    
+
         <ta:JQMColumnToggle dataFilter="#{fltr1.getFilterId}"
           columnBtnText="Choose columns..." columnBtnTheme="b" columnPopupTheme="a"
           backgroundTheme="a" headerTheme="a"
@@ -685,7 +683,7 @@
           cells="&lt;th> Boston &lt;/th>,   2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%,
                  &lt;th> Chicago &lt;/th>,  2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%,
                  &lt;th> New York &lt;/th>, 2\,898, 739, -5.8%, 3\,647, 1\,354, +5.8%, 4\,981, 2\,246, +13.4%, 3\,457, 1\,259, -3.9%, 12\,463, 6\,234, +5.9%">
-    
+
           <ta:colGroup>
             <g:Label addStyleNames="{style.inlineBlock}" />
           </ta:colGroup>

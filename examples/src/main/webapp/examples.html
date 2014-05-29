@@ -1,9 +1,11 @@
 <!doctype html>
 <html>
   <head>
-    <title>Example Project</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- meta http-equiv="content-type" content="text/html; charset=UTF-8" -->
+    
+    <title>jqm4gwt Examples</title>
     <meta charset="utf-8">
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         
     <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     
@@ -16,7 +18,14 @@
     <link rel="stylesheet" href="css/jquery-mobile-fluid960.min.css" />
     <link rel="stylesheet" href="css/size10flipswitch.css" />
     
-    <script type="text/javascript" language="javascript" src="examples/examples.nocache.js"></script>
+    <script type="text/javascript">
+        if (window.location.hash.length > 0) {
+          window.location.hash = ' ';
+          window.location = window.location;
+        }
+    </script>
+    
+    <script type="text/javascript" src="examples/examples.nocache.js"></script>
 
   </head>
   <body>
