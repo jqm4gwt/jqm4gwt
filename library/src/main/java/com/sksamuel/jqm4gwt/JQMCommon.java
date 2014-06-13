@@ -1,5 +1,6 @@
 package com.sksamuel.jqm4gwt;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
@@ -874,5 +875,56 @@ public class JQMCommon {
     public static void refreshFilter(Widget widget) {
         refreshFilter(widget.getElement());
     }
+
+    public static native void bindFilterEvents(HasFilterable fltr, Element fltrElt) /*-{
+        $wnd.$(fltrElt).on("filterablebeforefilter", function(event, ui) {
+            var value = ui.input.val();
+            fltr.@com.sksamuel.jqm4gwt.HasFilterable::doBeforeFilter(Ljava/lang/String;)(value);
+        });
+    }-*/;
+
+    public static native void unbindFilterEvents(Element fltrElt) /*-{
+        $wnd.$(fltrElt).off("filterablebeforefilter");
+    }-*/;
+
+    /** Useful when overriding doFiltering() */
+    public static native String getTextForFiltering(Element elt) /*-{
+        return ("" + ($wnd.$.mobile.getAttribute(elt, "filtertext") || $wnd.$(elt).text()));
+    }-*/;
+
+    public static native boolean isFilterableReady(Element elt) /*-{
+        var w = $wnd.$(elt);
+        if (w.data('mobile-filterable') !== undefined) {
+            return true;
+        } else {
+            return false;
+        }
+    }-*/;
+
+    public static native void bindFilterCallback(HasFilterable fltr, Element fltrElt,
+            JavaScriptObject origFilter) /*-{
+        $wnd.$(fltrElt).filterable("option", "filterCallback",
+            function(index, searchValue) {
+                var idx = @java.lang.Integer::valueOf(I)(index);
+                var rslt = fltr.@com.sksamuel.jqm4gwt.HasFilterable::doFiltering(Lcom/google/gwt/dom/client/Element;Ljava/lang/Integer;Ljava/lang/String;)(this, idx, searchValue);
+                if (rslt === undefined || rslt === null) {
+                    if (origFilter === undefined || origFilter === null) {
+                        return false;
+                    } else {
+                        return origFilter.call(this, index, searchValue);
+                    }
+                } else {
+                    return rslt;
+                }
+            });
+    }-*/;
+
+    public static native void unbindFilterCallback(Element fltrElt, JavaScriptObject origFilter) /*-{
+        $wnd.$(fltrElt).filterable("option", "filterCallback", origFilter);
+    }-*/;
+
+    public static native JavaScriptObject getFilterCallback(Element fltrElt) /*-{
+        return $wnd.$(fltrElt).filterable("option", "filterCallback");
+    }-*/;
 
 }

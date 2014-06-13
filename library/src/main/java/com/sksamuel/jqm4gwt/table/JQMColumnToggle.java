@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
@@ -103,6 +106,8 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
     private Map<Widget, Boolean> dataObj;
 
     private boolean boundFilterEvents;
+    private boolean boundFilterCallback;
+    private JavaScriptObject origFilter;
 
     public JQMColumnToggle() {
         super(Document.get().createTableElement());
@@ -814,34 +819,77 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
         return addHandler(handler, JQMFilterableEvent.getType());
     }
 
-    private native void bindFilterEvents(HasFilterable fltr, Element fltrElt) /*-{
-        $wnd.$(fltrElt).on("filterablebeforefilter", function(event, ui) {
-            var value = ui.input.val();
-            fltr.@com.sksamuel.jqm4gwt.HasFilterable::doBeforeFilter(Ljava/lang/String;)(value);
-        });
-    }-*/;
-
-    private native void unbindFilterEvents(Element fltrElt) /*-{
-        $wnd.$(fltrElt).off("filterablebeforefilter");
-    }-*/;
-
     private void bindFilterEvents() {
         if (boundFilterEvents) return;
-        bindFilterEvents(this, getDataFilterWidget().getElement());
+        JQMCommon.bindFilterEvents(this, getDataFilterWidget().getElement());
         boundFilterEvents = true;
     }
 
     private void unbindFilterEvents() {
         if (!boundFilterEvents) return;
-        unbindFilterEvents(getDataFilterWidget().getElement());
+        JQMCommon.unbindFilterEvents(getDataFilterWidget().getElement());
         boundFilterEvents = false;
+    }
+
+    /**
+     * @param elt - current filtering element
+     * @param index - filtering element's index
+     * @param searchValue - filtering text
+     * @return - must return true if the element is to be filtered,
+     * and it must return false if the element is to be shown.
+     * null - means default filtering should be used.
+     */
+    protected Boolean onFiltering(Element elt, Integer index, String searchValue) {
+        //String s = JQMCommon.getTextForFiltering(elt);
+        return null;
+    }
+
+    @Override
+    public Boolean doFiltering(Element elt, Integer index, String searchValue) {
+        Boolean rslt = onFiltering(elt, index, searchValue);
+        Boolean eventRslt = JQMFilterableEvent.fire(this, JQMFilterableEvent.FilterableState.FILTERING,
+                searchValue, elt, index);
+        // return the worst (from "filter out" to "default filtering") result
+        if (rslt != null && rslt || eventRslt != null && eventRslt) return true;
+        if (rslt != null) return rslt;
+        if (eventRslt != null) return eventRslt;
+        return null;
+    }
+
+    private void bindFilterCallback() {
+        if (boundFilterCallback) return;
+        Element elt = getDataFilterWidget().getElement();
+        origFilter = JQMCommon.getFilterCallback(elt);
+        JQMCommon.bindFilterCallback(this, elt, origFilter);
+        boundFilterCallback = true;
+    }
+
+    private void unbindFilterCallback() {
+        if (!boundFilterCallback) return;
+        JQMCommon.unbindFilterCallback(getDataFilterWidget().getElement(), origFilter);
+        origFilter = null;
+        boundFilterCallback = false;
     }
 
     private void checkFilterEvents() {
         if (isAttached()) {
             boolean b = isFilterable();
-            if (!b) unbindFilterEvents();
-            else bindFilterEvents();
+            if (!b) {
+                unbindFilterEvents();
+                unbindFilterCallback();
+            } else {
+                bindFilterEvents();
+                Scheduler.get().scheduleFinally(new RepeatingCommand() {
+                    @Override
+                    public boolean execute() {
+                        if (!isFilterable()) return false;
+                        Element elt = getDataFilterWidget().getElement();
+                        if (!JQMCommon.isFilterableReady(elt)) return true;
+                        bindFilterCallback();
+                        return false;
+                    }
+                });
+            }
         }
     }
 
@@ -858,4 +906,5 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
         unbindFilterEvents();
         super.onUnload();
     }
+
 }
