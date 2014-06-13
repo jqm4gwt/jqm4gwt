@@ -53,6 +53,7 @@ public class JQMCommon {
     private static final String DATA_INPUT = "data-input";
     private static final String DATA_FILTER_TEXT = "data-filtertext";
     private static final String DATA_FILTER_CHILDREN = "data-children";
+    private static final String DATA_FILTER_REVEAL = "data-filter-reveal";
 
     public static boolean isVisible(Widget widget) {
         return widget != null && Mobile.isVisible(widget.getElement());
@@ -860,6 +861,22 @@ public class JQMCommon {
         setFilterChildren(widget.getElement(), filterChildren);
     }
 
+    public static boolean isFilterReveal(Element elt) {
+        return "true".equals(getAttribute(elt, DATA_FILTER_REVEAL));
+    }
+
+    public static boolean isFilterReveal(Widget widget) {
+        return isFilterReveal(widget.getElement());
+    }
+
+    public static void setFilterReveal(Element elt, boolean value) {
+        setAttribute(elt, DATA_FILTER_REVEAL, value ? "true" : null);
+    }
+
+    public static void setFilterReveal(Widget widget, boolean value) {
+        setFilterReveal(widget.getElement(), value);
+    }
+
     public static native void refreshFilter(Element elt) /*-{
         var w = $wnd.$(elt);
         if (w.data('mobile-filterable') !== undefined) {
@@ -914,7 +931,8 @@ public class JQMCommon {
                         return origFilter.call(this, index, searchValue);
                     }
                 } else {
-                    return rslt;
+                    var v = rslt === @java.lang.Boolean::TRUE ? true : false;
+                    return v;
                 }
             });
     }-*/;

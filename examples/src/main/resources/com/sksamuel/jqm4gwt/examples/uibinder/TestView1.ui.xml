@@ -110,14 +110,14 @@
             <b:JQMButton ui:field="page2RestoreRoleDialog" text="Restore Page 2 as dialog"
               mini="true" inline="true" />
           </g:FlowPanel>
-          <e:JQMFilterable ui:field="btnsFltr" />
-          <b:JQMButtonGroup dataFilter="#{btnsFltr.getFilterId}">
-            <b:JQMButton theme="a" text="Button theme 'a' of group"/>
-            <b:JQMButton theme="b" text="Button theme 'b' of group"/>
-            <b:JQMButton theme="c" text="Button theme 'c' of group"/>
-            <b:JQMButton theme="d" text="Button theme 'd' of group"/>
-            <b:JQMButton theme="e" text="Button theme 'e' of group"/>
-            <b:JQMButton theme="f" text="Button theme 'f' of group"/>
+          <e:JQMFilterable ui:field="btnsFltr" placeHolder="Filter buttons..." theme="a" /> 
+          <b:JQMButtonGroup ui:field="btnGroup1" dataFilter="#{btnsFltr.getFilterId}">
+            <b:JQMButton theme="a" text="A"/>
+            <b:JQMButton theme="b" text="B"/>
+            <b:JQMButton theme="c" text="C"/>
+            <b:JQMButton theme="d" text="D"/>
+            <b:JQMButton theme="e" text="E"/>
+            <b:JQMButton theme="f" text="F"/>
           </b:JQMButtonGroup>
           <b:JQMButtonGroup orientation="HORIZONTAL" mini="true" corners="false">
             <b:JQMButton theme="a" text="A"/>

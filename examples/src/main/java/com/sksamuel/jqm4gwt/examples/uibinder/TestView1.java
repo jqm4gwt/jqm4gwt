@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.IconPos;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMDialog;
 import com.sksamuel.jqm4gwt.JQMPage;
@@ -27,6 +28,7 @@ import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.JQMPopup;
 import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.button.JQMButton;
+import com.sksamuel.jqm4gwt.button.JQMButtonGroup;
 import com.sksamuel.jqm4gwt.form.JQMForm;
 import com.sksamuel.jqm4gwt.form.SubmissionHandler;
 import com.sksamuel.jqm4gwt.form.elements.JQMCheckbox;
@@ -303,6 +305,9 @@ public class TestView1 {
 
     @UiField
     JQMButton showPctColBtn;
+
+    @UiField
+    JQMButtonGroup btnGroup1;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -767,6 +772,25 @@ public class TestView1 {
                       cityList.refresh();
                   }
                 });
+            }
+        });
+
+        btnGroup1.addFilterableHandler(new JQMFilterableEvent.DefaultHandler() {
+            @Override
+            public Boolean onFiltering(JQMFilterableEvent event) {
+                String s = event.getFilterText();
+                if (s == null || s.isEmpty()) return null;
+                String[] arr = s.split(",");
+                String txt = JQMCommon.getTextForFiltering(event.getFilteringElt());
+                if (txt == null || txt.isEmpty()) return null;
+                txt = txt.toLowerCase();
+                for (int i = 0; i < arr.length; i++) {
+                    String v = arr[i].trim();
+                    if (v.isEmpty()) continue;
+                    v = v.toLowerCase();
+                    if (txt.contains(v)) return false;
+                }
+                return true; // filter out
             }
         });
     }

@@ -231,6 +231,14 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
         JQMCommon.setFilterChildren(getDataFilterWidget(), filterChildren);
     }
 
+    public boolean isFilterReveal() {
+        return JQMCommon.isFilterReveal(getDataFilterWidget());
+    }
+
+    public void setFilterReveal(boolean value) {
+        JQMCommon.setFilterReveal(getDataFilterWidget(), value);
+    }
+
     @Override
     public void refreshFilter() {
         if (isFilterable()) JQMCommon.refreshFilter(getDataFilterWidget());

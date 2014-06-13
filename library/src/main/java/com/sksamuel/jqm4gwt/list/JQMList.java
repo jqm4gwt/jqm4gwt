@@ -347,15 +347,21 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
      * Sets the color scheme (swatch) for the search filter bar.
      * It accepts a single letter from a-z that maps to the swatches included in your theme.
      */
-    public JQMList setFilterTheme(String theme) {
+    public void setFilterTheme(String theme) {
         setAttribute("data-filter-theme", theme);
+    }
+
+    public JQMList withFilterTheme(String theme) {
+        setFilterTheme(theme);
         return this;
     }
 
+    @Override
     public boolean isFilterReveal() {
         return "true".equals(JQMCommon.getAttribute(this, "data-filter-reveal"));
     }
 
+    @Override
     public void setFilterReveal(boolean value) {
         JQMCommon.setAttribute(this, "data-filter-reveal", value ? "true" : null);
     }
@@ -611,8 +617,12 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
             removeItem(item);
     }
 
-    public JQMList setAutoDividers(boolean auto) {
+    public void setAutoDividers(boolean auto) {
         getElement().setAttribute("data-autodividers", String.valueOf(auto));
+    }
+
+    public JQMList withAutoDividers(boolean auto) {
+        setAutoDividers(auto);
         return this;
     }
 
@@ -631,21 +641,33 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
      * Sets the color scheme (swatch) for list item count bubbles. It accepts a single letter from a-z that maps to
      * the swatches included in your theme.
      */
-    public JQMList setCountTheme(String theme) {
+    public void setCountTheme(String theme) {
         setAttribute("data-count-theme", theme);
+    }
+
+    public JQMList withCountTheme(String theme) {
+        setCountTheme(theme);
         return this;
     }
 
     /**
      * Sets the theme attribute for the data dividers
      */
-    public JQMList setDividerTheme(String theme) {
+    public void setDividerTheme(String theme) {
         setAttribute("data-divider-theme", theme);
+    }
+
+    public JQMList withDividerTheme(String theme) {
+        setDividerTheme(theme);
         return this;
     }
 
-    public JQMList setHeaderTheme(String theme) {
+    public void setHeaderTheme(String theme) {
         setAttribute("data-header-theme", theme);
+    }
+
+    public JQMList withHeaderTheme(String theme) {
+        setHeaderTheme(theme);
         return this;
     }
 

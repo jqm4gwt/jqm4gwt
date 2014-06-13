@@ -800,6 +800,14 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
         JQMCommon.setFilterChildren(getDataFilterWidget(), filterChildren);
     }
 
+    public boolean isFilterReveal() {
+        return JQMCommon.isFilterReveal(getDataFilterWidget());
+    }
+
+    public void setFilterReveal(boolean value) {
+        JQMCommon.setFilterReveal(getDataFilterWidget(), value);
+    }
+
     @Override
     public void refreshFilter() {
         if (isFilterable()) JQMCommon.refreshFilter(getDataFilterWidget());
