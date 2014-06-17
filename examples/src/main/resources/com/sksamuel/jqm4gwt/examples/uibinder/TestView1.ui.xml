@@ -229,6 +229,14 @@
             <b:JQMButton ui:field="addSelectItemsBtn" text="Add Dropdown Items" inline="true" mini="true" />
           </g:FlowPanel>
           <h:Paragraph />
+          <e:JQMSelectWithIcons ui:field="ddIcons" text="Dropdown with icons" 
+            builtInIcon="BARS" selectInline="true">
+            <e:option><e:JQMSelect.Option text="Bars" value="1" icon="BARS" /></e:option>
+            <e:option><e:JQMSelect.Option text="Alert" value="2" icon="ALERT" /></e:option>
+            <e:option><e:JQMSelect.Option text="Audio" value="3" icon="AUDIO" /></e:option>
+            <e:option><e:JQMSelect.Option text="Loader" value="4" customIcon="loader" /></e:option>
+          </e:JQMSelectWithIcons>
+          <h:Paragraph />
           <e:JQMSelect text="Dropdown with multiple select" mulitple="true" native="false"
             closeText="Discard" selectInline="true">
             <e:option><e:JQMSelect.Option text="One" value="1" /></e:option>

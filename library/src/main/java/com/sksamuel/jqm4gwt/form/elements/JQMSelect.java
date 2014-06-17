@@ -61,6 +61,10 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         private boolean selected;
         private boolean disabled;
 
+        // Icons are supported by JQMSelectWithIcons
+        private DataIcon icon;
+        private String customIcon;
+
         public Option() {}
 
         public String getValue() {
@@ -101,6 +105,22 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
         public void setDisabled(boolean disabled) {
             this.disabled = disabled;
+        }
+
+        public DataIcon getIcon() {
+            return icon;
+        }
+
+        public void setIcon(DataIcon icon) {
+            this.icon = icon;
+        }
+
+        public String getCustomIcon() {
+            return customIcon;
+        }
+
+        public void setCustomIcon(String customIcon) {
+            this.customIcon = customIcon;
         }
     }
 
@@ -176,7 +196,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     @UiChild
     public void addOption(Option option) {
         addOption(option.value, option.text, option.isPlaceholder(), option.isSelected(),
-                  option.isDisabled());
+                  option.isDisabled(), option.getIcon(), option.getCustomIcon());
     }
 
     /**
@@ -191,10 +211,11 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     private void addOption(String value, String text, boolean placeholder, boolean selected,
-                           boolean disabled) {
+                           boolean disabled, DataIcon icon, String customIcon) {
         select.addItem(text, value);
 
-        if (value == null || placeholder || selected || disabled) {
+        if (value == null || placeholder || selected || disabled
+                || icon != null || customIcon != null) {
             SelectElement selElt = select.getElement().cast();
             NodeList<OptionElement> opts = selElt.getOptions();
             OptionElement opt = opts.getItem(opts.getLength() - 1);
@@ -202,7 +223,14 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
             if (placeholder) JQMCommon.setAttribute(opt, "data-placeholder", "true");
             if (selected) JQMCommon.setAttribute(opt, "selected", "selected");
             if (disabled) JQMCommon.setAttribute(opt, "disabled", "disabled");
+            if (icon != null) JQMCommon.setIcon(opt, icon);
+            else if (customIcon != null) JQMCommon.setIcon(opt, customIcon);
         }
+    }
+
+    private void addOption(String value, String text, boolean placeholder, boolean selected,
+                           boolean disabled) {
+        addOption(value, text, placeholder, selected, disabled, null/*icon*/, null/*customIcon*/);
     }
 
     /**
@@ -223,6 +251,24 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     public String getOptionValue(int index) {
         return select.getValue(index);
+    }
+
+    public String getOptionIcon(String optValue) {
+        if (optValue == null) return null;
+        NodeList<OptionElement> opts = getOptions();
+        for (int i = 0; i < opts.getLength(); i++) {
+            OptionElement opt = opts.getItem(i);
+            if (optValue.equals(opt.getValue())) {
+                return JQMCommon.getCustomIcon(opt);
+            }
+        }
+        return null;
+    }
+
+    public NodeList<OptionElement> getOptions() {
+        SelectElement selElt = select.getElement().cast();
+        NodeList<OptionElement> opts = selElt.getOptions();
+        return opts;
     }
 
     @Override
@@ -482,7 +528,12 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     @Override
     public JQMSelect removeIcon() {
+        String oldIcon = JQMCommon.getCustomIcon(select.getElement());
+        oldIcon = oldIcon == null ? "" : JQMCommon.STYLE_UI_ICON + oldIcon;
+
         JQMCommon.setIcon(select, null);
+
+        refreshIcon(getElement(), oldIcon, "");
         return this;
     }
 
@@ -491,16 +542,31 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      */
     @Override
     public void setBuiltInIcon(DataIcon icon) {
+        String oldIcon = JQMCommon.getCustomIcon(select.getElement());
+        oldIcon = oldIcon == null ? "" : JQMCommon.STYLE_UI_ICON + oldIcon;
+
         JQMCommon.setIcon(select, icon);
+
+        String newIcon = JQMCommon.getCustomIcon(select.getElement());
+        newIcon = newIcon == null ? "" : JQMCommon.STYLE_UI_ICON + newIcon;
+        refreshIcon(getElement(), oldIcon, newIcon);
     }
 
     @Override
     public void setIconURL(String src) {
-        if (src == null)
-            removeIcon();
-        else
-            select.getElement().setAttribute("data-icon", src);
+        String oldIcon = JQMCommon.getCustomIcon(select.getElement());
+        oldIcon = oldIcon == null ? "" : JQMCommon.STYLE_UI_ICON + oldIcon;
+
+        JQMCommon.setIcon(select.getElement(), src);
+
+        String newIcon = JQMCommon.getCustomIcon(select.getElement());
+        newIcon = newIcon == null ? "" : JQMCommon.STYLE_UI_ICON + newIcon;
+        refreshIcon(getElement(), oldIcon, newIcon);
     }
+
+    private static native void refreshIcon(Element elt, String oldIcon, String newIcon) /*-{
+        $wnd.$(elt).children().find('.ui-btn').removeClass(oldIcon).addClass(newIcon);
+    }-*/;
 
     /**
      * Sets the icon used by this button. See {@link DataIcon}.
@@ -515,6 +581,14 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     public JQMSelect withIconURL(String src) {
         setIconURL(src);
         return this;
+    }
+
+    public boolean isIconNoDisc() {
+        return JQMCommon.isIconNoDisc(this);
+    }
+
+    public void setIconNoDisc(boolean value) {
+        JQMCommon.setIconNoDisc(this, value);
     }
 
     public String getOverlayTheme() {

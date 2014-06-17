@@ -4,6 +4,9 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -30,7 +33,7 @@ public class JQMCommon {
     private static final String STYLE_UI_CORNER_ALL = "ui-corner-all";
     private static final String STYLE_UI_MINI = "ui-mini";
 
-    private static final String STYLE_UI_ICON = "ui-icon-";
+    public static final String STYLE_UI_ICON = "ui-icon-";
     private static final String STYLE_UI_NODISC_ICON = "ui-nodisc-icon";
     private static final String STYLE_UI_ALT_ICON = "ui-alt-icon";
     private static final String STYLE_UI_SHADOW_ICON = "ui-shadow-icon";
@@ -568,12 +571,20 @@ public class JQMCommon {
         return DataIcon.fromJqmValue(getAttribute(elt, DATA_ICON));
     }
 
+    public static String getCustomIcon(Element elt) {
+        return getAttribute(elt, DATA_ICON);
+    }
+
     public static DataIcon getIcon(Widget widget) {
         return getIcon(widget.getElement());
     }
 
     public static void setIcon(Element elt, DataIcon icon) {
         setAttribute(elt, DATA_ICON, icon != null ? icon.getJqmValue() : null);
+    }
+
+    public static void setIcon(Element elt, String customIcon) {
+        setAttribute(elt, DATA_ICON, customIcon != null ? customIcon : null);
     }
 
     public static void setIcon(Widget widget, DataIcon icon) {
@@ -944,5 +955,21 @@ public class JQMCommon {
     public static native JavaScriptObject getFilterCallback(Element fltrElt) /*-{
         return $wnd.$(fltrElt).filterable("option", "filterCallback");
     }-*/;
+
+    /**
+     * @param imgCssName - custom image CSS name, may start from ui-icon- prefix, like: ui-icon-myicon
+     * @return - CSS, can be injected with StyleInjector.inject()
+     */
+    public static String getImageCss(ImageResource img, String imgCssName) {
+        if (img == null || imgCssName == null || imgCssName.isEmpty()) return null;
+        StringBuilder sb = new StringBuilder();
+        SafeUri url = img.getSafeUri();
+        sb.append('.').append(imgCssName).append(":after {");
+        sb.append("background-image: url(").append(url.asString()).append(");");
+        sb.append("background-size: ").append(img.getWidth()).append(Unit.PX.getType());
+        sb.append(' ').append(img.getHeight()).append(Unit.PX.getType()).append(';');
+        sb.append("background-color: transparent;}");
+        return sb.toString();
+    }
 
 }

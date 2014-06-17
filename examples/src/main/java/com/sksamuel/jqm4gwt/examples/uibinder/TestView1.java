@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt.examples.uibinder;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -19,6 +20,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.IconPos;
+import com.sksamuel.jqm4gwt.ImageResources;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMDialog;
@@ -39,6 +41,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.form.elements.JQMRangeSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMSelect;
 import com.sksamuel.jqm4gwt.form.elements.JQMSelect.Option;
+import com.sksamuel.jqm4gwt.form.elements.JQMSelectWithIcons;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
 import com.sksamuel.jqm4gwt.html.Paragraph;
@@ -308,6 +311,9 @@ public class TestView1 {
 
     @UiField
     JQMButtonGroup btnGroup1;
+
+    @UiField
+    JQMSelectWithIcons ddIcons;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -791,6 +797,19 @@ public class TestView1 {
                     if (txt.contains(v)) return false;
                 }
                 return true; // filter out
+            }
+        });
+
+        String css = JQMCommon.getImageCss(ImageResources.INSTANCE.ajaxLoader(),
+                                           JQMCommon.STYLE_UI_ICON + "loader");
+        StyleInjector.inject(css);
+
+        ddIcons.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                String s = event.getValue();
+                String icon = ddIcons.getOptionIcon(s);
+                ddIcons.setIconURL(icon);
             }
         });
     }
