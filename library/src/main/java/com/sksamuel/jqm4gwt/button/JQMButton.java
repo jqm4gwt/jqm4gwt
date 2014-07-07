@@ -49,7 +49,7 @@ import com.sksamuel.jqm4gwt.events.TapHandler;
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 14:02:24
  * <p/>
  * An implementation of a Jquery mobile button.
- * <p/>See <a href="http://demos.jquerymobile.com/1.4.2/button-markup/">Buttons</a>
+ * <p/>See <a href="http://demos.jquerymobile.com/1.4.3/button-markup/">Buttons</a>
  * <p/>See also <a href="http://jquerymobile.com/demos/1.2.1/docs/buttons/buttons-types.html">Button basics</a>
  */
 public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<JQMButton>,
@@ -522,7 +522,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     public void setText(String text) {
         // if the button has already been rendered then we need to go down
         // deep until we get the final span.
-        // it's not a case in 1.4.2 anymore, because buttons have clean/simple mark-up now,
+        // it's not a case in 1.4.x anymore, because buttons have clean/simple mark-up now,
         // but could be useful for complex buttons (see setHtml() method).
         Element e = getElement();
         while (e.getFirstChildElement() != null) {

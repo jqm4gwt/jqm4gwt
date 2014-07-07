@@ -4,7 +4,7 @@ import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * See <a href="http://demos.jquerymobile.com/1.4.2/pages-dialog/">Dialogs</a>
+ * See <a href="http://demos.jquerymobile.com/1.4.3/pages-dialog/">Dialogs</a>
  *
  * <p/> Also see <a href="http://vernonkesner.com/blog/2013/04/10/jquery-mobile-dialogs-and-popups/">
  * jQuery Mobile: Dialogs and Popups</a>

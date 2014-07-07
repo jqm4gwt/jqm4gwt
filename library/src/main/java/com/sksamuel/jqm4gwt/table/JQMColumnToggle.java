@@ -27,8 +27,8 @@ import com.sksamuel.jqm4gwt.form.elements.JQMFilterableEvent;
 import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
 
 /**
- * See <a href="http://demos.jquerymobile.com/1.4.2/table-column-toggle/">Table: Column Toggle</a>
- * <p/> See <a href="http://demos.jquerymobile.com/1.4.2/table-reflow/">Table: Reflow</a>
+ * See <a href="http://demos.jquerymobile.com/1.4.3/table-column-toggle/">Table: Column Toggle</a>
+ * <p/> See <a href="http://demos.jquerymobile.com/1.4.3/table-reflow/">Table: Reflow</a>
  *
  * <p/> See also <a href="http://jquerymobile.com/demos/1.3.0-rc.1/docs/tables/">Responsive tables</a>
  * <p/> See also <a href="http://jquerymobile.com/demos/1.3.0-beta.1/docs/demos/tables/financial-grouped-columns.html">Grouped column headers</a>

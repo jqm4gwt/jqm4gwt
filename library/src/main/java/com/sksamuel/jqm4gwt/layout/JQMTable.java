@@ -31,7 +31,7 @@ import com.sksamuel.jqm4gwt.JQMWidget;
  *
  * <p/>    Tables must have at least 1 and at most 5 columns
  *
- * <p>See <a href="http://demos.jquerymobile.com/1.4.2/grids/">Grids</a></p>
+ * <p>See <a href="http://demos.jquerymobile.com/1.4.3/grids/">Grids</a></p>
  *
  */
 public class JQMTable extends JQMWidget {

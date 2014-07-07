@@ -5,8 +5,8 @@
 
    <!-- For compatibility with superdev mode, library's scripts could not be included here, see entry point code for their injection -->
    
-   <!-- stylesheet src="css/jqm-datebox-1.4.0.min.css"/>
-   <script src="js/jqm-datebox-1.4.0.comp.calbox.min.js"/>
+   <!-- stylesheet src="css/jqm-datebox-1.4.2.min.css"/>
+   <script src="js/jqm-datebox-1.4.2.comp.calbox.min.js"/>
    <script src="js/jquery.mobile.datebox.i18n.en_US.utf8.js"/-->
 
    <source path='jqm4gwt' />

@@ -34,13 +34,14 @@
         text="Is Content Centered" value="true" />
       <e:JQMCheckbox ui:field="cbContentHeight" name="cbContentHeight"
         text="Content Height to 75%" value="false" />
-      <dt:JQMCalBox ui:field="datePicker" text="Date Picker"
-        dateFormat="%A %m/%d/%y" value="2013-10-25" useClearButton="true" />
+      <dt:JQMCalBox ui:field="datePicker" text="Birthday"
+        dateFormat="%A %m/%d/%y" value="2013-10-25" useClearButton="true"
+        usePickers="true" yearPickMin="1901" yearPickMax="NOW" />
     </f:JQMForm>
     
     <t:JQMFooter fixed="true">
       <t:widget>
-        <t:JQMNavBar>
+        <t:JQMNavBar iconPos="TOP">
           <t:button>
             <b:JQMButton builtInIcon="LEFT" href="login" transition="NONE" text="Log In"
               ui:field="login" />
@@ -50,11 +51,11 @@
               ui:field="searchButton" />
           </t:button>
           <t:button>
-            <b:JQMButton builtInIcon="SEARCH" href="myReservations" transition="NONE" text="Reservations"
+            <b:JQMButton builtInIcon="STAR" href="myReservations" transition="NONE" text="Reservations"
               ui:field="reservationsButton"/>
           </t:button>
           <t:button>
-            <b:JQMButton builtInIcon="SEARCH" href="settings" transition="NONE" text="Settings"
+            <b:JQMButton builtInIcon="GEAR" href="settings" transition="NONE" text="Settings"
               ui:field="settingsButton"/>
           </t:button>
         </t:JQMNavBar>

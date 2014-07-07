@@ -27,7 +27,7 @@ import com.sksamuel.jqm4gwt.button.JQMButton;
  *         within a header or footer.
  *
  *
- * <p><a href="http://demos.jquerymobile.com/1.4.2/navbar/">Navbar</a></p>
+ * <p><a href="http://demos.jquerymobile.com/1.4.3/navbar/">Navbar</a></p>
  *
  *
  */
@@ -138,7 +138,7 @@ public class JQMNavBar extends JQMWidget implements HasFixedPosition {
             for (int i = 0; i < buttons.size(); i++) {
                 JQMButton btn = buttons.get(i);
                 IconPos p = btn.getIconPos();
-                if (p == null || p.equals(oldPos)) btn.setIconPos(pos);
+                if (p == null || oldPos == null || p.equals(oldPos)) btn.setIconPos(pos);
             }
         }
     }

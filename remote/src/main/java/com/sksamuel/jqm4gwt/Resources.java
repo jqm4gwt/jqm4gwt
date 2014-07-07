@@ -12,12 +12,12 @@ public interface Resources {
      **/
     class Loader {
 
-        private static final String JQM_CSS = "http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css";
+        private static final String JQM_CSS = "http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.css";
         private static final String JQM_FIXES_CSS = "css/jqm-fixes.css";
         private static final String JQM4GWT_CSS = "css/jqm4gwt.css";
 
         private static final String JQUERY_JS = "http://code.jquery.com/jquery-2.1.1.min.js";
-        private static final String JQM_JS = "http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js";
+        private static final String JQM_JS = "http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.js";
         private static final String JQUERY_ACTUAL = "https://raw.githubusercontent.com/dreamerslab/jquery.actual/v1.0.16/jquery.actual.min.js";
         private static final String JQM_FIXES_JS = "js/jqm-fixes.js";
 

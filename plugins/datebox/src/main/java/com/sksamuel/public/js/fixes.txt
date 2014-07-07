@@ -7,12 +7,16 @@ if ( o.mobVer < 140 ) {
 
 Looks like this issue is fixed in jquery-mobile 1.3.1, so 140 could be replaced by 131.
 
+>> Doesn't matter for jqm 1.4.x
+
 
 2. Hardcoded -6..+6 extended to -100..+100 to improve selection in year picker when calUsePickers mode defined.
 
 for(e=(b.thisYear-6);e<=b.thisYear+6;e++){b.picker2.append(a('<option value="'+e+'"'+((b.thisYear===e)?' selected="selected"':"")+">"+e+"</option>"))}
 
+>> FIXED, there are options now: https://github.com/jtsage/jquery-mobile-datebox/issues/293
 
-3. jqm 1.4.2 datebox not showing, see https://github.com/jtsage/jquery-mobile-datebox/issues/312
+
+3. jqm 1.4.2 / 1.4.3 AND datebox 1.4.2 - not showing problem, see https://github.com/jtsage/jquery-mobile-datebox/issues/312
 
 zindex: "500" changed to "999"

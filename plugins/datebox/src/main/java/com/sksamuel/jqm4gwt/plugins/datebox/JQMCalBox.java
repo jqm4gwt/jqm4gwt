@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt.plugins.datebox;
 import java.util.Date;
 
 import com.google.gwt.core.client.JsDate;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -38,6 +39,8 @@ public class JQMCalBox extends JQMText {
     public static final DateTimeFormat VALUE_DFLT_STR_FMT = DateTimeFormat.getFormat("yyyy-MM-dd");
     private static DateTimeFormat valueStrFmt = VALUE_DFLT_STR_FMT;
 
+    public static final String YEAR_PICK_NOW = "NOW";
+
     protected static final String MODE_CALBOX = "\"mode\": \"calbox\"";
     protected static final String USE_NEW_STYLE = "\"useNewStyle\":";
     protected static final String OVERRIDE_DATE_FMT = "\"overrideDateFormat\":";
@@ -47,6 +50,8 @@ public class JQMCalBox extends JQMText {
     protected static final String USE_TODAY_BUTTON = "\"useTodayButton\":";
     protected static final String SQUARE_DATE_BUTTONS = "\"calControlGroup\":";
     protected static final String USE_CLEAR_BUTTON = "\"useClearButton\":";
+    protected static final String YEAR_PICK_MIN = "\"calYearPickMin\":";
+    protected static final String YEAR_PICK_MAX = "\"calYearPickMax\":";
 
     private Boolean useNewStyle = true;
     private String dateFormat = null;
@@ -56,8 +61,13 @@ public class JQMCalBox extends JQMText {
     private Boolean squareDateButtons = null;
     private Boolean useClearButton = null;
     private Boolean editable = true;
+    private String yearPickMin = null;
+    private String yearPickMax = null;
 
-    Date delayedSetDate = null; // used when isAttached() == false
+    private Date delayedSetDate = null; // used when isAttached() == false
+
+    private boolean isInternSetDate;
+    private Date internDateToSet; // isInternSetDate == true
 
     public JQMCalBox() {
         this(null);
@@ -105,6 +115,12 @@ public class JQMCalBox extends JQMText {
         } else {
             getElement().removeClassName("jqm4gwt-non-editable");
         }
+        if (yearPickMin != null && !yearPickMin.isEmpty()) {
+            sb.append(',').append(YEAR_PICK_MIN).append('"').append(yearPickMin).append('"');
+        }
+        if (yearPickMax != null && !yearPickMax.isEmpty()) {
+            sb.append(',').append(YEAR_PICK_MAX).append('"').append(yearPickMax).append('"');
+        }
         sb.append('}');
         return sb.toString();
     }
@@ -142,8 +158,7 @@ public class JQMCalBox extends JQMText {
     public String getActiveDateFormat() {
         if (dateFormat != null) return dateFormat;
         if (input == null) return null;
-        String s = input.getElement().getId();
-        String fmt = internGetOption(s, "dateFormat");
+        String fmt = internGetOption(input.getElement(), "dateFormat");
         return fmt;
     }
 
@@ -204,6 +219,34 @@ public class JQMCalBox extends JQMText {
      */
     public void setEditable(Boolean editable) {
         this.editable = editable;
+        refreshDataOptions();
+    }
+
+    public String getYearPickMin() {
+        return yearPickMin;
+    }
+
+    /**
+     * See {@link JQMCalBox#setYearPickMax(String)}
+     */
+    public void setYearPickMin(String yearPickMin) {
+        this.yearPickMin = yearPickMin;
+        refreshDataOptions();
+    }
+
+    public String getYearPickMax() {
+        return yearPickMax;
+    }
+
+    /**
+     * yearPickMin and yearPickMax - valid options are an integer less than 1800,
+     * which will be added/subtracted from the current year
+     * (with Max, use a negative integer to go into the past - negative numbers for min will be abs()ed appropriatly),
+     * or if the number is greater than 1800, it will be assumed to be a hard year.
+     * <p/> Finally, the string "NOW" (UCASE!) will use the current year (today's date, not the picker year).
+     */
+    public void setYearPickMax(String yearPickMax) {
+        this.yearPickMax = yearPickMax;
         refreshDataOptions();
     }
 
@@ -312,15 +355,14 @@ public class JQMCalBox extends JQMText {
             return;
         }
         Date oldD = fireEvents ? getDate() : null;
-        String s = input.getElement().getId();
         if (d == null) {
-            internSetDate(s, 0);
+            internSetDate(d);
             input.setText("");
         } else {
-            internSetDate(s, d.getTime());
-            JsDate jsd = internGetDate(s);
+            internSetDate(d);
+            JsDate jsd = internGetDate(input.getElement());
             // had to update text manually, because JS function 'setTheDate' didn't do that for some reason
-            String fs = internFormat(s, getActiveDateFormat(), jsd);
+            String fs = internFormat(input.getElement(), getActiveDateFormat(), jsd);
             input.setText(fs);
         }
         if (fireEvents) {
@@ -334,15 +376,16 @@ public class JQMCalBox extends JQMText {
         if (input == null) return null;
         if (!input.isAttached()) return delayedSetDate;
 
+        if (isInternSetDate) return internDateToSet;
+
         String s = input.getText();
         // open/close calendar even without any selection, sets js control's date to Now,
         // but we don't want this behavior, i.e. text is empty means no date is chosen!
         if (s == null || s.isEmpty()) return null;
 
-        s = input.getElement().getId();
-        JsDate jsd = internGetDate(s);
+        JsDate jsd = internGetDate(input.getElement());
         double msec = jsd.getTime();
-        return msec == 0 ? null : new Date((long) msec);
+        return new Date((long) msec);
     }
 
     /**
@@ -350,29 +393,39 @@ public class JQMCalBox extends JQMText {
      */
     public String formatDate(Date d) {
         if (d == null) return null;
-        String s = input.getElement().getId();
         JsDate jsd = JsDate.create(d.getTime());
-        return internFormat(s, getActiveDateFormat(), jsd);
+        return internFormat(input.getElement(), getActiveDateFormat(), jsd);
     }
 
-    private native JsDate internGetDate(String id) /*-{
-        return $wnd.$("#" + id).datebox('getTheDate');
+    private static native String internFormat(Element elt, String fmt, JsDate d) /*-{
+        return $wnd.$(elt).datebox('callFormat', fmt, d);
     }-*/;
 
-    private native String internFormat(String id, String fmt, JsDate d) /*-{
-        return $wnd.$("#" + id).datebox('callFormat', fmt, d);
+    private static native JsDate internGetDate(Element elt) /*-{
+        return $wnd.$(elt).datebox('getTheDate');
     }-*/;
 
-    private native void internSetDate(String id, double d) /*-{
-        $wnd.$("#" + id).datebox('setTheDate', new $wnd.Date(d));
+    private static native void internalSetDate(Element elt, double d) /*-{
+        $wnd.$(elt).datebox('setTheDate', new $wnd.Date(d));
     }-*/;
+
+    private void internSetDate(Date d) {
+        isInternSetDate = true;
+        internDateToSet = d;
+        try {
+            // ValueChange may occur!
+            internalSetDate(input.getElement(), d == null ? 0d : d.getTime());
+        } finally {
+            isInternSetDate = false;
+        }
+    }
 
     // partial copy of __fmt() and __() functions from jqm-datebox.comp.calbox.js
     // datebox('option') is not in official documentation, see also:
     // http://stackoverflow.com/a/8217857
     // http://dev.jtsage.com/jQM-DateBox2/demos/api/events.html
-    private native String internGetOption(String id, String val) /*-{
-        var o = $wnd.$("#" + id).datebox('option');
+    private static native String internGetOption(Element elt, String val) /*-{
+        var o = $wnd.$(elt).datebox('option');
         if (typeof o.lang[o.useLang][val] !== 'undefined') {
             return o.lang[o.useLang][val];
         }

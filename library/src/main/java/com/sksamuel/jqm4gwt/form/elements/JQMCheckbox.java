@@ -1,5 +1,6 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -68,13 +69,14 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
     @UiConstructor
     public JQMCheckbox(String name, String text) {
         this();
+        String id = Document.get().createUniqueId();
         TextBox input = new TextBox();
-        input.getElement().setId(name);
+        input.getElement().setId(id);
         input.getElement().setAttribute("type", "checkbox");
         input.setName(name);
 
         FormLabel label = new FormLabel();
-        label.setFor(name);
+        label.setFor(id);
         label.setText(text);
 
         init(input, label, id);

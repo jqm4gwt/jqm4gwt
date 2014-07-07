@@ -417,7 +417,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
 
         if (imageElem == null) {
             imageElem = Document.get().createImageElement();
-            // must be first child according to jquery.mobile-1.4.2.css
+            // must be first child according to jquery.mobile-1.4.x.css
             if (anchor != null) anchor.insertFirst(imageElem);
             else insertFirstChild(imageElem);
         }
@@ -619,7 +619,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
 
     private void checkSplitPadding() {
         if (anchor == null || controlGroup == null) return;
-        // Not needed anymore in jqm 1.4.2
+        // Not needed anymore in jqm 1.4.x
         // anchor.getStyle().setPaddingRight(split == null ? 0 : 42, Unit.PX);
     }
 

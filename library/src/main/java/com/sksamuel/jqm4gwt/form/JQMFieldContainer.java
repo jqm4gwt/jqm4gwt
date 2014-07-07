@@ -48,7 +48,7 @@ public class JQMFieldContainer extends JQMWidget {
 
     /**
      * Label/Legend/Text can be hidden for form elements.
-     * <p><a href="http://demos.jquerymobile.com/1.4.2/forms-label-hidden-accessible/">
+     * <p><a href="http://demos.jquerymobile.com/1.4.3/forms-label-hidden-accessible/">
      * Field containers, hide label/legend</a></p>
      */
     public void setLabelHidden(boolean value) {
