@@ -32,9 +32,13 @@ import com.sksamuel.jqm4gwt.toolbar.JQMPanel;
  */
 public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
+    public static final String UI_DIALOG_BACKGROUND = "ui-dialog-background";
+    public static final String DATA_DOM_CACHE = "data-dom-cache";
+    public static final String JQM4GWT_DLG_TRANSPARENT = "jqm4gwt-dialog-transparent";
+
     private static final String STYLE_UI_DIALOG = "ui-dialog";
     private static final String UI_DIALOG_CONTAIN = "ui-dialog-contain";
-    private static final String UI_DIALOG_BACKGROUND = "ui-dialog-background";
+    private static final String UI_BODY_INHERIT = "ui-body-inherit";
 
     private static int counter = 1;
 
@@ -72,6 +76,10 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         allPages.put(getElement(), this);
         setRole(getDfltRole());
         content = createContent();
+    }
+
+    public static JQMPage findPage(Element elt) {
+        return elt == null ? null : allPages.get(elt);
     }
 
     /** Could be overridden by descendants */
@@ -213,53 +221,56 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         // triggerCreate();
     }
 
-    private native void bindLifecycleEvents(JQMPage p, String id) /*-{
+    private static native void bindLifecycleEvents(JQMPage p, Element elt) /*-{
+        var page = $wnd.$(elt);
 
-        $wnd.$('div[data-url="' + id + '"]').on("pagecreate",
-            function(event, ui) {
-                p.@com.sksamuel.jqm4gwt.JQMPage::doPageInit()();
-            });
+        page.on("pagecreate", function(event, ui) {
+            p.@com.sksamuel.jqm4gwt.JQMPage::doPageInit()();
+        });
 
-        $wnd.$('div[data-url="' + id + '"]').on("pageshow",
-            function(event, ui) {
-                p.@com.sksamuel.jqm4gwt.JQMPage::doPageShow(Lcom/google/gwt/dom/client/Element;)(ui.prevPage.get(0));
-            });
+        page.on("pageshow", function(event, ui) {
+            p.@com.sksamuel.jqm4gwt.JQMPage::doPageShow(Lcom/google/gwt/dom/client/Element;)(ui.prevPage.get(0));
+        });
 
-        $wnd.$('div[data-url="' + id + '"]').on("pagehide",
-            function(event, ui) {
-                p.@com.sksamuel.jqm4gwt.JQMPage::doPageHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
-            });
+        page.on("pagehide", function(event, ui) {
+            p.@com.sksamuel.jqm4gwt.JQMPage::doPageHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
+        });
 
-        $wnd.$('div[data-url="' + id + '"]').on("pagebeforehide",
-            function(event, ui) {
-                p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
-            });
+        page.on("pagebeforehide", function(event, ui) {
+            p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
+        });
 
-        $wnd.$('div[data-url="' + id + '"]').on("pagebeforeshow",
-            function(event, ui) {
-                p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeShow(Lcom/google/gwt/dom/client/Element;)(ui.prevPage.get(0));
-            });
-
+        page.on("pagebeforeshow", function(event, ui) {
+            p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeShow(Lcom/google/gwt/dom/client/Element;)(ui.prevPage.get(0));
+        });
     }-*/;
 
-    private native void unbindLifecycleEvents(String id) /*-{
-        $wnd.$('div[data-url="' + id + '"]').off("pagecreate");
-        $wnd.$('div[data-url="' + id + '"]').off("pageshow");
-        $wnd.$('div[data-url="' + id + '"]').off("pagehide");
-        $wnd.$('div[data-url="' + id + '"]').off("pagebeforehide");
-        $wnd.$('div[data-url="' + id + '"]').off("pagebeforeshow");
+    public void bindLifecycleEvents() {
+        bindLifecycleEvents(this, this.getElement());
+    }
 
+    private static native void unbindLifecycleEvents(Element elt) /*-{
+        var page = $wnd.$(elt);
+        page.off("pagecreate");
+        page.off("pageshow");
+        page.off("pagehide");
+        page.off("pagebeforehide");
+        page.off("pagebeforeshow");
     }-*/;
+
+    public void unbindLifecycleEvents() {
+        unbindLifecycleEvents(this.getElement());
+    }
 
     @Override
     protected void onLoad() {
         super.onLoad();
-        bindLifecycleEvents(this, getId());
+        bindLifecycleEvents(this, getElement());
     }
 
     @Override
     protected void onUnload() {
-    	unbindLifecycleEvents(getId());
+    	unbindLifecycleEvents(getElement());
     	super.onUnload();
     }
 
@@ -380,26 +391,26 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
             if (transparent && prevPage != null) {
                 transparentPrevPage = prevPage;
                 prevPage.addClassName(UI_DIALOG_BACKGROUND);
-                String s = prevPage.getAttribute("data-dom-cache");
+                String s = prevPage.getAttribute(DATA_DOM_CACHE);
                 if ("true".equals(s)) {
                     transparentPrevPageClearCache = false;
                 } else {
                     transparentPrevPageClearCache = true;
-                    prevPage.setAttribute("data-dom-cache", "true");
+                    prevPage.setAttribute(DATA_DOM_CACHE, "true");
                 }
                 if (!transparentDoPrevPageLifecycle) {
                     JQMPage prev = allPages.get(transparentPrevPage);
-                    if (prev != null) prev.unbindLifecycleEvents(prev.getId());
+                    if (prev != null) JQMPage.unbindLifecycleEvents(prev.getElement());
                 }
-                if (content != null) content.addStyleName("ui-body-inherit");
+                if (content != null) content.addStyleName(UI_BODY_INHERIT);
                 Element dlgContain = JQMCommon.findChild(getElement(), UI_DIALOG_CONTAIN);
-                if (dlgContain != null) dlgContain.addClassName("ui-body-inherit");
+                if (dlgContain != null) dlgContain.addClassName(UI_BODY_INHERIT);
             } else {
                 transparentPrevPage = null;
                 transparentPrevPageClearCache = false;
-                if (content != null) content.removeStyleName("ui-body-inherit");
+                if (content != null) content.removeStyleName(UI_BODY_INHERIT);
                 Element dlgContain = JQMCommon.findChild(getElement(), UI_DIALOG_CONTAIN);
-                if (dlgContain != null) dlgContain.removeClassName("ui-body-inherit");
+                if (dlgContain != null) dlgContain.removeClassName(UI_BODY_INHERIT);
             }
         }
     }
@@ -420,7 +431,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         if (transparentPrevPage != null) {
             transparentPrevPage.removeClassName(UI_DIALOG_BACKGROUND);
             if (transparentPrevPageClearCache) {
-                transparentPrevPage.removeAttribute("data-dom-cache");
+                transparentPrevPage.removeAttribute(DATA_DOM_CACHE);
             }
             if (!transparentDoPrevPageLifecycle) {
                 final JQMPage prev = allPages.get(transparentPrevPage);
@@ -428,7 +439,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
                     Scheduler.get().scheduleFinally(new ScheduledCommand() {
                         @Override
                         public void execute() {
-                            prev.bindLifecycleEvents(prev, prev.getId());
+                            JQMPage.bindLifecycleEvents(prev, prev.getElement());
                         }
                     });
                 }
@@ -727,9 +738,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     public void setDlgTransparent(boolean transparent) {
         this.transparent = transparent;
-        String s = "jqm4gwt-dialog-transparent";
-        if (this.transparent) addStyleName(s);
-        else removeStyleName(s);
+        if (this.transparent) addStyleName(JQM4GWT_DLG_TRANSPARENT);
+        else removeStyleName(JQM4GWT_DLG_TRANSPARENT);
     }
 
     public boolean isDlgTransparentDoPrevPageLifecycle() {
@@ -787,12 +797,12 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     public void restoreRoleDialog() {
         JQMCommon.setDataRole(this, Mobile.DATA_ROLE_DIALOG);
-        internPageEnchance(getId());
+        internPageEnchance(getElement());
     }
 
     /** Again it's ugly hack, actually partial copy of mobile.page._enhance() method. */
-    private native void internPageEnchance(String id) /*-{
-        var p = $wnd.$('#' + id);
+    private static native void internPageEnchance(Element elt) /*-{
+        var p = $wnd.$(elt);
         var corners = p.page("option", "corners");
         p.addClass("ui-dialog").wrapInner($wnd.$( "<div/>", { "role" : "dialog",
                 "class" : "ui-dialog-contain ui-overlay-shadow" + (corners ? " ui-corner-all" : "")
@@ -811,12 +821,12 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         if (isDialog()) {
             Mobile.back();
         } else if (Mobile.DATA_ROLE_DIALOG.equals(JQMCommon.getDataRole(this))) {
-            internCloseDialog(getId());
+            internCloseDialog(getElement());
         }
     }
 
-    private native void internCloseDialog(String id) /*-{
-        $wnd.$('#' + id).dialog("close");
+    private static native void internCloseDialog(Element elt) /*-{
+        $wnd.$(elt).dialog("close");
     }-*/;
 
     public static enum DlgCloseBtn {

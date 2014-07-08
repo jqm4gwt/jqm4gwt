@@ -1,5 +1,7 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
@@ -33,6 +35,7 @@ import com.sksamuel.jqm4gwt.HasPreventFocusZoom;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.events.HasTapHandlers;
 import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
@@ -131,6 +134,11 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     protected final FormLabel label;
 
     private boolean valueChangeHandlerInitialized;
+
+    private boolean transparent = true;
+    private Element transparentPrevPage;
+    private boolean transparentPrevPageClearCache;
+    private boolean transparentDoPrevPageLifecycle;
 
     /**
      * Creates a new {@link JQMSelect} with no label text.
@@ -723,6 +731,122 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     @Override
     protected Widget getDataFilterWidget() {
         return select;
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        bindLifecycleEvents(select.getElement().getId(), this);
+    }
+
+    @Override
+    protected void onUnload() {
+        unbindLifecycleEvents(select.getElement().getId());
+        super.onUnload();
+    }
+
+    private native void bindLifecycleEvents(String id, JQMSelect selectCtrl) /*-{
+        $wnd.$.mobile.document
+            // The custom select list may show up as either a popup or a dialog, depending how much
+            // vertical room there is on the screen. If it shows up as a dialog, then we have to
+            // process transparent property.
+            .on( "pagebeforeshow", "#" + id + "-dialog,#title-" + id + "-dialog", function( e, ui ) {
+                selectCtrl.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::doDlgBeforeShow(Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/dom/client/Element;)(e.target, ui.prevPage.get(0));
+            })
+            // After the dialog is closed, we have to process transparent property as well.
+            .on( "pagehide", "#" + id + "-dialog,#title-" + id + "-dialog", function( e, ui ) {
+                selectCtrl.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::doDlgHide(Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/dom/client/Element;)(e.target, ui.nextPage.get(0));
+            });
+    }-*/;
+
+    private native void unbindLifecycleEvents(String id) /*-{
+        $wnd.$.mobile.document
+            .off( "pagebeforeshow pagehide", "#" + id + "-dialog,#title-" + id + "-dialog" );
+    }-*/;
+
+    /**
+     * @param dialog - select list's dialog, which is showing
+     * @param prevPage - actually the page on which select widget is placed
+     */
+    protected void doDlgBeforeShow(Element dialog, Element prevPage) {
+        if (transparent && prevPage != null) {
+            transparentPrevPage = prevPage;
+            prevPage.addClassName(JQMPage.UI_DIALOG_BACKGROUND);
+            String s = prevPage.getAttribute(JQMPage.DATA_DOM_CACHE);
+            if ("true".equals(s)) {
+                transparentPrevPageClearCache = false;
+            } else {
+                transparentPrevPageClearCache = true;
+                prevPage.setAttribute(JQMPage.DATA_DOM_CACHE, "true");
+            }
+            if (!transparentDoPrevPageLifecycle) {
+                JQMPage prev = JQMPage.findPage(transparentPrevPage);
+                if (prev != null) prev.unbindLifecycleEvents();
+            }
+            //Element dlgContain = JQMCommon.findChild(dialog, JQMPage.UI_DIALOG_CONTAIN);
+            //if (dlgContain != null) dlgContain.addClassName(JQMPage.UI_BODY_INHERIT);
+        } else {
+            transparentPrevPage = null;
+            transparentPrevPageClearCache = false;
+            //Element dlgContain = JQMCommon.findChild(dialog, JQMPage.UI_DIALOG_CONTAIN);
+            //if (dlgContain != null) dlgContain.removeClassName(JQMPage.UI_BODY_INHERIT);
+        }
+
+        if (transparent) dialog.addClassName(JQMPage.JQM4GWT_DLG_TRANSPARENT);
+        else dialog.removeClassName(JQMPage.JQM4GWT_DLG_TRANSPARENT);
+    }
+
+    /**
+     * @param dialog - select list's dialog, which is hiding
+     * @param nextPage - actually the page on which select widget is placed
+     */
+    protected void doDlgHide(Element dialog, Element nextPage) {
+        if (transparentPrevPage != null) {
+            transparentPrevPage.removeClassName(JQMPage.UI_DIALOG_BACKGROUND);
+            if (transparentPrevPageClearCache) {
+                transparentPrevPage.removeAttribute(JQMPage.DATA_DOM_CACHE);
+            }
+            if (!transparentDoPrevPageLifecycle) {
+                final JQMPage prev = JQMPage.findPage(transparentPrevPage);
+                if (prev != null) {
+                    Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            prev.bindLifecycleEvents();
+                        }
+                    });
+                }
+            }
+            transparentPrevPage = null;
+            transparentPrevPageClearCache = false;
+        }
+    }
+
+    public boolean isDlgTransparent() {
+        return transparent;
+    }
+
+    /**
+     * @param transparent - select list may show up as either a popup or a dialog,
+     * depending how much vertical room there is on the screen.
+     * If it shows up as a dialog then true means show faded previous page under dialog window
+     * and don't bother prev page with lifecycle events (show, hide, ...).
+     */
+    public void setDlgTransparent(boolean transparent) {
+        this.transparent = transparent;
+    }
+
+    public boolean isDlgTransparentDoPrevPageLifecycle() {
+        return transparentDoPrevPageLifecycle;
+    }
+
+    /**
+     * By default all lifecycle events (show, hide, ...) are blocked on previous page
+     * when dlgTransparent is true for this select widget. This behavior can be disabled by setting
+     * this property to true, so lifecycle events will be called for previous page.
+     */
+    public void setDlgTransparentDoPrevPageLifecycle(boolean transparentDoPrevPageLifecycle) {
+        this.transparentDoPrevPageLifecycle = transparentDoPrevPageLifecycle;
     }
 
 }

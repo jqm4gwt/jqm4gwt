@@ -812,6 +812,23 @@ public class TestView1 {
                 ddIcons.setIconURL(icon);
             }
         });
+
+        /*popup.addPopupHandler(new JQMPopupEvent.DefaultHandler() {
+            @Override
+            public void onAfterClose(JQMPopupEvent event) {
+                Window.alert("Popup after close");
+            }
+
+            @Override
+            public void onAfterOpen(JQMPopupEvent event) {
+                Window.alert("Popup after open");
+            }
+
+            @Override
+            public void onBeforePosition(JQMPopupEvent event) {
+                Window.alert("Popup before position");
+            }
+        });*/
     }
 
     public void show() {

@@ -1,6 +1,9 @@
 package com.sksamuel.jqm4gwt;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.JQMPopupEvent.PopupState;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 16 Sep 2012 00:26:35
@@ -45,16 +48,16 @@ public class JQMPopup extends JQMContainer {
         return this;
     }
 
-    private native void _close(String id) /*-{
-        $wnd.$('#' + id).popup("close")
+    private static native void _close(Element elt) /*-{
+        $wnd.$(elt).popup("close")
     }-*/;
 
-    private native void _open(String id) /*-{
-        $wnd.$('#' + id).popup("open")
+    private static native void _open(Element elt) /*-{
+        $wnd.$(elt).popup("open")
     }-*/;
 
     public JQMPopup close() {
-        _close(id);
+        _close(getElement());
         return this;
     }
 
@@ -64,7 +67,7 @@ public class JQMPopup extends JQMContainer {
     }
 
     public JQMPopup open() {
-        _open(id);
+        _open(getElement());
         return this;
     }
 
@@ -153,4 +156,69 @@ public class JQMPopup extends JQMContainer {
     public void setArrows(String arrows) {
         JQMCommon.setAttribute(this, "data-arrow", arrows);
     }
+
+    /** Triggered when a popup has completely closed */
+    protected void onAfterClose() {
+    }
+
+    protected void doAfterClose() {
+        onAfterClose();
+        JQMPopupEvent.fire(this, PopupState.AFTER_CLOSE);
+    }
+
+    /** Triggered after a popup has completely opened */
+    protected void onAfterOpen() {
+    }
+
+    protected void doAfterOpen() {
+        onAfterOpen();
+        JQMPopupEvent.fire(this, PopupState.AFTER_OPEN);
+    }
+
+    /** Triggered before a popup computes the coordinates where it will appear */
+    protected void onBeforePosition() {
+    }
+
+    protected void doBeforePosition() {
+        onBeforePosition();
+        JQMPopupEvent.fire(this, PopupState.BEFORE_POSITION);
+    }
+
+    private static native void bindLifecycleEvents(JQMPopup p, Element elt) /*-{
+        var popup = $wnd.$(elt);
+        popup.on("popupafterclose", function(event, ui) {
+            p.@com.sksamuel.jqm4gwt.JQMPopup::doAfterClose()();
+        });
+        popup.on("popupafteropen", function(event, ui) {
+            p.@com.sksamuel.jqm4gwt.JQMPopup::doAfterOpen()();
+        });
+        popup.on("popupbeforeposition", function(event, ui) {
+            p.@com.sksamuel.jqm4gwt.JQMPopup::doBeforePosition()();
+        });
+    }-*/;
+
+    private static native void unbindLifecycleEvents(Element elt) /*-{
+        var popup = $wnd.$(elt);
+        popup.off("popupafterclose");
+        popup.off("popupafteropen");
+        popup.off("popupbeforeposition");
+    }-*/;
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        bindLifecycleEvents(this, getElement());
+    }
+
+    @Override
+    protected void onUnload() {
+        unbindLifecycleEvents(getElement());
+        super.onUnload();
+    }
+
+    public HandlerRegistration addPopupHandler(JQMPopupEvent.Handler handler) {
+        return addHandler(handler, JQMPopupEvent.getType());
+    }
+
 }
+
