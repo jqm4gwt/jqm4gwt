@@ -21,7 +21,7 @@
   background: rgba(0, 0, 0, 0.3);
   display: none;
   position: fixed;
-  z-index: 100;
+  z-index: 9999999; /* the same as ui-loader */
 }
 .ui-loading .ui-loader-background {
   display: block;
@@ -46,7 +46,7 @@
 
 .jqm4gwt-dialog-transparent.ui-dialog {
   min-height: 100% !important;
-  background: transparent !important;
+  background: rgba(0, 0, 0, 0.1) !important; /* cannot be transparent because of IE9 */
 
   width: 100%;
   height: 100%;
@@ -54,7 +54,7 @@
   top: 0;
   margin: 0;
   position: fixed;
-  z-index: 100;
+  z-index: 9999; /* must be less than ui-loader, but huge enough */
 }
 
 .jqm4gwt-non-editable input {
