@@ -130,6 +130,31 @@ public class JQMPopup extends JQMContainer {
         JQMCommon.setAttribute(this, "data-dismissible", value ? "false" : null);
     }
 
+    public boolean isDismissible() {
+        return !isDialog();
+    }
+
+    /**
+     * Opposite to setDialog()
+     * <p/> Sets whether clicking outside the popup or pressing Escape while the popup is
+     * open will close the popup.
+     * <p/> Note: When history support is turned on, pressing the browser's "Back" button
+     * will dismiss the popup even if this option is set to false.
+     */
+    public void setDismissible(boolean value) {
+        setDialog(!value);
+    }
+
+    public boolean isShadow() {
+        String s = JQMCommon.getAttribute(this, "data-shadow");
+        boolean noShadow = "false".equals(s);
+        return !noShadow;
+    }
+
+    public void setShadow(boolean value) {
+        JQMCommon.setAttribute(this, "data-shadow", value ? null : "false");
+    }
+
     public String getArrows() {
         return JQMCommon.getAttribute(this, "data-arrow");
     }

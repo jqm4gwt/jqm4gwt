@@ -579,7 +579,8 @@
         <b:JQMButton widgetId="popupOpenButton" ui:field="popupOpenButton"
           builtInIcon="INFO" text="Pop-up example..."/>
 
-        <jqm:JQMPopup containerId="tooltipPop" theme="b" padding="true" addStyleNames="{style.tooltipPop}">
+        <jqm:JQMPopup containerId="tooltipPop" theme="b" padding="true" shadow="false" 
+          addStyleNames="{style.tooltipPop}">
           <g:HTML
             HTML="&lt;p&gt;Here is a &lt;strong&gt;tiny popup&lt;/strong&gt; being used like a tooltip. The text will wrap to multiple lines as needed.&lt;/p&gt;">
           </g:HTML>
@@ -590,7 +591,7 @@
 
         <h:Paragraph />
         <jqm:JQMPopup containerId="popupAsDialog" dialog="true" corners="false" theme="a" overlayTheme="b">
-          <b:JQMButton iconPos="NOTEXT" builtInIcon="DELETE" back="true" text="Close"
+          <b:JQMButton iconPos="NOTEXT" builtInIcon="DELETE" back="true" text="Close" mini="true"
             addStyleNames="ui-btn-right" />
           <h:ImageLink src="http://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/NASA-Apollo8-Dec24-Earthrise.jpg/1024px-NASA-Apollo8-Dec24-Earthrise.jpg"
             height="512px" />
