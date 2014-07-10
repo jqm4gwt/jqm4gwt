@@ -830,7 +830,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }-*/;
 
     public static enum DlgCloseBtn {
-        RIGHT("right"), NONE("none");
+        RIGHT("right"), NONE("none"), LEFT("left");
 
         private final String jqmVal;
 

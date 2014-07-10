@@ -60,7 +60,9 @@ public class Jqm4gwtExamplesEntryPoint implements EntryPoint {
         page.add(new JQMButton("Dynamic Table", new DynamicTableDemoPage()));
         page.add(new JQMButton("Dynamic Collapsible", new DynamicCollapsibleDemoPage()));
         page.add(new JQMButton("Popups", new PopupExamplePage()));
-        page.add(new JQMButton("UiBinder", TestView1.createPage() ));
+        JQMButton btn = new JQMButton("UiBinder - All Widgets", TestView1.createPage());
+        btn.getElement().getStyle().setColor("#ffa200");
+        page.add(btn);
 
         page.add(new JQMFooter("jqm4gwt open source project"));
 
