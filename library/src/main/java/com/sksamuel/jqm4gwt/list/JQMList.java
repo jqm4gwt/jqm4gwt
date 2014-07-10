@@ -534,7 +534,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
      *
      * @return the divider with the given tag (if found, or null otherwise).
      */
-    public JQMListDivider findDivider(Object tag) {
+    public JQMListDivider findDividerByTag(Object tag) {
         if (tag == null) return null;
         for (int k = 0; k < list.getWidgetCount(); k++) {
             Widget w = list.getWidget(k);

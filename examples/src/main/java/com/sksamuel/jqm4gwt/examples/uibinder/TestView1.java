@@ -47,6 +47,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMText;
 import com.sksamuel.jqm4gwt.html.Paragraph;
 import com.sksamuel.jqm4gwt.layout.JQMTable;
 import com.sksamuel.jqm4gwt.list.JQMList;
+import com.sksamuel.jqm4gwt.list.JQMListDivider;
 import com.sksamuel.jqm4gwt.list.JQMListItem;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox;
 import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
@@ -314,6 +315,18 @@ public class TestView1 {
 
     @UiField
     JQMSelectWithIcons ddIcons;
+
+    @UiField
+    JQMButton dividerShowBtn;
+
+    @UiField
+    JQMButton dividerBuyBtn;
+
+    @UiField
+    JQMButton dividerShareBtn;
+
+    @UiField
+    JQMList orderList1;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -829,6 +842,20 @@ public class TestView1 {
                 Window.alert("Popup before position");
             }
         });*/
+
+        ClickHandler dividerBtnClick = new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                JQMButton btn = (JQMButton) event.getSource();
+                JQMListDivider di = orderList1.findDividerByTag("dividerWithButtons");
+                String s = di != null ? di.getTagStr() + " found" : "dividerWithButtons NOT found";
+                Window.alert("Clicked button: '" + btn.getText() + "'\n\n" + s);
+            }};
+
+        dividerShowBtn.addClickHandler(dividerBtnClick);
+        dividerBuyBtn.addClickHandler(dividerBtnClick);
+        dividerShareBtn.addClickHandler(dividerBtnClick);
+
     }
 
     public void show() {

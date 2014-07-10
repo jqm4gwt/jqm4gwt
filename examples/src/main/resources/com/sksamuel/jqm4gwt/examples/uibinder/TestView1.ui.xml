@@ -526,7 +526,7 @@
         </g:FlowPanel>
         <h:Paragraph addStyleNames="{style.bevel}" />
         <e:JQMFilterable ui:field="fltr2" />
-        <jqm:list.JQMList.Ordered dataFilter="#{fltr2.getFilterId}">
+        <jqm:list.JQMList.Ordered ui:field="orderList1" dataFilter="#{fltr2.getFilterId}">
           <jqm:item><jqm:list.JQMListItem text="Ordered List Item #1 Text" dataIcon="NONE" /></jqm:item>
           <jqm:item><jqm:list.JQMListItem text="Ordered List Item #2 Text"/></jqm:item>
           <jqm:item><jqm:list.JQMListItem text="Ordered List Item #3 Text" href="http://www.cnn.com"/></jqm:item>
@@ -534,6 +534,26 @@
           <jqm:item><jqm:list.JQMListItem ui:field="listItem4" text="Ordered List Item #4 Text"/></jqm:item>
           <jqm:item><jqm:list.JQMListItem text="Ordered List Item #5 Text"/></jqm:item>
           <jqm:item><jqm:list.JQMListItem /></jqm:item> <!-- Could be without text -->
+          <jqm:divider>
+            <jqm:list.JQMListDivider tagStr="dividerWithButtons">
+              <jqm:widget>
+                <h:Span text="Something" addStyleNames="{style.marginRight10}" />
+              </jqm:widget>
+              <jqm:widget>
+                <h:Span text="Description" addStyleNames="{style.headerImportantColor}" />
+              </jqm:widget>
+              <jqm:widget>
+                <g:FlowPanel>
+                  <b:JQMButton ui:field="dividerShowBtn" text="Show..." inline="true" mini="true" />
+                  <b:JQMButton ui:field="dividerBuyBtn" text="Buy..." inline="true" mini="true" />
+                  <b:JQMButton ui:field="dividerShareBtn" text="Share..." inline="true" mini="true" />
+                </g:FlowPanel>  
+              </jqm:widget>
+            </jqm:list.JQMListDivider>
+          </jqm:divider>
+          <jqm:divider>
+            <jqm:list.JQMListDivider HTML="&lt;i>Divider with &lt;/i>&lt;b>HTML&lt;/b> content" />
+          </jqm:divider>
         </jqm:list.JQMList.Ordered>
         <h:Paragraph />
         <b:JQMButton ui:field="setListItemTextBtn"
