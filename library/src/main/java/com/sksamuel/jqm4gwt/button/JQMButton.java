@@ -257,11 +257,6 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     }
 
     @Override
-    public String getRel() {
-        return getElement().getAttribute("rel");
-    }
-
-    @Override
     public String getText() {
         Element e = getElement();
         while (e.getFirstChildElement() != null) {
@@ -270,28 +265,33 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         return e.getInnerText();
     }
 
-    @Override
-    public Transition getTransition() {
-        String attr = getElement().getAttribute("data-transition");
-        if (attr == null)
-            return null;
-        return Transition.valueOf(attr);
-    }
-
     /**
      * Returns true if this button is set to load the linked page as a dialog page
      *
      * @return true if this link will show as a dialog
      */
     public boolean isDialog() {
-        return Mobile.DATA_ROLE_DIALOG.equals(getAttribute("data-rel"));
+        return Mobile.DATA_ROLE_DIALOG.equals(getRel());
+    }
+
+    /**
+     * Sets this button to be a dialog button. This changes the look and feel
+     * of the page that is loaded as a consequence of clicking on this button.
+     */
+    public void setDialog(boolean dialog) {
+        setRel(dialog ? Mobile.DATA_ROLE_DIALOG : null);
+    }
+
+    public JQMButton withDialog(boolean dialog) {
+        setDialog(dialog);
+        return this;
     }
 
     /**
      * Returns true if this button is set to load a popup
      */
     public boolean isPopup() {
-        return "popup".equals(getAttribute("data-rel"));
+        return "popup".equals(getRel());
     }
 
     public void setPopup(boolean popup) {
@@ -352,7 +352,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     }
 
     /**
-     * Sets this buttom to be a back button. This will override any URL set on
+     * Sets this button to be a back button. This will override any URL set on
      * the button.
      */
     public void setBack(boolean back) {
@@ -378,19 +378,6 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     public JQMButton withCorners(boolean corners) {
         setCorners(corners);
         return this;
-    }
-
-    /**
-     * Sets this buttom to be a dialog button. This changes the look and feel
-     * of the page that is loaded as a consequence of clicking on this button.
-     */
-    public JQMButton withDialog(boolean dialog) {
-        setDialog(dialog);
-        return this;
-    }
-
-    public void setDialog(boolean dialog) {
-        setRel(dialog ? Mobile.DATA_ROLE_DIALOG : null);
     }
 
     /**
@@ -507,9 +494,13 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     }
 
     @Override
+    public String getRel() {
+        return JQMCommon.getAttribute(getElement(), "data-rel");
+    }
+
+    @Override
     public void setRel(String rel) {
-        if (rel == null) getElement().removeAttribute("data-rel");
-        else getElement().setAttribute("data-rel", rel);
+        JQMCommon.setAttribute(getElement(), "data-rel", rel);
     }
 
     @Override
@@ -550,15 +541,17 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         return this;
     }
 
+    @Override
+    public Transition getTransition() {
+        return JQMCommon.getTransition(getElement());
+    }
+
     /**
      * Sets the transition to be used by this button when loading the URL.
      */
     @Override
     public void setTransition(Transition transition) {
-        if (transition != null)
-            setAttribute("data-transition", transition.getJQMValue());
-        else
-            removeAttribute("data-transition");
+        JQMCommon.setTransition(getElement(), transition);
     }
 
     /**

@@ -31,7 +31,7 @@ public class TransitionDemoPage extends JQMPage {
 					JQMHeader hdr = new JQMHeader(transition.name());
 					hdr.setBackButton(true);
 				    add(hdr);
-					add(new Paragraph("I was transitioned in by " + transition.getJQMValue() + "- isn't that great!"));
+					add(new Paragraph("I was transitioned in by " + transition.getJqmValue() + "- isn't that great!"));
 				}
 			}, transition);
 			add(button);

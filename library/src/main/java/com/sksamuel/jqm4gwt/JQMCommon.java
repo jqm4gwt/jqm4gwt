@@ -51,6 +51,7 @@ public class JQMCommon {
     private static final String DATA_DIALOG = "data-dialog";
     private static final String DATA_WRAPPER = "data-wrapper-class";
     private static final String DATA_SHADOW = "data-shadow";
+    private static final String DATA_TRANSITION = "data-transition";
 
     private static final String DATA_FILTER = "data-filter";
     private static final String DATA_INPUT = "data-input";
@@ -688,6 +689,22 @@ public class JQMCommon {
 
     public static void setIconPosEx(Widget widget, IconPos iconPos, String prefix) {
         setIconPosEx(widget.getElement(), iconPos, prefix);
+    }
+
+    public static Transition getTransition(Element elt) {
+        return Transition.fromJqmValue(getAttribute(elt, DATA_TRANSITION));
+    }
+
+    public static Transition getTransition(Widget widget) {
+        return getTransition(widget.getElement());
+    }
+
+    public static void setTransition(Element elt, Transition value) {
+        setAttribute(elt, DATA_TRANSITION, value != null ? value.getJqmValue() : null);
+    }
+
+    public static void setTransition(Widget widget, Transition value) {
+        setTransition(widget.getElement(), value);
     }
 
     public static boolean isClearButton(Element elt) {

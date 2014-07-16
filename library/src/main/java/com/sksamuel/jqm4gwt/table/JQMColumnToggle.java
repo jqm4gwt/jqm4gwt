@@ -57,8 +57,10 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
     private static final String IMG_ONLY = "img-only";
 
     // See http://stackoverflow.com/a/2709855
+    @SuppressWarnings("unused")
     private static final String COMMA_SPLIT = "(?<!\\\\),";
 
+    @SuppressWarnings("unused")
     private static final String BACKSLASH_COMMA = "\\\\,";
 
     private final ComplexPanel tHead;
@@ -602,6 +604,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
         refreshBody();
     }
 
+    @SuppressWarnings("unused")
     private void setDataObj(Map<Widget, Boolean> lst) {
         dataObj = lst;
         dataStr = null;

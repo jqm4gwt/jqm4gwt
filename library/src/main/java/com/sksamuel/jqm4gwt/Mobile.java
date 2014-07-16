@@ -46,7 +46,7 @@ public class Mobile {
      * Invokes the $.mobile.changePage method
      */
     static void changePage(String url, Transition t, boolean reverse, boolean changeHash, boolean dialog) {
-        changePage(url, t.getJQMValue(), reverse, changeHash, dialog ? DATA_ROLE_DIALOG : null);
+        changePage(url, t.getJqmValue(), reverse, changeHash, dialog ? DATA_ROLE_DIALOG : null);
     }
 
     static void changePage(String url, Transition t, boolean reverse, boolean changeHash) {

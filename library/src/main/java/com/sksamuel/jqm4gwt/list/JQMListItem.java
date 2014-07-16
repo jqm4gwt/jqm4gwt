@@ -24,9 +24,13 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.DataIcon;
+import com.sksamuel.jqm4gwt.HasRel;
 import com.sksamuel.jqm4gwt.HasText;
+import com.sksamuel.jqm4gwt.HasTransition;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.Mobile;
+import com.sksamuel.jqm4gwt.Transition;
 import com.sksamuel.jqm4gwt.events.HasTapHandlers;
 import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
@@ -41,7 +45,7 @@ import com.sksamuel.jqm4gwt.panel.JQMControlGroup;
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 11:21:29
  */
 public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>, HasClickHandlers,
-        HasTapHandlers {
+        HasTapHandlers, HasRel<JQMListItem>, HasTransition<JQMListItem> {
 
     public static final String STYLE_UI_LI_HAS_THUMB = "ui-li-has-thumb";
 
@@ -808,4 +812,194 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
     public boolean isFilteredOut() {
         return JQMCommon.hasStyle(this, "ui-screen-hidden");
     }
+
+    @Override
+    public String getRel() {
+        return anchor != null ? JQMCommon.getAttribute(anchor, "data-rel") : null;
+    }
+
+    @Override
+    public void setRel(String rel) {
+        if (anchor == null) {
+            if (rel != null && !rel.isEmpty()) {
+                setUrl("#");
+            } else {
+                return;
+            }
+        }
+        if (anchor != null) JQMCommon.setAttribute(anchor, "data-rel", rel);
+    }
+
+    @Override
+    public JQMListItem withRel(String rel) {
+        setRel(rel);
+        return this;
+    }
+
+    public String getSplitRel() {
+        return split != null ? JQMCommon.getAttribute(split, "data-rel") : null;
+    }
+
+    public void setSplitRel(String rel) {
+        if (split == null) {
+            if (rel != null && !rel.isEmpty()) {
+                setSplitHref("#");
+            } else {
+                return;
+            }
+        }
+        if (split != null) JQMCommon.setAttribute(split, "data-rel", rel);
+    }
+
+    /**
+     * Returns true if this list item is set to load a popup
+     */
+    public boolean isPopup() {
+        return "popup".equals(getRel());
+    }
+
+    public void setPopup(boolean popup) {
+        setRel(popup ? "popup" : null);
+    }
+
+    public JQMListItem withPopup(boolean popup) {
+        setPopup(popup);
+        return this;
+    }
+
+    public String getPopupPos() {
+        return anchor != null ? JQMCommon.getPopupPos(anchor) : null;
+    }
+
+    public void setPopupPos(String pos) {
+        if (anchor == null) {
+            if (pos != null && !pos.isEmpty()) {
+                setUrl("#");
+            } else {
+                return;
+            }
+        }
+        if (anchor != null) JQMCommon.setPopupPos(anchor, pos);
+    }
+
+    /**
+     * Returns true if this list item is set to load the linked page as a dialog page
+     */
+    public boolean isDialog() {
+        return Mobile.DATA_ROLE_DIALOG.equals(getRel());
+    }
+
+    /**
+     * Sets this list item to call a dialog item. This changes the look and feel
+     * of the page that is loaded as a consequence of clicking on this item.
+     */
+    public void setDialog(boolean dialog) {
+        setRel(dialog ? Mobile.DATA_ROLE_DIALOG : null);
+    }
+
+    public JQMListItem withDialog(boolean dialog) {
+        setDialog(dialog);
+        return this;
+    }
+
+    @Override
+    public Transition getTransition() {
+        return anchor != null ? JQMCommon.getTransition(anchor) : null;
+    }
+
+    /**
+     * Sets the transition to be used by this list item when loading the URL.
+     */
+    @Override
+    public void setTransition(Transition transition) {
+        if (anchor == null) {
+            if (transition != null) {
+                setUrl("#");
+            } else {
+                return;
+            }
+        }
+        if (anchor != null) JQMCommon.setTransition(anchor, transition);
+    }
+
+    @Override
+    public JQMListItem withTransition(Transition transition) {
+        setTransition(transition);
+        return this;
+    }
+
+    /**
+     * Returns true if this list item split part is set to load a popup
+     */
+    public boolean isSplitPopup() {
+        return "popup".equals(getSplitRel());
+    }
+
+    public void setSplitPopup(boolean popup) {
+        setSplitRel(popup ? "popup" : null);
+    }
+
+    public JQMListItem withSplitPopup(boolean popup) {
+        setSplitPopup(popup);
+        return this;
+    }
+
+    public String getSplitPopupPos() {
+        return split != null ? JQMCommon.getPopupPos(split) : null;
+    }
+
+    public void setSplitPopupPos(String pos) {
+        if (split == null) {
+            if (pos != null && !pos.isEmpty()) {
+                setSplitHref("#");
+            } else {
+                return;
+            }
+        }
+        if (split != null) JQMCommon.setPopupPos(split, pos);
+    }
+
+    /**
+     * Returns true if this list item split part is set to load the linked page as a dialog page
+     */
+    public boolean isSplitDialog() {
+        return Mobile.DATA_ROLE_DIALOG.equals(getSplitRel());
+    }
+
+    /**
+     * Sets this list item split part to call a dialog item. This changes the look and feel
+     * of the page that is loaded as a consequence of clicking on this item.
+     */
+    public void setSplitDialog(boolean dialog) {
+        setSplitRel(dialog ? Mobile.DATA_ROLE_DIALOG : null);
+    }
+
+    public JQMListItem withSplitDialog(boolean dialog) {
+        setSplitDialog(dialog);
+        return this;
+    }
+
+    public Transition getSplitTransition() {
+        return split != null ? JQMCommon.getTransition(split) : null;
+    }
+
+    /**
+     * Sets the transition to be used by this list item split part when loading the URL.
+     */
+    public void setSplitTransition(Transition transition) {
+        if (split == null) {
+            if (transition != null) {
+                setSplitHref("#");
+            } else {
+                return;
+            }
+        }
+        if (split != null) JQMCommon.setTransition(split, transition);
+    }
+
+    public JQMListItem withSplitTransition(Transition transition) {
+        setSplitTransition(transition);
+        return this;
+    }
+
 }

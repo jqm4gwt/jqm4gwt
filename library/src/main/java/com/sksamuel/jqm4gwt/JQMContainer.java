@@ -138,12 +138,6 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
         return JQMCommon.getTheme(this);
     }
 
-    @Override
-    public Transition getTransition() {
-        String value = getElement().getAttribute("data-transition");
-        return value == null ? null : Transition.valueOf(value);
-    }
-
     public boolean isEnhanced() {
         return enhanced;
     }
@@ -191,8 +185,13 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
     }
 
     @Override
+    public Transition getTransition() {
+        return JQMCommon.getTransition(getElement());
+    }
+
+    @Override
     public void setTransition(Transition transition) {
-        getElement().setAttribute("data-transition", transition.getJQMValue());
+        JQMCommon.setTransition(getElement(), transition);
     }
 
     @Override

@@ -85,7 +85,7 @@ public class JQMContext {
     private static Transition getTransitionForJQMString(String val) {
         if (val != null) {
             for (Transition t : Transition.values()) {
-                if (val.equalsIgnoreCase(t.getJQMValue())) {
+                if (val.equalsIgnoreCase(t.getJqmValue())) {
                     return t;
                 }
             }
@@ -150,12 +150,12 @@ public class JQMContext {
     }-*/;
 
     public static void setDefaultTransition(Transition defaultTransition) {
-        setDefaultTransitionImpl(defaultTransition.getJQMValue());
+        setDefaultTransitionImpl(defaultTransition.getJqmValue());
     }
 
     public static void setDefaultTransition(Transition defaultTransition,
             boolean direction) {
-        setDefaultTransitionImpl(defaultTransition.getJQMValue());
+        setDefaultTransitionImpl(defaultTransition.getJqmValue());
         defaultTransistionDirection = direction;
     }
 
