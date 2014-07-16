@@ -281,4 +281,20 @@ public class JQMContext {
         return jsObj[key];
     }-*/;
 
+    public static native void setJsObjValue(JavaScriptObject jsObj, String key, String value) /*-{
+        jsObj[key] = value;
+    }-*/;
+
+    public static native void deleteJsObjProperty(JavaScriptObject jsObj, String key) /*-{
+        delete jsObj[key];
+    }-*/;
+
+    public static native void setJsObjIntValue(JavaScriptObject jsObj, String key, int value) /*-{
+        jsObj[key] = value;
+    }-*/;
+
+    public static native void setJsObjDoubleValue(JavaScriptObject jsObj, String key, double value) /*-{
+        jsObj[key] = value;
+    }-*/;
+
 }

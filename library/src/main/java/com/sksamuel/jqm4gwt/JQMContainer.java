@@ -79,6 +79,10 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
         setAttribute("data-url", this.id);
     }
 
+    public String getContainerId() {
+        return this.id;
+    }
+
     /**
      * Sets the containerId so it can be referenced by name.
      * @return the instance being operated on as part of a Fluent API

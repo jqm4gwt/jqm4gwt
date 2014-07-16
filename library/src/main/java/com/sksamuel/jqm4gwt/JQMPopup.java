@@ -1,5 +1,6 @@
 package com.sksamuel.jqm4gwt;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
@@ -200,13 +201,88 @@ public class JQMPopup extends JQMContainer {
         JQMPopupEvent.fire(this, PopupState.AFTER_OPEN);
     }
 
-    /** Triggered before a popup computes the coordinates where it will appear */
-    protected void onBeforePosition() {
+    /**
+     * Triggered before a popup computes the coordinates where it will appear.
+     * <p/> Handling this event gives an opportunity to modify the content of
+     * the popup before it appears on the screen. For example, the content can be
+     * scaled or parts of it can be hidden or removed if it is too wide or too tall.
+     * You can also modify the options parameter to affect the popup's placement.
+     *
+     * @param openOptions
+     **/
+    protected void onBeforePosition(PopupOptions openOptions) {
     }
 
-    protected void doBeforePosition() {
-        onBeforePosition();
-        JQMPopupEvent.fire(this, PopupState.BEFORE_POSITION);
+    public static class PopupOptions {
+
+        private Integer x;
+        private Integer y;
+        private String positionTo;
+
+        public Integer getX() {
+            return x;
+        }
+
+        public void setX(Integer x) {
+            this.x = x;
+        }
+
+        public Integer getY() {
+            return y;
+        }
+
+        public void setY(Integer y) {
+            this.y = y;
+        }
+
+        public String getPositionTo() {
+            return positionTo;
+        }
+
+        public void setPositionTo(String positionTo) {
+            this.positionTo = positionTo;
+        }
+
+        @Override
+        public String toString() {
+            return "PopupOptions [x=" + x + ", y=" + y + ", positionTo=" + positionTo + "]";
+        }
+    }
+
+    /**
+     * @param openOptions = { x: 123, y: 456, positionTo: #xxx }
+     */
+    protected void doBeforePosition(JavaScriptObject openOptions) {
+        String x = JQMContext.getJsObjValue(openOptions, "x");
+        String y = JQMContext.getJsObjValue(openOptions, "y");
+        String p = JQMContext.getJsObjValue(openOptions, "positionTo");
+
+        PopupOptions opts = new PopupOptions();
+        opts.setPositionTo(p);
+        opts.setX(x != null && !x.isEmpty() ? Integer.parseInt(x) : null);
+        opts.setY(y != null && !y.isEmpty() ? Integer.parseInt(y) : null);
+
+        onBeforePosition(opts);
+        JQMPopupEvent.fire(this, PopupState.BEFORE_POSITION, opts);
+
+        String newP = opts.getPositionTo();
+        if (newP == null) {
+            if (p != null && !p.isEmpty()) JQMContext.deleteJsObjProperty(openOptions, "positionTo");
+        } else {
+            JQMContext.setJsObjValue(openOptions, "positionTo", newP);
+        }
+        Integer newX = opts.getX();
+        if (newX == null) {
+            if (x != null && !x.isEmpty()) JQMContext.deleteJsObjProperty(openOptions, "x");
+        } else {
+            JQMContext.setJsObjIntValue(openOptions, "x", newX);
+        }
+        Integer newY = opts.getY();
+        if (newY == null) {
+            if (y != null && !y.isEmpty()) JQMContext.deleteJsObjProperty(openOptions, "y");
+        } else {
+            JQMContext.setJsObjIntValue(openOptions, "y", newY);
+        }
     }
 
     private static native void bindLifecycleEvents(JQMPopup p, Element elt) /*-{
@@ -218,7 +294,8 @@ public class JQMPopup extends JQMContainer {
             p.@com.sksamuel.jqm4gwt.JQMPopup::doAfterOpen()();
         });
         popup.on("popupbeforeposition", function(event, ui) {
-            p.@com.sksamuel.jqm4gwt.JQMPopup::doBeforePosition()();
+            //alert(JSON.stringify(ui));
+            p.@com.sksamuel.jqm4gwt.JQMPopup::doBeforePosition(Lcom/google/gwt/core/client/JavaScriptObject;)(ui);
         });
     }-*/;
 

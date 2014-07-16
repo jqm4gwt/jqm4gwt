@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt;
 import com.google.gwt.event.logical.shared.HasAttachHandlers;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
+import com.sksamuel.jqm4gwt.JQMPopup.PopupOptions;
 
 public class JQMPopupEvent extends GwtEvent<JQMPopupEvent.Handler> {
 
@@ -41,11 +42,17 @@ public class JQMPopupEvent extends GwtEvent<JQMPopupEvent.Handler> {
      * @param <S> The handler source type
      * @param source - the source of the handlers
      */
-    public static <S extends HasAttachHandlers> void fire(S source, PopupState popupState) {
+    public static <S extends HasAttachHandlers> void fire(S source, PopupState popupState,
+                                                          PopupOptions popupOptions) {
       if (TYPE != null) {
         JQMPopupEvent event = new JQMPopupEvent(popupState);
+        if (popupOptions != null) event.setPopupOptions(popupOptions);
         source.fireEvent(event);
       }
+    }
+
+    public static <S extends HasAttachHandlers> void fire(S source, PopupState popupState) {
+        fire(source, popupState, null/*popupOptions*/);
     }
 
     public static Type<JQMPopupEvent.Handler> getType() {
@@ -59,12 +66,22 @@ public class JQMPopupEvent extends GwtEvent<JQMPopupEvent.Handler> {
 
     private final PopupState popupState;
 
+    private PopupOptions popupOptions;
+
     protected JQMPopupEvent(PopupState popupState) {
         this.popupState = popupState;
     }
 
     public PopupState getPopupState() {
         return popupState;
+    }
+
+    public PopupOptions getPopupOptions() {
+        return popupOptions;
+    }
+
+    public void setPopupOptions(PopupOptions popupOptions) {
+        this.popupOptions = popupOptions;
     }
 
     @Override

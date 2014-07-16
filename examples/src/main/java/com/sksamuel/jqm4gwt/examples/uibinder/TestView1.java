@@ -839,7 +839,8 @@ public class TestView1 {
 
             @Override
             public void onBeforePosition(JQMPopupEvent event) {
-                Window.alert("Popup before position");
+                PopupOptions opts = event.getPopupOptions();
+                Window.alert("Popup before position: " + opts.toString());
             }
         });*/
 
