@@ -215,23 +215,23 @@ public class JQMPopup extends JQMContainer {
 
     public static class PopupOptions {
 
-        private Integer x;
-        private Integer y;
+        private Double x;
+        private Double y;
         private String positionTo;
 
-        public Integer getX() {
+        public Double getX() {
             return x;
         }
 
-        public void setX(Integer x) {
+        public void setX(Double x) {
             this.x = x;
         }
 
-        public Integer getY() {
+        public Double getY() {
             return y;
         }
 
-        public void setY(Integer y) {
+        public void setY(Double y) {
             this.y = y;
         }
 
@@ -245,7 +245,8 @@ public class JQMPopup extends JQMContainer {
 
         @Override
         public String toString() {
-            return "PopupOptions [x=" + x + ", y=" + y + ", positionTo=" + positionTo + "]";
+            return "PopupOptions [x=" + JQMContext.round(x, 2)
+                    + ", y=" + JQMContext.round(y, 2) + ", positionTo=" + positionTo + "]";
         }
     }
 
@@ -253,14 +254,14 @@ public class JQMPopup extends JQMContainer {
      * @param openOptions = { x: 123, y: 456, positionTo: #xxx }
      */
     protected void doBeforePosition(JavaScriptObject openOptions) {
-        String x = JQMContext.getJsObjValue(openOptions, "x");
-        String y = JQMContext.getJsObjValue(openOptions, "y");
         String p = JQMContext.getJsObjValue(openOptions, "positionTo");
+        Double x = JQMContext.getJsObjDoubleValue(openOptions, "x");
+        Double y = JQMContext.getJsObjDoubleValue(openOptions, "y");
 
         PopupOptions opts = new PopupOptions();
         opts.setPositionTo(p);
-        opts.setX(x != null && !x.isEmpty() ? Integer.parseInt(x) : null);
-        opts.setY(y != null && !y.isEmpty() ? Integer.parseInt(y) : null);
+        opts.setX(x);
+        opts.setY(y);
 
         onBeforePosition(opts);
         JQMPopupEvent.fire(this, PopupState.BEFORE_POSITION, opts);
@@ -271,17 +272,17 @@ public class JQMPopup extends JQMContainer {
         } else {
             JQMContext.setJsObjValue(openOptions, "positionTo", newP);
         }
-        Integer newX = opts.getX();
+        Double newX = opts.getX();
         if (newX == null) {
-            if (x != null && !x.isEmpty()) JQMContext.deleteJsObjProperty(openOptions, "x");
+            if (x != null) JQMContext.deleteJsObjProperty(openOptions, "x");
         } else {
-            JQMContext.setJsObjIntValue(openOptions, "x", newX);
+            JQMContext.setJsObjDoubleValue(openOptions, "x", newX);
         }
-        Integer newY = opts.getY();
+        Double newY = opts.getY();
         if (newY == null) {
-            if (y != null && !y.isEmpty()) JQMContext.deleteJsObjProperty(openOptions, "y");
+            if (y != null) JQMContext.deleteJsObjProperty(openOptions, "y");
         } else {
-            JQMContext.setJsObjIntValue(openOptions, "y", newY);
+            JQMContext.setJsObjDoubleValue(openOptions, "y", newY);
         }
     }
 

@@ -61,6 +61,11 @@
     }
 
     .tooltipPop { max-width: 350px; }
+
+    .wordWrap {
+      white-space: normal;
+    }
+
   </ui:style>
 
   <jqm:JQMPage containerId="testPage1" backButton="true"
@@ -534,6 +539,10 @@
           <jqm:item><jqm:list.JQMListItem ui:field="listItem4" text="Ordered List Item #4 Text"/></jqm:item>
           <jqm:item><jqm:list.JQMListItem text="Ordered List Item #5 Text"/></jqm:item>
           <jqm:item><jqm:list.JQMListItem /></jqm:item> <!-- Could be without text -->
+          <jqm:item>
+            <jqm:list.JQMListItem text="Item #7 - opens Popup"
+              href="#listPopup" popup="true" />
+          </jqm:item>
           <jqm:divider>
             <jqm:list.JQMListDivider tagStr="dividerWithButtons">
               <jqm:widget>
@@ -555,6 +564,12 @@
             <jqm:list.JQMListDivider HTML="&lt;i>Divider with &lt;/i>&lt;b>HTML&lt;/b> content" />
           </jqm:divider>
         </jqm:list.JQMList.Ordered>
+        <jqm:JQMPopup ui:field="listPopup" containerId="listPopup" arrows="l,r" padding="true" >
+          <g:FlowPanel>
+            <h:Heading.H3>JQMList Popup demo</h:Heading.H3>
+            <h:Heading.H4 ui:field="listPopupInfo" addStyleNames="{style.wordWrap}" />
+          </g:FlowPanel>
+        </jqm:JQMPopup>
         <h:Paragraph />
         <b:JQMButton ui:field="setListItemTextBtn"
           text="Set 'Ordered List Item #4 Text' to 'null'" mini="true" inline="true" />

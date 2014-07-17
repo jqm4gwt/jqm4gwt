@@ -28,6 +28,8 @@ import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMPage.DlgCloseBtn;
 import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.JQMPopup;
+import com.sksamuel.jqm4gwt.JQMPopup.PopupOptions;
+import com.sksamuel.jqm4gwt.JQMPopupEvent;
 import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.button.JQMButtonGroup;
@@ -44,6 +46,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMSelect.Option;
 import com.sksamuel.jqm4gwt.form.elements.JQMSelectWithIcons;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
+import com.sksamuel.jqm4gwt.html.Heading;
 import com.sksamuel.jqm4gwt.html.Paragraph;
 import com.sksamuel.jqm4gwt.layout.JQMTable;
 import com.sksamuel.jqm4gwt.list.JQMList;
@@ -327,6 +330,12 @@ public class TestView1 {
 
     @UiField
     JQMList orderList1;
+
+    @UiField
+    JQMPopup listPopup;
+
+    @UiField
+    Heading listPopupInfo;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -843,6 +852,14 @@ public class TestView1 {
                 Window.alert("Popup before position: " + opts.toString());
             }
         });*/
+
+        listPopup.addPopupHandler(new JQMPopupEvent.DefaultHandler() {
+            @Override
+            public void onBeforePosition(JQMPopupEvent event) {
+                PopupOptions opts = event.getPopupOptions();
+                listPopupInfo.setText("before position: " + opts.toString());
+            }
+        });
 
         ClickHandler dividerBtnClick = new ClickHandler() {
             @Override

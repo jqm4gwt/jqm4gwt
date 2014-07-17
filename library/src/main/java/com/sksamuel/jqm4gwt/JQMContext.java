@@ -289,6 +289,16 @@ public class JQMContext {
         delete jsObj[key];
     }-*/;
 
+    public static native Integer getJsObjIntValue(JavaScriptObject jsObj, String key) /*-{
+        var v = jsObj[key];
+        return v === undefined || v === null ? null : @java.lang.Integer::valueOf(I)(v);
+    }-*/;
+
+    public static native Double getJsObjDoubleValue(JavaScriptObject jsObj, String key) /*-{
+        var v = jsObj[key];
+        return v === undefined || v === null ? null : @java.lang.Double::valueOf(D)(v);
+    }-*/;
+
     public static native void setJsObjIntValue(JavaScriptObject jsObj, String key, int value) /*-{
         jsObj[key] = value;
     }-*/;
@@ -296,5 +306,11 @@ public class JQMContext {
     public static native void setJsObjDoubleValue(JavaScriptObject jsObj, String key, double value) /*-{
         jsObj[key] = value;
     }-*/;
+
+    public static double round(double valueToRound, int numberOfDecimalPlaces) {
+        double multipicationFactor = Math.pow(10, numberOfDecimalPlaces);
+        double interestedInZeroDPs = valueToRound * multipicationFactor;
+        return Math.round(interestedInZeroDPs) / multipicationFactor;
+    }
 
 }
