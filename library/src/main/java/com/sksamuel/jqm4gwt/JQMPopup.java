@@ -286,6 +286,73 @@ public class JQMPopup extends JQMContainer {
         }
     }
 
+    /**
+     * Based on mobile.popup _desiredCoords()
+     *
+     * @param positionTo - jQuery selector for finding element (must be visible)
+     * @return - { left: 111, top: 222, width: 333, height: 444 }
+     */
+    private static native JavaScriptObject jsCalcEltCoords(String positionTo) /*-{
+        var dst = null;
+        try {
+            dst = $wnd.$(positionTo);
+        } catch(err) {
+            dst = null;
+        }
+        if (dst) {
+            dst.filter(":visible");
+            if (dst.length === 0) {
+                dst = null;
+            }
+        }
+
+        // If an element was found, preparing result
+        if (dst) {
+            var offset = dst.offset();
+            var rslt = { left: offset.left, top: offset.top, width: dst.outerWidth(), height: dst.outerHeight() };
+            return rslt;
+        } else {
+            return null;
+        }
+    }-*/;
+
+    public static class EltCoords {
+
+        public final double left;
+        public final double top;
+        public final double width;
+        public final double height;
+
+        public EltCoords(double left, double top, double width, double height) {
+            super();
+            this.left = left;
+            this.top = top;
+            this.width = width;
+            this.height = height;
+        }
+
+        @Override
+        public String toString() {
+            return "EltCoords [left=" + JQMContext.round(left, 2)
+                    + ", top=" + JQMContext.round(top, 2)
+                    + ", width=" + JQMContext.round(width, 2)
+                    + ", height=" + JQMContext.round(height, 2) + "]";
+        }
+    }
+
+    /**
+     * @param positionTo - jQuery selector for finding element (must be visible)
+     */
+    public static EltCoords calcEltCoords(String positionTo) {
+       JavaScriptObject o = jsCalcEltCoords(positionTo);
+       if (o == null) return null;
+       Double left = JQMContext.getJsObjDoubleValue(o, "left");
+       Double top = JQMContext.getJsObjDoubleValue(o, "top");
+       Double width = JQMContext.getJsObjDoubleValue(o, "width");
+       Double height = JQMContext.getJsObjDoubleValue(o, "height");
+       return new EltCoords(left, top, width, height);
+    }
+
     private static native void bindLifecycleEvents(JQMPopup p, Element elt) /*-{
         var popup = $wnd.$(elt);
         popup.on("popupafterclose", function(event, ui) {

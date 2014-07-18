@@ -458,7 +458,32 @@ public class JQMTable extends JQMWidget {
         return flow.getWidgetCount();
     }
 
+    /**
+     * @return - i-th cell, i must be in 0..size()-1
+     */
     public Widget get(int i) {
         return flow.getWidget(i);
+    }
+
+    public Widget getFirstVisibleCell() {
+        for (int i = 0; i < flow.getWidgetCount(); i++) {
+            Widget w = flow.getWidget(i);
+            String disp = w.getElement().getStyle().getDisplay();
+            if (disp == null || disp.isEmpty()) return w;
+            if (Display.NONE.getCssName().equals(disp)) continue;
+            return w;
+        }
+        return null;
+    }
+
+    public Widget getLastVisibleCell() {
+        for (int i = flow.getWidgetCount() - 1; i >= 0; i--) {
+            Widget w = flow.getWidget(i);
+            String disp = w.getElement().getStyle().getDisplay();
+            if (disp == null || disp.isEmpty()) return w;
+            if (Display.NONE.getCssName().equals(disp)) continue;
+            return w;
+        }
+        return null;
     }
 }

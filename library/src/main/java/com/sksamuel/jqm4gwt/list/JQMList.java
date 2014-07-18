@@ -723,4 +723,23 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
         return this;
     }
 
+    public boolean isIconNoDisc() {
+        return JQMCommon.isIconNoDisc(this);
+    }
+
+    public void setIconNoDisc(boolean value) {
+        JQMCommon.setIconNoDisc(this, value);
+    }
+
+    public boolean isIconAlt() {
+        return JQMCommon.isIconAlt(this);
+    }
+
+    /**
+     * @param value - if true "white vs. black" icon style will be used
+     */
+    public void setIconAlt(boolean value) {
+        JQMCommon.setIconAlt(this, value);
+    }
+
 }

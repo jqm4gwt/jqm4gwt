@@ -28,6 +28,7 @@ import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMPage.DlgCloseBtn;
 import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.JQMPopup;
+import com.sksamuel.jqm4gwt.JQMPopup.EltCoords;
 import com.sksamuel.jqm4gwt.JQMPopup.PopupOptions;
 import com.sksamuel.jqm4gwt.JQMPopupEvent;
 import com.sksamuel.jqm4gwt.Mobile;
@@ -857,7 +858,14 @@ public class TestView1 {
             @Override
             public void onBeforePosition(JQMPopupEvent event) {
                 PopupOptions opts = event.getPopupOptions();
-                listPopupInfo.setText("before position: " + opts.toString());
+                JQMListItem li = orderList1.getClickItem();
+                if (li == null) {
+                    listPopupInfo.setText("before position: " + opts.toString());
+                } else {
+                    EltCoords coords = JQMPopup.calcEltCoords('#' + li.getId());
+                    listPopupInfo.setText("before position: " + opts.toString()
+                            + " " + coords.toString());
+                }
             }
         });
 

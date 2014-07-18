@@ -19,6 +19,9 @@ public class JQMCommon {
 
     private JQMCommon() {} // static class, not supposed to be instantiated
 
+    public static final String POPUP_POS_WINDOW = "window";
+    public static final String POPUP_POS_ORIGIN = "origin";
+
     public static final String STYLE_UI_BTN = "ui-btn-";
     public static final String STYLE_UI_BTN_INLINE = "ui-btn-inline";
     public static final String STYLE_UI_BTN_ICONPOS = "ui-btn-icon-";
@@ -776,7 +779,7 @@ public class JQMCommon {
             setAttribute(elt, DATA_POPUP_POSITION, null);
             return;
         }
-        if (!value.startsWith("#") && !value.equals("window") && !value.equals("origin")) {
+        if (!value.startsWith("#") && !value.equals(POPUP_POS_WINDOW) && !value.equals(POPUP_POS_ORIGIN)) {
             throw new IllegalArgumentException("Popup position must be origin, window, or an id selector");
         }
         setAttribute(elt, DATA_POPUP_POSITION, value);

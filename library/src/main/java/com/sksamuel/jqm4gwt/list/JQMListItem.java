@@ -374,6 +374,10 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         return this;
     }
 
+    public String getId() {
+        return getElement().getId();
+    }
+
     /**
      * Sets the image to be used to the given source url.
      * <p/> The same as setImage(), but image is marked as icon class.

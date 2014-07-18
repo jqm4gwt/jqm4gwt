@@ -32,6 +32,10 @@ public class JQMListDivider extends CustomFlowPanel implements HasText<JQMListDi
 		setText(text);
 	}
 
+    public String getId() {
+        return getElement().getId();
+    }
+
     @UiChild(tagname="widget")
     public void addWidget(Widget w) {
         if (w == null) return;
