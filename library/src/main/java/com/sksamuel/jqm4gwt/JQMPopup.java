@@ -433,5 +433,19 @@ public class JQMPopup extends JQMContainer {
         return addHandler(handler, JQMPopupEvent.getType());
     }
 
+    public boolean isCloseThenClick() {
+        String s = JQMCommon.getAttribute(getElement(), "data-closeThenClick");
+        return "true".equals(s);
+    }
+
+    /**
+     * Works in conjunction with dismissible, will pass/re-route outside click to proper widget
+     * after popup is closed, so you don't have to tap widget one more time (i.e. prevents click event
+     * eating by popup).
+     */
+    public void setCloseThenClick(boolean value) {
+        JQMCommon.setAttribute(getElement(), "data-closeThenClick", value ? "true" : null);
+    }
+
 }
 

@@ -565,7 +565,7 @@
           </jqm:divider>
         </jqm:list.JQMList.Ordered>
         <jqm:JQMPopup ui:field="listPopup" containerId="listPopup" arrows="l,r" padding="true"
-          tolerance="30,200,30,15" >
+          tolerance="30,200,30,15" closeThenClick="true" >
           <g:FlowPanel>
             <h:Heading.H3>JQMList Popup demo</h:Heading.H3>
             <h:Heading.H4 ui:field="listPopupInfo" addStyleNames="{style.wordWrap}" />

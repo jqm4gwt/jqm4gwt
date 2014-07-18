@@ -17,7 +17,7 @@ $.widget( "ui.tabs", $.ui.tabs, {
                 });
             }
         } else {
-            return this._super();
+            return this._super( options, element );
         }
     }
 });
@@ -27,7 +27,7 @@ $.widget( "ui.tabs", $.ui.tabs, {
     _setupHeightStyle: function( heightStyle ) {
         var maxHeight,
         parent = this.element.parent();
-        
+
         if ( heightStyle === "auto" ) {
             maxHeight = 0;
             this.panels.each(function() {
@@ -36,28 +36,55 @@ $.widget( "ui.tabs", $.ui.tabs, {
         } else if ( heightStyle === "fill" ) {
             maxHeight = parent.actual( 'height' );
             maxHeight -= this.element.actual( 'outerHeight' ) - this.element.actual( 'height' );
-    
+
             this.element.siblings( ":visible" ).each(function() {
                 var elem = $( this ),
                     position = elem.css( "position" );
-    
+
                 if ( position === "absolute" || position === "fixed" ) {
                     return;
                 }
                 maxHeight -= elem.actual( 'outerHeight', { includeMargin : true } );
             });
-    
+
             this.element.children().not( this.panels ).each(function() {
                 maxHeight -= $( this ).actual( 'outerHeight', { includeMargin : true } );
             });
-    
+
             this.panels.each(function() {
                 $( this ).height( Math.max( 0, maxHeight -
                     $( this ).actual( 'innerHeight') + $( this ).actual( 'height') ) );
             })
             .css( "overflow", "auto" );
         } else {
-            this._super();
+            return this._super( heightStyle );
         }
+    }
+});
+
+// See https://github.com/jquery/jquery-mobile/issues/7579
+$.widget( "mobile.popup", $.mobile.popup, {
+    _eatEventAndClose: function( theEvent ) {
+        if ( this.options.dismissible ) {
+            var doClick = this.element.attr( "data-" + $.mobile.ns + "closeThenClick" );
+            if ( doClick === "true" ) {
+                var x = theEvent.clientX;
+                var y = theEvent.clientY;
+
+                theEvent.preventDefault();
+                theEvent.stopImmediatePropagation();
+                this.close();
+
+                var newTarget = document.elementFromPoint( x, y );
+                if (newTarget != null) {
+                    setTimeout(function() {
+                        newTarget.focus();
+                        newTarget.click();
+                    }, 200); // Win 8.1 is not OK with timeout less than 200
+                }
+                return false;
+            }
+        }
+        return this._super( theEvent );
     }
 });
