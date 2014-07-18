@@ -1,6 +1,8 @@
 package com.sksamuel.jqm4gwt;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
@@ -14,6 +16,8 @@ import com.sksamuel.jqm4gwt.JQMPopupEvent.PopupState;
 public class JQMPopup extends JQMContainer {
 
     private static int counter = 1;
+
+    private String tolerance;
 
     /**
      * Creates a new {@link JQMPopup} with an automatically assigned id in the form popup-xx where XX is an incrementing number.
@@ -286,6 +290,31 @@ public class JQMPopup extends JQMContainer {
         }
     }
 
+    private static native void setTolerance(Element elt, String tolerance) /*-{
+        $wnd.$(elt).popup("option", "tolerance", tolerance);
+    }-*/;
+
+    private static native String getTolerance(Element elt) /*-{
+        return $wnd.$(elt).popup("option", "tolerance");
+    }-*/;
+
+    protected static native boolean isInitialized(Element elt) /*-{
+        var w = $wnd.$(elt);
+        return w.data('mobile-popup') !== undefined;
+    }-*/;
+
+    public String getTolerance() {
+        Element elt = getElement();
+        if (isInitialized(elt)) return getTolerance(elt);
+        else return tolerance;
+    }
+
+    public void setTolerance(String tolerance) {
+        this.tolerance = tolerance;
+        Element elt = getElement();
+        if (isInitialized(elt)) setTolerance(elt, tolerance);
+    }
+
     /**
      * Based on mobile.popup _desiredCoords()
      *
@@ -378,6 +407,20 @@ public class JQMPopup extends JQMContainer {
     protected void onLoad() {
         super.onLoad();
         bindLifecycleEvents(this, getElement());
+        if (tolerance != null) {
+            Scheduler.get().scheduleFinally(new RepeatingCommand() {
+                @Override
+                public boolean execute() {
+                    Element elt = getElement();
+                    if (isInitialized(elt)) {
+                        setTolerance(elt, tolerance);
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            });
+        }
     }
 
     @Override
