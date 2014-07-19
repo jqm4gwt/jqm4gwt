@@ -93,8 +93,9 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
     private TextBox checkBoxInput;
 
     private HandlerRegistration clickHandler;
-
     private HandlerRegistration tapHandler;
+
+    private Object tag;
 
     /**
      * Create empty {@link JQMListItem}
@@ -1004,6 +1005,25 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
     public JQMListItem withSplitTransition(Transition transition) {
         setSplitTransition(transition);
         return this;
+    }
+
+    public Object getTag() {
+        return tag;
+    }
+
+    /**
+     * Additional information can be attached to list item (for example linked JQMListDivider).
+     */
+    public void setTag(Object tag) {
+        this.tag = tag;
+    }
+
+    public String getTagStr() {
+        return tag != null ? tag.toString() : null;
+    }
+
+    public void setTagStr(String value) {
+        setTag(value);
     }
 
 }

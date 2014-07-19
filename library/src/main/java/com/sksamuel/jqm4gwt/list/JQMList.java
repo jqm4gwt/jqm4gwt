@@ -375,7 +375,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
 
     /**
      * Returns a List of {@link JQMListItem}s currently set on this list.
-     * @return the items, null values for divider locations!
+     * @return the items, has null values for divider locations!
      */
     public List<JQMListItem> getItems() {
         return items;
@@ -583,6 +583,22 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
         for (JQMListItem i : lst) {
             if (i == null) continue;
             if (text.equals(i.getText())) return i;
+        }
+        return null;
+    }
+
+    /**
+     * Find the list item with the given tag. This method will search all the items and return
+     * the first item found with the given tag.
+     *
+     * @return the list item with the given tag (if found, or null otherwise).
+     */
+    public JQMListItem findItemByTag(Object tag) {
+        if (tag == null) return null;
+        List<JQMListItem> lst = getItems();
+        for (JQMListItem i : lst) {
+            if (i == null) continue;
+            if (tag.equals(i.getTag())) return i;
         }
         return null;
     }
