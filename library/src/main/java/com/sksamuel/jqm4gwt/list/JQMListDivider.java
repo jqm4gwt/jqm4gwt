@@ -20,6 +20,7 @@ public class JQMListDivider extends CustomFlowPanel implements HasText<JQMListDi
 	public static final String ATTR_VALUE = "list-divider";
 
     private Object tag;
+    private JQMList list;
 
     protected JQMListDivider() {
         super(Document.get().createLIElement());
@@ -101,4 +102,14 @@ public class JQMListDivider extends CustomFlowPanel implements HasText<JQMListDi
     public void setTagStr(String value) {
         setTag(value);
     }
+
+    public JQMList getList() {
+        return list;
+    }
+
+    protected JQMListDivider setList(JQMList jqmList) {
+        this.list = jqmList;
+        return this;
+    }
+
 }

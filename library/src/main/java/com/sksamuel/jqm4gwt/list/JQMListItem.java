@@ -472,6 +472,10 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         super.onUnload();
     }
 
+    public JQMList getList() {
+        return list;
+    }
+
     protected JQMListItem setList(JQMList jqmList) {
         removeItemActivationHandlers();
         this.list = jqmList;

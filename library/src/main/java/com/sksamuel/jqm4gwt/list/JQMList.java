@@ -131,6 +131,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
     public void addDivider(int index, JQMListDivider d) {
         list.insert(d, index);
         items.add(index, null); // to keep the list and items in sync
+        d.setList(this);
     }
 
     /**
@@ -472,6 +473,11 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
         JQMContext.render(getElement());
     }
 
+    protected boolean isDivider(Widget w) {
+        if (w == null) return false;
+        return JQMListDivider.ATTR_VALUE.equals(w.getElement().getAttribute(JQMListDivider.ATTR_NAME));
+    }
+
     /**
      * Remove the divider with the given text. This method will search all the dividers and remove the first divider
      * found with the given text.
@@ -481,8 +487,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
     public boolean removeDivider(String text) {
         for (int k = 0; k < list.getWidgetCount(); k++) {
             Widget w = list.getWidget(k);
-            if (JQMListDivider.ATTR_VALUE.equals(w.getElement().getAttribute(JQMListDivider.ATTR_NAME))
-                    && w.getElement().getInnerText().equals(text)) {
+            if (isDivider(w) && w.getElement().getInnerText().equals(text)) {
                 list.remove(k);
                 items.remove(k);
                 return true;
@@ -497,12 +502,11 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
      *
      * @return true if a divider with the given tag was found and removed, otherwise false.
      */
-    public boolean removeDivider(Object tag) {
+    public boolean removeDividerByTag(Object tag) {
         if (tag == null) return false;
         for (int k = 0; k < list.getWidgetCount(); k++) {
             Widget w = list.getWidget(k);
-            if (JQMListDivider.ATTR_VALUE.equals(w.getElement().getAttribute(JQMListDivider.ATTR_NAME))
-                    && tag.equals(((JQMListDivider) w).getTag())) {
+            if (isDivider(w) && tag.equals(((JQMListDivider) w).getTag())) {
                 list.remove(k);
                 items.remove(k);
                 return true;
@@ -520,8 +524,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
     public JQMListDivider findDivider(String text) {
         for (int k = 0; k < list.getWidgetCount(); k++) {
             Widget w = list.getWidget(k);
-            if (JQMListDivider.ATTR_VALUE.equals(w.getElement().getAttribute(JQMListDivider.ATTR_NAME))
-                    && w.getElement().getInnerText().equals(text)) {
+            if (isDivider(w) && w.getElement().getInnerText().equals(text)) {
                 return (JQMListDivider) w;
             }
         }
@@ -538,12 +541,23 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
         if (tag == null) return null;
         for (int k = 0; k < list.getWidgetCount(); k++) {
             Widget w = list.getWidget(k);
-            if (JQMListDivider.ATTR_VALUE.equals(w.getElement().getAttribute(JQMListDivider.ATTR_NAME))
-                    && tag.equals(((JQMListDivider) w).getTag())) {
+            if (isDivider(w) && tag.equals(((JQMListDivider) w).getTag())) {
                 return (JQMListDivider) w;
             }
         }
         return null;
+    }
+
+    public List<JQMListDivider> getDividers() {
+        List<JQMListDivider> rslt = null;
+        for (int k = 0; k < list.getWidgetCount(); k++) {
+            Widget w = list.getWidget(k);
+            if (isDivider(w)) {
+                if (rslt == null) rslt = new ArrayList<JQMListDivider>();
+                rslt.add((JQMListDivider) w);
+            }
+        }
+        return rslt;
     }
 
     public int findDividerIdx(JQMListDivider d) {
