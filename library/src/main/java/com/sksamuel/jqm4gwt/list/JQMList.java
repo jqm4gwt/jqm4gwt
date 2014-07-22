@@ -478,6 +478,18 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
         return JQMListDivider.ATTR_VALUE.equals(w.getElement().getAttribute(JQMListDivider.ATTR_NAME));
     }
 
+    public void removeDivider(JQMListDivider divider) {
+        if (divider == null) return;
+        for (int k = 0; k < list.getWidgetCount(); k++) {
+            Widget w = list.getWidget(k);
+            if (isDivider(w) && divider.equals(w)) {
+                list.remove(k);
+                items.remove(k);
+                return;
+            }
+        }
+    }
+
     /**
      * Remove the divider with the given text. This method will search all the dividers and remove the first divider
      * found with the given text.
