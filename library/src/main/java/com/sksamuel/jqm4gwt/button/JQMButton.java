@@ -294,6 +294,9 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         return "popup".equals(getRel());
     }
 
+    /**
+     * @param popup - true if this button is set to load a popup
+     */
     public void setPopup(boolean popup) {
         setRel(popup ? "popup" : null);
     }
@@ -307,6 +310,9 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         return JQMCommon.getPopupPos(this);
     }
 
+    /**
+     * @param pos - possible values: window, origin, jQuery selector to get positioning element.
+     */
     public void setPopupPos(String pos) {
         JQMCommon.setPopupPos(this, pos);
     }
@@ -729,6 +735,36 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     @Override
     public void setTheme(String themeName) {
         JQMCommon.setThemeEx(this, themeName, JQMCommon.STYLE_UI_BTN);
+    }
+
+    private static final String STYLE_UI_BTN_RIGHT = "ui-btn-right";
+    private static final String STYLE_UI_BTN_LEFT = "ui-btn-left";
+
+    public static enum PosOnBand { RIGHT, LEFT }
+
+    public PosOnBand getPosOnBand() {
+        if (JQMCommon.hasStyle(this, STYLE_UI_BTN_RIGHT)) return PosOnBand.RIGHT;
+        else if (JQMCommon.hasStyle(this, STYLE_UI_BTN_LEFT)) return PosOnBand.LEFT;
+        else return null;
+    }
+
+    /**
+     * Works in case of this button placed on Header, Popup, ...
+     */
+    public void setPosOnBand(PosOnBand value) {
+        if (value == null) {
+            getElement().removeClassName(STYLE_UI_BTN_RIGHT);
+            getElement().removeClassName(STYLE_UI_BTN_LEFT);
+        } else {
+            switch (value) {
+            case LEFT:
+                getElement().addClassName(STYLE_UI_BTN_LEFT);
+                break;
+            case RIGHT:
+                getElement().addClassName(STYLE_UI_BTN_RIGHT);
+                break;
+            }
+        }
     }
 
 }

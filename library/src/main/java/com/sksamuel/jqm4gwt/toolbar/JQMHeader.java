@@ -6,6 +6,7 @@ import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.button.JQMButton;
+import com.sksamuel.jqm4gwt.button.JQMButton.PosOnBand;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 4 May 2011 21:21:13
@@ -123,8 +124,7 @@ public class JQMHeader extends JQMToolbar implements HasText<JQMHeader> {
     @UiChild(tagname="leftButton", limit=1)
     public void setLeftButton(JQMButton button) {
         if (left != null) remove(left);
-        button.removeStyleName("ui-btn-right");
-        button.addStyleName("ui-btn-left");
+        button.setPosOnBand(PosOnBand.LEFT);
         left = button;
         insert(left, 0);
     }
@@ -250,8 +250,7 @@ public class JQMHeader extends JQMToolbar implements HasText<JQMHeader> {
     @UiChild(tagname="rightButton", limit=1)
     public void setRightButton(JQMButton button) {
         if (right != null) remove(right);
-        button.removeStyleName("ui-btn-left");
-        button.addStyleName("ui-btn-right");
+        button.setPosOnBand(PosOnBand.RIGHT);
         right = button;
         add(right);
     }
