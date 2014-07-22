@@ -19,4 +19,4 @@ for(e=(b.thisYear-6);e<=b.thisYear+6;e++){b.picker2.append(a('<option value="'+e
 
 3. jqm 1.4.2 / 1.4.3 AND datebox 1.4.2 - not showing problem, see https://github.com/jtsage/jquery-mobile-datebox/issues/312
 
-zindex: "500" changed to "999"
+zindex: "500" changed to "1100" - will be fixed in the following version, already fixed in dev branch.
