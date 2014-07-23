@@ -54,11 +54,19 @@ public class JQMPopup extends JQMContainer {
     }
 
     private static native void _close(Element elt) /*-{
-        $wnd.$(elt).popup("close")
+        $wnd.$(elt).popup("close");
     }-*/;
 
     private static native void _open(Element elt) /*-{
-        $wnd.$(elt).popup("open")
+        $wnd.$(elt).popup("open");
+    }-*/;
+
+    public static native void close(String selector) /*-{
+        $wnd.$(selector).popup("close");
+    }-*/;
+
+    public static native void open(String selector) /*-{
+        $wnd.$(selector).popup("open");
     }-*/;
 
     public JQMPopup close() {
@@ -66,14 +74,14 @@ public class JQMPopup extends JQMContainer {
         return this;
     }
 
-    @Override
-    public String getRelType() {
-        return "popup";
-    }
-
     public JQMPopup open() {
         _open(getElement());
         return this;
+    }
+
+    @Override
+    public String getRelType() {
+        return "popup";
     }
 
     public String getOverlayTheme() {
@@ -111,7 +119,10 @@ public class JQMPopup extends JQMContainer {
     }
 
     /**
-     * @param pos - origin, window, or an id selector starts with #
+     * @param pos - origin, window, or jQuery selector.
+     * <p/> Element is searched by selector, and then popup is centered over it.
+     * The selector is filtered for elements that are visible with ":visible".
+     * If the result is empty, the popup will be centered in the window.
      */
     public void setPosition(String pos) {
         JQMCommon.setPopupPos(this, pos);

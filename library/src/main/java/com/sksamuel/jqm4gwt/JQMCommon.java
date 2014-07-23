@@ -779,9 +779,6 @@ public class JQMCommon {
             setAttribute(elt, DATA_POPUP_POSITION, null);
             return;
         }
-        if (!value.startsWith("#") && !value.equals(POPUP_POS_WINDOW) && !value.equals(POPUP_POS_ORIGIN)) {
-            throw new IllegalArgumentException("Popup position must be origin, window, or an id selector");
-        }
         setAttribute(elt, DATA_POPUP_POSITION, value);
     }
 
