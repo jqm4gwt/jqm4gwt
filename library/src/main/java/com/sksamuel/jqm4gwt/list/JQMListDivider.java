@@ -22,7 +22,7 @@ public class JQMListDivider extends CustomFlowPanel implements HasText<JQMListDi
     private Object tag;
     private JQMList list;
 
-    protected JQMListDivider() {
+    public JQMListDivider() {
         super(Document.get().createLIElement());
         getElement().setAttribute(ATTR_NAME, ATTR_VALUE);
         getElement().setId(Document.get().createUniqueId());
