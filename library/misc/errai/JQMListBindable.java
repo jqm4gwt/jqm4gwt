@@ -53,7 +53,7 @@ public class JQMListBindable<M> extends JQMList
         /**
          * In some cases could be implemented as simple as addItem().
          */
-        List<? extends ComplexPanel> insertItem(JQMListBindable<M> list, int index, M item);
+        List<? extends ComplexPanel> insertItem(JQMListBindable<M> list, int dataIndex, M item);
 
         /**
          * @param uiItems - the same items which have been returned earlier by addItem() / insertItem()
@@ -62,13 +62,25 @@ public class JQMListBindable<M> extends JQMList
         void removeItem(JQMListBindable<M> list, M item, List<? extends ComplexPanel> uiItems);
 
         /**
-         * @param uiItems - the same items which have been returned earlier by addItem() / insertItem()
+         * There are many possible reasons why/when this method is called:
+         * <p/> 1. data item's content changed, i.e. oldItem == newItem
+         * <p/> 2. new data item is replacing old one
+         * <p/> 3. sort() is called, so data items positions are exchanging (no real remove/add to the list)
+         *
+         * @param oldUiItems - the same items which have been returned earlier by addItem() / insertItem()
          * for this particular model item.
+         * <p/>
+         * @param oldItemDeleted - means item is not in data/model anymore, otherwise probably
+         * it was just moved to a different position, for example by sort().
+         * <p/>
+         * @param newUiItems - if newItem is already in data/model, then these ui items were returned
+         * earlier by addItem() / insertItem(). Otherwise is just null.
+         * <p/>
          * @return - must return new UI items for this model item.
          */
-        List<? extends ComplexPanel> itemChanged(JQMListBindable<M> list, int index,
-                                                 M oldItem, M newItem,
-                                                 List<? extends ComplexPanel> uiItems);
+        List<? extends ComplexPanel> itemChanged(JQMListBindable<M> list, int dataIndex,
+                M oldItem, List<? extends ComplexPanel> oldUiItems, boolean oldItemDeleted,
+                M newItem, List<? extends ComplexPanel> newUiItems);
 
         /**
          * Called after all add/remove operations are finished, right before list.refresh() call.
@@ -84,15 +96,18 @@ public class JQMListBindable<M> extends JQMList
     public static abstract class BaseRenderer<M> implements Renderer<M> {
 
         @Override
-        public List<? extends ComplexPanel> insertItem(JQMListBindable<M> list, int index, M item) {
+        public List<? extends ComplexPanel> insertItem(JQMListBindable<M> list, int dataIndex, M item) {
             return addItem(list, item);
         }
 
         @Override
-        public List<? extends ComplexPanel> itemChanged(JQMListBindable<M> list, int index,
-                M oldItem, M newItem, List<? extends ComplexPanel> uiItems) {
-            removeItem(list, oldItem, uiItems);
-            return insertItem(list, index, newItem);
+        public List<? extends ComplexPanel> itemChanged(JQMListBindable<M> list, int dataIndex,
+                M oldItem, List<? extends ComplexPanel> oldUiItems, boolean oldItemDeleted,
+                M newItem, List<? extends ComplexPanel> newUiItems) {
+
+            if (oldItemDeleted) removeItem(list, oldItem, oldUiItems);
+            if (newUiItems != null) removeItem(list, newItem, newUiItems);
+            return insertItem(list, dataIndex, newItem);
         }
 
         @Override
@@ -110,12 +125,19 @@ public class JQMListBindable<M> extends JQMList
 
         private JQMListItem emptyMsg = null;
 
-        public ListRenderer(boolean showEmptyMsg) {
+        private boolean unstableUiIndex;
+
+        public ListRenderer(boolean showEmptyMsg, boolean unstableUiIndex) {
             this.showEmptyMsg = showEmptyMsg;
+            this.unstableUiIndex = unstableUiIndex;
         }
 
         public ListRenderer() {
-            this(true/*showEmptyMsg*/);
+            this(true/*showEmptyMsg*/, false/*unstableUiIndex*/);
+        }
+
+        public ListRenderer(boolean showEmptyMsg) {
+            this(showEmptyMsg, false/*unstableUiIndex*/);
         }
 
         protected abstract JQMListItem createListItem(M item);
@@ -185,11 +207,26 @@ public class JQMListBindable<M> extends JQMList
         }
 
         @Override
-        public List<? extends ComplexPanel> itemChanged(final JQMListBindable<M> list, int index,
-                M oldItem, M newItem, List<? extends ComplexPanel> uiItems) {
+        public List<? extends ComplexPanel> insertItem(JQMListBindable<M> list, int dataIndex, M item) {
+            if (unstableUiIndex) return addItem(list, item);
 
-            final int oldPos = list.getUiIndex(oldItem);
-            removeItem(list, oldItem, uiItems);
+            List<M> data = list.getDataItems();
+            if (dataIndex < data.size() - 1) {
+                M oldItem = data.get(dataIndex + 1);
+                int oldPos = list.getUiIndex(oldItem);
+                return addItemIntern(list, item, oldPos);
+            }
+            return addItem(list, item);
+        }
+
+        @Override
+        public List<? extends ComplexPanel> itemChanged(JQMListBindable<M> list, int dataIndex,
+                M oldItem, List<? extends ComplexPanel> oldUiItems, boolean oldItemDeleted,
+                M newItem, List<? extends ComplexPanel> newUiItems) {
+
+            final int oldPos = unstableUiIndex ? -1 : list.getUiIndex(oldItem);
+            if (oldItemDeleted) removeItem(list, oldItem, oldUiItems);
+            if (newUiItems != null) removeItem(list, newItem, newUiItems);
             return addItemIntern(list, newItem, oldPos);
         }
 
@@ -216,10 +253,24 @@ public class JQMListBindable<M> extends JQMList
             addEmptyMsg(list);
             list.recreate();
         }
+
+        public boolean isUnstableUiIndex() {
+            return unstableUiIndex;
+        }
+
+        /**
+         * Used during insertItem() and itemChanged() processing.
+         * <p/>Stable ui index means that there are no manual sort() or items exchange operations
+         * over underlying/binded data items. So previous data item's ui index can be used as
+         * base for current data item visual placement.
+         */
+        public void setUnstableUiIndex(boolean unstableUiIndex) {
+            this.unstableUiIndex = unstableUiIndex;
+        }
     }
 
     /**
-     * An ordered JQMListBindable
+     * An "ordered" JQMListBindable (in terms of Html, i.e. only 1, 2, 3, ... position indicator, no real data ordering)
      */
     public static class Ordered<M> extends JQMListBindable<M> {
         public Ordered() {
@@ -228,7 +279,7 @@ public class JQMListBindable<M> extends JQMList
     }
 
     /**
-     * An unordered JQMListBindable
+     * An "unordered" JQMListBindable (in terms of Html, i.e. only no visual position indicator)
      */
     public static class Unordered<M> extends JQMListBindable<M> {
         public Unordered() {
@@ -304,9 +355,16 @@ public class JQMListBindable<M> extends JQMList
     }
 
     private void dataItemChanged(final int index, final M oldItem, final M newItem) {
+        // in case of sort() item can appear as newItem first, then later as oldItem
+        // Example: 0: 8>1, 1: 6>2, 2: 4>3, 3: 1>4, 4: 7>5, 5: 3>6, 6: 2>7, 7: 5>8
+
         List<? extends ComplexPanel> oldUi = dataToUI.get(oldItem);
-        List<? extends ComplexPanel> newUi = renderer.itemChanged(this, index, oldItem, newItem, oldUi);
-        if (oldItem != newItem) dataToUI.remove(oldItem);
+        List<? extends ComplexPanel> newUi = dataToUI.get(newItem);
+        boolean oldInData = dataItems.contains(oldItem);
+
+        newUi = renderer.itemChanged(this, index, oldItem, oldUi, !oldInData, newItem, newUi);
+
+        if (oldItem != newItem && !oldInData) dataToUI.remove(oldItem);
         dataToUI.put(newItem, newUi);
     }
 
@@ -330,6 +388,9 @@ public class JQMListBindable<M> extends JQMList
         return dataToUI.get(dataItem);
     }
 
+    /**
+     * @return - first visual position for this data item, or -1 otherwise.
+     */
     public int getUiIndex(M dataItem) {
         List<? extends ComplexPanel> ui = getUiItems(dataItem);
         if (ui == null || ui.isEmpty()) return -1;
