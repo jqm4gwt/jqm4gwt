@@ -86,7 +86,8 @@ Related Projects
 ================
 
 If you are looking for a GWT wrapper for the desktop [jQuery UI](http://jqueryui.com) 
-then [gwtquery-ui](http://code.google.com/p/gwtquery-ui/) or (https://github.com/koobe/gwtquery-ui) is where to look.
+then [gwtquery-ui](http://code.google.com/p/gwtquery-ui/) 
+or [koobe/gwtquery-ui](https://github.com/koobe/gwtquery-ui) is where to look.
 For a GWT wrapper of JQuery then [gwtquery](http://code.google.com/p/gwtquery) is where to go.
 
 
