@@ -22,20 +22,19 @@
         <!-- or showcase how fast it runs thanks to GWT -->
         <gwt.style>OBF</gwt.style>
         <gwt.optimizationLevel>9</gwt.optimizationLevel>
-        <!--<gwt.optimizationLevel>9</gwt.optimizationLevel>-->
 
         <!-- Specify AppEngine version for your project. It should match SDK version
             pointed to by ${gae.home} property (Typically, one used by your Eclipse plug-in) -->
-        <gae.home>/home/sam/development/appengine-java-sdk-1.8.8</gae.home>
-        <!--<gae.version>1.6.5</gae.version>-->
-        <gae.version>1.7.5</gae.version>
-        <gae-runtime.version>1.7.5.1</gae-runtime.version>
+        <!--gae.home>/home/sam/development/appengine-java-sdk-1.8.8</gae.home-->
+        <gae.home>C:\appengine-java-sdk-1.9.7</gae.home> 
+        <gae.version>1.9.7</gae.version>
+        <gae-runtime.version>1.8.8</gae-runtime.version>
         <gae.application.name>jqm4gwt</gae.application.name>
         <!-- Upload to http://test.latest.<gae.application.name>.appspot.com by default -->
         <gae.application.version>test</gae.application.version>
         <!-- port defaults to 8080 -->
         <gae.port>8080</gae.port>
-        <!-- The server entry name in settings.xml containing credentials to upload to AppEngine -->
+        <!-- The server entry name in user\.m2\settings.xml containing credentials to upload to AppEngine -->
         <gae.server.id>jqm4gwt-appspot</gae.server.id>
         <webapp.directory>${project.build.directory}/${project.artifactId}-${project.version}</webapp.directory>
     </properties>
@@ -268,7 +267,7 @@
                 <plugin>
                     <groupId>net.kindleit</groupId>
                     <artifactId>maven-gae-plugin</artifactId>
-                    <version>0.9.5</version>
+                    <version>0.9.6</version>
                 </plugin>
 
                 <!--This plugin's configuration is used to store Eclipse m2e settings
