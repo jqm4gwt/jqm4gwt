@@ -58,19 +58,19 @@ Read the [quick start guide](https://github.com/jqm4gwt/jqm4gwt/wiki/Getting-Sta
 Getting It
 ========
 
-Latest Release: 1.3.5 Released 14-March-2014
- * [jqm4gwt Remote Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.5/jqm4gwt-remote-1.3.5.jar)
- * [jqm4gwt Library Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-library/1.3.5/jqm4gwt-library-1.3.5.jar)
- * [Remote Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.3.5/jqm4gwt-remote-1.3.5-sources.jar)
- * [Library Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-library/1.3.5/jqm4gwt-library-1.3.5-sources.jar)
+Latest Release: 1.4.3.Final released 28-July-2014
+ * [jqm4gwt Remote Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.4.3.Final/jqm4gwt-remote-1.4.3.Final.jar)
+ * [jqm4gwt Library Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-library/1.4.3.Final/jqm4gwt-library-1.4.3.Final.jar)
+ * [Remote Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.4.3.Final/jqm4gwt-remote-1.4.3.Final-sources.jar)
+ * [Library Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-library/1.4.3.Final/jqm4gwt-library-1.4.3.Final-sources.jar)
 
-Dependencies are available from maven central:
+Dependencies are available from Maven Central:
 
 ```xml
 <dependency>
   <groupId>com.sksamuel.jqm4gwt</groupId>
   <artifactId>jqm4gwt-remote</artifactId>
-  <version>1.3.5</version>
+  <version>1.4.3.Final</version>
 </dependency>
 ```
 
@@ -85,7 +85,8 @@ Want to talk about it? Join the [discussion group for jqm4gwt on Google Groups](
 Related Projects
 ================
 
-If you are looking for a GWT wrapper for the desktop [jQuery UI](http://jqueryui.com) then [gwtquery-ui](http://code.google.com/p/gwtquery-ui/) is where to look.
+If you are looking for a GWT wrapper for the desktop [jQuery UI](http://jqueryui.com) 
+then [gwtquery-ui](http://code.google.com/p/gwtquery-ui/) or (https://github.com/koobe/gwtquery-ui) is where to look.
 For a GWT wrapper of JQuery then [gwtquery](http://code.google.com/p/gwtquery) is where to go.
 
 
@@ -93,7 +94,7 @@ For a GWT wrapper of JQuery then [gwtquery](http://code.google.com/p/gwtquery) i
 ```
 This software is licensed under the Apache 2 license, quoted below.
 
-Copyright 2013 Stephen Samuel
+Copyright 2014 Stephen Samuel
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not
 use this file except in compliance with the License. You may obtain a copy of
