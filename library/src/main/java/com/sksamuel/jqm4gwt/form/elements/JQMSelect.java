@@ -1,5 +1,8 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
@@ -263,9 +266,8 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     public String getOptionIcon(String optValue) {
         if (optValue == null) return null;
-        NodeList<OptionElement> opts = getOptions();
-        for (int i = 0; i < opts.getLength(); i++) {
-            OptionElement opt = opts.getItem(i);
+        List<OptionElement> opts = getOptions();
+        for (OptionElement opt : opts) {
             if (optValue.equals(opt.getValue())) {
                 return JQMCommon.getCustomIcon(opt);
             }
@@ -273,10 +275,17 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         return null;
     }
 
-    public NodeList<OptionElement> getOptions() {
+    public List<OptionElement> getOptions() {
         SelectElement selElt = select.getElement().cast();
         NodeList<OptionElement> opts = selElt.getOptions();
-        return opts;
+        List<OptionElement> rslt = new ArrayList<OptionElement>(opts != null ? opts.getLength() : 0);
+        if (opts != null) {
+            for (int i = 0; i < opts.getLength(); i++) {
+                OptionElement opt = opts.getItem(i);
+                rslt.add(opt);
+            }
+        }
+        return rslt;
     }
 
     @Override
