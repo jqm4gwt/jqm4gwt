@@ -222,6 +222,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     private static native void bindLifecycleEvents(JQMPage p, Element elt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
+
         var page = $wnd.$(elt);
 
         page.on("pagecreate", function(event, ui) {
@@ -250,6 +252,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     private static native void unbindLifecycleEvents(Element elt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         var page = $wnd.$(elt);
         page.off("pagecreate");
         page.off("pageshow");

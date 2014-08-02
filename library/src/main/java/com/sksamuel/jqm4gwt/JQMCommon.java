@@ -922,6 +922,7 @@ public class JQMCommon {
     }
 
     public static native void bindFilterEvents(HasFilterable fltr, Element fltrElt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$(fltrElt).on("filterablebeforefilter", function(event, ui) {
             var value = ui.input.val();
             fltr.@com.sksamuel.jqm4gwt.HasFilterable::doBeforeFilter(Ljava/lang/String;)(value);
@@ -929,6 +930,7 @@ public class JQMCommon {
     }-*/;
 
     public static native void unbindFilterEvents(Element fltrElt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$(fltrElt).off("filterablebeforefilter");
     }-*/;
 

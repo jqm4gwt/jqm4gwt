@@ -582,6 +582,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     private static native void refreshIcon(Element elt, String oldIcon, String newIcon) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$(elt).children().find('.ui-btn').removeClass(oldIcon).addClass(newIcon);
     }-*/;
 
@@ -755,6 +756,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     private native void bindLifecycleEvents(String id, JQMSelect selectCtrl) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$.mobile.document
             // The custom select list may show up as either a popup or a dialog, depending how much
             // vertical room there is on the screen. If it shows up as a dialog, then we have to
@@ -769,6 +771,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }-*/;
 
     private native void unbindLifecycleEvents(String id) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$.mobile.document
             .off( "pagebeforeshow pagehide", "#" + id + "-dialog,#title-" + id + "-dialog" );
     }-*/;

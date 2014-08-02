@@ -310,6 +310,7 @@ public class JQMPopup extends JQMContainer {
     }-*/;
 
     protected static native boolean isInitialized(Element elt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return false; // jQuery is not loaded
         var w = $wnd.$(elt);
         return w.data('mobile-popup') !== undefined;
     }-*/;
@@ -394,6 +395,7 @@ public class JQMPopup extends JQMContainer {
     }
 
     private static native void bindLifecycleEvents(JQMPopup p, Element elt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         var popup = $wnd.$(elt);
         popup.on("popupafterclose", function(event, ui) {
             p.@com.sksamuel.jqm4gwt.JQMPopup::doAfterClose()();
@@ -408,6 +410,7 @@ public class JQMPopup extends JQMContainer {
     }-*/;
 
     private static native void unbindLifecycleEvents(Element elt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         var popup = $wnd.$(elt);
         popup.off("popupafterclose");
         popup.off("popupafteropen");

@@ -30,7 +30,10 @@ public class JQMContext {
      *
      */
     public static void attachAndEnhance(JQMContainer container) {
-        RootPanel.get().add(container);
+        if (container == null) return;
+        RootPanel p = RootPanel.get();
+        if (p == null) return;
+        p.add(container);
         enhance(container);
         container.setEnhanced(true);
     }
@@ -73,7 +76,7 @@ public class JQMContext {
     }
 
     private static void enhance(JQMContainer c) {
-        render(c.getId());
+        render(c.getElement());
     }
 
     public static Transition getDefaultTransition() {
@@ -136,16 +139,21 @@ public class JQMContext {
     }
 
     public static void render(Element elt) {
+        if (elt == null) {
+            throw new IllegalArgumentException("render() for null element is not possible");
+        }
         renderImpl(elt);
     }
 
     // page() was replaced by trigger("create"), see http://stackoverflow.com/a/6848969
     // trigger("create") was replaced by enhanceWithin(), see http://jquerymobile.com/upgrade-guide/1.4/#enhancewithin
     private static native void renderImpl(String id) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$("#" + id).enhanceWithin();
     }-*/;
 
     private static native void renderImpl(Element elt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$(elt).enhanceWithin();
     }-*/;
 

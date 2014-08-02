@@ -218,6 +218,7 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
     }
 
     private native String getValue(String id) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return null; // jQuery is not loaded
         return $wnd.$("#" + id).val();
     }-*/;
 
@@ -225,22 +226,27 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
      * Can raise ChangeEvent, block it manually by setting ignoreChange (if needed).
      */
     private native void refresh(String id, String value) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$("#" + id).val(value).slider("refresh");
     }-*/;
 
     private native void refresh(String id) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$("#" + id).slider("refresh");
     }-*/;
 
     private native void refreshMin(String id, String min) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$("#" + id).attr("min", min).slider("refresh");
     }-*/;
 
     private native void refreshMax(String id, String max) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$("#" + id).attr("max", max).slider("refresh");
     }-*/;
 
     private native void refreshStep(String id, String step) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$("#" + id).attr("step", step).slider("refresh");
     }-*/;
 

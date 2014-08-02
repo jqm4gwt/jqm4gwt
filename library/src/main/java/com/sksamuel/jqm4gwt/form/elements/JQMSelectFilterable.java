@@ -29,7 +29,7 @@ public class JQMSelectFilterable extends JQMSelect {
     }
 
     private native void bindLifecycleEvents(String id) /*-{
-
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$.mobile.document
             // The custom selectmenu plugin generates an ID for the listview by suffixing the ID of the
             // native widget with "-menu". Upon creation of the listview widget we want to place an
@@ -90,6 +90,7 @@ public class JQMSelectFilterable extends JQMSelect {
     }-*/;
 
     private native void unbindLifecycleEvents(String id) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$.mobile.document
             .off( "listviewcreate", "#" + id + "-menu,#title-" + id + "-menu" )
             .off( "pagebeforeshow pagehide", "#" + id + "-dialog,#title-" + id + "-dialog" );

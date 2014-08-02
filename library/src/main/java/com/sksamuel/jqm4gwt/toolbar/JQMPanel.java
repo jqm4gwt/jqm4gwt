@@ -250,6 +250,7 @@ public class JQMPanel extends JQMWidget {
     }
 
     private native void bindLifecycleEvents(JQMPanel p, String id) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$('div[data-url="' + id + '"]').on("panelbeforeclose",
             function(event, ui) { p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelBeforeClose()(); });
 
@@ -267,6 +268,7 @@ public class JQMPanel extends JQMWidget {
     }-*/;
 
     private native void bindLifecycleEventsExternal(JQMPanel p, String id) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$("body").on("panelbeforeclose",
             function(event, ui) {
                 if (event.target.id === id) {
@@ -304,6 +306,7 @@ public class JQMPanel extends JQMWidget {
     }-*/;
 
     private native void unbindLifecycleEvents(String id) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$('#' + id).off("panelbeforeclose");
         $wnd.$('#' + id).off("panelbeforeopen");
         $wnd.$('#' + id).off("panelclose");

@@ -55,18 +55,15 @@ public class JQMHandlerRegistration<X extends EventHandler> implements
             attachIfNeeded();
         }
 
-        attachHandlerRegistration = widget
-                .addAttachHandler(new AttachEvent.Handler() {
-
-                    @Override
-                    public void onAttachOrDetach(AttachEvent event) {
-                        if (event.isAttached())
-                            attachIfNeeded();
-                        else
-                            detachIfNeeded();
-                    }
-
-                });
+        attachHandlerRegistration = widget.addAttachHandler(new AttachEvent.Handler() {
+            @Override
+            public void onAttachOrDetach(AttachEvent event) {
+                if (event.isAttached())
+                    attachIfNeeded();
+                else
+                    detachIfNeeded();
+            }
+        });
     }
 
     public void attachIfNeeded() {
@@ -93,10 +90,10 @@ public class JQMHandlerRegistration<X extends EventHandler> implements
     }
 
     public static native JavaScriptObject addJQueryEvent(Element element, String jqmEventName) /*-{
-        $wnd.$(element).on(jqmEventName + ".jqm4gwt.s",
-            $entry(function(event) {
-                       @com.sksamuel.jqm4gwt.events.JQMHandlerRegistration::dispatchJQMEvent(Ljava/lang/String;Lcom/google/gwt/user/client/EventListener;Lcom/google/gwt/core/client/JavaScriptObject;)(jqmEventName, element.__listener, event);
-                   }));
+        if ($wnd.$ === undefined || $wnd.$ === null) return null; // jQuery is not loaded
+        $wnd.$(element).on(jqmEventName + ".jqm4gwt.s", $entry(function(event) {
+                @com.sksamuel.jqm4gwt.events.JQMHandlerRegistration::dispatchJQMEvent(Ljava/lang/String;Lcom/google/gwt/user/client/EventListener;Lcom/google/gwt/core/client/JavaScriptObject;)(jqmEventName, element.__listener, event);
+        }));
     }-*/;
 
     public static final void dispatchJQMEvent(String jqmEventName,
@@ -115,8 +112,8 @@ public class JQMHandlerRegistration<X extends EventHandler> implements
         }
     }
 
-    public static native void removeJQueryEventHandler(Element element,
-            String jqmEventName) /*-{
+    public static native void removeJQueryEventHandler(Element element, String jqmEventName) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$(element).off(jqmEventName + ".jqm4gwt.s");
     }-*/;
 

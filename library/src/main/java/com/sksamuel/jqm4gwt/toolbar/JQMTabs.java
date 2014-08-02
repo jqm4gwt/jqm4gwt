@@ -325,6 +325,7 @@ public class JQMTabs extends JQMWidget {
     }
 
     private native void bindEvents(JQMTabs tabs, Element tabsElt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$(tabsElt).on("tabsactivate", function(event, ui) {
             tabs.@com.sksamuel.jqm4gwt.toolbar.JQMTabs::doActivate(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)
                     (ui.newTab.attr('id'), ui.oldTab.attr('id'), ui.newPanel.attr('id'), ui.oldPanel.attr('id'));
@@ -340,6 +341,7 @@ public class JQMTabs extends JQMWidget {
     }-*/;
 
     private native void unbindEvents(Element tabsElt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$(tabsElt).off("tabsactivate");
         $wnd.$(tabsElt).off("tabsbeforeactivate");
     }-*/;
