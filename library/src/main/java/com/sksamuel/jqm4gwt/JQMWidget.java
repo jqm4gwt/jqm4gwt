@@ -5,6 +5,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
@@ -12,8 +13,7 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.events.HasJQMEventHandlers;
-import com.sksamuel.jqm4gwt.events.JQMEvent;
-import com.sksamuel.jqm4gwt.events.JQMEventHandler;
+import com.sksamuel.jqm4gwt.events.JQMEventFactory;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
 import com.sksamuel.jqm4gwt.form.elements.JQMFilterable;
@@ -166,14 +166,16 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
     }
 
     @Override
-    public HandlerRegistration addJQMEventHandler(String eventName ,JQMEventHandler handler){
+    public HandlerRegistration addJQMEventHandler(String jqmEventName, EventHandler handler) {
 
-           return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
-                @Override
-                public int getHandlerCountForWidget(Type<?> type) {
-                    return getHandlerCount(type);
-                }
-            }, this, handler, eventName, JQMEvent.getType());
+        Type<EventHandler> t = JQMEventFactory.getType(jqmEventName, EventHandler.class);
+
+        return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
+            @Override
+            public int getHandlerCountForWidget(Type<?> type) {
+                return getHandlerCount(type);
+            }
+        }, this, handler, jqmEventName, t);
     }
 
     public String getFilterText() {

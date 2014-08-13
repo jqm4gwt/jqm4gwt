@@ -1,66 +1,46 @@
 package com.sksamuel.jqm4gwt.events;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.dom.client.DomEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Represents a JQM event (ex: tap, vclick etc)
- * 
+ * Represents a JQM event (e.g.: tap, vclick, ...)
+ *
  * @author Ovidiu Buligan
  */
-public class JQMEvent extends JQueryBaseEvent<JQMEventHandler> {
+public class JQMEvent<T extends EventHandler> extends JQueryBaseEvent<T> {
 
-	/**
-	 * Event type for tap events. Represents the meta-data associated with this
-	 * event.
-	 */
-	private static Type<JQMEventHandler> TYPE = null;
+	/** Event handler type for this event. */
+	private final Type<T> handlerType;
 
-	/**
-	 * Gets the event type associated with tap events.
-	 * 
-	 * @return the handler type
-	 */
-	public static Type<JQMEventHandler> getType() {
-		if (TYPE == null) TYPE = new Type<JQMEventHandler>();
-		return TYPE;
-	}
-
-	/**
-	 * Protected constructor, use
-	 * {@link DomEvent#fireNativeEvent(com.google.gwt.dom.client.NativeEvent, com.google.gwt.event.shared.HasHandlers)}
-	 * or
-	 * {@link DomEvent#fireNativeEvent(com.google.gwt.dom.client.NativeEvent, com.google.gwt.event.shared.HasHandlers, com.google.gwt.dom.client.Element)}
-	 * to fire tap.
-	 * @param jQueryEvent 
-	 */
-	protected JQMEvent(JavaScriptObject jQueryEvent) {
+	protected JQMEvent(JavaScriptObject jQueryEvent, Type<T> handlerType) {
 		super(jQueryEvent);
+		this.handlerType = handlerType;
 	}
 
 	@Override
-	public final Type<JQMEventHandler> getAssociatedType() {
-		return TYPE;
+	public final Type<T> getAssociatedType() {
+		return handlerType;
 	}
 
 	@Override
-	protected void dispatch(JQMEventHandler handler) {
-		handler.onEvent(this);
+	protected void dispatch(T handler) {
+		if (handler instanceof JQMEventHandler) {
+		    ((JQMEventHandler) handler).onEvent(this);
+		}
 	}
 
 	/**
-	 * Fires a {@link JQMEvent} on all registered handlers in the handler
-	 * manager. If no such handlers exist, this method will do nothing.
-	 * 
-	 * @param source
-	 *            the source of the handlers
-	 * @param jQueryEvent 
-	 */
-	public static void fire(HasJQMEventHandlers source, JavaScriptObject jQueryEvent) {
-		if (TYPE != null) {
-			JQMEvent event = new JQMEvent(jQueryEvent);
-			source.fireEvent(event);
-		}
+     * Fires a {@link JQMEvent} on all registered handlers in the handler
+     * manager. If no such handlers exist, this method will do nothing.
+     *
+     * @param source - the source of the handlers
+     */
+	public static void fire(HasJQMEventHandlers source, String jqmEventName,
+	                        JavaScriptObject jQueryEvent) {
+
+	    JQMEvent<?> event = JQMEventFactory.createEvent(jqmEventName, jQueryEvent);
+	    source.fireEvent(event);
 	}
 
 }

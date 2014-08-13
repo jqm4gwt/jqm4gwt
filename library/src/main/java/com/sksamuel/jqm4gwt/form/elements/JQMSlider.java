@@ -212,15 +212,10 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
      * @return - null if slider is not created/initialized/attached yet and therefore have no UI value.
      */
     private Double getUiValue() {
-        String v = getValue(input.getElement().getId());
+        String v = JQMCommon.getVal(input.getElement().getId());
         if (v == null || v.isEmpty()) return null;
         return Double.valueOf(v);
     }
-
-    private native String getValue(String id) /*-{
-        if ($wnd.$ === undefined || $wnd.$ === null) return null; // jQuery is not loaded
-        return $wnd.$("#" + id).val();
-    }-*/;
 
     /**
      * Can raise ChangeEvent, block it manually by setting ignoreChange (if needed).

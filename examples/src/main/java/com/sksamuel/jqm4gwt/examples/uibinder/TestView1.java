@@ -40,13 +40,18 @@ import com.sksamuel.jqm4gwt.form.elements.JQMCheckbox;
 import com.sksamuel.jqm4gwt.form.elements.JQMFilterable;
 import com.sksamuel.jqm4gwt.form.elements.JQMFilterableEvent;
 import com.sksamuel.jqm4gwt.form.elements.JQMFlip;
+import com.sksamuel.jqm4gwt.form.elements.JQMNumber;
+import com.sksamuel.jqm4gwt.form.elements.JQMPassword;
 import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.form.elements.JQMRangeSlider;
+import com.sksamuel.jqm4gwt.form.elements.JQMSearch;
 import com.sksamuel.jqm4gwt.form.elements.JQMSelect;
 import com.sksamuel.jqm4gwt.form.elements.JQMSelect.Option;
 import com.sksamuel.jqm4gwt.form.elements.JQMSelectWithIcons;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
+import com.sksamuel.jqm4gwt.form.elements.JQMTelephone;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
+import com.sksamuel.jqm4gwt.form.elements.JQMUrl;
 import com.sksamuel.jqm4gwt.html.Heading;
 import com.sksamuel.jqm4gwt.html.Paragraph;
 import com.sksamuel.jqm4gwt.layout.JQMTable;
@@ -337,6 +342,21 @@ public class TestView1 {
 
     @UiField
     Heading listPopupInfo;
+
+    @UiField
+    JQMSearch searchEd;
+
+    @UiField
+    JQMNumber numberEd;
+
+    @UiField
+    JQMTelephone phoneEd;
+
+    @UiField
+    JQMPassword passwordEd;
+
+    @UiField
+    JQMUrl urlEd;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -881,6 +901,44 @@ public class TestView1 {
         dividerShowBtn.addClickHandler(dividerBtnClick);
         dividerBuyBtn.addClickHandler(dividerBtnClick);
         dividerShareBtn.addClickHandler(dividerBtnClick);
+
+        //searchEd.setValue("abcd", false/*fireEvents*/);
+        /*searchEd.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                Window.alert(searchEd.getValue());
+            }
+        });
+        searchEd.addInputHandler(new JQMInputHandler() {
+            @Override
+            public void onEvent(JQMEvent<?> event) {
+                Window.alert(searchEd.getValue());
+            }
+        });
+        phoneEd.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                Window.alert(phoneEd.getValue());
+            }
+        });
+        numberEd.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                Window.alert(numberEd.getValue());
+            }
+        });
+        passwordEd.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                Window.alert(passwordEd.getValue());
+            }
+        });
+        urlEd.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                Window.alert(urlEd.getValue());
+            }
+        });*/
 
     }
 

@@ -15,8 +15,7 @@ import com.google.gwt.user.client.ui.Widget;
  *
  * @author Andrei Costescu costescuandrei@gmail.com 31 Oct 2013
  */
-public class JQMHandlerRegistration<X extends EventHandler> implements
-        HandlerRegistration {
+public class JQMHandlerRegistration<X extends EventHandler> implements HandlerRegistration {
 
     private String jqmEventName;
     private HandlerRegistration defaultRegistration;
@@ -34,8 +33,7 @@ public class JQMHandlerRegistration<X extends EventHandler> implements
     }
 
     public static <X extends EventHandler> JQMHandlerRegistration<X> registerJQueryHandler(
-            WidgetHandlerCounter counter, Widget widget, X handler,
-            String jqmEventName, Type<X> type) {
+            WidgetHandlerCounter counter, Widget widget, X handler, String jqmEventName, Type<X> type) {
 
         JQMHandlerRegistration<X> reg = new JQMHandlerRegistration<X>();
         reg.addHandler(counter, widget, handler, jqmEventName, type);
@@ -78,8 +76,9 @@ public class JQMHandlerRegistration<X extends EventHandler> implements
         if (defaultRegistration != null) {
             defaultRegistration.removeHandler();
             defaultRegistration = null;
-            if (counter.getHandlerCountForWidget(type) == 0)
+            if (counter.getHandlerCountForWidget(type) == 0) {
                 removeJQueryEventHandler(widget.getElement(), jqmEventName);
+            }
         }
     }
 
@@ -99,16 +98,7 @@ public class JQMHandlerRegistration<X extends EventHandler> implements
     public static final void dispatchJQMEvent(String jqmEventName,
             EventListener listener, JavaScriptObject jQueryEvent) {
         if (listener != null) {
-            // TODO do this nicer somehow - and if possible make this class
-            // "JQueryHandlerRegistration" - so make it work for all jQuery
-            // events
-            if (JQMComponentEvents.TAP_EVENT.equals(jqmEventName)){
-                TapEvent.fire((HasTapHandlers) listener, jQueryEvent);
-            }else if (JQMComponentEvents.TAP_HOLD_EVENT.equals(jqmEventName)){
-                TapHoldEvent.fire((HasTapHoldHandlers) listener, jQueryEvent);
-            }else {
-                JQMEvent.fire((HasJQMEventHandlers) listener, jQueryEvent);
-            }
+            JQMEvent.fire((HasJQMEventHandlers) listener, jqmEventName, jQueryEvent);
         }
     }
 

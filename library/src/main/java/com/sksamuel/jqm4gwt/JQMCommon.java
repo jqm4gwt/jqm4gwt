@@ -991,4 +991,14 @@ public class JQMCommon {
         return sb.toString();
     }
 
+    public static native String getVal(String id) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return null; // jQuery is not loaded
+        return $wnd.$("#" + id).val();
+    }-*/;
+
+    public static native void setVal(String id, String value) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return null; // jQuery is not loaded
+        $wnd.$("#" + id).val(value);
+    }-*/;
+
 }
