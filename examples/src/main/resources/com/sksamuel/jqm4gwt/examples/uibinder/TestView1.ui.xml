@@ -130,7 +130,8 @@
           </b:JQMButtonGroup>
           <e:JQMCheckbox ui:field="cb1" name="cb1" text="Checkbox"/>
           <e:JQMCheckbox ui:field="cb2" name="cb2" text="Mini-Checkbox" mini="true" value="true"/>
-          <e:JQMCheckbox ui:field="cb3" name="cb3" text="Themed Checkbox" theme="b"/>
+          <e:JQMCheckbox ui:field="cb3" name="cb3" text="Themed Checkbox, no corners, inline" 
+            theme="b" corners="false" inline="true" />
           <e:JQMCheckbox ui:field="cb4" name="cb4" text="Right Icon and No corners"
             corners="false" iconPos="RIGHT" />
           <b:JQMButton ui:field="checkboxInfoBtn" text="Show Checkboxes Info" />

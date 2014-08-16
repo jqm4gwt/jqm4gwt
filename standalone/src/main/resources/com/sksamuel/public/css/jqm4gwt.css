@@ -173,3 +173,11 @@
 .ui-select-filterable.ui-selectmenu.ui-dialog .ui-header {
   border-bottom-width: 1px;
 }
+
+.ui-inline {
+  display: inline-block;
+}
+.ui-inline > .ui-checkbox {
+  margin-top: 0;
+  margin-bottom: 0;
+}
