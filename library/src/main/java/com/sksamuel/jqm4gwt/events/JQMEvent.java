@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt.events;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HasHandlers;
 
 /**
  * Represents a JQM event (e.g.: tap, vclick, ...)
@@ -36,7 +37,7 @@ public class JQMEvent<T extends EventHandler> extends JQueryBaseEvent<T> {
      *
      * @param source - the source of the handlers
      */
-	public static void fire(HasJQMEventHandlers source, String jqmEventName,
+	public static void fire(HasHandlers source, String jqmEventName,
 	                        JavaScriptObject jQueryEvent) {
 
 	    JQMEvent<?> event = JQMEventFactory.createEvent(jqmEventName, jQueryEvent);

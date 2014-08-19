@@ -7,6 +7,7 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -97,8 +98,8 @@ public class JQMHandlerRegistration<X extends EventHandler> implements HandlerRe
 
     public static final void dispatchJQMEvent(String jqmEventName,
             EventListener listener, JavaScriptObject jQueryEvent) {
-        if (listener != null) {
-            JQMEvent.fire((HasJQMEventHandlers) listener, jqmEventName, jQueryEvent);
+        if (listener != null && listener instanceof HasHandlers) {
+            JQMEvent.fire((HasHandlers) listener, jqmEventName, jQueryEvent);
         }
     }
 
