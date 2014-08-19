@@ -70,6 +70,17 @@
   padding-left: 10px;
 }
 
+.jqm4gwt-form-required > label:after {
+  content: " *";
+  display: inline;
+}
+
+.jqm4gwt-errorcontain input {
+  -webkit-box-shadow: 0 0 12px #CC3333;
+  -moz-box-shadow: 0 0 12px #CC3333;
+  box-shadow: 0 0 12px #CC3333;
+}
+
 .jqm4gwt-scrollable-page-content {
   position: relative;
 }

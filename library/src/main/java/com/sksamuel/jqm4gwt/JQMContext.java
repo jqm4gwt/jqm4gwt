@@ -124,6 +124,10 @@ public class JQMContext {
         return $wnd.$("#" + id).offset().top;
     }-*/;
 
+    public native static int getTop(Element elt) /*-{
+        return $wnd.$(elt).offset().top;
+    }-*/;
+
     public native static void initializePage() /*-{
         $wnd.$.mobile.initializePage();
     }-*/;
