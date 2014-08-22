@@ -66,7 +66,9 @@ public class ImageLinkButton extends ImageLink implements HasInline<ImageLink>,
 
     @Override
     public void setTheme(String themeName) {
-        JQMCommon.setThemeEx(this, themeName, JQMCommon.STYLE_UI_BTN);
+        JQMCommon.setThemeEx(this, themeName, JQMCommon.STYLE_UI_BTN,
+                /*excludes:*/ JQMCommon.STYLE_UI_BTN_INLINE, JQMCommon.STYLE_UI_BTN_ICONPOS,
+                JQMCommon.STYLE_UI_BTN_ACTIVE);
     }
 
     @Override

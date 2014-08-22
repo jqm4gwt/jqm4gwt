@@ -734,7 +734,9 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     @Override
     public void setTheme(String themeName) {
-        JQMCommon.setThemeEx(this, themeName, JQMCommon.STYLE_UI_BTN);
+        JQMCommon.setThemeEx(this, themeName, JQMCommon.STYLE_UI_BTN,
+                /*excludes:*/ JQMCommon.STYLE_UI_BTN_INLINE, JQMCommon.STYLE_UI_BTN_ICONPOS,
+                JQMCommon.STYLE_UI_BTN_ACTIVE);
     }
 
     private static final String STYLE_UI_BTN_RIGHT = "ui-btn-right";

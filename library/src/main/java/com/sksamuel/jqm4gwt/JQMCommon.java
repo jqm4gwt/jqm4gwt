@@ -463,15 +463,15 @@ public class JQMCommon {
         return getThemeEx(w.getElement(), prefix, excludes);
     }
 
-    public static void setThemeEx(Element elt, String themeName, String prefix) {
-        String old = getThemeEx(elt, prefix);
+    public static void setThemeEx(Element elt, String themeName, String prefix, String... excludes) {
+        String old = getThemeEx(elt, prefix, excludes);
         if (old != null && !old.isEmpty()) elt.removeClassName(prefix + old);
         if (themeName != null && !themeName.isEmpty()) elt.addClassName(prefix + themeName);
         setAttribute(elt, DATA_THEME, themeName);
     }
 
-    public static void setThemeEx(Widget w, String themeName, String prefix) {
-        setThemeEx(w.getElement(), themeName, prefix);
+    public static void setThemeEx(Widget w, String themeName, String prefix, String... excludes) {
+        setThemeEx(w.getElement(), themeName, prefix, excludes);
     }
 
     public static boolean isInline(Element elt) {
