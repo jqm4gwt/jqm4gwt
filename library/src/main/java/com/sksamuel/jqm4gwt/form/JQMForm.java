@@ -206,9 +206,18 @@ public class JQMForm extends FlowPanel {
                 // add the error label to the document as the next child of this form container
                 add(label);
             } else {
-                int i = getWidgetIndex(positionErrorAfter);
-                if (i >= 0) insert(label, i + 1);
-                else add(label);
+                boolean inserted = false;
+                Widget w = positionErrorAfter;
+                while (w != null) {
+                    int i = getWidgetIndex(w);
+                    if (i >= 0) {
+                        insert(label, i + 1);
+                        inserted = true;
+                        break;
+                    }
+                    w = w.getParent();
+                }
+                if (!inserted) add(label);
             }
         }
 
