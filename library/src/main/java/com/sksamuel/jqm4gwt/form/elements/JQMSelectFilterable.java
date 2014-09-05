@@ -10,16 +10,32 @@ public class JQMSelectFilterable extends JQMSelect {
 
     private static final String SELECT_FILTERABLE_STYLENAME = "jqm4gwt-select-filterable";
 
+    private String menuStyleNames;
+
     public JQMSelectFilterable() {
         super();
         addStyleName(SELECT_FILTERABLE_STYLENAME);
         setNative(false);
     }
 
+    public String getMenuStyleNames() {
+        return menuStyleNames;
+    }
+
+    /**
+     * There is predefined ui-select-filterable CSS class added to menu dialog/popup.
+     * <p/> You can style listview by defining rule .ui-selectmenu.ui-select-filterable .ui-selectmenu-list { ... }
+     * <p/> For additional flexibility you can specify custom classes to be added together with ui-select-filterable
+     * @param dialogStyleNames - space separated custom classes
+     */
+    public void setMenuStyleNames(String dialogStyleNames) {
+        this.menuStyleNames = dialogStyleNames;
+    }
+
     @Override
     protected void onLoad() {
         super.onLoad();
-        bindLifecycleEvents(select.getElement().getId());
+        bindLifecycleEvents(select.getElement().getId(), this);
     }
 
     @Override
@@ -28,7 +44,7 @@ public class JQMSelectFilterable extends JQMSelect {
         super.onUnload();
     }
 
-    private native void bindLifecycleEvents(String id) /*-{
+    private native void bindLifecycleEvents(String id, JQMSelectFilterable combo) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$.mobile.document
             // The custom selectmenu plugin generates an ID for the listview by suffixing the ID of the
@@ -39,7 +55,10 @@ public class JQMSelectFilterable extends JQMSelect {
                     listview = $wnd.$( e.target ),
                     form = listview.jqmData( "filter-form" );
 
-                $wnd.$( "#" + id + "-listbox" ).addClass( "ui-select-filterable" ); // for CSS styling
+                var lb = $wnd.$( "#" + id + "-listbox" );
+                lb.addClass( "ui-select-filterable" ); // for CSS styling
+                var addnl = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::getMenuStyleNames()();
+                if (addnl) { lb.addClass( addnl ); }
 
                 // We store the generated form in a variable attached to the popup so we avoid creating a
                 // second form/input field when the listview is destroyed/rebuilt during a refresh.
@@ -69,6 +88,8 @@ public class JQMSelectFilterable extends JQMSelect {
                     form = listview.jqmData( "filter-form" );
 
                 dialog.addClass( "ui-select-filterable" ); // for CSS styling
+                var addnl = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::getMenuStyleNames()();
+                if (addnl) { dialog.addClass( addnl ); }
 
                 // Attach a reference to the listview as a data item to the dialog, because during the
                 // pagehide handler below the selectmenu widget will already have returned the listview

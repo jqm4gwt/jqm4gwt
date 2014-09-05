@@ -278,7 +278,8 @@
             <e:option><e:JQMSelect.Option text="Nine" value="9" /></e:option>
           </e:JQMSelect>
           <h:Paragraph />
-          <e:JQMSelectFilterable text="Filterable inside Select/Dropdown">
+          <e:JQMSelectFilterable text="Filterable inside Select/Dropdown"
+            menuStyleNames="aaa bbb ccc">
             <e:option><e:JQMSelect.Option text="San Francisco" value="SFO" /></e:option>
             <e:option><e:JQMSelect.Option text="Los Angeles" value="LAX" /></e:option>
             <e:option><e:JQMSelect.Option text="Vancouver" value="YVR" /></e:option>
