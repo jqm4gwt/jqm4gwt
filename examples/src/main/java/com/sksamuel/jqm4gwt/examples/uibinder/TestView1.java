@@ -358,6 +358,24 @@ public class TestView1 {
     @UiField
     JQMUrl urlEd;
 
+    @UiField
+    JQMButton fltr2GetSearchTextBtn;
+
+    @UiField
+    JQMText fltr2SetSearchTextEd;
+
+    @UiField
+    JQMButton fltr2SetSearchTextBtn;
+
+    @UiField
+    JQMButton fruitsGetSearchTextBtn;
+
+    @UiField
+    JQMText fruitsSetSearchTextEd;
+
+    @UiField
+    JQMButton fruitsSetSearchTextBtn;
+
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
             @Override
@@ -590,6 +608,26 @@ public class TestView1 {
     @UiHandler("setListItemTextBtn")
     void setListItemTextBtnClick(ClickEvent e) {
         listItem4.setText(null);
+    }
+
+    @UiHandler("fltr2GetSearchTextBtn")
+    void fltr2GetSearchTextBtnClick(ClickEvent e) {
+        Window.alert("Search text: " + orderList1.getFilterSearchText());
+    }
+
+    @UiHandler("fltr2SetSearchTextBtn")
+    void fltr2SetSearchTextBtnClick(ClickEvent e) {
+        orderList1.setFilterSearchText(fltr2SetSearchTextEd.getValue());
+    }
+
+    @UiHandler("fruitsGetSearchTextBtn")
+    void fruitsGetSearchTextBtnClick(ClickEvent e) {
+        Window.alert("Search text: " + fruitsList.getFilterSearchText());
+    }
+
+    @UiHandler("fruitsSetSearchTextBtn")
+    void fruitsSetSearchTextBtnClick(ClickEvent e) {
+        fruitsList.setFilterSearchText(fruitsSetSearchTextEd.getValue());
     }
 
     @UiHandler("listItemCheckedBtn")

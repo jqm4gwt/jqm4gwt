@@ -290,7 +290,16 @@
           <h:Paragraph />
           <h:Heading.H4 text="Filter Select/Dropdown Reveal"
             addStyleNames="{style.inlineBlock} {style.marginRight10}" />
-          <b:JQMButton ui:field="addFruitsBtn" text="Add fruits" inline="true" />
+          <g:FlowPanel addStyleNames="{style.inlineBlock}">
+            <b:JQMButton ui:field="addFruitsBtn" text="Add fruits" inline="true" mini="true" />
+            <b:JQMButton ui:field="fruitsGetSearchTextBtn"
+              text="Get Search Text" mini="true" inline="true" />
+            <g:FlowPanel addStyleNames="{style.inlineBlock}" >
+              <e:JQMText ui:field="fruitsSetSearchTextEd" labelHidden="true" />
+            </g:FlowPanel>
+            <b:JQMButton ui:field="fruitsSetSearchTextBtn"
+                text="Set Search Text" mini="true" inline="true" />
+          </g:FlowPanel>
           <l:JQMList.Unordered ui:field="fruitsList" inset="true"
             filterable="true" filterReveal="true" filterPlaceholder="Search fruits...">
             <l:item><l:JQMListItem checkBox="LEFT" text="Apple" /></l:item>
@@ -574,8 +583,18 @@
           </g:FlowPanel>
         </jqm:JQMPopup>
         <h:Paragraph />
-        <b:JQMButton ui:field="setListItemTextBtn"
-          text="Set 'Ordered List Item #4 Text' to 'null'" mini="true" inline="true" />
+        <g:FlowPanel>
+          <b:JQMButton ui:field="setListItemTextBtn"
+            text="Set 'Ordered List Item #4 Text' to 'null'" mini="true" inline="true" />
+          <b:JQMButton ui:field="fltr2GetSearchTextBtn"
+            text="Get Search Text" mini="true" inline="true" />
+          <g:FlowPanel addStyleNames="{style.inlineBlock}" >
+            <e:JQMText ui:field="fltr2SetSearchTextEd" labelHidden="true" />
+          </g:FlowPanel>
+          <b:JQMButton ui:field="fltr2SetSearchTextBtn"
+              text="Set Search Text" mini="true" inline="true" />    
+        </g:FlowPanel>
+        
         <h:Paragraph addStyleNames="{style.bevel}" />
         <jqm:list.JQMList.Unordered ui:field="listWithChecked" splitIcon="GEAR" splitTheme="b">
           <jqm:divider><jqm:list.JQMListDivider text="List with checkBoxes"/></jqm:divider>

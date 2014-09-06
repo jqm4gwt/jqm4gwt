@@ -184,6 +184,15 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
 
     /**
      * {@link JQMFilterable} will use this text when searching through this widget.
+     * <p/><b>Detail description:</b> By default, the filter simply searches against
+     * the contents of each list item.
+     * If you want the filter to search against different content, add the data-filtertext
+     * attribute to the item and populate it with one or many keywords and phrases that
+     * should be used to match against. Note that if this attribute is added,
+     * the contents of the list item are ignored.
+     * <p> This attribute is useful for dealing with allowing for ticker symbols
+     * and full company names to be searched, or for covering common spellings
+     * and abbreviations for countries.
      */
     public void setFilterText(String filterText) {
         JQMCommon.setFilterText(getDataFilterWidget(), filterText);
@@ -221,6 +230,38 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
         JQMCommon.setDataFilter(getDataFilterWidget(), filterSelector);
         checkFilterEvents();
     }
+
+    /**
+     * @return - associated JQMFilterable.filter.getElement()
+     */
+    protected Element getFilterSearchElt() {
+        String s = getDataFilter();
+        if (s == null || s.isEmpty()) return null;
+        return findElt(s);
+    }
+
+    protected static native Element findElt(String selector) /*-{
+        return $wnd.$( selector ).first()[0];
+    }-*/;
+
+    public String getFilterSearchText() {
+        Element elt = getFilterSearchElt();
+        if (elt == null) return null;
+        return JQMCommon.getAttribute(elt, "data-lastval");
+    }
+
+    /**
+     * Complimentary to setDataFilter(). Sets filter search text of associated JQMFilterable widget.
+     */
+    public void setFilterSearchText(String value) {
+        Element elt = getFilterSearchElt();
+        if (elt == null) return;
+        refreshFilterSearch(elt, value);
+    }
+
+    protected static native void refreshFilterSearch(Element elt, String text) /*-{
+        $wnd.$(elt).val(text).attr('data-lastval', '').trigger('change');
+    }-*/;
 
     public String getFilterChildren() {
         return JQMCommon.getFilterChildren(getDataFilterWidget());
