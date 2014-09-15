@@ -4,6 +4,8 @@ import java.util.Date;
 
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -52,6 +54,8 @@ public class JQMCalBox extends JQMText {
     protected static final String USE_CLEAR_BUTTON = "\"useClearButton\":";
     protected static final String YEAR_PICK_MIN = "\"calYearPickMin\":";
     protected static final String YEAR_PICK_MAX = "\"calYearPickMax\":";
+    protected static final String LOCK_INPUT = "\"lockInput\":";
+    protected static final String BUTTON_ICON = "\"buttonIcon\":";
 
     private Boolean useNewStyle = true;
     private String dateFormat = null;
@@ -63,11 +67,23 @@ public class JQMCalBox extends JQMText {
     private Boolean editable = true;
     private String yearPickMin = null;
     private String yearPickMax = null;
+    private Boolean lockInput = null;
+    private String buttonIcon = null;
 
-    private Date delayedSetDate = null; // used when isAttached() == false
+    private Date delayedSetDate = null; // used when not initialized yet
 
     private boolean isInternSetDate;
-    private Date internDateToSet; // isInternSetDate == true
+    private Date internDateToSet; // works when isInternSetDate == true
+
+    private boolean invalidateUnlockedInputOnBlur = true;
+
+    static {
+        addJsParts();
+    }
+
+    private static native void addJsParts() /*-{
+        $wnd.mobileDateboxCallbackFalse = function() { return false; };
+    }-*/;
 
     public JQMCalBox() {
         this(null);
@@ -77,6 +93,20 @@ public class JQMCalBox extends JQMText {
         super(text);
         setType("date");
         setInputAttribute("data-role", "datebox");
+        input.addBlurHandler(new BlurHandler() {
+            @Override
+            public void onBlur(BlurEvent event) {
+                if (lockInput != null && !lockInput && invalidateUnlockedInputOnBlur) {
+                    String oldText = input.getText();
+                    updateInputText();
+                    String newText = input.getText();
+                    boolean eq = true;
+                    if (oldText != null) eq = oldText.equals(newText);
+                    else if (newText != null) eq = newText.equals(oldText);
+                    if (!eq) ValueChangeEvent.fire(input, getValue());
+                }
+            }
+        });
         refreshDataOptions();
     }
 
@@ -110,7 +140,8 @@ public class JQMCalBox extends JQMText {
             sb.append(',').append(USE_CLEAR_BUTTON).append(bool2Str(useClearButton));
         }
         if (editable != null && editable == false) {
-            sb.append(',').append("\"openCallback\": \"function(){return false;}\"");
+            sb.append(',').append("\"openCallback\": \"mobileDateboxCallbackFalse\"");
+            //sb.append(',').append("\"openCallback\": \"function(){return false;}\"");
             getElement().addClassName("jqm4gwt-non-editable");
         } else {
             getElement().removeClassName("jqm4gwt-non-editable");
@@ -120,6 +151,12 @@ public class JQMCalBox extends JQMText {
         }
         if (yearPickMax != null && !yearPickMax.isEmpty()) {
             sb.append(',').append(YEAR_PICK_MAX).append('"').append(yearPickMax).append('"');
+        }
+        if (lockInput != null) {
+            sb.append(',').append(LOCK_INPUT).append(bool2Str(lockInput));
+        }
+        if (buttonIcon != null && !buttonIcon.isEmpty()) {
+            sb.append(',').append(BUTTON_ICON).append('"').append(buttonIcon).append('"');
         }
         sb.append('}');
         return sb.toString();
@@ -215,10 +252,11 @@ public class JQMCalBox extends JQMText {
     }
 
     /**
-     * Read only mode for this widget, if true - open calendar button will be disabled.
+     * Read only mode for this widget, if false - open calendar button will be disabled and input locked.
      */
     public void setEditable(Boolean editable) {
         this.editable = editable;
+        if (!editable) lockInput = true;
         refreshDataOptions();
     }
 
@@ -243,11 +281,44 @@ public class JQMCalBox extends JQMText {
      * which will be added/subtracted from the current year
      * (with Max, use a negative integer to go into the past - negative numbers for min will be abs()ed appropriatly),
      * or if the number is greater than 1800, it will be assumed to be a hard year.
-     * <p/> Finally, the string "NOW" (UCASE!) will use the current year (today's date, not the picker year).
+     * <p/> Finally, the string "NOW" (UPCASE!) will use the current year (today's date, not the picker year).
      */
     public void setYearPickMax(String yearPickMax) {
         this.yearPickMax = yearPickMax;
         refreshDataOptions();
+    }
+
+    public Boolean getLockInput() {
+        return lockInput;
+    }
+
+    public void setLockInput(Boolean lockInput) {
+        this.lockInput = lockInput;
+        refreshDataOptions();
+    }
+
+    public String getButtonIcon() {
+        return buttonIcon;
+    }
+
+    /**
+     * This is the class of the button in the input element. Any valid ui-icon-xxx is fine.
+     * <p/>Default value is calendar.
+     */
+    public void setButtonIcon(String buttonIcon) {
+        this.buttonIcon = buttonIcon;
+        refreshDataOptions();
+    }
+
+    public boolean isInvalidateUnlockedInputOnBlur() {
+        return invalidateUnlockedInputOnBlur;
+    }
+
+    /**
+     * When lockInput == false this property controls if proper/parsed date is forcefully set on blur/exit (default: true)
+     */
+    public void setInvalidateUnlockedInputOnBlur(boolean invalidateUnlockedInputOnBlur) {
+        this.invalidateUnlockedInputOnBlur = invalidateUnlockedInputOnBlur;
     }
 
     public static DateTimeFormat getValueStrFmt() {
@@ -336,12 +407,40 @@ public class JQMCalBox extends JQMText {
 
     @Override
     protected void onUnload() {
+        final Date d = getDate();
         super.onUnload();
-        delayedSetDate = getDate();
+        delayedSetDate = d;
     }
 
     public void setDate(Date d) {
         setDate(d, false);
+    }
+
+    /**
+     * Refresh after a programmatic change has taken place.
+     */
+    public void refresh() {
+        refresh(input.getElement());
+    }
+
+    private native void refresh(Element elt) /*-{
+        var w = $wnd.$(elt);
+        if (w.data('mobile-datebox') !== undefined) {
+            w.datebox('refresh');
+        }
+    }-*/;
+
+    private static native boolean isCalboxReady(Element elt) /*-{
+        var w = $wnd.$(elt);
+        if (w.data('mobile-datebox') !== undefined) {
+            return true;
+        } else {
+            return false;
+        }
+    }-*/;
+
+    private boolean isReady() {
+        return input.isAttached() && isCalboxReady(input.getElement());
     }
 
     /**
@@ -350,7 +449,7 @@ public class JQMCalBox extends JQMText {
      */
     public void setDate(Date d, boolean fireEvents) {
         if (input == null) return;
-        if (!input.isAttached()) {
+        if (!isReady()) {
             delayedSetDate = d;
             return;
         }
@@ -360,10 +459,8 @@ public class JQMCalBox extends JQMText {
             input.setText("");
         } else {
             internSetDate(d);
-            JsDate jsd = internGetDate(input.getElement());
             // had to update text manually, because JS function 'setTheDate' didn't do that for some reason
-            String fs = internFormat(input.getElement(), getActiveDateFormat(), jsd);
-            input.setText(fs);
+            updateInputText();
         }
         if (fireEvents) {
             Date newD = getDate();
@@ -372,9 +469,15 @@ public class JQMCalBox extends JQMText {
         }
     }
 
+    private void updateInputText() {
+        JsDate jsd = internGetDate(input.getElement());
+        String fs = internFormat(input.getElement(), getActiveDateFormat(), jsd);
+        input.setText(fs);
+    }
+
     public Date getDate() {
         if (input == null) return null;
-        if (!input.isAttached()) return delayedSetDate;
+        if (!isReady()) return delayedSetDate;
 
         if (isInternSetDate) return internDateToSet;
 

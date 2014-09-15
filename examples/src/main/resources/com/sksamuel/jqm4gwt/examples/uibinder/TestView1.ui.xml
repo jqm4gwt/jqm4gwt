@@ -163,10 +163,13 @@
 
           <dt:JQMCalBox ui:field="datePicker" text="Date Picker"
             dateFormat="%A %m/%d/%y" value="2013-10-25" useClearButton="true" />
+            <!-- lockInput="false" buttonIcon="gear" editable="false" invalidateUnlockedInputOnBlur="false" /-->
           <b:JQMButton ui:field="datePickerGetValueBtn" text="Get Date Picker value"
             inline="true" mini="true" />
           <b:JQMButton ui:field="datePickerSetNullBtn" text="Set Date Picker value to Null"
-            inline="true" mini="true" />
+            inline="true" mini="true" addStyleNames="{style.marginRight20}" />
+          <h:Span text="Last onValueChange:" addStyleNames="{style.marginRight10}" />
+          <h:Span ui:field="datePickerValueChanged" />  
 
           <e:JQMMonth ui:field="monthEd" text="monthText"/>
           <e:JQMNumber ui:field="numberEd" text="numberText"/>

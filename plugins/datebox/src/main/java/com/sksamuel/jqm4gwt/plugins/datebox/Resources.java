@@ -8,8 +8,8 @@ public interface Resources {
 
     class Loader {
 
-        private static final String JQM_DATEBOX_CSS = "css/jqm-datebox-1.4.2.min.css";
-        private static final String CALBOX_JS = "js/jqm-datebox-1.4.2.comp.calbox.min.js";
+        private static final String JQM_DATEBOX_CSS = "css/jqm-datebox-1.4.4.min.css";
+        private static final String CALBOX_JS = "js/jqm-datebox-1.4.4.comp.calbox.min.js";
         private static final String DATEBOX_I18N_JS = "js/jquery.mobile.datebox.i18n.en_US.utf8.js";
 
         public static void injectAll(final InjectCallback done) {

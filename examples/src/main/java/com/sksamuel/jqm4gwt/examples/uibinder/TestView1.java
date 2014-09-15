@@ -54,6 +54,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMText;
 import com.sksamuel.jqm4gwt.form.elements.JQMUrl;
 import com.sksamuel.jqm4gwt.html.Heading;
 import com.sksamuel.jqm4gwt.html.Paragraph;
+import com.sksamuel.jqm4gwt.html.Span;
 import com.sksamuel.jqm4gwt.layout.JQMTable;
 import com.sksamuel.jqm4gwt.list.JQMList;
 import com.sksamuel.jqm4gwt.list.JQMListDivider;
@@ -225,6 +226,9 @@ public class TestView1 {
 
     @UiField
     JQMButton datePickerSetNullBtn;
+
+    @UiField
+    Span datePickerValueChanged;
 
     @UiField
     JQMListItem listItem4;
@@ -531,6 +535,7 @@ public class TestView1 {
     @UiHandler("datePickerSetNullBtn")
     void datePickerSetNullBtnClick(ClickEvent e) {
         datePicker.setValue(null);
+        datePicker.refresh();
     }
 
     @UiHandler("headerTestBtn1")
@@ -977,6 +982,13 @@ public class TestView1 {
                 Window.alert(urlEd.getValue());
             }
         });*/
+
+        datePicker.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                datePickerValueChanged.setText(datePicker.getValue());
+            }
+        });
 
     }
 
