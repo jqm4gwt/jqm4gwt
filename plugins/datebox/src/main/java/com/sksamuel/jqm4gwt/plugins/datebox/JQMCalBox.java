@@ -91,7 +91,7 @@ public class JQMCalBox extends JQMText {
 
     public JQMCalBox(String text) {
         super(text);
-        setType("date");
+        //setType("date"); // it's servicing by jqm-datebox, so type must not be set as "date"
         setInputAttribute("data-role", "datebox");
         input.addBlurHandler(new BlurHandler() {
             @Override
