@@ -800,12 +800,15 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     public void restoreRoleDialog() {
         JQMCommon.setDataRole(this, Mobile.DATA_ROLE_DIALOG);
-        internPageEnchance(getElement());
+        internRestoreDialog(getElement());
     }
 
-    /** Again it's ugly hack, actually partial copy of mobile.page._enhance() method. */
-    private static native void internPageEnchance(Element elt) /*-{
+    /** XXX: Again it's ugly hack, actually partial copy of mobile.dialog._create() method. */
+    private static native void internRestoreDialog(Element elt) /*-{
         var p = $wnd.$(elt);
+        if (p.data('mobile-page') === undefined || p.hasClass("ui-dialog")) {
+            return;
+        }
         var corners = p.page("option", "corners");
         p.addClass("ui-dialog").wrapInner($wnd.$( "<div/>", { "role" : "dialog",
                 "class" : "ui-dialog-contain ui-overlay-shadow" + (corners ? " ui-corner-all" : "")
