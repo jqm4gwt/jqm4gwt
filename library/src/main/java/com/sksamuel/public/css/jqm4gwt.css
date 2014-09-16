@@ -54,7 +54,7 @@
   top: 0;
   margin: 0;
   position: fixed;
-  z-index: 9999; /* must be less than ui-loader, but huge enough */
+  z-index: 1099; /* must be less than ui-loader and jqm-datebox(1100) */
 }
 
 .jqm4gwt-non-editable input {
