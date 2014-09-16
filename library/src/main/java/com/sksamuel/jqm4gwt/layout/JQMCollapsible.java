@@ -21,7 +21,7 @@ import com.sksamuel.jqm4gwt.html.Heading;
  * A {@link JQMCollapsible} is a panel that shows a header and can reveal content
  * once the header is expanded. This is similar to the GWT {@link DisclosurePanel}.
  *
- * <p/> See <a href="http://demos.jquerymobile.com/1.4.3/collapsible/">Collapsible</a>
+ * <p/> See <a href="http://demos.jquerymobile.com/1.4.4/collapsible/">Collapsible</a>
  */
 public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>,
         HasIconPos<JQMCollapsible>, HasMini<JQMCollapsible>, HasInset<JQMCollapsible> {

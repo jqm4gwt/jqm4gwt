@@ -19,7 +19,7 @@ import com.sksamuel.jqm4gwt.toolbar.JQMPanelEvent.PanelState;
  *
  * <p/> This class models a Jquery Mobile
  *
- * <a href="http://demos.jquerymobile.com/1.4.3/panel/">Panel Widget</a>
+ * <a href="http://demos.jquerymobile.com/1.4.4/panel/">Panel Widget</a>
  * <p/> See also <a href="http://api.jquerymobile.com/panel/">API for Panel Widget</a>
  *
  *

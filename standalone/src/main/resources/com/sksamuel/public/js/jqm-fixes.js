@@ -1,4 +1,4 @@
-// jqm 1.4.3 tabs widget fix: https://github.com/jquery/jquery-mobile/issues/7169
+// jqm 1.4.4 tabs widget fix: https://github.com/jquery/jquery-mobile/issues/7169
 $.widget( "ui.tabs", $.ui.tabs, {
 
     _createWidget: function( options, element ) {
@@ -22,7 +22,7 @@ $.widget( "ui.tabs", $.ui.tabs, {
     }
 });
 
-// jqm 1.4.3 tabs widget heightStyle="auto" fix: https://github.com/jquery/jquery-mobile/issues/6392
+// jqm 1.4.4 tabs widget heightStyle="auto" fix: https://github.com/jquery/jquery-mobile/issues/6392
 $.widget( "ui.tabs", $.ui.tabs, {
     _setupHeightStyle: function( heightStyle ) {
         var maxHeight,

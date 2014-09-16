@@ -40,8 +40,8 @@ import com.sksamuel.jqm4gwt.html.Legend;
  *         The child checkboxes are grouped together and can be set to be
  *         vertical or horizontal.
  *
- * <p><a href="http://demos.jquerymobile.com/1.4.3/checkboxradio-checkbox/">Checkboxes</a></p>
- * <p><a href="http://demos.jquerymobile.com/1.4.3/forms/#checkboxes">Form elements - Checkboxes</a></p>
+ * <p><a href="http://demos.jquerymobile.com/1.4.4/checkboxradio-checkbox/">Checkboxes</a></p>
+ * <p><a href="http://demos.jquerymobile.com/1.4.4/forms/#checkboxes">Form elements - Checkboxes</a></p>
  *
  * <h3>Use in UiBinder Templates</h3>
  *

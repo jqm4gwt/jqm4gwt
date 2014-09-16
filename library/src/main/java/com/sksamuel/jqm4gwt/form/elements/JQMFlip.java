@@ -29,7 +29,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 18 May 2011 04:21:09
  *
- * <p><a href="http://demos.jquerymobile.com/1.4.3/flipswitch/">Flip switch</a></p>
+ * <p><a href="http://demos.jquerymobile.com/1.4.4/flipswitch/">Flip switch</a></p>
  *
  */
 public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasValue<String>,

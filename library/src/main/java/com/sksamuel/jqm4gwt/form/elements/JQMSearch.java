@@ -18,7 +18,7 @@ import com.sksamuel.jqm4gwt.events.JQMInputHandler;
  *
  * <p/> Text element stylised as a search box.
  *
- * <p/> See <a href="http://demos.jquerymobile.com/1.4.3/forms/#search">Search Input</a>
+ * <p/> See <a href="http://demos.jquerymobile.com/1.4.4/forms/#search">Search Input</a>
  *
  */
 public class JQMSearch extends JQMText {
