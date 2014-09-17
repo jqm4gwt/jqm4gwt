@@ -254,10 +254,14 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         }
     }
 
-    private void addOption(String value, String text, boolean placeholder, boolean selected,
-                           boolean disabled) {
-        addOption(value, text, null/*filterText*/, placeholder, selected, disabled,
+    private void addOption(String value, String text, String filterText,
+                           boolean placeholder, boolean selected, boolean disabled) {
+        addOption(value, text, filterText, placeholder, selected, disabled,
                   null/*icon*/, null/*customIcon*/);
+    }
+
+    public void addOption(String value, String text, String filterText) {
+        addOption(value, text, filterText, false/*placeholder*/, false/*selected*/, false/*disabled*/);
     }
 
     /**
@@ -265,7 +269,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      * the end of the list of options.
      */
     public void addOption(String value, String text) {
-        addOption(value, text, false/*placeholder*/, false/*selected*/, false/*disabled*/);
+        addOption(value, text, null/*filterText*/);
     }
 
     public int getOptionCount() {
