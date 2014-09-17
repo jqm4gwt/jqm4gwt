@@ -767,27 +767,6 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     @Override
-    public Boolean doFiltering(Element elt, Integer index, String searchValue) {
-        String s = JQMCommon.getAttribute(elt, "data-option-index");
-        if (s != null && !s.isEmpty()) {
-            try {
-                int i = Integer.parseInt(s);
-                OptionElement opt = getOption(i);
-                if (opt != null) {
-                    s = JQMCommon.getFilterText(opt);
-                    if (s != null && !s.isEmpty()) {
-                        // XXX: jqm bug - filterText is not copied from option to menu listView items
-                        JQMCommon.setFilterText(elt, s);
-                    }
-                }
-            } catch (NumberFormatException ex) {
-                // nothing, can continue safely
-            }
-        }
-        return super.doFiltering(elt, index, searchValue);
-    }
-
-    @Override
     protected void onLoad() {
         super.onLoad();
         bindLifecycleEvents(select.getElement().getId(), this);

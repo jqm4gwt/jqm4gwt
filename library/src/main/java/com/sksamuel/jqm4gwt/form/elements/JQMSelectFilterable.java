@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.OptionElement;
 import com.sksamuel.jqm4gwt.JQMCommon;
 
 /**
@@ -36,6 +37,30 @@ public class JQMSelectFilterable extends JQMSelect {
      */
     public void setMenuStyleNames(String dialogStyleNames) {
         this.menuStyleNames = dialogStyleNames;
+    }
+
+    @Override
+    public Boolean doFiltering(Element elt, Integer index, String searchValue) {
+        // TODO: remove when this bug is fixed: https://github.com/jquery/jquery-mobile/issues/7677
+        String s = JQMCommon.getFilterText(elt);
+        if (s == null || s.isEmpty()) {
+            s = JQMCommon.getAttribute(elt, "data-option-index");
+            if (s != null && !s.isEmpty()) {
+                try {
+                    int i = Integer.parseInt(s);
+                    OptionElement opt = getOption(i);
+                    if (opt != null) {
+                        s = JQMCommon.getFilterText(opt);
+                        if (s != null && !s.isEmpty()) {
+                            JQMCommon.setFilterText(elt, s);
+                        }
+                    }
+                } catch (NumberFormatException ex) {
+                    // nothing, can continue safely
+                }
+            }
+        }
+        return super.doFiltering(elt, index, searchValue);
     }
 
     private void setListView(Element listViewElt) {
