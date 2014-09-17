@@ -1,5 +1,9 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Element;
+import com.sksamuel.jqm4gwt.JQMCommon;
+
 /**
  * See <a href="http://demos.jquerymobile.com/1.4.4/selectmenu-custom-filter/">Filterable inside custom select</a>
  * <p/> See also <a href="https://github.com/jquery/jquery-mobile/blob/9cb1040f1da9309c30b70eccbbfb54a8ddf253aa/demos/selectmenu-custom-filter/index.php">Github Demos</a>
@@ -11,6 +15,8 @@ public class JQMSelectFilterable extends JQMSelect {
     private static final String SELECT_FILTERABLE_STYLENAME = "jqm4gwt-select-filterable";
 
     private String menuStyleNames;
+
+    private Element listView;
 
     public JQMSelectFilterable() {
         super();
@@ -30,6 +36,14 @@ public class JQMSelectFilterable extends JQMSelect {
      */
     public void setMenuStyleNames(String dialogStyleNames) {
         this.menuStyleNames = dialogStyleNames;
+    }
+
+    private void setListView(Element listViewElt) {
+        listView = listViewElt;
+        if (listView != null && JQMCommon.isFilterableReady(listView)) {
+            JavaScriptObject origFilter = JQMCommon.getFilterCallback(listView);
+            JQMCommon.bindFilterCallback(this, listView, origFilter);
+        }
     }
 
     @Override
@@ -74,8 +88,8 @@ public class JQMSelectFilterable extends JQMSelect {
                 }
                 // Instantiate a filterable widget on the newly created listview and
                 // indicate that the generated input is to be used for the filtering.
-                listview.filterable({ input: input,
-                    children: "> li:not(:jqmData(placeholder='true'))" });
+                listview.filterable({ input: input, children: "> li:not(:jqmData(placeholder='true'))" });
+                combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::setListView(Lcom/google/gwt/dom/client/Element;)(listview[0]);
             })
 
             // The custom select list may show up as either a popup or a dialog, depending how much

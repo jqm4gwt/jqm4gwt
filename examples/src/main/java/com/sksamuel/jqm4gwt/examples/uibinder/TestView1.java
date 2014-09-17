@@ -47,6 +47,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMRangeSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMSearch;
 import com.sksamuel.jqm4gwt.form.elements.JQMSelect;
 import com.sksamuel.jqm4gwt.form.elements.JQMSelect.Option;
+import com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable;
 import com.sksamuel.jqm4gwt.form.elements.JQMSelectWithIcons;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMTelephone;
@@ -379,6 +380,9 @@ public class TestView1 {
 
     @UiField
     JQMButton fruitsSetSearchTextBtn;
+
+    @UiField
+    JQMSelectFilterable selectFilterable;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -989,6 +993,12 @@ public class TestView1 {
                 datePickerValueChanged.setText(datePicker.getValue());
             }
         });
+
+        selectFilterable.addFilterableHandler(new JQMFilterableEvent.DefaultHandler() {
+            @Override
+            public Boolean onFiltering(JQMFilterableEvent event) {
+                return event.filterStartWithIgnoreCase(",");
+            }});
 
     }
 

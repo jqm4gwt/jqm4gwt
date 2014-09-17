@@ -314,12 +314,14 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
     }
 
     /**
-     * @param elt - current filtering element
+     * @param elt - current filtering element, JQMCommon.getTextForFiltering(elt) can be used to get filtering text
      * @param index - filtering element's index
      * @param searchValue - filtering text
-     * @return - must return true if the element is to be filtered,
-     * and it must return false if the element is to be shown.
-     * null - means default filtering should be used.
+     *
+     * @return - must return <b>true</b> if the element is to be <b>filtered out</b>.
+     * <p/> - must return <b>false</b> if the element is to be <b>shown</b>.
+     * <p/> - null means default filtering should be used.
+     * <p/> JQMCommon.getTextForFiltering(elt) can be used to get filtering element's text
      */
     protected Boolean onFiltering(Element elt, Integer index, String searchValue) {
         //String s = JQMCommon.getTextForFiltering(elt);

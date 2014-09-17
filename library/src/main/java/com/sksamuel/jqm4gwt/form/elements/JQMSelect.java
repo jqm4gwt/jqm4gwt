@@ -63,6 +63,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     public static class Option {
         private String value;
         private String text;
+        private String filterText;
         private boolean placeholder;
         private boolean selected;
         private boolean disabled;
@@ -127,6 +128,14 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
         public void setCustomIcon(String customIcon) {
             this.customIcon = customIcon;
+        }
+
+        public String getFilterText() {
+            return filterText;
+        }
+
+        public void setFilterText(String filterText) {
+            this.filterText = filterText;
         }
     }
 
@@ -206,8 +215,9 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     @UiChild
     public void addOption(Option option) {
-        addOption(option.value, option.text, option.isPlaceholder(), option.isSelected(),
-                  option.isDisabled(), option.getIcon(), option.getCustomIcon());
+        addOption(option.value, option.text, option.filterText,
+                  option.isPlaceholder(), option.isSelected(), option.isDisabled(),
+                  option.getIcon(), option.getCustomIcon());
     }
 
     /**
@@ -221,16 +231,21 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         addOption(text, text);
     }
 
-    private void addOption(String value, String text, boolean placeholder, boolean selected,
+    private void addOption(String value, String text, String filterText,
+                           boolean placeholder, boolean selected,
                            boolean disabled, DataIcon icon, String customIcon) {
         select.addItem(text, value);
 
-        if (value == null || placeholder || selected || disabled
+        if (value == null || (filterText != null && !filterText.isEmpty())
+                || placeholder || selected || disabled
                 || icon != null || customIcon != null) {
             SelectElement selElt = select.getElement().cast();
             NodeList<OptionElement> opts = selElt.getOptions();
             OptionElement opt = opts.getItem(opts.getLength() - 1);
             if (value == null) JQMCommon.setAttribute(opt, "value", null);
+            if (filterText != null && !filterText.isEmpty()) {
+                JQMCommon.setFilterText(opt, filterText);
+            }
             if (placeholder) JQMCommon.setAttribute(opt, "data-placeholder", "true");
             if (selected) JQMCommon.setAttribute(opt, "selected", "selected");
             if (disabled) JQMCommon.setAttribute(opt, "disabled", "disabled");
@@ -241,7 +256,8 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     private void addOption(String value, String text, boolean placeholder, boolean selected,
                            boolean disabled) {
-        addOption(value, text, placeholder, selected, disabled, null/*icon*/, null/*customIcon*/);
+        addOption(value, text, null/*filterText*/, placeholder, selected, disabled,
+                  null/*icon*/, null/*customIcon*/);
     }
 
     /**
@@ -286,6 +302,13 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
             }
         }
         return rslt;
+    }
+
+    public OptionElement getOption(int index) {
+        if (index < 0) return null;
+        SelectElement selElt = select.getElement().cast();
+        NodeList<OptionElement> opts = selElt.getOptions();
+        return index < opts.getLength() ? opts.getItem(index) : null;
     }
 
     @Override
@@ -741,6 +764,27 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     @Override
     protected Widget getDataFilterWidget() {
         return select;
+    }
+
+    @Override
+    public Boolean doFiltering(Element elt, Integer index, String searchValue) {
+        String s = JQMCommon.getAttribute(elt, "data-option-index");
+        if (s != null && !s.isEmpty()) {
+            try {
+                int i = Integer.parseInt(s);
+                OptionElement opt = getOption(i);
+                if (opt != null) {
+                    s = JQMCommon.getFilterText(opt);
+                    if (s != null && !s.isEmpty()) {
+                        // XXX: jqm bug - filterText is not copied from option to menu listView items
+                        JQMCommon.setFilterText(elt, s);
+                    }
+                }
+            } catch (NumberFormatException ex) {
+                // nothing, can continue safely
+            }
+        }
+        return super.doFiltering(elt, index, searchValue);
     }
 
     @Override

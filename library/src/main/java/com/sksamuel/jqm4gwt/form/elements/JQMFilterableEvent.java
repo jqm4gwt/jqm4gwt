@@ -4,6 +4,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.HasAttachHandlers;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
+import com.sksamuel.jqm4gwt.JQMCommon;
 
 public class JQMFilterableEvent extends GwtEvent<JQMFilterableEvent.Handler> {
 
@@ -11,9 +12,9 @@ public class JQMFilterableEvent extends GwtEvent<JQMFilterableEvent.Handler> {
         void onBeforeFilter(JQMFilterableEvent event);
 
         /**
-         * @return - must return true if the element is to be filtered,
-         * and it must return false if the element is to be shown.
-         * null - means default filtering should be used.
+         * @return - must return <b>true</b> if the element is to be <b>filtered out</b>.
+         * <p/> - must return <b>false</b> if the element is to be <b>shown</b>.
+         * <p/> - null means default filtering should be used.
          * <p/> JQMCommon.getTextForFiltering(elt) can be used to get filtering element's text
          */
         Boolean onFiltering(JQMFilterableEvent event);
@@ -29,6 +30,35 @@ public class JQMFilterableEvent extends GwtEvent<JQMFilterableEvent.Handler> {
         public Boolean onFiltering(JQMFilterableEvent event) {
             return null;
         }
+    }
+
+    /**
+     * @param splitTextForFiltering - regex for splitting item's text (optional, could be null).
+     * @return - false: show, true: filter out.
+     */
+    public Boolean filterStartWithIgnoreCase(String splitTextForFiltering) {
+        String search = getFilterText();
+        if (search == null || search.isEmpty()) return null;
+        String s = JQMCommon.getTextForFiltering(getFilteringElt());
+        if (s == null || s.isEmpty()) return null;
+        if (splitTextForFiltering == null || splitTextForFiltering.isEmpty()) {
+            return !(s.startsWith(search) || s.toLowerCase().startsWith(search.toLowerCase()));
+        } else {
+            String[] arr = s.split(splitTextForFiltering);
+            for (String i : arr) {
+                i = i.trim();
+                boolean match = i.startsWith(search) || i.toLowerCase().startsWith(search.toLowerCase());
+                if (match) return false;
+            }
+            return true;
+        }
+    }
+
+    /**
+     * @return - false: show, true: filter out.
+     */
+    public Boolean filterStartWithIgnoreCase() {
+        return filterStartWithIgnoreCase(null/*splitTextForFiltering*/);
     }
 
     static Type<JQMFilterableEvent.Handler> TYPE;
