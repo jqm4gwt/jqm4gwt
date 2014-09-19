@@ -152,6 +152,10 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     private boolean transparentPrevPageClearCache;
     private boolean transparentDoPrevPageLifecycle;
 
+    /** See {@link JQMSelect#getDelayedValue()} */
+    private String delayedValue;
+    private Boolean delayedFireEvents;
+
     /**
      * Creates a new {@link JQMSelect} with no label text.
      */
@@ -252,6 +256,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
             if (icon != null) JQMCommon.setIcon(opt, icon);
             else if (customIcon != null) JQMCommon.setIcon(opt, customIcon);
         }
+        if (delayedValue != null) tryResolveDelayed();
     }
 
     private void addOption(String value, String text, String filterText,
@@ -370,13 +375,8 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      * Returns the index of the currently selected option
      */
     public int getSelectedIndex() {
-        return getSelectedIndex(select.getElement().getId());
+        return select.getSelectedIndex();
     }
-
-    private native int getSelectedIndex(String id) /*-{
-        var select = $wnd.$("select#" + id);
-        return select.length > 0 ? select[0].selectedIndex : -1;
-    }-*/;
 
     public String getSelectedValue() {
         return getValue();
@@ -405,6 +405,18 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      */
     public String getValue(int index) {
         return index == -1 ? null : select.getValue(index);
+    }
+
+    /**
+     * setValue() can be called before options are populated (or in the middle of their population).
+     * For example: asynchronous options loading or data binding scenarios.
+     * <p/> if value != null and cannot be resolved immediately through current options,
+     * it will be memorized and probably resolved later, when more options are added.
+     * <p/> On successful resolution regular setValue() will be called (and events fired if it was requested).
+     * <p/> Calling clear() resets delayedValue processing.
+     */
+    public String getDelayedValue() {
+        return delayedValue;
     }
 
     /**
@@ -501,20 +513,20 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     /** Programmatically close an open select menu */
     public void close() {
-        close(select.getElement().getId());
+        close(select.getElement());
     }
 
-    private native void close(String id) /*-{
-        $wnd.$("#" + id).selectmenu('close');
+    private static native void close(Element elt) /*-{
+        $wnd.$(elt).selectmenu('close');
     }-*/;
 
     /** Programmatically open a select menu */
     public void open() {
-        open(select.getElement().getId());
+        open(select.getElement());
     }
 
-    private native void open(String id) /*-{
-        $wnd.$("#" + id).selectmenu('open');
+    private static native void open(Element elt) /*-{
+        $wnd.$(elt).selectmenu('open');
     }-*/;
 
     /**
@@ -524,7 +536,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         refresh(select.getElement());
     }
 
-    private native void refresh(Element elt) /*-{
+    private static native void refresh(Element elt) /*-{
         var w = $wnd.$(elt);
         if (w.data('mobile-selectmenu') !== undefined) {
             w.selectmenu('refresh');
@@ -536,12 +548,29 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      */
     public void removeOption(String value) {
         int indexOf = indexOf(value);
-        if (indexOf >= 0)
+        if (indexOf >= 0) {
+            int i = select.getSelectedIndex();
+            if (i == indexOf) select.setSelectedIndex(-1);
             select.removeItem(indexOf);
+        }
+    }
+
+    /**
+     * @return - true when there are <b>no value</b> and <b>no options</b> defined.
+     */
+    public boolean isEmpty() {
+        return getSelectedIndex() == -1 && getOptionCount() == 0;
     }
 
     public void clear() {
+        clearDelayed();
+        select.setSelectedIndex(-1);
     	select.clear();
+    }
+
+    private void clearDelayed() {
+        delayedValue = null;
+        delayedFireEvents = null;
     }
 
     @Override
@@ -714,6 +743,16 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     @Override
     public void setValue(String value, boolean fireEvents) {
         int newIdx = value == null ? -1 : indexOf(value);
+        if (newIdx == -1 && value != null) {
+            delayedValue = value;
+            delayedFireEvents = fireEvents;
+        } else {
+            clearDelayed();
+        }
+        setNewSelectedIndex(newIdx, fireEvents);
+    }
+
+    private void setNewSelectedIndex(int newIdx, boolean fireEvents) {
         int oldIdx = fireEvents ? getSelectedIndex() : -1;
         setSelectedIndex(newIdx);
         if (fireEvents) {
@@ -722,6 +761,15 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                 ValueChangeEvent.fire(this, getValue(newIdx));
             }
         }
+    }
+
+    private void tryResolveDelayed() {
+        if (delayedValue == null) return;
+        int newIdx = indexOf(delayedValue);
+        if (newIdx == -1) return;
+        boolean fireEvents = delayedFireEvents != null ? delayedFireEvents : false;
+        clearDelayed();
+        setNewSelectedIndex(newIdx, fireEvents);
     }
 
     public String getCloseText() {
@@ -782,25 +830,24 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         super.onUnload();
     }
 
-    private native void bindLifecycleEvents(String id, JQMSelect selectCtrl) /*-{
+    private static native void bindLifecycleEvents(String id, JQMSelect selectCtrl) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$.mobile.document
             // The custom select list may show up as either a popup or a dialog, depending how much
             // vertical room there is on the screen. If it shows up as a dialog, then we have to
             // process transparent property.
-            .on( "pagebeforeshow", "#" + id + "-dialog,#title-" + id + "-dialog", function( e, ui ) {
+            .on( "pagebeforeshow", "#" + id + "-dialog", function( e, ui ) {
                 selectCtrl.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::doDlgBeforeShow(Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/dom/client/Element;)(e.target, ui.prevPage.get(0));
             })
             // After the dialog is closed, we have to process transparent property as well.
-            .on( "pagehide", "#" + id + "-dialog,#title-" + id + "-dialog", function( e, ui ) {
+            .on( "pagehide", "#" + id + "-dialog", function( e, ui ) {
                 selectCtrl.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::doDlgHide(Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/dom/client/Element;)(e.target, ui.nextPage.get(0));
             });
     }-*/;
 
-    private native void unbindLifecycleEvents(String id) /*-{
+    private static native void unbindLifecycleEvents(String id) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
-        $wnd.$.mobile.document
-            .off( "pagebeforeshow pagehide", "#" + id + "-dialog,#title-" + id + "-dialog" );
+        $wnd.$.mobile.document.off( "pagebeforeshow pagehide", "#" + id + "-dialog" );
     }-*/;
 
     /**
