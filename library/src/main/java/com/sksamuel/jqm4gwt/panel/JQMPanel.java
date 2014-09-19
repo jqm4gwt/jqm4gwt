@@ -105,11 +105,11 @@ public class JQMPanel extends ComplexPanel implements HasId<JQMPanel>, HasTheme<
     }
 
     public void hide() {
-        hide(getId());
+        hide(getElement());
     }
 
-    private native void hide(String id) /*-{
-        $wnd.$("#" + id).hide();
+    private static native void hide(Element elt) /*-{
+        $wnd.$(elt).hide();
     }-*/;
 
     public void insert(IsWidget w, int beforeIndex) {
@@ -166,10 +166,10 @@ public class JQMPanel extends ComplexPanel implements HasId<JQMPanel>, HasTheme<
     }
 
     public void show() {
-        show(getAttribute("id"));
+        show(getElement());
     }
 
-    private native void show(String id) /*-{
-        $wnd.$("#" + id).show();
+    private static native void show(Element elt) /*-{
+        $wnd.$(elt).show();
     }-*/;
 }

@@ -96,7 +96,7 @@ public class JQMContext {
         return null;
     }
 
-    private native static String getDefaultTransitionImpl() /*-{
+    private static native String getDefaultTransitionImpl() /*-{
         return $wnd.$.mobile.defaultPageTransition;
     }-*/;
 
@@ -108,7 +108,7 @@ public class JQMContext {
      * @param id
      *            the id of the element to find the offset
      */
-    public native static int getLeft(String id) /*-{
+    public static native int getLeft(String id) /*-{
         return $wnd.$("#" + id).offset().left;
     }-*/;
 
@@ -120,15 +120,15 @@ public class JQMContext {
      * @param id
      *            the id of the element to find the offset
      */
-    public native static int getTop(String id) /*-{
+    public static native int getTop(String id) /*-{
         return $wnd.$("#" + id).offset().top;
     }-*/;
 
-    public native static int getTop(Element elt) /*-{
+    public static native int getTop(Element elt) /*-{
         return $wnd.$(elt).offset().top;
     }-*/;
 
-    public native static void initializePage() /*-{
+    public static native void initializePage() /*-{
         $wnd.$.mobile.initializePage();
     }-*/;
 
@@ -171,7 +171,7 @@ public class JQMContext {
         defaultTransistionDirection = direction;
     }
 
-    private native static void setDefaultTransitionImpl(String transition) /*-{
+    private static native void setDefaultTransitionImpl(String transition) /*-{
         $wnd.$.mobile.defaultPageTransition = transition;
     }-*/;
 

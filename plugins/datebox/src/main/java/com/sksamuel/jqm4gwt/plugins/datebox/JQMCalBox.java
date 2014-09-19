@@ -431,6 +431,7 @@ public class JQMCalBox extends JQMText {
     }-*/;
 
     private static native boolean isCalboxReady(Element elt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return false; // jQuery is not loaded
         var w = $wnd.$(elt);
         if (w.data('mobile-datebox') !== undefined) {
             return true;

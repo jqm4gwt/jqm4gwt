@@ -223,10 +223,6 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 		return null;
 	}
 
-	private native void getValueC(String id) /*-{
-        alert($wnd.$('#' + id).is(':checked'));
-    }-*/;
-
 	/**
 	 * Returns true if at least one checkbox in this checkset is selected.
 	 */

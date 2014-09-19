@@ -83,13 +83,13 @@ public class JQMSelectFilterable extends JQMSelect {
         super.onUnload();
     }
 
-    private native void bindLifecycleEvents(String id, JQMSelectFilterable combo) /*-{
+    private static native void bindLifecycleEvents(String id, JQMSelectFilterable combo) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$.mobile.document
             // The custom selectmenu plugin generates an ID for the listview by suffixing the ID of the
             // native widget with "-menu". Upon creation of the listview widget we want to place an
             // input field before the list to be used for a filter.
-            .on( "listviewcreate", "#" + id + "-menu,#title-" + id + "-menu", function( e ) {
+            .on( "listviewcreate", "#" + id + "-menu", function( e ) {
                 var input,
                     listview = $wnd.$( e.target ),
                     form = listview.jqmData( "filter-form" );
@@ -121,7 +121,7 @@ public class JQMSelectFilterable extends JQMSelect {
             // vertical room there is on the screen. If it shows up as a dialog, then the form containing
             // the filter input field must be transferred to the dialog so that the user can continue to
             // use it for filtering list items.
-            .on( "pagebeforeshow", "#" + id + "-dialog,#title-" + id + "-dialog", function( e ) {
+            .on( "pagebeforeshow", "#" + id + "-dialog", function( e ) {
                 var dialog = $wnd.$( e.target ),
                     listview = dialog.find( "ul" ),
                     form = listview.jqmData( "filter-form" );
@@ -140,7 +140,7 @@ public class JQMSelectFilterable extends JQMSelect {
             })
 
             // After the dialog is closed, the form containing the filter input is returned to the popup.
-            .on( "pagehide", "#" + id + "-dialog,#title-" + id + "-dialog", function( e ) {
+            .on( "pagehide", "#" + id + "-dialog", function( e ) {
                 var listview = $wnd.$( e.target ).jqmData( "listview" ),
                     form = listview.jqmData( "filter-form" );
 
@@ -149,11 +149,11 @@ public class JQMSelectFilterable extends JQMSelect {
             });
     }-*/;
 
-    private native void unbindLifecycleEvents(String id) /*-{
+    private static native void unbindLifecycleEvents(String id) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$.mobile.document
-            .off( "listviewcreate", "#" + id + "-menu,#title-" + id + "-menu" )
-            .off( "pagebeforeshow pagehide", "#" + id + "-dialog,#title-" + id + "-dialog" );
+            .off( "listviewcreate", "#" + id + "-menu" )
+            .off( "pagebeforeshow pagehide", "#" + id + "-dialog" );
     }-*/;
 
 }

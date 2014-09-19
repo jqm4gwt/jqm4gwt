@@ -292,7 +292,7 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
     public String getValue() {
         for (TextBox radio : radios) {
             Element element = radio.getElement();
-            if (isChecked(element.getId())) {
+            if (isChecked(element)) {
                 return element.getAttribute("value");
             }
         }
@@ -425,15 +425,15 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
     }
 
     protected boolean isChecked(TextBox radio) {
-        return radio != null && isChecked(radio.getElement().getId());
+        return radio != null && isChecked(radio.getElement());
     }
 
-    private native boolean isChecked(String id) /*-{
+    private static native boolean isChecked(Element elt) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return false; // jQuery is not loaded
-        return $wnd.$("input#" + id).prop("checked") ? true : false;
+        return $wnd.$(elt).prop("checked") ? true : false;
     }-*/;
 
-    private native void setCheckedAndRefresh(Element elt, boolean value) /*-{
+    private static native void setCheckedAndRefresh(Element elt, boolean value) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         var w = $wnd.$(elt);
         if (w.data('mobile-checkboxradio') !== undefined) {
@@ -443,12 +443,12 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
         }
     }-*/;
 
-    private native void setChecked(Element elt, boolean value) /*-{
+    private static native void setChecked(Element elt, boolean value) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$(elt).prop('checked', value);
     }-*/;
 
-    protected native void refreshAll() /*-{
+    protected static native void refreshAll() /*-{
         $wnd.$("input[type='radio']").each(function() {
             var w = $wnd.$(this);
             if (w.data('mobile-checkboxradio') !== undefined) {

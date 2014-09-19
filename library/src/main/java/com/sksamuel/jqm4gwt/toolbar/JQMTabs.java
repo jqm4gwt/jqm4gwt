@@ -324,7 +324,7 @@ public class JQMTabs extends JQMWidget {
         super.onUnload();
     }
 
-    private native void bindEvents(JQMTabs tabs, Element tabsElt) /*-{
+    private static native void bindEvents(JQMTabs tabs, Element tabsElt) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$(tabsElt).on("tabsactivate", function(event, ui) {
             tabs.@com.sksamuel.jqm4gwt.toolbar.JQMTabs::doActivate(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)
@@ -340,7 +340,7 @@ public class JQMTabs extends JQMWidget {
         });
     }-*/;
 
-    private native void unbindEvents(Element tabsElt) /*-{
+    private static native void unbindEvents(Element tabsElt) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$(tabsElt).off("tabsactivate");
         $wnd.$(tabsElt).off("tabsbeforeactivate");
@@ -631,7 +631,7 @@ public class JQMTabs extends JQMWidget {
         refresh(getElement());
     }
 
-    private native void refresh(Element elt) /*-{
+    private static native void refresh(Element elt) /*-{
         var w = $wnd.$(elt);
         if (w.data('mobile-tabs') !== undefined) {
             w.tabs('refresh');

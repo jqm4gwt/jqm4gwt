@@ -22,12 +22,12 @@ public class JQMSelectWithIcons extends JQMSelect {
         super.onUnload();
     }
 
-    private native void bindLifecycleEvents(String id) /*-{
+    private static native void bindLifecycleEvents(String id) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$.mobile.document
             // The custom selectmenu plugin generates an ID for the listview by suffixing the ID of the
             // native widget with "-menu". Upon creation of the listview widget we want to add item icons.
-            .on( "listviewcreate", "#" + id + "-menu,#title-" + id + "-menu", function( e ) {
+            .on( "listviewcreate", "#" + id + "-menu", function( e ) {
                 var select =  $wnd.$( "#" + id ),
                     listview = $wnd.$( e.target );
 
@@ -55,10 +55,9 @@ public class JQMSelectWithIcons extends JQMSelect {
             });
     }-*/;
 
-    private native void unbindLifecycleEvents(String id) /*-{
+    private static native void unbindLifecycleEvents(String id) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
-        $wnd.$.mobile.document
-            .off( "listviewcreate", "#" + id + "-menu,#title-" + id + "-menu" );
+        $wnd.$.mobile.document.off( "listviewcreate", "#" + id + "-menu" );
     }-*/;
 
 }

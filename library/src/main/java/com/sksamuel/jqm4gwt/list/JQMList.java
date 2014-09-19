@@ -473,7 +473,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
         refresh(getElement());
     }
 
-    protected native void refresh(Element elt) /*-{
+    protected static native void refresh(Element elt) /*-{
         var w = $wnd.$(elt);
         if (w.data('mobile-listview') !== undefined) {
             w.listview('refresh');

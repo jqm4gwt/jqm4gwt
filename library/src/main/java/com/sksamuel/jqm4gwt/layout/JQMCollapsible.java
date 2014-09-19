@@ -258,11 +258,11 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
         execCollapse(getElement());
     }
 
-    private native void execExpand(Element elt) /*-{
+    private static native void execExpand(Element elt) /*-{
         $wnd.$(elt).collapsible("expand");
     }-*/;
 
-    private native void execCollapse(Element elt) /*-{
+    private static native void execCollapse(Element elt) /*-{
         $wnd.$(elt).collapsible("collapse");
     }-*/;
 }

@@ -116,7 +116,7 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
         return this;
     }
 
-    protected native void refresh(Element elt) /*-{
+    protected static native void refresh(Element elt) /*-{
         var w = $wnd.$(elt);
         if (w.data('mobile-controlgroup') !== undefined) {
             w.controlgroup('refresh');

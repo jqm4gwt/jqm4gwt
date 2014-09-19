@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt.toolbar;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.uibinder.client.UiChild;
@@ -114,11 +115,11 @@ public class JQMPanel extends JQMWidget {
      * while the panel is open, you have to call refresh().
      */
     public void refresh() {
-        updateLayout(getId());
+        updateLayout(getElement());
     }
 
-    private static native void updateLayout(String id) /*-{
-        $wnd.$(id).trigger("updatelayout");
+    private static native void updateLayout(Element elt) /*-{
+        $wnd.$(elt).trigger("updatelayout");
     }-*/;
 
     public void setAnimate(boolean animate) {
@@ -186,15 +187,15 @@ public class JQMPanel extends JQMWidget {
     }
 
     public void open() {
-        _open(getId());
+        _open(getElement());
     }
 
     public void close() {
-        _close(getId());
+        _close(getElement());
     }
 
     public void toggle() {
-        _toggle(getId());
+        _toggle(getElement());
     }
 
     protected void onPanelBeforeClose() {
@@ -249,7 +250,7 @@ public class JQMPanel extends JQMWidget {
         if (parent instanceof JQMPage) unbindLifecycleEvents(((JQMPage) parent).getId());
     }
 
-    private native void bindLifecycleEvents(JQMPanel p, String id) /*-{
+    private static native void bindLifecycleEvents(JQMPanel p, String id) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$('div[data-url="' + id + '"]').on("panelbeforeclose",
             function(event, ui) { p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelBeforeClose()(); });
@@ -267,7 +268,7 @@ public class JQMPanel extends JQMWidget {
             function(event, ui) { p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelOpen()(); });
     }-*/;
 
-    private native void bindLifecycleEventsExternal(JQMPanel p, String id) /*-{
+    private static native void bindLifecycleEventsExternal(JQMPanel p, String id) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$("body").on("panelbeforeclose",
             function(event, ui) {
@@ -305,25 +306,26 @@ public class JQMPanel extends JQMWidget {
             });
     }-*/;
 
-    private native void unbindLifecycleEvents(String id) /*-{
+    private static native void unbindLifecycleEvents(String id) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
-        $wnd.$('#' + id).off("panelbeforeclose");
-        $wnd.$('#' + id).off("panelbeforeopen");
-        $wnd.$('#' + id).off("panelclose");
-        $wnd.$('#' + id).off("panelcreate");
-        $wnd.$('#' + id).off("panelopen");
+        var p = $wnd.$("#" + id);
+        p.off("panelbeforeclose");
+        p.off("panelbeforeopen");
+        p.off("panelclose");
+        p.off("panelcreate");
+        p.off("panelopen");
     }-*/;
 
-    private native void _open(String id) /*-{
-        $wnd.$('#' + id).panel("open")
+    private static native void _open(Element elt) /*-{
+        $wnd.$(elt).panel("open")
     }-*/;
 
-    private native void _close(String id) /*-{
-        $wnd.$('#' + id).panel("close")
+    private static native void _close(Element elt) /*-{
+        $wnd.$(elt).panel("close")
     }-*/;
 
-    private native void _toggle(String id) /*-{
-        $wnd.$('#' + id).panel("toggle")
+    private static native void _toggle(Element elt) /*-{
+        $wnd.$(elt).panel("toggle")
     }-*/;
 
     public boolean isExternal() {
@@ -342,7 +344,7 @@ public class JQMPanel extends JQMWidget {
             Scheduler.get().scheduleFinally(new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    manualInitialize(getId());
+                    manualInitialize(getElement());
                     bindLifecycleEventsExternal(JQMPanel.this, getId());
                 }
             });
@@ -352,7 +354,7 @@ public class JQMPanel extends JQMWidget {
         }
     }
 
-    private static native void manualInitialize(String id) /*-{
-        $wnd.$("#" + id).panel().enhanceWithin();
+    private static native void manualInitialize(Element elt) /*-{
+        $wnd.$(elt).panel().enhanceWithin();
     }-*/;
 }

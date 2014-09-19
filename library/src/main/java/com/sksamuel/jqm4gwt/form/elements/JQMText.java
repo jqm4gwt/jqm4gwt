@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -152,19 +153,19 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasF
     }
 
     public void disable() {
-        disable(input.getElement().getId());
+        disable(input.getElement());
     }
 
-    private native void disable(String id)/*-{
-        $wnd.$("#" + id).textinput('disable');
+    private static native void disable(Element elt)/*-{
+        $wnd.$(elt).textinput('disable');
     }-*/;
 
     public void enable() {
-        enable(input.getElement().getId());
+        enable(input.getElement());
     }
 
-    private native void enable(String id) /*-{
-        $wnd.$("#" + id).textinput('enable');
+    private static native void enable(Element elt) /*-{
+        $wnd.$(elt).textinput('enable');
     }-*/;
 
     @Override

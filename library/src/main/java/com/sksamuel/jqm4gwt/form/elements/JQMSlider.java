@@ -141,7 +141,8 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
         disable(input.getElement().getId());
     }
 
-    private native void disable(String id)/*-{
+    // XXX: Warning! 'String id' cannot be replaced by 'Element elt', because $("#" + id) not equal $(elt) for this widget!
+    private static native void disable(String id) /*-{
         $wnd.$("#" + id).slider('disable');
     }-*/;
 
@@ -149,7 +150,7 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
         enable(input.getElement().getId());
     }
 
-    private native void enable(String id) /*-{
+    private static native void enable(String id) /*-{
         $wnd.$("#" + id).slider('enable');
     }-*/;
 
@@ -220,27 +221,28 @@ public class JQMSlider extends JQMFieldContainer implements HasValue<Double>, Ha
     /**
      * Can raise ChangeEvent, block it manually by setting ignoreChange (if needed).
      */
-    private native void refresh(String id, String value) /*-{
+    // XXX: Warning! 'String id' cannot be replaced by 'Element elt', because $("#" + id) not equal $(elt) for this widget!
+    private static native void refresh(String id, String value) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$("#" + id).val(value).slider("refresh");
     }-*/;
 
-    private native void refresh(String id) /*-{
+    private static native void refresh(String id) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$("#" + id).slider("refresh");
     }-*/;
 
-    private native void refreshMin(String id, String min) /*-{
+    private static native void refreshMin(String id, String min) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$("#" + id).attr("min", min).slider("refresh");
     }-*/;
 
-    private native void refreshMax(String id, String max) /*-{
+    private static native void refreshMax(String id, String max) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$("#" + id).attr("max", max).slider("refresh");
     }-*/;
 
-    private native void refreshStep(String id, String step) /*-{
+    private static native void refreshStep(String id, String step) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$("#" + id).attr("step", step).slider("refresh");
     }-*/;
