@@ -304,7 +304,7 @@ public class JQMTable extends JQMWidget {
         String[] arr = percents.split(",");
         percentage = new int[arr.length];
         for (int i = 0; i < arr.length; i++) {
-            String s = arr[i];
+            String s = arr[i].trim();
             percentage[i] = Integer.parseInt(s);
         }
         if (arr.length == this.columns) updateCellPercents();
