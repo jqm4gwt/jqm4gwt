@@ -49,6 +49,20 @@ public class JQMEventFactory {
                 return TYPE;
             }});
 
+        instantiators.put(JQMComponentEvents.VCLICK, new EventInstantiator<JQMVClickHandler>() {
+
+            private final Type<JQMVClickHandler> TYPE = new Type<JQMVClickHandler>();
+
+            @Override
+            public JQMEvent<JQMVClickHandler> create(JavaScriptObject jQueryEvent) {
+                return new JQMEvent<JQMVClickHandler>(jQueryEvent, getType());
+            }
+
+            @Override
+            public Type<JQMVClickHandler> getType() {
+                return TYPE;
+            }});
+
         instantiators.put(JQMComponentEvents.TAP_EVENT, new EventInstantiator<TapHandler>() {
 
             @Override
