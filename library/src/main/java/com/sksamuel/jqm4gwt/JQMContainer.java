@@ -4,8 +4,15 @@ import java.util.Collection;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.events.HasJQMEventHandlers;
+import com.sksamuel.jqm4gwt.events.JQMEventFactory;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 16 Sep 2012 00:22:18
@@ -15,7 +22,8 @@ import com.google.gwt.user.client.ui.Widget;
  * It is meant to contain the common functionality for showing these containers.
  */
 public abstract class JQMContainer extends ComplexPanel implements HasId<JQMContainer>,
-        HasTheme<JQMContainer>, HasTransition<JQMContainer>, HasCorners<JQMContainer> {
+        HasTheme<JQMContainer>, HasTransition<JQMContainer>, HasCorners<JQMContainer>,
+        HasJQMEventHandlers {
 
     private static int counter = 1;
     private static final String AUTOINC_SUFFIX = "++";
@@ -223,6 +231,19 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
     public JQMContainer withCorners(boolean corners) {
         setCorners(corners);
         return this;
+    }
+
+    @Override
+    public HandlerRegistration addJQMEventHandler(String jqmEventName, EventHandler handler) {
+
+        Type<EventHandler> t = JQMEventFactory.getType(jqmEventName, EventHandler.class);
+
+        return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
+            @Override
+            public int getHandlerCountForWidget(Type<?> type) {
+                return getHandlerCount(type);
+            }
+        }, this, handler, jqmEventName, t);
     }
 
 }

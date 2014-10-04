@@ -86,6 +86,20 @@ public class JQMEventFactory {
             public Type<TapHoldHandler> getType() {
                 return TapHoldEvent.getType();
             }});
+
+        instantiators.put(JQMComponentEvents.ORIENTATIONCHANGE, new EventInstantiator<JQMOrientationChangeHandler>() {
+
+            private final Type<JQMOrientationChangeHandler> TYPE = new Type<JQMOrientationChangeHandler>();
+
+            @Override
+            public JQMEvent<JQMOrientationChangeHandler> create(JavaScriptObject jQueryEvent) {
+                return new JQMEvent<JQMOrientationChangeHandler>(jQueryEvent, getType());
+            }
+
+            @Override
+            public Type<JQMOrientationChangeHandler> getType() {
+                return TYPE;
+            }});
     }
 
     public static JQMEvent<?> createEvent(String jqmEventName, JavaScriptObject jQueryEvent) {

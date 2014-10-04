@@ -34,6 +34,9 @@ import com.sksamuel.jqm4gwt.JQMPopupEvent;
 import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.button.JQMButtonGroup;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMEvent;
+import com.sksamuel.jqm4gwt.events.JQMOrientationChangeHandler;
 import com.sksamuel.jqm4gwt.form.JQMForm;
 import com.sksamuel.jqm4gwt.form.SubmissionHandler;
 import com.sksamuel.jqm4gwt.form.elements.JQMCheckbox;
@@ -999,6 +1002,14 @@ public class TestView1 {
             public Boolean onFiltering(JQMFilterableEvent event) {
                 return event.filterStartWithIgnoreCase(",");
             }});
+
+        page.addJQMEventHandler(JQMComponentEvents.ORIENTATIONCHANGE, new JQMOrientationChangeHandler() {
+            @Override
+            public void onEvent(JQMEvent<?> event) {
+                //String s = JQMOrientationChangeHandler.Process.getOrientation(event);
+                //Window.alert(s);
+            }
+        });
 
     }
 

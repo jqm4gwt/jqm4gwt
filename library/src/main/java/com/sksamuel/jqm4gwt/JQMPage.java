@@ -16,19 +16,18 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMPageEvent.PageState;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMEvent;
+import com.sksamuel.jqm4gwt.events.JQMOrientationChangeHandler;
 import com.sksamuel.jqm4gwt.toolbar.JQMFooter;
 import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
 import com.sksamuel.jqm4gwt.toolbar.JQMPanel;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 4 May 2011 23:55:27
- *         <p/>
- *         A {@link JQMPage} is the base container for a single page. Any JQM
- *         widgets can be added to the page. You can consider a JQMPage as like
- *         a GWT "view" in the MVP paradigm.
- *         <p/>
- *         A {@link JQMPage} is also a {@link JQMWidget} and thus all the usual
- *         methods are available.
+ * <p/>
+ * A {@link JQMPage} is the base container for a single page. Any JQM widgets can be added
+ * to the page. You can consider a JQMPage as like a GWT "view" in the MVP paradigm.
  */
 public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
@@ -40,14 +39,14 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     private static final String UI_DIALOG_CONTAIN = "ui-dialog-contain";
     private static final String UI_BODY_INHERIT = "ui-body-inherit";
 
+    private static final String JQM4GWT_FIXED_HIDDEN = "jqm4gwt-fixed-hidden";
+
     private static int counter = 1;
 
     /** Needed to find out JQMPage by its Element received usually from JS */
     private static final Map<Element, JQMPage> allPages = new HashMap<Element, JQMPage>(); // there is no WeakHashMap in GWT
 
-    /**
-     * The primary content div
-     */
+    /** The primary content div */
     private JQMContent content;
 
     public boolean firstShow = false;
@@ -59,9 +58,15 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     protected JQMPanel panel;
 
     private boolean contentCentered;
-    private boolean windowResizeInitialized;
-
     private double contentHeightPercent;
+    private double hideFixedToolbarsIfContentAreaPercentBelow = 50.0d;
+    private int hideFixedToolbarsIfVirtualKeyboard = 0; // threshold(height) for keyboard detection
+
+    private boolean windowResizeInitialized;
+    private boolean orientationChangeInitialized;
+    private int initialWindowHeight;
+    private int hiddenHeaderH;
+    private int hiddenFooterH;
 
     private boolean transparent;
     private Element transparentPrevPage;
@@ -69,8 +74,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     private boolean transparentDoPrevPageLifecycle;
 
     /**
-     * Create a new {@link JQMPage}. Using this constructor, the page will not be rendered until a containerID has been
-     * assigned.
+     * Create a new {@link JQMPage}. Using this constructor, the page will not be rendered
+     * until a containerID has been assigned.
      */
     private JQMPage() {
         allPages.put(getElement(), this);
@@ -175,8 +180,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 	 * Logical remove operation. If you do this you are responsible for removing it
 	 * from the DOM yourself.
 	 *
-	 * @param w
-	 *            the child widget to be removed
+	 * @param w - the child widget to be removed
 	 */
 	protected boolean removeLogical(Widget w) {
 		// Validate.
@@ -330,9 +334,6 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         return getCookie(name) != null;
     }
 
-    /**
-     *
-     */
     protected boolean hasParameter(String name) {
         return getParameter(name) != null;
     }
@@ -463,22 +464,57 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * Could be null when the first page is transitioned in during application startup.
      */
     protected void doPageShow(Element prevPage) {
+        initialWindowHeight = Window.getClientHeight();
         onPageShow();
         JQMPageEvent.fire(this, PageState.SHOW);
-        if (contentCentered || contentHeightPercent > 0) {
+        if (contentCentered || contentHeightPercent > 0
+                || hideFixedToolbarsIfContentAreaPercentBelow > 0
+                || hideFixedToolbarsIfVirtualKeyboard > 0) {
+            processFixedToolbars();
             recalcContentHeightPercent();
             centerContent();
-            if (!windowResizeInitialized) {
-                windowResizeInitialized = true;
-                Window.addResizeHandler(new ResizeHandler() {
+            initWindowResize();
+            if (hideFixedToolbarsIfVirtualKeyboard > 0) initOrientationChange();
+        }
+    }
+
+    private void initWindowResize() {
+        if (windowResizeInitialized) return;
+        windowResizeInitialized = true;
+        Window.addResizeHandler(new ResizeHandler() {
+            @Override
+            public void onResize(ResizeEvent event) {
+                processFixedToolbars();
+                recalcContentHeightPercent();
+                centerContent();
+            }
+        });
+    }
+
+    private void initOrientationChange() {
+        if (orientationChangeInitialized) return;
+        orientationChangeInitialized = true;
+        this.addJQMEventHandler(JQMComponentEvents.ORIENTATIONCHANGE,
+                new JQMOrientationChangeHandler() {
                     @Override
-                    public void onResize(ResizeEvent event) {
-                        recalcContentHeightPercent();
-                        if (contentCentered) centerContent();
+                    public void onEvent(JQMEvent<?> event) {
+                        int h = Window.getClientHeight();
+                        int w = Window.getClientWidth();
+                        String s = JQMOrientationChangeHandler.Process.getOrientation(event);
+                        // iOS and Android give opposite values (iOS - already rotated, Android - not yet rotated)
+                        if (JQMOrientationChangeHandler.LANDSCAPE.equals(s)) {
+                            initialWindowHeight = Math.min(w, h);
+                        } else if (JQMOrientationChangeHandler.PORTRAIT.equals(s)) {
+                            initialWindowHeight = Math.max(w, h);
+                        }
+                        //Window.alert(s + ", height: " + initialWindowHeight);
+                        if (hideFixedToolbarsIfVirtualKeyboard > 0) {
+                            processFixedToolbars();
+                            recalcContentHeightPercent();
+                            centerContent();
+                        }
                     }
                 });
-            }
-        }
     }
 
     /**
@@ -583,12 +619,9 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
         addLogical(header);
 
-        if(panel == null)
-        {
+        if (panel == null) {
         	getElement().insertBefore(header.getElement(), getElement().getFirstChild());
-        }
-        else
-        {
+        } else {
         	getElement().insertAfter(header.getElement(), panel.getElement());
         }
     }
@@ -645,14 +678,18 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     /**
-     * Content div will be centered between Header and Footer (they must be defined as fixed="true").
+     * Content band will be centered between Header and Footer (they must be defined as fixed="true").
      */
     public void setContentCentered(boolean contentCentered) {
         boolean oldVal = this.contentCentered;
         this.contentCentered = contentCentered;
         if (oldVal != this.contentCentered && content != null && content.isAttached()) {
-            if (this.contentCentered) centerContent();
-            else clearCenterContent();
+            if (this.contentCentered) {
+                centerContent();
+                initWindowResize();
+            } else {
+                clearCenterContent();
+            }
         }
     }
 
@@ -660,13 +697,149 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         return contentHeightPercent;
     }
 
+    /**
+     * Defines content band's height as percent of available content area's height.
+     */
     public void setContentHeightPercent(double contentHeightPercent) {
         double oldVal = this.contentHeightPercent;
         this.contentHeightPercent = contentHeightPercent;
         if (oldVal != this.contentHeightPercent && content != null && content.isAttached()) {
             recalcContentHeightPercent();
-            if (this.contentCentered) centerContent();
+            centerContent();
+            initWindowResize();
         }
+    }
+
+    public double getHideFixedToolbarsIfContentAreaPercentBelow() {
+        return hideFixedToolbarsIfContentAreaPercentBelow;
+    }
+
+    /**
+     * Fixed Header and Footer will be hidden if content area height percent is below
+     * than specified percent of window height (default is 50%).
+     * <p/> Useful in cases with activated virtual keyboard, especially on Android.
+     */
+    public void setHideFixedToolbarsIfContentAreaPercentBelow(double value) {
+        double oldVal = hideFixedToolbarsIfContentAreaPercentBelow;
+        hideFixedToolbarsIfContentAreaPercentBelow = value;
+        if (oldVal != hideFixedToolbarsIfContentAreaPercentBelow
+                && content != null && content.isAttached()) {
+            processFixedToolbars();
+            centerContent();
+            initWindowResize();
+        }
+    }
+
+    public int getHideFixedToolbarsIfVirtualKeyboard() {
+        return hideFixedToolbarsIfVirtualKeyboard;
+    }
+
+    /**
+     * Fixed Header and Footer will be hidden if virtual/on-screen keyboard is activated.
+     * <p/> This property is used as threshold(keyboard's height) in pixels
+     * for keyboard detection (to work must be > 0, default is 0).
+     */
+    public void setHideFixedToolbarsIfVirtualKeyboard(int value) {
+        int oldVal = hideFixedToolbarsIfVirtualKeyboard;
+        hideFixedToolbarsIfVirtualKeyboard = value;
+        if (oldVal != hideFixedToolbarsIfVirtualKeyboard
+                && content != null && content.isAttached()) {
+            processFixedToolbars();
+            centerContent();
+            initWindowResize();
+            if (hideFixedToolbarsIfVirtualKeyboard > 0) initOrientationChange();
+        }
+    }
+
+    private void showFixedToolbars() {
+        if (header != null) {
+            Element headerElt = header.getElement();
+            if (headerElt.hasClassName(JQM4GWT_FIXED_HIDDEN)) {
+                headerElt.removeClassName(JQM4GWT_FIXED_HIDDEN);
+                headerElt.addClassName("ui-header-fixed");
+                Element pageElt = getElement();
+                pageElt.addClassName("ui-page-header-fixed");
+                header.setFixed(true);
+                header.updatePagePadding();
+            }
+        }
+        if (footer != null) {
+            Element footerElt = footer.getElement();
+            if (footerElt.hasClassName(JQM4GWT_FIXED_HIDDEN)) {
+                footerElt.removeClassName(JQM4GWT_FIXED_HIDDEN);
+                footerElt.addClassName("ui-footer-fixed");
+                Element pageElt = getElement();
+                pageElt.addClassName("ui-page-footer-fixed");
+                footer.setFixed(true);
+                footer.updatePagePadding();
+            }
+        }
+    }
+
+    private void hideFixedToolbars(int headerH, int footerH) {
+        if (header != null && header.isFixed() && !header.getElement().hasClassName(JQM4GWT_FIXED_HIDDEN)) {
+            header.setFixed(false);
+            Element headerElt = header.getElement();
+            headerElt.removeClassName("ui-header-fixed");
+            headerElt.addClassName(JQM4GWT_FIXED_HIDDEN);
+            hiddenHeaderH = headerH;
+            Element pageElt = getElement();
+            pageElt.removeClassName("ui-page-header-fixed");
+            pageElt.getStyle().clearPaddingTop();
+        }
+        if (footer != null && footer.isFixed() && !footer.getElement().hasClassName(JQM4GWT_FIXED_HIDDEN)) {
+            footer.setFixed(false);
+            Element footerElt = footer.getElement();
+            footerElt.removeClassName("ui-footer-fixed");
+            footerElt.addClassName(JQM4GWT_FIXED_HIDDEN);
+            hiddenFooterH = footerH;
+            Element pageElt = getElement();
+            pageElt.removeClassName("ui-page-footer-fixed");
+            pageElt.getStyle().clearPaddingBottom();
+        }
+    }
+
+    private boolean isFixedToolbarsHidden() {
+        return (header != null && header.getElement().hasClassName(JQM4GWT_FIXED_HIDDEN))
+            || (footer != null && footer.getElement().hasClassName(JQM4GWT_FIXED_HIDDEN));
+    }
+
+    private void processFixedToolbars() {
+        if (!isVisible() || header == null && footer == null) return;
+
+        if (hideFixedToolbarsIfContentAreaPercentBelow <= 0 && hideFixedToolbarsIfVirtualKeyboard <= 0) {
+            showFixedToolbars();
+            return;
+        }
+        final int headerH;
+        final int footerH;
+        if (isFixedToolbarsHidden()) {
+            headerH = hiddenHeaderH;
+            footerH = hiddenFooterH;
+        } else {
+            headerH = header == null ? 0 : header.getOffsetHeight();
+            footerH = footer == null ? 0 : footer.getOffsetHeight();
+        }
+        int windowH = Window.getClientHeight();
+
+        if (hideFixedToolbarsIfVirtualKeyboard > 0 &&
+                initialWindowHeight - windowH >= hideFixedToolbarsIfVirtualKeyboard) {
+            hideFixedToolbars(headerH, footerH);
+            return;
+        }
+        if (hideFixedToolbarsIfContentAreaPercentBelow > 0) {
+            int contentAreaH = windowH - headerH - footerH;
+            if (contentAreaH <= 0) {
+                hideFixedToolbars(headerH, footerH);
+                return;
+            }
+            double minContentAreaH = windowH * 0.01d * hideFixedToolbarsIfContentAreaPercentBelow;
+            if (contentAreaH < minContentAreaH) {
+                hideFixedToolbars(headerH, footerH);
+                return;
+            }
+        }
+        showFixedToolbars();
     }
 
     /**
@@ -677,6 +850,20 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * How to know when an DOM element moves or is resized</a></p>
      */
     public void centerContent() {
+        if (!isVisible()) return;
+        if (!contentCentered) {
+            content.getElement().getStyle().clearMarginTop();
+            return;
+        }
+        boolean isFixedHeader = header != null && header.isFixed();
+        boolean isFixedFooter = footer != null && footer.isFixed();
+        boolean needCentering = (header == null && footer == null)
+                || (isFixedHeader && isFixedFooter)
+                || (isFixedHeader && footer == null) || (isFixedFooter && header == null);
+        if (!needCentering || isFixedToolbarsHidden()) {
+            content.getElement().getStyle().clearMarginTop();
+            return;
+        }
         int contentH = content.getOffsetHeight();
         if (contentH == 0) {
             content.getElement().getStyle().clearMarginTop();
@@ -697,10 +884,11 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * notification for DOM elements).
      */
     public void recalcContentHeightPercent() {
+        if (!isVisible()) return;
         Element contentElt = content.getElement();
         if (contentHeightPercent > 0) {
-            int headerH = header == null ? 0 : header.getOffsetHeight();
-            int footerH = footer == null ? 0 : footer.getOffsetHeight();
+            int headerH = header == null || isFixedToolbarsHidden() ? 0 : header.getOffsetHeight();
+            int footerH = footer == null || isFixedToolbarsHidden() ? 0 : footer.getOffsetHeight();
             int windowH = Window.getClientHeight();
 
             int clientH = contentElt.getPropertyInt("clientHeight");
@@ -725,7 +913,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * <p> Warning! - contentCentered property is not affected, you have to change it manually. </p>
      */
     public void clearCenterContent() {
-        content.getElement().getStyle().clearProperty("marginTop");
+        content.getElement().getStyle().clearMarginTop();
     }
 
     public boolean isDlgTransparent() {
