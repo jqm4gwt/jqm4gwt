@@ -665,6 +665,17 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         JQMCommon.setIconNoDisc(this, value);
     }
 
+    public boolean isIconAlt() {
+        return JQMCommon.isIconAlt(this);
+    }
+
+    /**
+     * @param value - if true "white vs. black" icon style will be used
+     */
+    public void setIconAlt(boolean value) {
+        JQMCommon.setIconAlt(this, value);
+    }
+
     public String getOverlayTheme() {
         return JQMCommon.getAttribute(select, "data-overlay-theme");
     }

@@ -111,10 +111,12 @@ public class Mobile {
      * jQuery based check if this element is visible, much more correct than GWT default implementation.
      */
     public static native boolean isVisible(Element elt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return false; // jQuery is not loaded
         return $wnd.$(elt).is(':visible');
     }-*/;
 
     public static native boolean isHidden(Element elt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return true; // jQuery is not loaded
         return $wnd.$(elt).is(':hidden');
     }-*/;
 

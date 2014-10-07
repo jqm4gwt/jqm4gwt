@@ -164,7 +164,9 @@
 
           <dt:JQMCalBox ui:field="datePicker" text="Date Picker"
             dateFormat="%A %m/%d/%y" value="2013-10-25" useClearButton="true" />
-            <!-- lockInput="false" buttonIcon="gear" editable="false" invalidateUnlockedInputOnBlur="false" /-->
+            <!-- useInline="true" lockInput="false" placeHolder="DayOfWeek mm/dd/yy" dialogLabel="Date Picker" 
+              buttonIcon="gear" editable="false" 
+              invalidateUnlockedInputOnBlur="false" iconNoDisc="true" iconAlt="true" /-->
           <b:JQMButton ui:field="datePickerGetValueBtn" text="Get Date Picker value"
             inline="true" mini="true" />
           <b:JQMButton ui:field="datePickerSetNullBtn" text="Set Date Picker value to Null"
@@ -224,6 +226,7 @@
           <h:Paragraph />
           <e:JQMSelect text="selectText" ui:field="select1" mini="true"
             builtInIcon="BARS" iconPos="LEFT" native="false" hidePlaceholderMenuItems="false">
+            <!-- conNoDisc="true" iconAlt="true" -->
             <e:option>
               <e:JQMSelect.Option text="Select One..." placeholder="true" />
             </e:option>

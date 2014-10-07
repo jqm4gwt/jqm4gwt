@@ -11,6 +11,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
@@ -25,13 +26,13 @@ import com.sksamuel.jqm4gwt.form.elements.JQMText;
  * <p> into your main html after yourApp.nocache.js script. </p>
  *
  * See also:
- * <p><a href="http://dev.jtsage.com/jQM-DateBox2/demos/mode/calbox.html">jQueryMobile - DateBox</a></p>
- * <p><a href="http://dev.jtsage.com/jQM-DateBox2/demos/install.html">Install instructions</a></p>
+ * <p><a href="http://dev.jtsage.com/jQM-DateBox/">jQueryMobile - DateBox</a></p>
+ * <p><a href="http://dev.jtsage.com/jQM-DateBox/doc/2-0-installing/">Installing instructions</a></p>
  *
  */
 public class JQMCalBox extends JQMText {
 
-    /** <a href="http://dev.jtsage.com/jQM-DateBox2/demos/api/dateformat.html">Available Date Format Options</a> */
+    /** <a href="http://dev.jtsage.com/jQM-DateBox/doc/3-3-output/">Date Format Options</a> */
     public static final String FMT_MMDDYY = "%m/%d/%y";
 
     // HasValue<String> declared in JQMText and cannot be overridden as HasValue<Date> in this class.
@@ -43,32 +44,80 @@ public class JQMCalBox extends JQMText {
 
     public static final String YEAR_PICK_NOW = "NOW";
 
-    protected static final String MODE_CALBOX = "\"mode\": \"calbox\"";
-    protected static final String USE_NEW_STYLE = "\"useNewStyle\":";
+    protected static final String MODE_CALBOX       = "\"mode\": \"calbox\"";
+    protected static final String USE_INLINE        = "\"useInline\":"; // Show control inline in the page, negating any open and close actions
+    protected static final String USE_INLINE_BLIND  = "\"useInlineBlind\":"; // Attach the control directly to the input element, and roll it down from there when opened
     protected static final String OVERRIDE_DATE_FMT = "\"overrideDateFormat\":";
-    protected static final String NO_HEADER = "\"calNoHeader\":";
-    protected static final String USE_PICKERS = "\"calUsePickers\":";
-    protected static final String WEEK_START_DAY = "\"overrideCalStartDay\":";
-    protected static final String USE_TODAY_BUTTON = "\"useTodayButton\":";
-    protected static final String SQUARE_DATE_BUTTONS = "\"calControlGroup\":";
-    protected static final String USE_CLEAR_BUTTON = "\"useClearButton\":";
-    protected static final String YEAR_PICK_MIN = "\"calYearPickMin\":";
-    protected static final String YEAR_PICK_MAX = "\"calYearPickMax\":";
-    protected static final String LOCK_INPUT = "\"lockInput\":";
-    protected static final String BUTTON_ICON = "\"buttonIcon\":";
+    protected static final String WEEK_START_DAY    = "\"overrideCalStartDay\":";
+    protected static final String DIALOG_LABEL      = "\"overrideDialogLabel\":";
+    protected static final String USE_CLEAR_BUTTON  = "\"useClearButton\":";
+    protected static final String LOCK_INPUT        = "\"lockInput\":";
+    protected static final String BUTTON_ICON       = "\"buttonIcon\":";
 
-    private Boolean useNewStyle = true;
+    // See http://dev.jtsage.com/jQM-DateBox/doc/5-0-control/
+    // CalBox Specific - Display
+    protected static final String SHOW_DAYS            = "\"calShowDays\":";
+    protected static final String SHOW_WEEK            = "\"calShowWeek\":";
+    protected static final String SHOW_ONE_MONTH_ONLY  = "\"calOnlyMonth\":";
+    protected static final String HIGHLIGHT_TODAY      = "\"calHighToday\":";
+    protected static final String HIGHLIGHT_SELECTED   = "\"calHighPick\":";
+    protected static final String COMPACT_DATE_BUTTONS = "\"calControlGroup\":";
+
+    // See http://dev.jtsage.com/jQM-DateBox/doc/5-0-control/
+    // CalBox Specific - Control
+    protected static final String USE_TODAY_BUTTON    = "\"useTodayButton\":";
+    protected static final String USE_TOMORROW_BUTTON = "\"useTomorrowButton\":";
+    protected static final String USE_PICKERS         = "\"calUsePickers\":";
+    protected static final String YEAR_PICK_MIN       = "\"calYearPickMin\":";
+    protected static final String YEAR_PICK_MAX       = "\"calYearPickMax\":";
+    protected static final String NO_HEADER           = "\"calNoHeader\":";
+
+    // See http://dev.jtsage.com/jQM-DateBox/doc/3-1-themes/
+    protected static final String THEME              = "\"theme\":";            // false means inherited theme
+    protected static final String THEME_HEADER       = "\"themeHeader\":";      // Theme for header
+    protected static final String THEME_MODAL        = "\"useModalTheme\":";    // Theme for modal background of control. Shade the background with this color swatch. From the default themes, “a” is a very light grey, “b” is a slighly darker grey.
+    protected static final String THEME_DATE         = "\"themeDate\":";        // Theme for otherwise un-specified date buttons
+    protected static final String THEME_DATETODAY    = "\"themeDateToday\":";   // Theme for “today”
+    protected static final String THEME_DATEPICK     = "\"themeDatePick\":";    // Theme for choosen date (used last after other options fail)
+    protected static final String THEME_DAYHIGH      = "\"themeDayHigh\":";     // Theme for highlighted DAYS
+    protected static final String THEME_DATEHIGH     = "\"themeDateHigh\":";    // Theme for highlighted DATES
+    protected static final String THEME_DATEHIGH_ALT = "\"themeDateHighAlt\":"; // Theme for highlighted ALTERNATE DATES
+    protected static final String THEME_DATEHIGH_REC = "\"themeDateHighRec\":"; // Theme for highlighted RECURRING DATES
+
+    private Boolean useInline = null;
+    private Boolean useInlineBlind = null;
     private String dateFormat = null;
-    private Boolean usePickers = null;
     private Integer weekStartDay = null;
-    private Boolean useTodayButton = null;
-    private Boolean squareDateButtons = null;
+    private String dialogLabel = null;
     private Boolean useClearButton = null;
     private Boolean editable = true;
-    private String yearPickMin = null;
-    private String yearPickMax = null;
     private Boolean lockInput = null;
     private String buttonIcon = null;
+
+    private Boolean useTodayButton = null;
+    private Boolean useTomorrowButton = null;
+    private Boolean usePickers = null;
+    private String yearPickMin = null;
+    private String yearPickMax = null;
+    private Boolean noHeader = null;
+
+    private Boolean showDays = null;
+    private Boolean showWeek = null;
+    private Boolean showOneMonthOnly = null;
+    private Boolean highlightToday = null;
+    private Boolean highlightSelected = null;
+    private Boolean compactDateButtons = null;
+
+    private String theme = null;
+    private String themeHeader = null;
+    private String themeModal = null;
+    private String themeDate = null;
+    private String themeDateToday = null;
+    private String themeDatePick = null;
+    private String themeDayHigh = null;
+    private String themeDateHigh = null;
+    private String themeDateHighAlt = null;
+    private String themeDateHighRec = null;
 
     private Date delayedSetDate = null; // used when not initialized yet
 
@@ -98,34 +147,42 @@ public class JQMCalBox extends JQMText {
             public void onBlur(BlurEvent event) {
                 if (lockInput != null && !lockInput && invalidateUnlockedInputOnBlur) {
                     String oldText = input.getText();
+                    if (oldText == null || oldText.isEmpty()) return;
+                    if (oldText.trim().isEmpty()) {
+                        input.setText("");
+                        ValueChangeEvent.fire(input, getValue());
+                        return;
+                    }
                     updateInputText();
                     String newText = input.getText();
-                    boolean eq = true;
-                    if (oldText != null) eq = oldText.equals(newText);
-                    else if (newText != null) eq = newText.equals(oldText);
-                    if (!eq) ValueChangeEvent.fire(input, getValue());
+                    if (!oldText.equals(newText)) ValueChangeEvent.fire(input, getValue());
                 }
             }
         });
         refreshDataOptions();
     }
 
-    protected String bool2Str(boolean value) {
+    protected static String bool2Str(boolean value) {
         return value ? "true" : "false";
     }
 
     protected String constructDataOptions() {
         StringBuilder sb = new StringBuilder();
         sb.append('{').append(MODE_CALBOX);
-        if (useNewStyle != null) {
-            sb.append(',').append(USE_NEW_STYLE).append(bool2Str(useNewStyle));
+        if (useInline != null) {
+            sb.append(',').append(USE_INLINE).append(bool2Str(useInline));
+        }
+        if (useInlineBlind != null) {
+            sb.append(',').append(USE_INLINE_BLIND).append(bool2Str(useInlineBlind));
         }
         if (dateFormat != null && !dateFormat.isEmpty()) {
             sb.append(',').append(OVERRIDE_DATE_FMT).append('"').append(dateFormat).append('"');
         }
         if (usePickers != null) {
-            sb.append(',').append(NO_HEADER).append(bool2Str(usePickers));
             sb.append(',').append(USE_PICKERS).append(bool2Str(usePickers));
+        }
+        if (noHeader != null) {
+            sb.append(',').append(NO_HEADER).append(bool2Str(noHeader));
         }
         if (weekStartDay != null) {
             sb.append(',').append(WEEK_START_DAY).append(String.valueOf(weekStartDay));
@@ -133,15 +190,35 @@ public class JQMCalBox extends JQMText {
         if (useTodayButton != null) {
             sb.append(',').append(USE_TODAY_BUTTON).append(bool2Str(useTodayButton));
         }
-        if (squareDateButtons != null) {
-            sb.append(',').append(SQUARE_DATE_BUTTONS).append(bool2Str(squareDateButtons));
+        if (useTomorrowButton != null) {
+            sb.append(',').append(USE_TOMORROW_BUTTON).append(bool2Str(useTomorrowButton));
+        }
+        if (showDays != null) {
+            sb.append(',').append(SHOW_DAYS).append(bool2Str(showDays));
+        }
+        if (showWeek != null) {
+            sb.append(',').append(SHOW_WEEK).append(bool2Str(showWeek));
+        }
+        if (showOneMonthOnly != null) {
+            sb.append(',').append(SHOW_ONE_MONTH_ONLY).append(bool2Str(showOneMonthOnly));
+        }
+        if (highlightToday != null) {
+            sb.append(',').append(HIGHLIGHT_TODAY).append(bool2Str(highlightToday));
+        }
+        if (highlightSelected != null) {
+            sb.append(',').append(HIGHLIGHT_SELECTED).append(bool2Str(highlightSelected));
+        }
+        if (compactDateButtons != null) {
+            sb.append(',').append(COMPACT_DATE_BUTTONS).append(bool2Str(compactDateButtons));
+        }
+        if (dialogLabel != null && !dialogLabel.isEmpty()) {
+            sb.append(',').append(DIALOG_LABEL).append('"').append(dialogLabel).append('"');
         }
         if (useClearButton != null) {
             sb.append(',').append(USE_CLEAR_BUTTON).append(bool2Str(useClearButton));
         }
         if (editable != null && editable == false) {
             sb.append(',').append("\"openCallback\": \"mobileDateboxCallbackFalse\"");
-            //sb.append(',').append("\"openCallback\": \"function(){return false;}\"");
             getElement().addClassName("jqm4gwt-non-editable");
         } else {
             getElement().removeClassName("jqm4gwt-non-editable");
@@ -158,6 +235,36 @@ public class JQMCalBox extends JQMText {
         if (buttonIcon != null && !buttonIcon.isEmpty()) {
             sb.append(',').append(BUTTON_ICON).append('"').append(buttonIcon).append('"');
         }
+        if (theme != null && !theme.isEmpty()) {
+            sb.append(',').append(THEME).append('"').append(theme).append('"');
+        }
+        if (themeHeader != null && !themeHeader.isEmpty()) {
+            sb.append(',').append(THEME_HEADER).append('"').append(themeHeader).append('"');
+        }
+        if (themeModal != null && !themeModal.isEmpty()) {
+            sb.append(',').append(THEME_MODAL).append('"').append(themeModal).append('"');
+        }
+        if (themeDate != null && !themeDate.isEmpty()) {
+            sb.append(',').append(THEME_DATE).append('"').append(themeDate).append('"');
+        }
+        if (themeDateToday != null && !themeDateToday.isEmpty()) {
+            sb.append(',').append(THEME_DATETODAY).append('"').append(themeDateToday).append('"');
+        }
+        if (themeDatePick != null && !themeDatePick.isEmpty()) {
+            sb.append(',').append(THEME_DATEPICK).append('"').append(themeDatePick).append('"');
+        }
+        if (themeDayHigh != null && !themeDayHigh.isEmpty()) {
+            sb.append(',').append(THEME_DAYHIGH).append('"').append(themeDayHigh).append('"');
+        }
+        if (themeDateHigh != null && !themeDateHigh.isEmpty()) {
+            sb.append(',').append(THEME_DATEHIGH).append('"').append(themeDateHigh).append('"');
+        }
+        if (themeDateHighAlt != null && !themeDateHighAlt.isEmpty()) {
+            sb.append(',').append(THEME_DATEHIGH_ALT).append('"').append(themeDateHighAlt).append('"');
+        }
+        if (themeDateHighRec != null && !themeDateHighRec.isEmpty()) {
+            sb.append(',').append(THEME_DATEHIGH_REC).append('"').append(themeDateHighRec).append('"');
+        }
         sb.append('}');
         return sb.toString();
     }
@@ -171,12 +278,23 @@ public class JQMCalBox extends JQMText {
         input.getElement().setAttribute(name, value);
     }
 
-    public Boolean getUseNewStyle() {
-        return useNewStyle;
+    public Boolean getUseInline() {
+        return useInline;
     }
 
-    public void setUseNewStyle(Boolean useNewStyle) {
-        this.useNewStyle = useNewStyle;
+    /** Show control inline in the page, negating any open and close actions */
+    public void setUseInline(Boolean useInline) {
+        this.useInline = useInline;
+        refreshDataOptions();
+    }
+
+    public Boolean getUseInlineBlind() {
+        return useInlineBlind;
+    }
+
+    /** Attach the control directly to the input element, and roll it down from there when opened */
+    public void setUseInlineBlind(Boolean useInlineBlind) {
+        this.useInlineBlind = useInlineBlind;
         refreshDataOptions();
     }
 
@@ -185,7 +303,7 @@ public class JQMCalBox extends JQMText {
     }
 
     /**
-     * @param dateFormat - <a href="http://dev.jtsage.com/jQM-DateBox2/demos/api/dateformat.html">Available Date Format Options</a>
+     * @param dateFormat - <a href="http://dev.jtsage.com/jQM-DateBox/doc/3-3-output/">Date Format Options</a>
      */
     public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
@@ -205,6 +323,16 @@ public class JQMCalBox extends JQMText {
 
     public void setUsePickers(Boolean usePickers) {
         this.usePickers = usePickers;
+        if (this.usePickers != null && this.usePickers) noHeader = true;
+        refreshDataOptions();
+    }
+
+    public Boolean getNoHeader() {
+        return noHeader;
+    }
+
+    public void setNoHeader(Boolean noHeader) {
+        this.noHeader = noHeader;
         refreshDataOptions();
     }
 
@@ -220,6 +348,18 @@ public class JQMCalBox extends JQMText {
         refreshDataOptions();
     }
 
+    public String getDialogLabel() {
+        return dialogLabel;
+    }
+
+    /**
+     * Needed in case for example you don't want placeholder to be shown as date selection dialog title.
+     */
+    public void setDialogLabel(String dialogLabel) {
+        this.dialogLabel = dialogLabel;
+        refreshDataOptions();
+    }
+
     public Boolean getUseTodayButton() {
         return useTodayButton;
     }
@@ -229,12 +369,66 @@ public class JQMCalBox extends JQMText {
         refreshDataOptions();
     }
 
-    public Boolean getSquareDateButtons() {
-        return squareDateButtons;
+    public Boolean getUseTomorrowButton() {
+        return useTomorrowButton;
     }
 
-    public void setSquareDateButtons(Boolean squareDateButtons) {
-        this.squareDateButtons = squareDateButtons;
+    public void setUseTomorrowButton(Boolean useTomorrowButton) {
+        this.useTomorrowButton = useTomorrowButton;
+        refreshDataOptions();
+    }
+
+    public Boolean getShowDays() {
+        return showDays;
+    }
+
+    public void setShowDays(Boolean showDays) {
+        this.showDays = showDays;
+        refreshDataOptions();
+    }
+
+    public Boolean getShowWeek() {
+        return showWeek;
+    }
+
+    public void setShowWeek(Boolean showWeek) {
+        this.showWeek = showWeek;
+        refreshDataOptions();
+    }
+
+    public Boolean getShowOneMonthOnly() {
+        return showOneMonthOnly;
+    }
+
+    public void setShowOneMonthOnly(Boolean showOneMonthOnly) {
+        this.showOneMonthOnly = showOneMonthOnly;
+        refreshDataOptions();
+    }
+
+    public Boolean getHighlightToday() {
+        return highlightToday;
+    }
+
+    public void setHighlightToday(Boolean highlightToday) {
+        this.highlightToday = highlightToday;
+        refreshDataOptions();
+    }
+
+    public Boolean getHighlightSelected() {
+        return highlightSelected;
+    }
+
+    public void setHighlightSelected(Boolean highlightSelected) {
+        this.highlightSelected = highlightSelected;
+        refreshDataOptions();
+    }
+
+    public Boolean getCompactDateButtons() {
+        return compactDateButtons;
+    }
+
+    public void setCompactDateButtons(Boolean compactDateButtons) {
+        this.compactDateButtons = compactDateButtons;
         refreshDataOptions();
     }
 
@@ -292,6 +486,9 @@ public class JQMCalBox extends JQMText {
         return lockInput;
     }
 
+    /**
+     * When false - user can type-in date manually (default is true, i.e. no manual typing).
+     */
     public void setLockInput(Boolean lockInput) {
         this.lockInput = lockInput;
         refreshDataOptions();
@@ -307,6 +504,100 @@ public class JQMCalBox extends JQMText {
      */
     public void setButtonIcon(String buttonIcon) {
         this.buttonIcon = buttonIcon;
+        refreshDataOptions();
+    }
+
+    @Override
+    public String getTheme() {
+        if (theme == null || theme.isEmpty()) return super.getTheme();
+        else return theme;
+    }
+
+    @Override
+    public void setTheme(String theme) {
+        super.setTheme(theme);
+        this.theme = theme;
+        refreshDataOptions();
+    }
+
+    public String getThemeHeader() {
+        return themeHeader;
+    }
+
+    public void setThemeHeader(String themeHeader) {
+        this.themeHeader = themeHeader;
+        refreshDataOptions();
+    }
+
+    public String getThemeModal() {
+        return themeModal;
+    }
+
+    public void setThemeModal(String themeModal) {
+        this.themeModal = themeModal;
+        refreshDataOptions();
+    }
+
+    public String getThemeDate() {
+        return themeDate;
+    }
+
+    public void setThemeDate(String themeDate) {
+        this.themeDate = themeDate;
+        refreshDataOptions();
+    }
+
+    public String getThemeDateToday() {
+        return themeDateToday;
+    }
+
+    public void setThemeDateToday(String themeDateToday) {
+        this.themeDateToday = themeDateToday;
+        refreshDataOptions();
+    }
+
+    public String getThemeDatePick() {
+        return themeDatePick;
+    }
+
+    public void setThemeDatePick(String themeDatePick) {
+        this.themeDatePick = themeDatePick;
+        refreshDataOptions();
+    }
+
+    public String getThemeDayHigh() {
+        return themeDayHigh;
+    }
+
+    public void setThemeDayHigh(String themeDayHigh) {
+        this.themeDayHigh = themeDayHigh;
+        refreshDataOptions();
+    }
+
+    public String getThemeDateHigh() {
+        return themeDateHigh;
+    }
+
+    public void setThemeDateHigh(String themeDateHigh) {
+        this.themeDateHigh = themeDateHigh;
+        refreshDataOptions();
+    }
+
+    public String getThemeDateHighAlt() {
+        return themeDateHighAlt;
+    }
+
+    public void setThemeDateHighAlt(String themeDateHighAlt) {
+        this.themeDateHighAlt = themeDateHighAlt;
+        refreshDataOptions();
+    }
+
+    public String getThemeDateHighRec() {
+        return themeDateHighRec;
+    }
+
+    public void setThemeDateHighRec(String themeDateHighRec) {
+        this.themeDateHighRec = themeDateHighRec;
         refreshDataOptions();
     }
 
@@ -539,5 +830,24 @@ public class JQMCalBox extends JQMText {
         }
         return o.lang['default'][val];
     }-*/;
+
+    public boolean isIconNoDisc() {
+        return JQMCommon.isIconNoDisc(this);
+    }
+
+    public void setIconNoDisc(boolean value) {
+        JQMCommon.setIconNoDisc(this, value);
+    }
+
+    public boolean isIconAlt() {
+        return JQMCommon.isIconAlt(this);
+    }
+
+    /**
+     * @param value - if true "white vs. black" icon style will be used
+     */
+    public void setIconAlt(boolean value) {
+        JQMCommon.setIconAlt(this, value);
+    }
 
 }
