@@ -11,6 +11,9 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadElement;
 import com.google.gwt.dom.client.ScriptElement;
 
+/**
+ * Dynamically injects JS scripts into DOM, strictly one after one (sequentially).
+ */
 public class SequentialScriptInjector {
 
     private HeadElement head;

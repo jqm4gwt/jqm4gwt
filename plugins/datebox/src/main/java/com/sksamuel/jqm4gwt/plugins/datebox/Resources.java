@@ -13,7 +13,7 @@ public interface Resources {
         private static final String DATEBOX_I18N_JS = "js/jquery.mobile.datebox.i18n.en_US.utf8.js";
 
         public static void injectAll(final InjectCallback done) {
-            ScriptUtils.waitJqmLoaded(new Callback<Void, Void>() {
+            ScriptUtils.waitJqmLoaded(new Callback<Void, Throwable>() {
 
                 @Override
                 public void onSuccess(Void result) {
@@ -22,7 +22,8 @@ public interface Resources {
                 }
 
                 @Override
-                public void onFailure(Void reason) {
+                public void onFailure(Throwable reason) {
+                    throw new RuntimeException(reason);
                 }
             });
         }

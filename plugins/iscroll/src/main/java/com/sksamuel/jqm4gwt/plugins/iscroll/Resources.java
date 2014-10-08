@@ -13,7 +13,7 @@ public interface Resources {
         private static final String JQM_ISCROLL_JS = "js/jquery.mobile.iscrollview.min.js";
 
         public static void injectAll(final InjectCallback done) {
-            ScriptUtils.waitJqmLoaded(new Callback<Void, Void>() {
+            ScriptUtils.waitJqmLoaded(new Callback<Void, Throwable>() {
 
                 @Override
                 public void onSuccess(Void result) {
@@ -22,7 +22,8 @@ public interface Resources {
                 }
 
                 @Override
-                public void onFailure(Void reason) {
+                public void onFailure(Throwable reason) {
+                    throw new RuntimeException(reason);
                 }
             });
         }

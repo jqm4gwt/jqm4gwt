@@ -20,10 +20,10 @@ import com.sksamuel.jqm4gwt.form.elements.JQMText;
  * <p> When you add {@literal <inherits name='com.sksamuel.Jqm4gwt-datebox' />} to yourApp.gwt.xml
  * the following scripts will be included automatically to resulting war: </p>
  * <pre> jqm-datebox.comp.calbox.min.js, jqm-datebox.min.css,
- * jquery.mobile.datebox.i18n.en_US.utf8.js, and datebox.png (for "new style" support) </pre>
- * <p> You can add additional languages by including something like: </p>
- * <pre> {@literal <script src="javascript/jquery.mobile.datebox.i18n.ru.utf8.js"></script>} </pre>
- * <p> into your main html after yourApp.nocache.js script. </p>
+ * jquery.mobile.datebox.i18n.en_US.utf8.js, and datebox.png (in case you'll want a custom icon) </pre>
+ * <p> You can add additional languages by injecting something like: </p>
+ * <pre> jquery.mobile.datebox.i18n.ru.utf8.js </pre>
+ * <p> after your application.onModuleLoad() called, see ScriptUtils.waitJqmLoaded() </p>
  *
  * See also:
  * <p><a href="http://dev.jtsage.com/jQM-DateBox/">jQueryMobile - DateBox</a></p>

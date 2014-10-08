@@ -1,6 +1,8 @@
 package com.sksamuel.jqm4gwt;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
@@ -15,6 +17,9 @@ import com.google.gwt.dom.client.ScriptElement;
 public class ScriptUtils {
 
     private ScriptUtils() {} // static class
+
+    private static final List<SequentialScriptInjector> injectors = new ArrayList<SequentialScriptInjector>();
+    private static Throwable injectFailed;
 
     private static HeadElement head;
     private static String moduleURL;
@@ -99,14 +104,32 @@ public class ScriptUtils {
         injectJs(false, done, paths);
     }
 
-    public static void injectJs(boolean noModulePrefix, InjectCallback done, String... paths) {
+    public static void injectJs(boolean noModulePrefix, final InjectCallback done, String... paths) {
         if (paths == null || paths.length == 0) return;
-        SequentialScriptInjector injector = new SequentialScriptInjector();
+        final SequentialScriptInjector injector = new SequentialScriptInjector();
+        injectors.add(injector);
         if (!noModulePrefix) {
             checkModuleURL();
             injector.setUrlPrefix(moduleURL);
         }
-        injector.inject(done, paths);
+        injector.inject(new InjectCallback() {
+
+            @Override
+            public void onSuccess(Collection<String> result) {
+                injectors.remove(injector);
+                if (done != null) done.onSuccess(result);
+            }
+
+            @Override
+            public void onFailure(Throwable reason) {
+                injectors.remove(injector);
+                injectFailed = reason;
+                if (done != null) done.onFailure(reason);
+                else super.onFailure(reason);
+            }
+
+        }, paths);
+
     }
 
     private static native boolean isJqmLoaded() /*-{
@@ -115,14 +138,15 @@ public class ScriptUtils {
         return !b;
     }-*/;
 
-    public static void waitJqmLoaded(final Callback<Void, Void> done) {
+    public static void waitJqmLoaded(final Callback<Void, Throwable> done) {
         if (done == null) return;
         Scheduler.get().scheduleFinally(new RepeatingCommand() {
             @Override
             public boolean execute() {
-                if (!isJqmLoaded()) return true;
-                done.onSuccess(null);
-                return false;
+                if (!isJqmLoaded() || !injectors.isEmpty()) return true; // continue waiting
+                if (injectFailed != null) done.onFailure(injectFailed);
+                else done.onSuccess(null);
+                return false; // done waiting
             }
         });
     }

@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt.examples;
 
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.Window;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.ScriptUtils;
@@ -29,7 +30,7 @@ public class Jqm4gwtExamplesEntryPoint implements EntryPoint {
 	 */
     @Override
 	public void onModuleLoad() {
-        ScriptUtils.waitJqmLoaded(new Callback<Void, Void>() {
+        ScriptUtils.waitJqmLoaded(new Callback<Void, Throwable>() {
 
             @Override
             public void onSuccess(Void result) {
@@ -37,7 +38,8 @@ public class Jqm4gwtExamplesEntryPoint implements EntryPoint {
             }
 
             @Override
-            public void onFailure(Void reason) {
+            public void onFailure(Throwable reason) {
+                Window.alert(reason.getMessage());
             }
         });
 	}
