@@ -151,7 +151,7 @@
             label1="Flip1" label2="Flip2" value1="flip1Value" value2="flip2Value" text="flipText"
             value="flip1Value" /> <!-- theme="b" mini="true" textHidden="true" -->
           <ly:JQMTable columns="3">
-            <ly:cell>
+            <ly:cell addStyleNames="aaa bbb">
               <b:JQMButton ui:field="flipInfoBtn" text="Show Flip Info" mini="true" />
             </ly:cell>
             <ly:cell>

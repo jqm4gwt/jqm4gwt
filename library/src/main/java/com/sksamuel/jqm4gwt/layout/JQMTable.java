@@ -11,6 +11,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMWidget;
 
@@ -77,10 +78,11 @@ public class JQMTable extends JQMWidget {
      * JQuery Mobile class name given (eg, "ui-block-a" for the first cell,
      * etc). This created div will have an automatically assigned id.
      *
+     * @param addStyleNames - space separated additional style names for this particular cell
      * @return the widget that was created to wrap the given content
      */
     @UiChild(tagname = "cell")
-    public Widget add(Widget widget) {
+    public Widget add(Widget widget, String addStyleNames) {
 
         int size = getElement().getChildCount();
         String klass = getCellStyleName(size);
@@ -91,6 +93,9 @@ public class JQMTable extends JQMWidget {
         removeAllCellStyles(cellElt);
         cellElt.addClassName(klass);
         prepareCellPercentStyle(size, cell);
+        if (addStyleNames != null && !addStyleNames.isEmpty()) {
+            JQMCommon.addStyleNames(cell, addStyleNames);
+        }
         cell.add(widget);
 
         flow.add(cell);
@@ -98,6 +103,10 @@ public class JQMTable extends JQMWidget {
         JQMContext.render(cell.getElement().getId());
 
         return cell;
+    }
+
+    public Widget add(Widget widget) {
+        return add(widget, null/*cellStyleNames*/);
     }
 
     /**
