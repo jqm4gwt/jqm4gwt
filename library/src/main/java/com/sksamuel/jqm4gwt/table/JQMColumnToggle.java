@@ -17,9 +17,12 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasFilterable;
 import com.sksamuel.jqm4gwt.JQMCommon;
@@ -36,7 +39,8 @@ import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
  * @author slavap
  *
  */
-public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
+public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
+        HasValue<Collection<String>> {
 
     //TODO: table-stroke and table-stripe are deprecated in 1.4, so custom CSS will be needed in 1.5
     public static final String STD_ROW_LINES = "table-stroke";
@@ -916,6 +920,31 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable {
     protected void onUnload() {
         unbindFilterEvents();
         super.onUnload();
+    }
+
+    @Override
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Collection<String>> handler) {
+        return addHandler(handler, ValueChangeEvent.getType());
+    }
+
+    @Override
+    public Collection<String> getValue() {
+        return getBodyData();
+    }
+
+    @Override
+    public void setValue(Collection<String> value) {
+        setValue(value, false/*fireEvents*/);
+    }
+
+    @Override
+    public void setValue(Collection<String> value, boolean fireEvents) {
+        Collection<String> oldValue = fireEvents ? getValue() : null;
+        setBodyData(value);
+        if (fireEvents) {
+            Collection<String> newValue = getValue();
+            ValueChangeEvent.fireIfNotEqual(this, oldValue, newValue);
+        }
     }
 
 }
