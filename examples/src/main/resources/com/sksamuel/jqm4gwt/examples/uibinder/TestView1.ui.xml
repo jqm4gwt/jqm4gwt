@@ -91,10 +91,12 @@
     <g:FlowPanel addStyleNames="jqm4gwt-scrollable-main-stage">
       <g:FlowPanel addStyleNames="{style.pageContent}">
         <b:JQMButton text="" html="&lt;b&gt;Button&lt;/b&gt; with &lt;i&gt;HTML&lt;/i&gt; content"
-          mini="true" inline="true" />
+          mini="true" inline="true" customIcon="loader" iconPos="RIGHT" />
         <h:Div />
         <h:Span text="span text"/>
         <h:Div text="div text" />
+        <jqm:JQMIcon iconNoDisc="false" iconShadow="false" iconAlt="false"
+          text="Icon text" customIcon="loader" iconPos="LEFT" /> <!-- builtInIcon="AUDIO" -->
         <h:Div>
           <b:JQMButton text="Always Active Button in div" inline="true" mini="true"
             corners="false" alwaysActive="true" />

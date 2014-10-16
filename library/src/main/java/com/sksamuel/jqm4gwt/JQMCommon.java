@@ -560,15 +560,23 @@ public class JQMCommon {
         return DataIcon.fromJqmValue(s.substring(STYLE_UI_ICON.length()));
     }
 
-    public static void setStyleIcon(Element elt, DataIcon icon) {
-        if (icon == null || DataIcon.NONE.equals(icon)) {
+    public static void setStyleIcon(Element elt, String icon) {
+        if (icon == null || icon.isEmpty()) {
             removeStylesStartsWith(elt, STYLE_UI_ICON);
             return;
         }
-        String s = STYLE_UI_ICON + icon.getJqmValue();
+        String s = STYLE_UI_ICON + icon;
         if (hasStyle(elt, s)) return;
         removeStylesStartsWith(elt, STYLE_UI_ICON);
         elt.addClassName(s);
+    }
+
+    public static void setStyleIcon(Element elt, DataIcon icon) {
+        if (icon == null || DataIcon.NONE.equals(icon)) {
+            setStyleIcon(elt, (String) null);
+            return;
+        }
+        setStyleIcon(elt, icon.getJqmValue());
     }
 
     public static DataIcon getIcon(Element elt) {
@@ -595,20 +603,30 @@ public class JQMCommon {
         setIcon(widget.getElement(), icon);
     }
 
-    public static DataIcon getIconEx(Element elt) {
+    public static String getIconExStr(Element elt) {
         String s = getStyleStartsWith(elt, STYLE_UI_ICON);
         if (s != null && !s.isEmpty()) {
             s = s.substring(STYLE_UI_ICON.length());
-            return DataIcon.fromJqmValue(s);
+            return s;
         }
         s = getAttribute(elt, DATA_ICON);
-        DataIcon icon = DataIcon.fromJqmValue(s);
-        if (DataIcon.NONE.equals(icon)) return icon; // NONE has no className, but stored in attribute
+        if (DataIcon.NONE.getJqmValue().equals(s)) return s; // NONE has no className, but stored in attribute
         return null;
+    }
+
+    public static DataIcon getIconEx(Element elt) {
+        String s = getIconExStr(elt);
+        DataIcon icon = DataIcon.fromJqmValue(s);
+        return icon;
     }
 
     public static DataIcon getIconEx(Widget widget) {
         return getIconEx(widget.getElement());
+    }
+
+    public static void setIconEx(Element elt, String icon) {
+        setStyleIcon(elt, icon);
+        setAttribute(elt, DATA_ICON, icon);
     }
 
     public static void setIconEx(Element elt, DataIcon icon) {

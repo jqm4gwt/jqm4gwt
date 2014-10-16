@@ -1,6 +1,5 @@
 package com.vx.sw.client.jqm4gwt;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -318,9 +317,13 @@ public class JQMListBindable<M> extends JQMList
      */
     public void setDataItems(List<M> items) {
         boolean changed = this.dataItems != items;
-        this.dataItems = items instanceof BindableListWrapper ? (BindableListWrapper<M>) items
-                                                              : new BindableListWrapper<M>(items);
-        if (changed) this.dataItems.addChangeHandler(this);
+        if (items == null) {
+            this.dataItems = null;
+        } else {
+            this.dataItems = items instanceof BindableListWrapper ? (BindableListWrapper<M>) items
+                                                                  : new BindableListWrapper<M>(items);
+            if (changed) this.dataItems.addChangeHandler(this);
+        }
         addDataItems();
     }
 
@@ -420,10 +423,6 @@ public class JQMListBindable<M> extends JQMList
 
     @Override
     public List<M> getValue() {
-        if (dataItems == null) {
-            dataItems = new BindableListWrapper<M>(new ArrayList<M>());
-            dataItems.addChangeHandler(this);
-        }
         return dataItems;
     }
 

@@ -419,10 +419,21 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     @Override
     public void setIconURL(String src) {
-        if (src == null)
-            removeIcon();
-        else
-            getElement().setAttribute("data-icon", src);
+        Element elt = getElement();
+        JQMCommon.setIconEx(elt, src);
+        JQMCommon.invalidateIconPosEx(elt, JQMCommon.STYLE_UI_BTN_ICONPOS);
+    }
+
+    public String getIconURL() {
+        return JQMCommon.getIconExStr(getElement());
+    }
+
+    public void setCustomIcon(String icon) {
+        setIconURL(icon);
+    }
+
+    public String getCustomIcon() {
+        return getIconURL();
     }
 
     /**

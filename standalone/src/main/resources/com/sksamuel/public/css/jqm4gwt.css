@@ -196,3 +196,19 @@
 .jqm4gwt-fixed-hidden {
   display: none;
 }
+
+/* Alt icons */
+.ui-alt-icon.jqm4gwt-icon:after {
+  background-color: #666 /*{global-icon-color}*/;
+  background-color: rgba(0,0,0,.15) /*{global-icon-disc}*/;
+}
+/* No disc */
+.ui-nodisc-icon.jqm4gwt-icon:after {
+  background-color: transparent;
+}
+/* Icon shadow */
+.ui-shadow-icon.jqm4gwt-icon:after {
+  -webkit-box-shadow: 0 1px 0 rgba(255,255,255,.3) /*{global-icon-shadow}*/;
+  -moz-box-shadow: 0 1px 0 rgba(255,255,255,.3) /*{global-icon-shadow}*/;
+  box-shadow: 0 1px 0 rgba(255,255,255,.3) /*{global-icon-shadow}*/;
+}
