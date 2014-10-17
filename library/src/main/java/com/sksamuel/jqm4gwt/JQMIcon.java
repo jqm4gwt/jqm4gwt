@@ -2,10 +2,14 @@ package com.sksamuel.jqm4gwt;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.HasValue;
 import com.sksamuel.jqm4gwt.html.Div;
 
 /** Simple jQuery Mobile icon, non-clickable - use JQMButton if you need any interaction. */
-public class JQMIcon extends Div implements HasIcon<JQMIcon>, HasIconShadow<JQMIcon> {
+public class JQMIcon extends Div implements HasIcon<JQMIcon>, HasIconShadow<JQMIcon>, HasValue<String> {
 
     public JQMIcon() {
         addStyleName("jqm4gwt-icon");
@@ -74,6 +78,10 @@ public class JQMIcon extends Div implements HasIcon<JQMIcon>, HasIconShadow<JQMI
         JQMCommon.setIconAlt(this, value);
     }
 
+    public DataIcon getBuiltInIcon() {
+        return JQMCommon.getIconEx(this);
+    }
+
     @Override
     public void setBuiltInIcon(DataIcon icon) {
         JQMCommon.setIconEx(this, icon);
@@ -109,6 +117,45 @@ public class JQMIcon extends Div implements HasIcon<JQMIcon>, HasIconShadow<JQMI
     public JQMIcon withIconURL(String src) {
         setIconURL(src);
         return this;
+    }
+
+    @Override
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
+        return addHandler(handler, ValueChangeEvent.getType());
+    }
+
+    @Override
+    public String getValue() {
+        DataIcon icon = getBuiltInIcon();
+        if (icon != null) return icon.name();
+        return getCustomIcon();
+    }
+
+    @Override
+    public void setValue(String value) {
+        setValue(value, false/*fireEvents*/);
+    }
+
+    /**
+     * @param value - DataIcon.name() or custom icon
+     */
+    @Override
+    public void setValue(String value, boolean fireEvents) {
+        String oldValue = fireEvents ? getValue() : null;
+        if (value == null || value.isEmpty()) {
+            removeIcon();
+        } else {
+            try {
+                DataIcon icon = DataIcon.valueOf(value);
+                setBuiltInIcon(icon);
+            } catch (Exception e) {
+                setCustomIcon(value);
+            }
+        }
+        if (fireEvents) {
+            String newValue = getValue();
+            ValueChangeEvent.fireIfNotEqual(this, oldValue, newValue);
+        }
     }
 
 }
