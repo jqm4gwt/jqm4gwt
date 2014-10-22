@@ -44,6 +44,8 @@
 
     .marginRight10 { margin-right: 10px; }
     .marginRight20 { margin-right: 20px; }
+    .marginLeft10 { margin-left: 10px; }
+    .marginLeft20 { margin-left: 20px; }
 
     @external .jqm4gwt-thead-groups, .ui-table-reflow .ui-table-cell-label-top;
     .jqm4gwt-thead-groups th, .ui-table-reflow tbody .ui-table-cell-label-top {
@@ -92,6 +94,10 @@
       <g:FlowPanel addStyleNames="{style.pageContent}">
         <b:JQMButton text="" html="&lt;b&gt;Button&lt;/b&gt; with &lt;i&gt;HTML&lt;/i&gt; content"
           mini="true" inline="true" customIcon="loader" iconPos="RIGHT" />
+        <b:JQMButtonPanel mini="true" inline="true" addStyleNames="{style.marginLeft10}">
+          <b:widget> <g:Label text="Button" /> </b:widget>
+          <b:widget> <g:Label text="Panel" /> </b:widget>
+        </b:JQMButtonPanel>  
         <h:Div />
         <h:Span text="span text"/>
         <h:Div text="div text" />
