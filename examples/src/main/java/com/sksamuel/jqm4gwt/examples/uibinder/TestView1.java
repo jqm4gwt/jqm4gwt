@@ -996,6 +996,12 @@ public class TestView1 {
                 datePickerValueChanged.setText(datePicker.getValue());
             }
         });
+        /*datePicker.setGridDateFormatter(new GridDateFormatter() {
+            @Override
+            public String format(int yyyy, int mm, int dd) {
+                return '~' + String.valueOf(dd) + '~';
+            }
+        });*/
 
         selectFilterable.addFilterableHandler(new JQMFilterableEvent.DefaultHandler() {
             @Override

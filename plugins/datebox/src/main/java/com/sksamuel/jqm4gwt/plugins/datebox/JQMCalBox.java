@@ -12,6 +12,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
@@ -125,6 +126,13 @@ public class JQMCalBox extends JQMText {
     private Date internDateToSet; // works when isInternSetDate == true
 
     private boolean invalidateUnlockedInputOnBlur = true;
+
+    /** Additional information can be added to days (1..31) buttons. */
+    public static interface GridDateFormatter {
+        String format(int yyyy, int mm, int dd);
+    }
+
+    private GridDateFormatter gridDateFormatter;
 
     static {
         addJsParts();
@@ -688,6 +696,7 @@ public class JQMCalBox extends JQMText {
                     public void onInit(JQMPageEvent event) {
                         super.onInit(event);
                         setDate(delayedSetDate);
+                        initGridDateFormatter();
                     }
                 });
                 break;
@@ -779,8 +788,7 @@ public class JQMCalBox extends JQMText {
         if (s == null || s.isEmpty()) return null;
 
         JsDate jsd = internGetDate(input.getElement());
-        double msec = jsd.getTime();
-        return new Date((long) msec);
+        return JQMContext.jsDateToDate(jsd);
     }
 
     /**
@@ -830,6 +838,44 @@ public class JQMCalBox extends JQMText {
         }
         return o.lang['default'][val];
     }-*/;
+
+    private String formatGridDate(JsDate d) {
+        if (gridDateFormatter == null) {
+            return String.valueOf(d.getDate());
+        } else {
+            return gridDateFormatter.format(d.getFullYear(), d.getMonth(), d.getDate());
+        }
+    }
+
+    private static native void initGridDateFormatter(Element elt, JQMCalBox ctrl) /*-{
+        if (ctrl == null) {
+            $wnd.$(elt).datebox('setGridDateFormatter', null);
+            return;
+        }
+        $wnd.$(elt).datebox('setGridDateFormatter', function (dates) {
+            var strs = [];
+            $wnd.$.each(dates, function( index, item ) { // item == this
+                var s = ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDate(Lcom/google/gwt/core/client/JsDate;)(item);
+                strs.push(s);
+            });
+            return strs;
+        });
+    }-*/;
+
+    private void initGridDateFormatter() {
+        if (!isReady()) return;
+        initGridDateFormatter(input.getElement(), gridDateFormatter != null ? this : null);
+    }
+
+    public GridDateFormatter getGridDateFormatter() {
+        return gridDateFormatter;
+    }
+
+    /** Additional information can be added to days (1..31) buttons. */
+    public void setGridDateFormatter(GridDateFormatter gridDateFormatter) {
+        this.gridDateFormatter = gridDateFormatter;
+        initGridDateFormatter();
+    }
 
     public boolean isIconNoDisc() {
         return JQMCommon.isIconNoDisc(this);

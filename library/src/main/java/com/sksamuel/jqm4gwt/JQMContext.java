@@ -1,7 +1,10 @@
 package com.sksamuel.jqm4gwt;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.client.JsDate;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -198,6 +201,12 @@ public class JQMContext {
      */
     public static void silentScroll(Widget widget) {
         silentScroll(widget.getElement());
+    }
+
+    public static Date jsDateToDate(JsDate jsDate) {
+        if (jsDate == null) return null;
+        double msec = jsDate.getTime();
+        return new Date((long) msec);
     }
 
     public static JsArrayString getJsArrayString(String... strings) {
