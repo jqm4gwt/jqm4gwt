@@ -59,6 +59,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     private boolean contentCentered;
     private double contentHeightPercent;
+    private boolean pseudoFixedToolbars;
+
     private double hideFixedToolbarsIfContentAreaPercentBelow = 50.0d;
     private int hideFixedToolbarsIfVirtualKeyboard = 0; // threshold(height) for keyboard detection
 
@@ -66,7 +68,9 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     private boolean orientationChangeInitialized;
     private int initialWindowHeight;
     private int hiddenHeaderH;
+    private boolean hiddenHeaderFixed;
     private int hiddenFooterH;
+    private boolean hiddenFooterFixed;
 
     private boolean transparent;
     private Element transparentPrevPage;
@@ -467,7 +471,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         initialWindowHeight = Window.getClientHeight();
         onPageShow();
         JQMPageEvent.fire(this, PageState.SHOW);
-        if (contentCentered || contentHeightPercent > 0
+        if (contentCentered || pseudoFixedToolbars || contentHeightPercent > 0
                 || hideFixedToolbarsIfContentAreaPercentBelow > 0
                 || hideFixedToolbarsIfVirtualKeyboard > 0) {
             processFixedToolbars();
@@ -678,7 +682,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     /**
-     * Content band will be centered between Header and Footer (they must be defined as fixed="true").
+     * Content band will be centered between Header and Footer
+     * (they must be defined as fixed="true" OR page.pseudoFixedToolbars="true").
      */
     public void setContentCentered(boolean contentCentered) {
         boolean oldVal = this.contentCentered;
@@ -689,6 +694,29 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
                 initWindowResize();
             } else {
                 clearCenterContent();
+            }
+        }
+    }
+
+    public boolean isPseudoFixedToolbars() {
+        return pseudoFixedToolbars;
+    }
+
+    /**
+     * If content is short or scrollable (see {@link JQMPage#setContentHeightPercent(double)}),
+     * we can get "fixed" header and footer without using CSS position: fixed (it's not working
+     * quite good in mobile browsers). Just setPseudoFixedToolbars(true) and footer's position will
+     * be calculated to be at the bottom of the page.
+     */
+    public void setPseudoFixedToolbars(boolean value) {
+        boolean oldVal = this.pseudoFixedToolbars;
+        this.pseudoFixedToolbars = value;
+        if (oldVal != this.pseudoFixedToolbars && content != null && content.isAttached()) {
+            if (this.pseudoFixedToolbars) {
+                centerContent();
+                initWindowResize();
+            } else {
+                centerContent();
             }
         }
     }
@@ -756,46 +784,66 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
             Element headerElt = header.getElement();
             if (headerElt.hasClassName(JQM4GWT_FIXED_HIDDEN)) {
                 headerElt.removeClassName(JQM4GWT_FIXED_HIDDEN);
-                headerElt.addClassName("ui-header-fixed");
-                Element pageElt = getElement();
-                pageElt.addClassName("ui-page-header-fixed");
-                header.setFixed(true);
-                header.updatePagePadding();
+                if (hiddenHeaderFixed) {
+                    headerElt.addClassName("ui-header-fixed");
+                    Element pageElt = getElement();
+                    pageElt.addClassName("ui-page-header-fixed");
+                    header.setFixed(true);
+                    header.updatePagePadding();
+                }
             }
         }
         if (footer != null) {
             Element footerElt = footer.getElement();
             if (footerElt.hasClassName(JQM4GWT_FIXED_HIDDEN)) {
                 footerElt.removeClassName(JQM4GWT_FIXED_HIDDEN);
-                footerElt.addClassName("ui-footer-fixed");
-                Element pageElt = getElement();
-                pageElt.addClassName("ui-page-footer-fixed");
-                footer.setFixed(true);
-                footer.updatePagePadding();
+                if (hiddenFooterFixed) {
+                    footerElt.addClassName("ui-footer-fixed");
+                    Element pageElt = getElement();
+                    pageElt.addClassName("ui-page-footer-fixed");
+                    footer.setFixed(true);
+                    footer.updatePagePadding();
+                }
             }
         }
     }
 
     private void hideFixedToolbars(int headerH, int footerH) {
-        if (header != null && header.isFixed() && !header.getElement().hasClassName(JQM4GWT_FIXED_HIDDEN)) {
-            header.setFixed(false);
+        if (header != null && (header.isFixed() || pseudoFixedToolbars)
+                && !header.getElement().hasClassName(JQM4GWT_FIXED_HIDDEN)) {
             Element headerElt = header.getElement();
-            headerElt.removeClassName("ui-header-fixed");
+            if (header.isFixed()) {
+                header.setFixed(false);
+                headerElt.removeClassName("ui-header-fixed");
+                hiddenHeaderFixed = true;
+            } else {
+                hiddenHeaderFixed = false;
+            }
             headerElt.addClassName(JQM4GWT_FIXED_HIDDEN);
             hiddenHeaderH = headerH;
-            Element pageElt = getElement();
-            pageElt.removeClassName("ui-page-header-fixed");
-            pageElt.getStyle().clearPaddingTop();
+            if (hiddenHeaderFixed) {
+                Element pageElt = getElement();
+                pageElt.removeClassName("ui-page-header-fixed");
+                pageElt.getStyle().clearPaddingTop();
+            }
         }
-        if (footer != null && footer.isFixed() && !footer.getElement().hasClassName(JQM4GWT_FIXED_HIDDEN)) {
-            footer.setFixed(false);
+        if (footer != null && (footer.isFixed() || pseudoFixedToolbars)
+                && !footer.getElement().hasClassName(JQM4GWT_FIXED_HIDDEN)) {
             Element footerElt = footer.getElement();
-            footerElt.removeClassName("ui-footer-fixed");
+            if (footer.isFixed()) {
+                footer.setFixed(false);
+                footerElt.removeClassName("ui-footer-fixed");
+                hiddenFooterFixed = true;
+            } else {
+                hiddenFooterFixed = false;
+            }
             footerElt.addClassName(JQM4GWT_FIXED_HIDDEN);
             hiddenFooterH = footerH;
-            Element pageElt = getElement();
-            pageElt.removeClassName("ui-page-footer-fixed");
-            pageElt.getStyle().clearPaddingBottom();
+            if (hiddenFooterFixed) {
+                Element pageElt = getElement();
+                pageElt.removeClassName("ui-page-footer-fixed");
+                pageElt.getStyle().clearPaddingBottom();
+            }
         }
     }
 
@@ -851,31 +899,46 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     public void centerContent() {
         if (!isVisible()) return;
-        if (!contentCentered) {
-            content.getElement().getStyle().clearMarginTop();
-            return;
-        }
-        boolean isFixedHeader = header != null && header.isFixed();
-        boolean isFixedFooter = footer != null && footer.isFixed();
-        boolean needCentering = (header == null && footer == null)
-                || (isFixedHeader && isFixedFooter)
-                || (isFixedHeader && footer == null) || (isFixedFooter && header == null);
-        if (!needCentering || isFixedToolbarsHidden()) {
-            content.getElement().getStyle().clearMarginTop();
-            return;
-        }
-        int contentH = content.getOffsetHeight();
-        if (contentH == 0) {
-            content.getElement().getStyle().clearMarginTop();
-            return;
-        }
-        int headerH = header == null ? 0 : header.getOffsetHeight();
-        int footerH = footer == null ? 0 : footer.getOffsetHeight();
-        int windowH = Window.getClientHeight();
 
-        int marginTop = (windowH - headerH - footerH - contentH) / 2;
+        Integer windowH = null;
+        int headerH = 0;
+        int footerH = 0;
+        int contentH = 0;
+        int marginTop = 0;
+
+        if (contentCentered) {
+            boolean isFixedHeader = header != null && (header.isFixed() || pseudoFixedToolbars);
+            boolean isFixedFooter = footer != null && (footer.isFixed() || pseudoFixedToolbars);
+            boolean needCentering = (header == null && footer == null)
+                    || (isFixedHeader && isFixedFooter)
+                    || (isFixedHeader && footer == null) || (isFixedFooter && header == null);
+            if (needCentering && !isFixedToolbarsHidden()) {
+                contentH = content.getOffsetHeight();
+                if (contentH > 0) {
+                    if (header != null) headerH = header.getOffsetHeight();
+                    if (footer != null) footerH = footer.getOffsetHeight();
+                    windowH = Window.getClientHeight();
+                    marginTop = (windowH - headerH - footerH - contentH) / 2;
+                }
+            }
+        }
         if (marginTop <= 0) content.getElement().getStyle().clearMarginTop();
         else content.getElement().getStyle().setMarginTop(marginTop, Unit.PX);
+
+        if (footer != null) {
+            int footerMarginTop = 0;
+            footerH = footer.getOffsetHeight();
+            if (pseudoFixedToolbars && footerH > 0 && !footer.isFixed()) {
+                if (windowH == null) {
+                    windowH = Window.getClientHeight();
+                    contentH = content.getOffsetHeight();
+                    if (header != null) headerH = header.getOffsetHeight();
+                }
+                footerMarginTop = windowH - headerH - contentH - marginTop - footerH;
+            }
+            if (footerMarginTop <= 0) footer.getElement().getStyle().clearMarginTop();
+            else footer.getElement().getStyle().setMarginTop(footerMarginTop, Unit.PX);
+        }
     }
 
     /**
@@ -913,7 +976,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * <p> Warning! - contentCentered property is not affected, you have to change it manually. </p>
      */
     public void clearCenterContent() {
-        content.getElement().getStyle().clearMarginTop();
+        centerContent();
     }
 
     public boolean isDlgTransparent() {

@@ -73,7 +73,7 @@
   <jqm:JQMPage containerId="testPage1" backButton="true"
     contentCentered="true" contentHeightPercent="98.0"
     contentAddStyleNames="jqm4gwt-scrollable-page-content {style.contentBorder}">
-    <!-- hideFixedToolbarsIfVirtualKeyboard="250" -->
+    <!-- hideFixedToolbarsIfVirtualKeyboard="250" pseudoFixedToolbars="true" -->
 
     <t:JQMHeader fixed="true">
       <t:widget>
