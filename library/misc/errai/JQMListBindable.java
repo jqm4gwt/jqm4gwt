@@ -155,7 +155,7 @@ public class JQMListBindable<M> extends JQMList
         }
 
         private void addEmptyMsg(JQMListBindable<M> list) {
-            if (!showEmptyMsg || emptyMsg != null) return;
+            if (!showEmptyMsg) return;
             List<JQMListItem> items = list.getItems();
             if (items == null || items.isEmpty()) {
                 JQMListDivider d = (JQMListDivider) list.addDivider("");
