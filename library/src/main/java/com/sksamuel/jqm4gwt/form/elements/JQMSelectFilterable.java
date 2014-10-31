@@ -6,7 +6,7 @@ import com.google.gwt.dom.client.OptionElement;
 import com.sksamuel.jqm4gwt.JQMCommon;
 
 /**
- * See <a href="http://demos.jquerymobile.com/1.4.4/selectmenu-custom-filter/">Filterable inside custom select</a>
+ * See <a href="http://demos.jquerymobile.com/1.4.5/selectmenu-custom-filter/">Filterable inside custom select</a>
  * <p/> See also <a href="https://github.com/jquery/jquery-mobile/blob/9cb1040f1da9309c30b70eccbbfb54a8ddf253aa/demos/selectmenu-custom-filter/index.php">Github Demos</a>
  *
  * @author SlavaP

@@ -52,7 +52,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 10:58:58
  * <p/> An implementation of a jQuery mobile select element.
- * <p/> See <a href="http://demos.jquerymobile.com/1.4.4/selectmenu/">Select menu</a>
+ * <p/> See <a href="http://demos.jquerymobile.com/1.4.5/selectmenu/">Select menu</a>
  */
 public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>, HasText<JQMSelect>,
         HasFocusHandlers, HasChangeHandlers, HasClickHandlers, HasTapHandlers, HasValue<String>,

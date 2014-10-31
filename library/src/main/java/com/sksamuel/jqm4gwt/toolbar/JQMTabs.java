@@ -29,7 +29,7 @@ import com.sksamuel.jqm4gwt.toolbar.JQMTabsEvent.TabsState;
 /**
  * @author SlavaP
  *
- * <p> See <a href="http://demos.jquerymobile.com/1.4.4/tabs/">Tabs widget</a></p>
+ * <p> See <a href="http://demos.jquerymobile.com/1.4.5/tabs/">Tabs widget</a></p>
  * <p> See also <a href="http://api.jqueryui.com/tabs/">jQueryUI Tabs widget</a></p>
  *
  */

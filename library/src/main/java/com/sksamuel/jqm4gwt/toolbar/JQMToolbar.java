@@ -13,7 +13,7 @@ import com.sksamuel.jqm4gwt.html.Heading;
  *
  * <p/> Superclass for toolbars - {@link JQMHeader} and {@link JQMFooter}
  *
- * <p/> See <a href="http://demos.jquerymobile.com/1.4.4/toolbar/">Toolbar</a>
+ * <p/> See <a href="http://demos.jquerymobile.com/1.4.5/toolbar/">Toolbar</a>
  * <p/> See also <a href="http://api.jquerymobile.com/toolbar/">Toolbar API</a>
  */
 public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedPosition {

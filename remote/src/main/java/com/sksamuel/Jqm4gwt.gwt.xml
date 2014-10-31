@@ -6,22 +6,22 @@
     
     <!-- For compatibility with superdev mode, library's scripts could not be included here, see entry point code for their injection -->
 
-    <!-- stylesheet src="css/jquery.mobile-1.4.4.min.css"/>
+    <!-- stylesheet src="css/jquery.mobile-1.4.5.min.css"/>
     <stylesheet src="css/jqm-fixes.css"/>
     <stylesheet src="css/jqm4gwt.css"/-->
     
     <!-- script src="js/jquery-2.1.1.min.js"/>
-    <script src="js/jquery.mobile-1.4.4.min.js"/>
+    <script src="js/jquery.mobile-1.4.5.min.js"/>
     <script src="js/jquery.actual.min.js"/>
     <script src="js/jqm-fixes.js"/-->
     
     
-    <!-- stylesheet src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.css"/>
+    <!-- stylesheet src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
     <stylesheet src="http://dev.jtsage.com/cdn/datebox/1.4.4/jqm-datebox-1.4.4.min.css"/>
     <stylesheet src="https://raw.github.com/watusi/jquery-mobile-iscrollview/master/lib/jquery.mobile.iscrollview.css"/>
     
     <script src="http://code.jquery.com/jquery-2.1.1.min.js"/>
-    <script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"/>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"/>
     <script src="http://dev.jtsage.com/cdn/datebox/1.4.4/jqm-datebox-1.4.4.comp.calbox.min.js"/>
     <script src="http://dev.jtsage.com/cdn/datebox/i18n/jquery.mobile.datebox.i18n.en_US.utf8.js"/>
     <script src="https://raw.github.com/cubiq/iscroll/master/src/iscroll.js"/>

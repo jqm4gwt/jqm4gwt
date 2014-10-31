@@ -6,12 +6,12 @@
     
     <!-- For compatibility with superdev mode, library's scripts could not be included here, see entry point code for their injection -->
 
-    <!-- stylesheet src="css/jquery.mobile-1.4.4.min.css"/>
+    <!-- stylesheet src="css/jquery.mobile-1.4.5.min.css"/>
     <stylesheet src="css/jqm-fixes.css"/>
     <stylesheet src="css/jqm4gwt.css"/-->
     
     <!-- script src="js/jquery-2.1.1.min.js"/>
-    <script src="js/jquery.mobile-1.4.4.min.js"/>
+    <script src="js/jquery.mobile-1.4.5.min.js"/>
     <script src="js/jquery.actual.min.js"/>
     <script src="js/jqm-fixes.js"/-->
 
