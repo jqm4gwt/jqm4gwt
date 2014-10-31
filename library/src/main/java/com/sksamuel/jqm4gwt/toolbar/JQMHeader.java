@@ -1,7 +1,9 @@
 package com.sksamuel.jqm4gwt.toolbar;
 
 import com.google.gwt.uibinder.client.UiChild;
+import com.google.gwt.user.client.ui.Composite;
 import com.sksamuel.jqm4gwt.DataIcon;
+import com.sksamuel.jqm4gwt.HasJqmHeader;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMPage;
@@ -18,7 +20,7 @@ import com.sksamuel.jqm4gwt.button.JQMButton.PosOnBand;
  *       http://jquerymobile.com/demos/1.2.0/docs/toolbars/docs-headers.html
  *
  */
-public class JQMHeader extends JQMToolbar implements HasText<JQMHeader> {
+public class JQMHeader extends JQMToolbar implements HasText<JQMHeader>, HasJqmHeader {
 
     private static final String BACK_BTN = "data-add-back-btn";
     private static final String BACK_BTN_TEXT = "data-back-btn-text";
@@ -407,5 +409,15 @@ public class JQMHeader extends JQMToolbar implements HasText<JQMHeader> {
 
     public void setBackButtonTheme(String value) {
         JQMCommon.setAttribute(getElement(), BACK_BTN_THEME, value);
+    }
+
+    @Override
+    public JQMHeader getJqmHeader() {
+        return this;
+    }
+
+    @Override
+    public Composite getHeaderStage() {
+        return this;
     }
 }

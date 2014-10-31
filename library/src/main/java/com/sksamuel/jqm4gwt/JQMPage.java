@@ -51,10 +51,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     public boolean firstShow = false;
 
-    protected JQMHeader header;
-
-    protected JQMFooter footer;
-
+    protected HasJqmHeader header;
+    protected HasJqmFooter footer;
     protected JQMPanel panel;
 
     private boolean contentCentered;
@@ -220,13 +218,19 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     @Override
     public void add(Widget widget) {
-        if (widget instanceof JQMContent)
-            throw new RuntimeException("Do not add content widgets here, call createContent instead");
+        if (widget instanceof HasJqmHeader) {
+            setHeader((HasJqmHeader) widget);
+            return;
+        } else if (widget instanceof HasJqmFooter) {
+            setFooter((HasJqmFooter) widget);
+            return;
+        } else if (widget instanceof JQMContent) {
+            throw new RuntimeException("Do not add content widgets here, call createContent() instead");
+        }
         getPrimaryContent().add(widget);
-        // if page is already enhanced then we need to enhance the content
-        // manually
-        // if (enhanced)
-        // triggerCreate();
+
+        // if page is already enhanced then we need to enhance the content manually
+        // if (enhanced) triggerCreate();
     }
 
     private static native void bindLifecycleEvents(JQMPage p, Element elt) /*-{
@@ -552,7 +556,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 	 */
 	public void removeFooter() {
 		if (footer != null) {
-			removeLogical(footer);
+			removeLogical(footer.getFooterStage());
 			footer = null;
 			removeToolBar("footer");
 		}
@@ -564,7 +568,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 	 */
 	public void removeHeader() {
 		if (header != null) {
-			removeLogical(header);
+			removeLogical(header.getHeaderStage());
 			header = null;
 			removeToolBar("header");
 		}
@@ -587,16 +591,17 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     /**
      * Sets the footer element, overriding an existing footer if any.
      */
-    public void setFooter(JQMFooter footer) {
+    public void setFooter(HasJqmFooter footer) {
         removeFooter();
         this.footer = footer;
-        addLogical(footer);
-        getElement().appendChild(footer.getElement());
+        if (this.footer == null) return;
+
+        addLogical(footer.getFooterStage());
+        getElement().appendChild(footer.getJqmFooter().getElement());
     }
 
-    public JQMFooter getFooter()
-    {
-    	return footer;
+    public JQMFooter getFooter() {
+    	return footer != null ? footer.getJqmFooter() : null;
     }
 
     @Override
@@ -617,16 +622,17 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     /**
      * Sets the header element, overriding an existing header if any.
      */
-    public void setHeader(JQMHeader header) {
+    public void setHeader(HasJqmHeader header) {
         removeHeader();
         this.header = header;
+        if (this.header == null) return;
 
-        addLogical(header);
+        addLogical(header.getHeaderStage());
 
         if (panel == null) {
-        	getElement().insertBefore(header.getElement(), getElement().getFirstChild());
+        	getElement().insertBefore(header.getJqmHeader().getElement(), getElement().getFirstChild());
         } else {
-        	getElement().insertAfter(header.getElement(), panel.getElement());
+        	getElement().insertAfter(header.getJqmHeader().getElement(), panel.getElement());
         }
     }
 
@@ -638,7 +644,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     public JQMHeader getHeader() {
-    	return header;
+    	return header != null ? header.getJqmHeader() : null;
     }
 
     public void setPanel(JQMPanel panel) {
@@ -780,6 +786,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     private void showFixedToolbars() {
+        final JQMHeader header = getHeader();
         if (header != null) {
             Element headerElt = header.getElement();
             if (headerElt.hasClassName(JQM4GWT_FIXED_HIDDEN)) {
@@ -793,6 +800,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
                 }
             }
         }
+        final JQMFooter footer = getFooter();
         if (footer != null) {
             Element footerElt = footer.getElement();
             if (footerElt.hasClassName(JQM4GWT_FIXED_HIDDEN)) {
@@ -809,6 +817,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     private void hideFixedToolbars(int headerH, int footerH) {
+        final JQMHeader header = getHeader();
         if (header != null && (header.isFixed() || pseudoFixedToolbars)
                 && !header.getElement().hasClassName(JQM4GWT_FIXED_HIDDEN)) {
             Element headerElt = header.getElement();
@@ -827,6 +836,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
                 pageElt.getStyle().clearPaddingTop();
             }
         }
+        final JQMFooter footer = getFooter();
         if (footer != null && (footer.isFixed() || pseudoFixedToolbars)
                 && !footer.getElement().hasClassName(JQM4GWT_FIXED_HIDDEN)) {
             Element footerElt = footer.getElement();
@@ -848,6 +858,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     private boolean isFixedToolbarsHidden() {
+        final JQMHeader header = getHeader();
+        final JQMFooter footer = getFooter();
         return (header != null && header.getElement().hasClassName(JQM4GWT_FIXED_HIDDEN))
             || (footer != null && footer.getElement().hasClassName(JQM4GWT_FIXED_HIDDEN));
     }
@@ -865,7 +877,9 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
             headerH = hiddenHeaderH;
             footerH = hiddenFooterH;
         } else {
+            final JQMHeader header = getHeader();
             headerH = header == null ? 0 : header.getOffsetHeight();
+            final JQMFooter footer = getFooter();
             footerH = footer == null ? 0 : footer.getOffsetHeight();
         }
         int windowH = Window.getClientHeight();
@@ -905,6 +919,9 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         int footerH = 0;
         int contentH = 0;
         int marginTop = 0;
+
+        final JQMHeader header = getHeader();
+        final JQMFooter footer = getFooter();
 
         if (contentCentered) {
             boolean isFixedHeader = header != null && (header.isFixed() || pseudoFixedToolbars);
@@ -950,6 +967,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         if (!isVisible()) return;
         Element contentElt = content.getElement();
         if (contentHeightPercent > 0) {
+            final JQMHeader header = getHeader();
+            final JQMFooter footer = getFooter();
             int headerH = header == null || isFixedToolbarsHidden() ? 0 : header.getOffsetHeight();
             int footerH = footer == null || isFixedToolbarsHidden() ? 0 : footer.getOffsetHeight();
             int windowH = Window.getClientHeight();
