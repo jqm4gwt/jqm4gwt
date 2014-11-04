@@ -998,7 +998,7 @@ public class TestView1 {
         });
         /*datePicker.setGridDateFormatter(new GridDateFormatter() {
             @Override
-            public String format(int yyyy, int mm, int dd) {
+            public String format(int yyyy, int mm, int dd, String iso8601) {
                 return '~' + String.valueOf(dd) + '~';
             }
         });*/

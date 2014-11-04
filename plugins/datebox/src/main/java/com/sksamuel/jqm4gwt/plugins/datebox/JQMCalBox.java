@@ -129,7 +129,7 @@ public class JQMCalBox extends JQMText {
 
     /** Additional information can be added to days (1..31) buttons. */
     public static interface GridDateFormatter {
-        String format(int yyyy, int mm, int dd);
+        String format(int yyyy, int mm, int dd, String iso8601);
     }
 
     private GridDateFormatter gridDateFormatter;
@@ -226,7 +226,7 @@ public class JQMCalBox extends JQMText {
             sb.append(',').append(USE_CLEAR_BUTTON).append(bool2Str(useClearButton));
         }
         if (editable != null && editable == false) {
-            sb.append(',').append("\"openCallback\": \"mobileDateboxCallbackFalse\"");
+            sb.append(',').append("\"beforeOpenCallback\": \"mobileDateboxCallbackFalse\"");
             getElement().addClassName("jqm4gwt-non-editable");
         } else {
             getElement().removeClassName("jqm4gwt-non-editable");
@@ -839,27 +839,27 @@ public class JQMCalBox extends JQMText {
         return o.lang['default'][val];
     }-*/;
 
-    private String formatGridDate(JsDate d) {
+    /**
+     * @param mm - month 0-11, Jan = 0 .. Dec = 11
+     * @param dd - day 1-31
+     */
+    private String formatGridDate(int yyyy, int mm, int dd, String iso8601) {
         if (gridDateFormatter == null) {
-            return String.valueOf(d.getDate());
+            return String.valueOf(dd);
         } else {
-            return gridDateFormatter.format(d.getFullYear(), d.getMonth(), d.getDate());
+            return gridDateFormatter.format(yyyy, mm, dd, iso8601);
         }
     }
 
     private static native void initGridDateFormatter(Element elt, JQMCalBox ctrl) /*-{
         if (ctrl == null) {
-            $wnd.$(elt).datebox('setGridDateFormatter', null);
-            return;
+            $wnd.$(elt).datebox( { 'calFormatter': false } );
+        } else {
+            $wnd.$(elt).datebox( { 'calFormatter': function( date ) {
+                var s = ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDate(IIILjava/lang/String;)(date.Year, date.Month, date.Date, date.ISO);
+                return s;
+            }});
         }
-        $wnd.$(elt).datebox('setGridDateFormatter', function (dates) {
-            var strs = [];
-            $wnd.$.each(dates, function( index, item ) { // item == this
-                var s = ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDate(Lcom/google/gwt/core/client/JsDate;)(item);
-                strs.push(s);
-            });
-            return strs;
-        });
     }-*/;
 
     private void initGridDateFormatter() {
