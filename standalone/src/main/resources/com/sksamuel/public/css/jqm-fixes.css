@@ -3,3 +3,7 @@
     display: block;
   }
 }
+
+.ui-slider-track.ui-mini { /* https://github.com/jquery/jquery-mobile/issues/7821 */
+  margin: 0 15px 0 68px;
+}
