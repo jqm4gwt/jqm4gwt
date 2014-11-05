@@ -48,6 +48,7 @@ public class JQMCalBox extends JQMText {
     protected static final String MODE_CALBOX       = "\"mode\": \"calbox\"";
     protected static final String USE_INLINE        = "\"useInline\":"; // Show control inline in the page, negating any open and close actions
     protected static final String USE_INLINE_BLIND  = "\"useInlineBlind\":"; // Attach the control directly to the input element, and roll it down from there when opened
+    protected static final String HIDE_CONTAINER    = "\"hideContainer\":"; // Cause the original fieldcontain to be hidden on the page - really only appropriate with "useInline"
     protected static final String OVERRIDE_DATE_FMT = "\"overrideDateFormat\":";
     protected static final String WEEK_START_DAY    = "\"overrideCalStartDay\":";
     protected static final String DIALOG_LABEL      = "\"overrideDialogLabel\":";
@@ -72,6 +73,7 @@ public class JQMCalBox extends JQMText {
     protected static final String YEAR_PICK_MIN       = "\"calYearPickMin\":";
     protected static final String YEAR_PICK_MAX       = "\"calYearPickMax\":";
     protected static final String NO_HEADER           = "\"calNoHeader\":";
+    protected static final String NO_TITLE            = "\"useHeader\":"; // Refers to the header with the close button and the title
 
     // See http://dev.jtsage.com/jQM-DateBox/doc/3-1-themes/
     protected static final String THEME              = "\"theme\":";            // false means inherited theme
@@ -87,6 +89,7 @@ public class JQMCalBox extends JQMText {
 
     private Boolean useInline = null;
     private Boolean useInlineBlind = null;
+    private Boolean hideContainer = null;
     private String dateFormat = null;
     private Integer weekStartDay = null;
     private String dialogLabel = null;
@@ -101,6 +104,7 @@ public class JQMCalBox extends JQMText {
     private String yearPickMin = null;
     private String yearPickMax = null;
     private Boolean noHeader = null;
+    private Boolean noTitle = null;
 
     private Boolean showDays = null;
     private Boolean showWeek = null;
@@ -183,6 +187,9 @@ public class JQMCalBox extends JQMText {
         if (useInlineBlind != null) {
             sb.append(',').append(USE_INLINE_BLIND).append(bool2Str(useInlineBlind));
         }
+        if (hideContainer != null) {
+            sb.append(',').append(HIDE_CONTAINER).append(bool2Str(hideContainer));
+        }
         if (dateFormat != null && !dateFormat.isEmpty()) {
             sb.append(',').append(OVERRIDE_DATE_FMT).append('"').append(dateFormat).append('"');
         }
@@ -191,6 +198,9 @@ public class JQMCalBox extends JQMText {
         }
         if (noHeader != null) {
             sb.append(',').append(NO_HEADER).append(bool2Str(noHeader));
+        }
+        if (noTitle != null) {
+            sb.append(',').append(NO_TITLE).append(bool2Str(!noTitle));
         }
         if (weekStartDay != null) {
             sb.append(',').append(WEEK_START_DAY).append(String.valueOf(weekStartDay));
@@ -306,6 +316,16 @@ public class JQMCalBox extends JQMText {
         refreshDataOptions();
     }
 
+    public Boolean getHideContainer() {
+        return hideContainer;
+    }
+
+    /** Cause the original fieldcontain to be hidden on the page - really only appropriate with "useInline" */
+    public void setHideContainer(Boolean value) {
+        this.hideContainer = value;
+        refreshDataOptions();
+    }
+
     public String getDateFormat() {
         return dateFormat;
     }
@@ -339,8 +359,19 @@ public class JQMCalBox extends JQMText {
         return noHeader;
     }
 
+    /** Hide standard header (by default a plus button, the Month/Year combo, and a minus button) */
     public void setNoHeader(Boolean noHeader) {
         this.noHeader = noHeader;
+        refreshDataOptions();
+    }
+
+    public Boolean getNoTitle() {
+        return noTitle;
+    }
+
+    /** Refers to the header with the close button and the title */
+    public void setNoTitle(Boolean value) {
+        this.noTitle = value;
         refreshDataOptions();
     }
 
