@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt.plugins.datebox;
 
 import java.util.Date;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -55,6 +56,8 @@ public class JQMCalBox extends JQMText {
     protected static final String USE_CLEAR_BUTTON  = "\"useClearButton\":";
     protected static final String LOCK_INPUT        = "\"lockInput\":";
     protected static final String BUTTON_ICON       = "\"buttonIcon\":";
+    protected static final String NEXT_MONTH_ICON   = "\"calNextMonthIcon\":";
+    protected static final String PREV_MONTH_ICON   = "\"calPrevMonthIcon\":";
 
     // See http://dev.jtsage.com/jQM-DateBox/doc/5-0-control/
     // CalBox Specific - Display
@@ -97,6 +100,8 @@ public class JQMCalBox extends JQMText {
     private Boolean editable = true;
     private Boolean lockInput = null;
     private String buttonIcon = null;
+    private String nextMonthIcon = null;
+    private String prevMonthIcon = null;
 
     private Boolean useTodayButton = null;
     private Boolean useTomorrowButton = null;
@@ -134,6 +139,13 @@ public class JQMCalBox extends JQMText {
     /** Additional information can be added to days (1..31) buttons. */
     public static interface GridDateFormatter {
         String format(int yyyy, int mm, int dd, String iso8601);
+    }
+
+    public static interface GridDateFormatterEx extends GridDateFormatter {
+        /**
+         * @return - additional space separated classes for CSS styling (coloring, shaping, ...)
+         */
+        String getStyleNames(int yyyy, int mm, int dd, String iso8601);
     }
 
     private GridDateFormatter gridDateFormatter;
@@ -252,6 +264,12 @@ public class JQMCalBox extends JQMText {
         }
         if (buttonIcon != null && !buttonIcon.isEmpty()) {
             sb.append(',').append(BUTTON_ICON).append('"').append(buttonIcon).append('"');
+        }
+        if (nextMonthIcon != null && !nextMonthIcon.isEmpty()) {
+            sb.append(',').append(NEXT_MONTH_ICON).append('"').append(nextMonthIcon).append('"');
+        }
+        if (prevMonthIcon != null && !prevMonthIcon.isEmpty()) {
+            sb.append(',').append(PREV_MONTH_ICON).append('"').append(prevMonthIcon).append('"');
         }
         if (theme != null && !theme.isEmpty()) {
             sb.append(',').append(THEME).append('"').append(theme).append('"');
@@ -538,11 +556,40 @@ public class JQMCalBox extends JQMText {
     }
 
     /**
-     * This is the class of the button in the input element. Any valid ui-icon-xxx is fine.
+     * This is the class of the button in the input element.
      * <p/>Default value is calendar.
+     * <p/><a href="http://demos.jquerymobile.com/1.4.5/icons/">Icons</a>
      */
     public void setButtonIcon(String buttonIcon) {
         this.buttonIcon = buttonIcon;
+        refreshDataOptions();
+    }
+
+    public String getNextMonthIcon() {
+        return nextMonthIcon;
+    }
+
+    /**
+     * This allows customization of the Next Month button in the calendar header.
+     * <p/>Default value is plus.
+     * <p/><a href="http://demos.jquerymobile.com/1.4.5/icons/">Icons</a>
+     */
+    public void setNextMonthIcon(String nextMonthIcon) {
+        this.nextMonthIcon = nextMonthIcon;
+        refreshDataOptions();
+    }
+
+    public String getPrevMonthIcon() {
+        return prevMonthIcon;
+    }
+
+    /**
+     * This allows customization of the Previous Month button in the calendar header.
+     * <p/>Default value is minus.
+     * <p/><a href="http://demos.jquerymobile.com/1.4.5/icons/">Icons</a>
+     */
+    public void setPrevMonthIcon(String prevMonthIcon) {
+        this.prevMonthIcon = prevMonthIcon;
         refreshDataOptions();
     }
 
@@ -882,13 +929,39 @@ public class JQMCalBox extends JQMText {
         }
     }
 
+    private void formatGridDateEx(int yyyy, int mm, int dd, String iso8601, JavaScriptObject result) {
+        if (!(gridDateFormatter instanceof GridDateFormatterEx)) {
+            JQMContext.setJsObjValue(result, "text", String.valueOf(dd));
+            JQMContext.setJsObjValue(result, "class", "");
+        } else {
+            String text = gridDateFormatter.format(yyyy, mm, dd, iso8601);
+            String cls  = ((GridDateFormatterEx) gridDateFormatter).getStyleNames(yyyy, mm, dd, iso8601);
+            JQMContext.setJsObjValue(result, "text", text);
+            JQMContext.setJsObjValue(result, "class", cls);
+        }
+    }
+
+    private int getGridDateFormatterType() {
+        if (gridDateFormatter == null) return 0;
+        if (gridDateFormatter instanceof GridDateFormatterEx) return 2;
+        return 1;
+    }
+
     private static native void initGridDateFormatter(Element elt, JQMCalBox ctrl) /*-{
         if (ctrl == null) {
             $wnd.$(elt).datebox( { 'calFormatter': false } );
         } else {
             $wnd.$(elt).datebox( { 'calFormatter': function( date ) {
-                var s = ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDate(IIILjava/lang/String;)(date.Year, date.Month, date.Date, date.ISO);
-                return s;
+                var t = ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::getGridDateFormatterType()();
+                if (t === 0) return date.Date;
+                else if (t === 1) {
+                    var s = ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDate(IIILjava/lang/String;)(date.Year, date.Month, date.Date, date.ISO);
+                    return s;
+                } else {
+                    var rslt = {};
+                    ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDateEx(IIILjava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(date.Year, date.Month, date.Date, date.ISO, rslt);
+                    return rslt;
+                }
             }});
         }
     }-*/;

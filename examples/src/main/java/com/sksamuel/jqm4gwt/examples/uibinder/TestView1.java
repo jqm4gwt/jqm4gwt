@@ -996,10 +996,15 @@ public class TestView1 {
                 datePickerValueChanged.setText(datePicker.getValue());
             }
         });
-        /*datePicker.setGridDateFormatter(new GridDateFormatter() {
+        /*datePicker.setGridDateFormatter(new GridDateFormatterEx() {
             @Override
             public String format(int yyyy, int mm, int dd, String iso8601) {
                 return '~' + String.valueOf(dd) + '~';
+            }
+
+            @Override
+            public String getStyleNames(int yyyy, int mm, int dd, String iso8601) {
+                return dd % 2 == 0 ? "aaa bbb" : "ccc ddd";
             }
         });*/
 
