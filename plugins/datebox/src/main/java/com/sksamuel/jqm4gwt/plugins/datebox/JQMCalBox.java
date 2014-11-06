@@ -369,7 +369,7 @@ public class JQMCalBox extends JQMText {
 
     public void setUsePickers(Boolean usePickers) {
         this.usePickers = usePickers;
-        if (this.usePickers != null && this.usePickers) noHeader = true;
+        if (this.usePickers != null && this.usePickers && noHeader == null) noHeader = true;
         refreshDataOptions();
     }
 
