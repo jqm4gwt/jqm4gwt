@@ -73,6 +73,7 @@ public class JQMCalBox extends JQMText {
     protected static final String USE_TODAY_BUTTON    = "\"useTodayButton\":";
     protected static final String USE_TOMORROW_BUTTON = "\"useTomorrowButton\":";
     protected static final String USE_PICKERS         = "\"calUsePickers\":";
+    protected static final String USE_PICKERS_ICONS   = "\"calUsePickersIcons\":";
     protected static final String YEAR_PICK_MIN       = "\"calYearPickMin\":";
     protected static final String YEAR_PICK_MAX       = "\"calYearPickMax\":";
     protected static final String NO_HEADER           = "\"calNoHeader\":";
@@ -106,6 +107,7 @@ public class JQMCalBox extends JQMText {
     private Boolean useTodayButton = null;
     private Boolean useTomorrowButton = null;
     private Boolean usePickers = null;
+    private Boolean usePickersIcons = null;
     private String yearPickMin = null;
     private String yearPickMax = null;
     private Boolean noHeader = null;
@@ -207,6 +209,9 @@ public class JQMCalBox extends JQMText {
         }
         if (usePickers != null) {
             sb.append(',').append(USE_PICKERS).append(bool2Str(usePickers));
+        }
+        if (usePickersIcons != null) {
+            sb.append(',').append(USE_PICKERS_ICONS).append(bool2Str(usePickersIcons));
         }
         if (noHeader != null) {
             sb.append(',').append(NO_HEADER).append(bool2Str(noHeader));
@@ -370,6 +375,18 @@ public class JQMCalBox extends JQMText {
     public void setUsePickers(Boolean usePickers) {
         this.usePickers = usePickers;
         if (this.usePickers != null && this.usePickers && noHeader == null) noHeader = true;
+        refreshDataOptions();
+    }
+
+    public Boolean getUsePickersIcons() {
+        return usePickersIcons;
+    }
+
+    /**
+     * Only works with calNoHeader and calUsePickers turned on (true).
+     */
+    public void setUsePickersIcons(Boolean value) {
+        this.usePickersIcons = value;
         refreshDataOptions();
     }
 
