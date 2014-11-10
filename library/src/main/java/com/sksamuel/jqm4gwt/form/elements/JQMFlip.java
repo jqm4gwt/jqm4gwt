@@ -14,6 +14,7 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.ListBox;
+import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMCommon;
@@ -33,7 +34,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  *
  */
 public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasValue<String>,
-        HasChangeHandlers, HasClickHandlers, HasTapHandlers, HasMini<JQMFlip> {
+        HasChangeHandlers, HasClickHandlers, HasTapHandlers, HasMini<JQMFlip>, HasCorners<JQMFlip> {
 
     private final FormLabel label = new FormLabel();
 
@@ -345,6 +346,22 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
 
     public void setDataWrapper(String wrapper) {
         JQMCommon.setDataWrapper(select, wrapper);
+    }
+
+    @Override
+    public boolean isCorners() {
+        return JQMCommon.isCorners(select);
+    }
+
+    @Override
+    public void setCorners(boolean corners) {
+        JQMCommon.setCorners(select, corners);
+    }
+
+    @Override
+    public JQMFlip withCorners(boolean corners) {
+        setCorners(corners);
+        return this;
     }
 
 }

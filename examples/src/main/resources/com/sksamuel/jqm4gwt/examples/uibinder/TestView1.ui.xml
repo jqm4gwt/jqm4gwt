@@ -157,7 +157,8 @@
           <e:JQMFile text="File" corners="false" />
           <e:JQMFlip ui:field="flip"
             label1="Flip1" label2="Flip2" value1="flip1Value" value2="flip2Value" text="flipText"
-            value="flip1Value" /> <!-- theme="b" mini="true" textHidden="true" -->
+            value="flip1Value" /> 
+            <!-- theme="b" mini="true" textHidden="true" corners="false" -->
           <ly:JQMTable columns="3">
             <ly:cell addStyleNames="aaa bbb">
               <b:JQMButton ui:field="flipInfoBtn" text="Show Flip Info" mini="true" />

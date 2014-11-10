@@ -36,7 +36,8 @@
         text="Content Height to 75%" value="false" />
       <dt:JQMCalBox ui:field="datePicker" text="Birthday"
         dateFormat="%A %m/%d/%y" value="2013-10-25" useClearButton="true"
-        usePickers="true" yearPickMin="1901" yearPickMax="NOW" />
+        usePickers="true" noHeader="true" usePickersIcons="true" 
+        yearPickMin="1901" yearPickMax="NOW" />
     </f:JQMForm>
     
     <t:JQMFooter fixed="true">
