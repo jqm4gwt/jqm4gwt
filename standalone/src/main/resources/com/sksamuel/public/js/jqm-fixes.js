@@ -88,3 +88,15 @@ $.widget( "mobile.popup", $.mobile.popup, {
         return this._super( theEvent );
     }
 });
+
+// See https://github.com/jquery/jquery-mobile/issues/7830
+$.widget( "mobile.filterable", $.mobile.filterable, {
+    _onKeyPress: function( event ) {
+        if ( this._preventKeyPress ) {
+            if ( event.keyCode === $.ui.keyCode.ENTER ) event.preventDefault();
+            this._preventKeyPress = false;
+        } else {
+            this._super( event );
+        }
+    }
+});
