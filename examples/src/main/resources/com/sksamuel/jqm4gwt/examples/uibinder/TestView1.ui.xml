@@ -46,6 +46,11 @@
     .marginRight20 { margin-right: 20px; }
     .marginLeft10 { margin-left: 10px; }
     .marginLeft20 { margin-left: 20px; }
+    
+    .marginTopBottom0 {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
 
     @external .jqm4gwt-thead-groups, .ui-table-reflow .ui-table-cell-label-top;
     .jqm4gwt-thead-groups th, .ui-table-reflow tbody .ui-table-cell-label-top {
@@ -158,8 +163,8 @@
           <e:JQMFlip ui:field="flip"
             label1="Flip1" label2="Flip2" value1="flip1Value" value2="flip2Value" text="flipText"
             value="flip1Value" /> 
-            <!-- theme="b" mini="true" textHidden="true" corners="false" -->
-          <ly:JQMTable columns="3">
+            <!-- theme="b" trackTheme="a" mini="true" textHidden="true" corners="false" -->
+          <ly:JQMTable columns="4">
             <ly:cell addStyleNames="aaa bbb">
               <b:JQMButton ui:field="flipInfoBtn" text="Show Flip Info" mini="true" />
             </ly:cell>
@@ -168,6 +173,13 @@
             </ly:cell>
             <ly:cell>
               <b:JQMButton ui:field="setFlipNullBtn" text="Set Value to 'null'" mini="true" />
+            </ly:cell>
+            <ly:cell>
+              <g:FlowPanel>
+                <e:JQMText ui:field="flipTrackTheme" labelHidden="true" width="50px"
+                  addStyleNames="{style.inlineBlock} {style.marginTopBottom0}" />
+                <b:JQMButton ui:field="setFlipTrackTheme" text="Set Track Theme" mini="true" inline="true" />
+              </g:FlowPanel>
             </ly:cell>
           </ly:JQMTable>
 

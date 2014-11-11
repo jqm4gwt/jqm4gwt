@@ -14,10 +14,14 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.JQMPage;
+import com.sksamuel.jqm4gwt.JQMPageEvent;
+import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.events.HasTapHandlers;
 import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
@@ -52,6 +56,8 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
 
     /** setValue() in progress */
     private boolean inSetValue;
+
+    private String trackTheme;
 
     /**
      * Creates a new {@link JQMFlip} widget with the given label text and
@@ -227,6 +233,12 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
         }
     }-*/;
 
+    private static native boolean isReady(Element elt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
+        var w = $wnd.$(elt);
+        return w.data('mobile-flipswitch') !== undefined;
+    }-*/;
+
     /**
      * Sets the currently selected index.
      */
@@ -362,6 +374,56 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
     public JQMFlip withCorners(boolean corners) {
         setCorners(corners);
         return this;
+    }
+
+    public String getTrackTheme() {
+        return trackTheme;
+    }
+
+    /** Sets the theme for the track button */
+    public void setTrackTheme(String value) {
+        // data-track-theme is not available for flipswitch, so we have to hack it
+        trackTheme = value != null ? value.trim() : value;
+        refreshTrackTheme();
+    }
+
+    private void refreshTrackTheme() {
+        Element elt = select.getElement();
+        if (!select.isAttached() || !isReady(elt)) return;
+        Element par = elt.getParentElement();
+        if (par == null) return;
+        Element track = JQMCommon.findChild(par, "ui-flipswitch-on");
+        if (track != null && JQMCommon.hasStyle(track, "ui-btn")) {
+            if (trackTheme != null && !trackTheme.isEmpty()) {
+                track.removeClassName("ui-btn-inherit");
+                JQMButton.setTheme(track, trackTheme);
+            } else {
+                JQMButton.setTheme(track, "inherit");
+                track.removeAttribute("data-theme");
+            }
+        }
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        if (trackTheme != null && !trackTheme.isEmpty()) {
+            Widget p = getParent();
+            while (p != null) {
+                if (p instanceof JQMPage) {
+                    ((JQMPage) p).addPageHandler(new JQMPageEvent.DefaultHandler() {
+                        @Override
+                        public void onShow(JQMPageEvent event) {
+                            super.onShow(event);
+                            refreshTrackTheme();
+                        }
+                    });
+                    break;
+                }
+                p = p.getParent();
+            }
+            if (!(p instanceof JQMPage)) refreshTrackTheme();
+        }
     }
 
 }

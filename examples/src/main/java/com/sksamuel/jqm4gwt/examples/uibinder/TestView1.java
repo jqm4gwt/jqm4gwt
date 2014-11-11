@@ -214,6 +214,12 @@ public class TestView1 {
     JQMButton setFlipNullBtn;
 
     @UiField
+    JQMText flipTrackTheme;
+
+    @UiField
+    JQMButton setFlipTrackTheme;
+
+    @UiField
     JQMButton headerTestBtn1;
 
     @UiField
@@ -532,6 +538,11 @@ public class TestView1 {
     @UiHandler("setFlipNullBtn")
     void setFlipNullBtnClick(ClickEvent e) {
         flip.setValue(null);
+    }
+
+    @UiHandler("setFlipTrackTheme")
+    void setFlipTrackThemeClick(ClickEvent e) {
+        flip.setTrackTheme(flipTrackTheme.getValue());
     }
 
     @UiHandler("datePickerGetValueBtn")

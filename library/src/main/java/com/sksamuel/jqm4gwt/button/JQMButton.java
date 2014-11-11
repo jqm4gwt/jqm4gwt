@@ -648,21 +648,23 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     @Override
     protected void onLoad() {
         super.onLoad();
-        Widget p = getParent();
-        while (p != null) {
-            if (p instanceof JQMPage) {
-                ((JQMPage) p).addPageHandler(new JQMPageEvent.DefaultHandler() {
-                    @Override
-                    public void onShow(JQMPageEvent event) {
-                        super.onShow(event);
-                        checkAlwaysHover();
-                    }
-                });
-                break;
+        if (alwaysHover) {
+            Widget p = getParent();
+            while (p != null) {
+                if (p instanceof JQMPage) {
+                    ((JQMPage) p).addPageHandler(new JQMPageEvent.DefaultHandler() {
+                        @Override
+                        public void onShow(JQMPageEvent event) {
+                            super.onShow(event);
+                            checkAlwaysHover();
+                        }
+                    });
+                    break;
+                }
+                p = p.getParent();
             }
-            p = p.getParent();
+            if (!(p instanceof JQMPage)) checkAlwaysHover();
         }
-        if (!(p instanceof JQMPage)) checkAlwaysHover();
     }
 
     private void checkAlwaysHover() {
@@ -745,7 +747,11 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     @Override
     public void setTheme(String themeName) {
-        JQMCommon.setThemeEx(this, themeName, JQMCommon.STYLE_UI_BTN,
+        setTheme(this.getElement(), themeName);
+    }
+
+    public static void setTheme(Element elt, String themeName) {
+        JQMCommon.setThemeEx(elt, themeName, JQMCommon.STYLE_UI_BTN,
                 /*excludes:*/ JQMCommon.STYLE_UI_BTN_INLINE, JQMCommon.STYLE_UI_BTN_ICONPOS,
                 JQMCommon.STYLE_UI_BTN_ACTIVE);
     }
