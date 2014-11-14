@@ -629,6 +629,28 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
     }
 
     /**
+     * Ignores dividers, only counts JQMListItem bands.
+     *
+     *  @return - logical index of this item among other items (can be useful for matching/sync
+     *  between underlying data structure and UI in case of dynamic/multiple dividers
+     *  and JQMListItem's click handlers).
+     **/
+    public int findItemOnlyIdx(JQMListItem item) {
+        if (item == null) return -1;
+        List<JQMListItem> items = getItems();
+        if (items == null) return -1;
+        int i = items.indexOf(item);
+        if (i == -1) return -1;
+        int j = 0;
+        for (JQMListItem k : items) {
+            if (k == null) continue;
+            if (k == item) return j;
+            j++;
+        }
+        return -1;
+    }
+
+    /**
      * Find the list item with the given tag. This method will search all the items and return
      * the first item found with the given tag.
      *
