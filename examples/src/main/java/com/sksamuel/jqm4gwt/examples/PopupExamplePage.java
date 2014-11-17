@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt.examples;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMPopup;
@@ -73,6 +74,24 @@ public class PopupExamplePage extends JQMPage {
             add(popOpen);
             add(new Div());
             add(btnTestOpen);
+        }
+
+        {
+            final JQMPopup pop = new JQMPopup();
+            pop.add(new Label("penguin clicked"));
+            pop.setPosition("#penguin");
+            Image penguin = new Image("http://upload.wikimedia.org/wikipedia/commons/0/07/Emperor_Penguin_Manchot_empereur.jpg");
+            penguin.setWidth("300px");
+            penguin.addClickHandler( new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    pop.open();
+                }
+            });
+            penguin.getElement().setId("penguin");
+            add(pop);
+            add(new Div());
+            add(penguin);
         }
     }
 }
