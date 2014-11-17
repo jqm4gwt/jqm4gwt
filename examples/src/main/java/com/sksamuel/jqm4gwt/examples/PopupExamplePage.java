@@ -1,11 +1,14 @@
 package com.sksamuel.jqm4gwt.examples;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMPopup;
 import com.sksamuel.jqm4gwt.Transition;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.button.JQMButtonGroup;
+import com.sksamuel.jqm4gwt.html.Div;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 16 Sep 2012 00:52:48
@@ -52,6 +55,24 @@ public class PopupExamplePage extends JQMPage {
 				add(new JQMButton(t.getJqmValue(), popup).withInline(true));
 
 			}
+		}
+
+		{
+		    final JQMPopup popOpen = new JQMPopup();
+            popOpen.add(new Label("popup.open() works"));
+            popOpen.setPosition("#btnTestOpen");
+            JQMButton btnTestOpen = new JQMButton("Test popup.open()");
+            btnTestOpen.setId("btnTestOpen");
+            btnTestOpen.setInline(true);
+            btnTestOpen.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    popOpen.open();
+                }
+            });
+            add(popOpen);
+            add(new Div());
+            add(btnTestOpen);
 		}
 	}
 }
