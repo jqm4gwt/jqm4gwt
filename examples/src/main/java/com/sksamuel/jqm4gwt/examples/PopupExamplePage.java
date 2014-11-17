@@ -16,49 +16,49 @@ import com.sksamuel.jqm4gwt.html.Div;
  */
 public class PopupExamplePage extends JQMPage {
 
-	public PopupExamplePage() {
-		setHeader("Popups");
+    public PopupExamplePage() {
+        setHeader("Popups");
 
-		JQMPopup popup = new JQMPopup();
-		popup.add(new Label("This is a popup with the ui-content class added to the popup container."));
-		popup.setPadding(true);
-		JQMButton button = new JQMButton("Popup with padding", popup);
-		add(button);
-		add(popup);
+        JQMPopup popup = new JQMPopup();
+        popup.add(new Label("This is a popup with the ui-content class added to the popup container."));
+        popup.setPadding(true);
+        JQMButton button = new JQMButton("Popup with padding", popup);
+        add(button);
+        add(popup);
 
-		{
-			popup = new JQMPopup();
-			popup.add(new Label("I am positioned to the window."));
-			popup.setPosition("window");
-			JQMButton button1 = new JQMButton("Position to window", popup);
-			add(popup);
+        {
+            popup = new JQMPopup();
+            popup.add(new Label("I am positioned to the window."));
+            popup.setPosition("window");
+            JQMButton button1 = new JQMButton("Position to window", popup);
+            add(popup);
 
-			popup = new JQMPopup();
-			popup.add(new Label("I am positioned over the origin."));
-			JQMButton button2 = new JQMButton("Position to origin", popup);
+            popup = new JQMPopup();
+            popup.add(new Label("I am positioned over the origin."));
+            JQMButton button2 = new JQMButton("Position to origin", popup);
 
-			add(new JQMButtonGroup(button1, button2).withHorizontal());
-			add(popup);
+            add(new JQMButtonGroup(button1, button2).withHorizontal());
+            add(popup);
 
-		}
+        }
 
-		{
+        {
 
-			popup = new JQMPopup(new Label("No transition")).withPadding(true);
-			add(popup);
-			add(new JQMButton("No transition", popup).withInline(true));
+            popup = new JQMPopup(new Label("No transition")).withPadding(true);
+            add(popup);
+            add(new JQMButton("No transition", popup).withInline(true));
 
-			for (Transition t : Transition.values()) {
+            for (Transition t : Transition.values()) {
 
-				popup = new JQMPopup(new Label("I am a " + t.getJqmValue() + " transition")).withPadding(true);
-				add(popup.withTransition(t));
-				add(new JQMButton(t.getJqmValue(), popup).withInline(true));
+                popup = new JQMPopup(new Label("I am a " + t.getJqmValue() + " transition")).withPadding(true);
+                add(popup.withTransition(t));
+                add(new JQMButton(t.getJqmValue(), popup).withInline(true));
 
-			}
-		}
+            }
+        }
 
-		{
-		    final JQMPopup popOpen = new JQMPopup();
+        {
+            final JQMPopup popOpen = new JQMPopup();
             popOpen.add(new Label("popup.open() works"));
             popOpen.setPosition("#btnTestOpen");
             JQMButton btnTestOpen = new JQMButton("Test popup.open()");
@@ -73,6 +73,6 @@ public class PopupExamplePage extends JQMPage {
             add(popOpen);
             add(new Div());
             add(btnTestOpen);
-		}
-	}
+        }
+    }
 }
