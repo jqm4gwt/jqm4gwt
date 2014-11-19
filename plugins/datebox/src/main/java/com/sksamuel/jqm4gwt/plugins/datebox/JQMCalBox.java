@@ -886,6 +886,38 @@ public class JQMCalBox extends JQMText {
         return JQMContext.jsDateToDate(jsd);
     }
 
+    public String getIso8601() {
+        if (input == null) return null;
+        if (!isReady()) return dateToIso8601(delayedSetDate);
+
+        if (isInternSetDate) return dateToIso8601(internDateToSet);
+
+        String s = input.getText();
+        // open/close calendar even without any selection, sets js control's date to Now,
+        // but we don't want this behavior, i.e. text is empty means no date is chosen!
+        if (s == null || s.isEmpty()) return null;
+
+        JsDate jsd = internGetDate(input.getElement());
+        if (jsd == null) return null;
+        int yyyy = jsd.getFullYear();
+        int mm = jsd.getMonth() + 1;
+        int dd = jsd.getDate();
+        StringBuilder sb = new StringBuilder();
+        sb.append(yyyy).append('-').append(mm).append('-').append(dd);
+        return sb.toString();
+    }
+
+    @SuppressWarnings("deprecation")
+    public static String dateToIso8601(Date d) {
+        if (d == null) return null;
+        int yyyy = d.getYear() + 1900;
+        int mm = d.getMonth() + 1;
+        int dd = d.getDate();
+        StringBuilder sb = new StringBuilder();
+        sb.append(yyyy).append('-').append(mm).append('-').append(dd);
+        return sb.toString();
+    }
+
     /**
      * Doesn't change anything, just formats passed date as string according to widget's current settings.
      */
