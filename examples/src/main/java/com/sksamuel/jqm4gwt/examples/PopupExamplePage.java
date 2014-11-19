@@ -1,11 +1,14 @@
 package com.sksamuel.jqm4gwt.examples;
 
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMPopup;
+import com.sksamuel.jqm4gwt.JQMPopupEvent;
+import com.sksamuel.jqm4gwt.LoadingIndicator;
 import com.sksamuel.jqm4gwt.Transition;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.button.JQMButtonGroup;
@@ -77,6 +80,9 @@ public class PopupExamplePage extends JQMPage {
         }
 
         {
+            final LoadingIndicator loading = new LoadingIndicator();
+            loading.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+            loading.setVisible(false);
             JQMButton btnDynamicPop = new JQMButton("Test dynamic popup");
             btnDynamicPop.setId("btnDynamicPop");
             btnDynamicPop.setInline(true);
@@ -90,14 +96,22 @@ public class PopupExamplePage extends JQMPage {
                     img.addStyleName("dynamicPopImg");
                     pop.add(img);
                     add(pop);
+                    loading.setVisible(true);
+                    pop.addPopupHandler(new JQMPopupEvent.DefaultHandler() {
+                        @Override
+                        public void onAfterOpen(JQMPopupEvent event) {
+                            loading.setVisible(false);
+                        }
+                    });
                     pop.waitInitOpen(".dynamicPopImg");
-                    // In case of static content (there is no dynamically loaded images),
+                    // In case of static content (there are no dynamically loaded images),
                     // simpler code can be used to initialize popup:
                     // pop.initDynamic();
                     // pop.open();
                 }
             });
             add(btnDynamicPop);
+            add(loading);
         }
 
         {

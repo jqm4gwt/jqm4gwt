@@ -57,7 +57,10 @@ public class JQMPopup extends JQMContainer {
         $wnd.$(elt).popup();
     }-*/;
 
-    /** Initialize dynamically added popup (for example added after page is loaded) */
+    /**
+     * Initialize dynamically added popup with static content (for example added after page is loaded).
+     * <p/> Also see {@link JQMPopup#waitInitOpen(String)} if you need to wait for images to be loaded.
+     */
     public void initDynamic() {
         initialize(getElement());
     }
@@ -66,23 +69,24 @@ public class JQMPopup extends JQMContainer {
         // Wait with opening the popup until the popup image has been loaded in the DOM.
         // This ensures the popup gets the correct size and position
         var pop = $wnd.$(elt);
-        pop.css("visibility", "hidden");
+        var saveDisp = pop.css("display");
+        if (saveDisp !== "none") pop.css("display", "none");
         $wnd.$( waitForSelector, elt ).load(function() {
-            pop.css("visibility", "visible");
+            pop.css("display", saveDisp);
             pop.popup();
             pop.popup( "open" );
             clearTimeout( fallback ); // Clear the fallback
         });
         // Fallback in case the browser doesn't fire a load event
         var fallback = setTimeout(function() {
-            pop.css("visibility", "visible");
+            pop.css("display", saveDisp);
             pop.popup();
             pop.popup( "open" );
         }, 2000);
     }-*/;
 
     /**
-     * First wait for some elements to be loaded, then initialize and open dynamically added popup.
+     * First wait till some elements are loaded, then initialize and open dynamically added popup.
      * <p/> See <a href="http://demos.jquerymobile.com/1.4.5/popup-dynamic/#&ui-state=dialog&ui-state=dialog&ui-state=dialog">Dynamic popup with images</a>
      */
     public void waitInitOpen(String waitForSelector) {
