@@ -77,11 +77,35 @@ public class PopupExamplePage extends JQMPage {
         }
 
         {
+            JQMButton btnDynamicPop = new JQMButton("Test dynamic popup");
+            btnDynamicPop.setId("btnDynamicPop");
+            btnDynamicPop.setInline(true);
+            btnDynamicPop.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    JQMPopup pop = new JQMPopup();
+                    pop.add(new Label("Dynamic popup works"));
+                    pop.setPosition("#btnDynamicPop");
+                    Image img = new Image("http://www.hq.nasa.gov/alsj/a11/AS11-40-5903.jpg");
+                    img.addStyleName("dynamicPopImg");
+                    pop.add(img);
+                    add(pop);
+                    pop.waitInitOpen(".dynamicPopImg");
+                    // In case of static content (there is no dynamically loaded images),
+                    // simpler code can be used to initialize popup:
+                    // pop.initDynamic();
+                    // pop.open();
+                }
+            });
+            add(btnDynamicPop);
+        }
+
+        {
             final JQMPopup pop = new JQMPopup();
             pop.add(new Label("penguin clicked"));
             pop.setPosition("#penguin");
             Image penguin = new Image("http://upload.wikimedia.org/wikipedia/commons/0/07/Emperor_Penguin_Manchot_empereur.jpg");
-            penguin.setWidth("300px");
+            penguin.setWidth("320px");
             penguin.addClickHandler( new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
