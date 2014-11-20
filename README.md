@@ -31,9 +31,9 @@ and a self-contained version of the module providing all of the dependent JQuery
 Jqm4gwt also provides a useful form framework that enables rapid prototyping of form pages, including ajax submission and validation.
 See http://code.google.com/p/jqm4gwt/wiki/FormFramework
 
-For more information, see the [Frequently Asked Questions] (https://github.com/sksamuel/jqm4gwt/wiki/Frequently-Asked-Questions).
+For more information, see the [Frequently Asked Questions] (https://github.com/jqm4gwt/jqm4gwt/wiki/Frequently-Asked-Questions).
 
-Please contribute with pull requests! See the [Contributors Guidelines] (https://github.com/sksamuel/jqm4gwt/wiki/Contributors-Guidelines) to assure the health of the project.
+Please contribute with pull requests! See the [Contributors Guidelines] (https://github.com/jqm4gwt/jqm4gwt/wiki/Contributors-Guidelines) to assure the health of the project.
 
 Examples
 ========
