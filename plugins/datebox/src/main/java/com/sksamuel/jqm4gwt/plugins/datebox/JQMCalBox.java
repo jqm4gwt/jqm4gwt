@@ -888,9 +888,9 @@ public class JQMCalBox extends JQMText {
 
     public String getIso8601() {
         if (input == null) return null;
-        if (!isReady()) return dateToIso8601(delayedSetDate);
+        if (!isReady()) return dateAsIso8601(delayedSetDate);
 
-        if (isInternSetDate) return dateToIso8601(internDateToSet);
+        if (isInternSetDate) return dateAsIso8601(internDateToSet);
 
         String s = input.getText();
         // open/close calendar even without any selection, sets js control's date to Now,
@@ -902,19 +902,47 @@ public class JQMCalBox extends JQMText {
         int yyyy = jsd.getFullYear();
         int mm = jsd.getMonth() + 1;
         int dd = jsd.getDate();
-        StringBuilder sb = new StringBuilder();
-        sb.append(yyyy).append('-').append(mm).append('-').append(dd);
-        return sb.toString();
+        return dateAsIso8601(yyyy, mm, dd);
     }
 
     @SuppressWarnings("deprecation")
-    public static String dateToIso8601(Date d) {
+    public static String dateAsIso8601(Date d) {
         if (d == null) return null;
         int yyyy = d.getYear() + 1900;
         int mm = d.getMonth() + 1;
         int dd = d.getDate();
+        return dateAsIso8601(yyyy, mm, dd);
+    }
+
+    /**
+     * @return - date in ISO8601 format, i.e. 2015-01-09
+     */
+    public static String dateAsIso8601(int yyyy, int mm, int dd) {
         StringBuilder sb = new StringBuilder();
-        sb.append(yyyy).append('-').append(mm).append('-').append(dd);
+        String s = String.valueOf(yyyy);
+        int p = 4 - s.length();
+        while (p > 0) {
+            sb.append('0');
+            p--;
+        }
+        sb.append(s).append('-');
+
+        s = String.valueOf(mm);
+        p = 2 - s.length();
+        while (p > 0) {
+            sb.append('0');
+            p--;
+        }
+        sb.append(s).append('-');
+
+        s = String.valueOf(dd);
+        p = 2 - s.length();
+        while (p > 0) {
+            sb.append('0');
+            p--;
+        }
+        sb.append(s);
+
         return sb.toString();
     }
 
