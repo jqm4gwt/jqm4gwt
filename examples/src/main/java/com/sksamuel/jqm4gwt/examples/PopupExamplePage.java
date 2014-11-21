@@ -118,8 +118,8 @@ public class PopupExamplePage extends JQMPage {
             final JQMPopup pop = new JQMPopup();
             pop.add(new Label("penguin clicked"));
             pop.setPosition("#penguin");
-            Image penguin = new Image("http://upload.wikimedia.org/wikipedia/commons/0/07/Emperor_Penguin_Manchot_empereur.jpg");
-            penguin.setWidth("320px");
+            Image penguin = new Image("http://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Emperor_Penguin_Manchot_empereur.jpg/222px-Emperor_Penguin_Manchot_empereur.jpg");
+            //penguin.setWidth("320px");
             penguin.addClickHandler( new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
