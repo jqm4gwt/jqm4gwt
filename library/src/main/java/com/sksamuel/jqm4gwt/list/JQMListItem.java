@@ -262,9 +262,16 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
     }
 
     private void moveThisChildrenToAnchor() {
-        for (int k = 0; k < getElement().getChildCount(); k++) {
-            Node node = getElement().getChild(k);
-            getElement().removeChild(node);
+        Element elt = getElement();
+        int cnt = elt.getChildCount();
+        if (cnt == 0) return;
+        List<Node> move = new ArrayList<Node>(cnt);
+        for (int i = 0; i < cnt; i++) {
+            move.add(elt.getChild(i));
+        }
+        for (int i = 0; i < move.size(); i++) {
+            Node node = move.get(i);
+            elt.removeChild(node);
             anchor.appendChild(node);
         }
     }
@@ -555,8 +562,8 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
                 anchor.setAttribute("href", url);
                 moveThisChildrenToAnchor();
                 cleanUpLI();
-                getElement().appendChild(anchor);
                 prepareAnchorForControlGroup();
+                getElement().appendChild(anchor);
                 checkAnchorPanel();
             } else {
                 // need to make anchor and move children to it
@@ -592,7 +599,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         if (anchor == null) setUrl("#");
         split = Document.get().createAnchorElement();
         split.setAttribute("href", url);
-        getElement().appendChild(split);
+        getElement().insertAfter(split, anchor);
         setSplitTheme(splitTheme);
         checkSplitPadding();
     }
@@ -631,7 +638,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
     }
 
     private void checkSplitPadding() {
-        if (anchor == null || controlGroup == null) return;
+        // if (anchor == null || controlGroup == null) return;
         // Not needed anymore in jqm 1.4.x
         // anchor.getStyle().setPaddingRight(split == null ? 0 : 42, Unit.PX);
     }
@@ -684,7 +691,18 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
     private void checkAnchorPanel() {
         if (anchorPanel == null) {
             anchorPanel = new CustomFlowPanel(anchor);
-            add(anchorPanel);
+            int anchorIdx = -1;
+            Node parent = anchor.getParentNode();
+            if (parent != null && parent == getElement()) {
+                for (int i = 0; i < parent.getChildCount(); i++) {
+                    if (parent.getChild(i) == anchor) {
+                        anchorIdx = i;
+                        break;
+                    }
+                }
+            }
+            if (anchorIdx >= 0) insert(anchorPanel, anchorIdx);
+            else add(anchorPanel);
         }
         if (controlGroupRoot != null && controlGroupRoot.getParent() != anchorPanel) {
             anchorPanel.add(controlGroupRoot);
