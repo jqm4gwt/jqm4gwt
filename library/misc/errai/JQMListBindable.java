@@ -434,7 +434,9 @@ public class JQMListBindable<M> extends JQMList
     @Override
     public void setValue(List<M> value, boolean fireEvents) {
         List<M> oldValue = getValue();
-        setDataItems(value);
+        // if list changed, BindibleProxy will call updateWidgetsAndFire() -> this.setValue()
+        // but we may already listen to passed list and in such case should not call setDataItems()
+        if (oldValue != value) setDataItems(value);
         if (fireEvents) {
             ValueChangeEvent.fireIfNotEqual(this, oldValue, value);
         }
