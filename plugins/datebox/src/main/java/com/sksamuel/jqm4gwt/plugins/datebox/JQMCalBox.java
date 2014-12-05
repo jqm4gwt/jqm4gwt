@@ -17,6 +17,7 @@ import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
+import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBoxEvent.DisplayChangeData;
 
 /**
  * <p> When you add {@literal <inherits name='com.sksamuel.Jqm4gwt-datebox' />} to yourApp.gwt.xml
@@ -140,17 +141,19 @@ public class JQMCalBox extends JQMText {
 
     /** Additional information can be added to days (1..31) buttons. */
     public static interface GridDateFormatter {
-        String format(int yyyy, int mm, int dd, String iso8601);
+        String format(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible);
     }
 
     public static interface GridDateFormatterEx extends GridDateFormatter {
         /**
          * @return - additional space separated classes for CSS styling (coloring, shaping, ...)
          */
-        String getStyleNames(int yyyy, int mm, int dd, String iso8601);
+        String getStyleNames(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible);
     }
 
     private GridDateFormatter gridDateFormatter;
+
+    private boolean calBoxHandlerAdded;
 
     static {
         addJsParts();
@@ -792,6 +795,7 @@ public class JQMCalBox extends JQMText {
                         super.onInit(event);
                         setDate(delayedSetDate);
                         initGridDateFormatter();
+                        initDisplayChange();
                     }
                 });
                 break;
@@ -963,6 +967,18 @@ public class JQMCalBox extends JQMText {
         return $wnd.$(elt).datebox('getTheDate');
     }-*/;
 
+    private static native boolean internIsSelDateVisible(Element elt) /*-{
+        return $wnd.$(elt).datebox('dateVisible');
+    }-*/;
+
+    /**
+     * @return - true if the selected calendar date is visible.
+     * <p/> Only valid for calbox, otherwise it will always return true.
+     */
+    public boolean isSelectedDateVisible() {
+        return internIsSelDateVisible(input.getElement());
+    }
+
     private static native void internalSetDate(Element elt, double d) /*-{
         $wnd.$(elt).datebox('setTheDate', new $wnd.Date(d));
     }-*/;
@@ -998,21 +1014,23 @@ public class JQMCalBox extends JQMText {
      * @param mm - month 0-11, Jan = 0 .. Dec = 11
      * @param dd - day 1-31
      */
-    private String formatGridDate(int yyyy, int mm, int dd, String iso8601) {
+    private String formatGridDate(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible) {
         if (gridDateFormatter == null) {
             return String.valueOf(dd);
         } else {
-            return gridDateFormatter.format(yyyy, mm, dd, iso8601);
+            return gridDateFormatter.format(yyyy, mm, dd, iso8601, selectedDateVisible);
         }
     }
 
-    private void formatGridDateEx(int yyyy, int mm, int dd, String iso8601, JavaScriptObject result) {
+    private void formatGridDateEx(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible,
+            JavaScriptObject result) {
         if (!(gridDateFormatter instanceof GridDateFormatterEx)) {
             JQMContext.setJsObjValue(result, "text", String.valueOf(dd));
             JQMContext.setJsObjValue(result, "class", "");
         } else {
-            String text = gridDateFormatter.format(yyyy, mm, dd, iso8601);
-            String cls  = ((GridDateFormatterEx) gridDateFormatter).getStyleNames(yyyy, mm, dd, iso8601);
+            String text = gridDateFormatter.format(yyyy, mm, dd, iso8601, selectedDateVisible);
+            String cls  = ((GridDateFormatterEx) gridDateFormatter).getStyleNames(
+                    yyyy, mm, dd, iso8601, selectedDateVisible);
             JQMContext.setJsObjValue(result, "text", text);
             JQMContext.setJsObjValue(result, "class", cls);
         }
@@ -1032,11 +1050,11 @@ public class JQMCalBox extends JQMText {
                 var t = ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::getGridDateFormatterType()();
                 if (t === 0) return date.Date;
                 else if (t === 1) {
-                    var s = ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDate(IIILjava/lang/String;)(date.Year, date.Month, date.Date, date.ISO);
+                    var s = ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDate(IIILjava/lang/String;Z)(date.Year, date.Month, date.Date, date.ISO, date.dateVisible);
                     return s;
                 } else {
                     var rslt = {};
-                    ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDateEx(IIILjava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(date.Year, date.Month, date.Date, date.ISO, rslt);
+                    ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDateEx(IIILjava/lang/String;ZLcom/google/gwt/core/client/JavaScriptObject;)(date.Year, date.Month, date.Date, date.ISO, date.dateVisible, rslt);
                     return rslt;
                 }
             }});
@@ -1075,6 +1093,40 @@ public class JQMCalBox extends JQMText {
      */
     public void setIconAlt(boolean value) {
         JQMCommon.setIconAlt(this, value);
+    }
+
+    public HandlerRegistration addCalBoxHandler(JQMCalBoxEvent.Handler handler) {
+        if (handler == null) return null;
+        HandlerRegistration rslt = addHandler(handler, JQMCalBoxEvent.getType());
+        if (!calBoxHandlerAdded) {
+            calBoxHandlerAdded = true;
+            initDisplayChange();
+        }
+        return rslt;
+    }
+
+    private static native void initDisplayChange(Element elt, JQMCalBox ctrl) /*-{
+        if (ctrl == null) {
+            $wnd.$(elt).off('datebox.displayChange');
+        } else {
+            $wnd.$(elt).on('datebox.displayChange', function (e, p) {
+                if ( p.method === 'displayChange' ) {
+                    var changeAmount = p.thisChangeAmount == null ? 0 : p.thisChangeAmount;
+                    ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::fireDisplayChange(Lcom/google/gwt/core/client/JsDate;Lcom/google/gwt/core/client/JsDate;Ljava/lang/String;I)(p.shownDate, p.selectedDate, p.thisChange, changeAmount);
+                }
+            });
+        }
+    }-*/;
+
+    private void initDisplayChange() {
+        if (!calBoxHandlerAdded || !isReady()) return;
+        initDisplayChange(input.getElement(), this);
+    }
+
+    private void fireDisplayChange(JsDate shownDate, JsDate selectedDate,
+                                   String thisChange, int thisChangeAmount) {
+        JQMCalBoxEvent.fire(this, new DisplayChangeData(JQMContext.jsDateToDate(shownDate),
+                JQMContext.jsDateToDate(selectedDate), thisChange, thisChangeAmount));
     }
 
 }
