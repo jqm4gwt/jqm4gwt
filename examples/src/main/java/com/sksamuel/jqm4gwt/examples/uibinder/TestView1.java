@@ -337,6 +337,9 @@ public class TestView1 {
     JQMButtonGroup btnGroup1;
 
     @UiField
+    JQMCheckbox cbSetPageTheme;
+
+    @UiField
     JQMSelectWithIcons ddIcons;
 
     @UiField
@@ -904,6 +907,20 @@ public class TestView1 {
             }
         });
 
+        for (int i = 0; i < btnGroup1.getWidgetCount(); i++) {
+            final Widget w = btnGroup1.getWidget(i);
+            if (w instanceof JQMButton) {
+                ((JQMButton) w).addClickHandler(new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        if (cbSetPageTheme.isChecked()) {
+                            page.setTheme(((JQMButton) w).getText().toLowerCase());
+                        }
+                    }
+                });
+            }
+        }
+
         String css = JQMCommon.getImageCss(ImageResources.INSTANCE.ajaxLoader(),
                                            JQMCommon.STYLE_UI_ICON + "loader");
         StyleInjector.inject(css);
@@ -1009,13 +1026,20 @@ public class TestView1 {
         });
         /*datePicker.setGridDateFormatter(new GridDateFormatterEx() {
             @Override
-            public String format(int yyyy, int mm, int dd, String iso8601) {
+            public String format(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible) {
                 return '~' + String.valueOf(dd) + '~';
             }
 
             @Override
-            public String getStyleNames(int yyyy, int mm, int dd, String iso8601) {
+            public String getStyleNames(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible) {
                 return dd % 2 == 0 ? "aaa bbb" : "ccc ddd";
+            }
+        });*/
+
+        /*datePicker.addCalBoxHandler(new JQMCalBoxEvent.DefaultHandler() {
+            @Override
+            public void onDisplayChange(JQMCalBoxEvent event) {
+                Window.alert(event.getData().toString());
             }
         });*/
 

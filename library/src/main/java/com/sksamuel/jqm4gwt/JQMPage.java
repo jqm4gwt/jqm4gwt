@@ -1146,4 +1146,16 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         JQMCommon.setAttribute(this, "data-close-btn-text", value);
     }
 
+    @Override
+    public String getTheme() {
+        String rslt = JQMCommon.getThemeEx(this, "ui-page-theme-");
+        if (rslt == null || rslt.isEmpty()) rslt = super.getTheme();
+        return rslt;
+    }
+
+    @Override
+    public void setTheme(String theme) {
+        JQMCommon.setThemeEx(this, theme, "ui-page-theme-");
+    }
+
 }
