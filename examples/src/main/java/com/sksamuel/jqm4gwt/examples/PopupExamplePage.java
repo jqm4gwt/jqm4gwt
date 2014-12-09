@@ -3,6 +3,8 @@ package com.sksamuel.jqm4gwt.examples;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.sksamuel.jqm4gwt.JQMPage;
@@ -13,6 +15,7 @@ import com.sksamuel.jqm4gwt.Transition;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.button.JQMButtonGroup;
 import com.sksamuel.jqm4gwt.html.Div;
+import com.sksamuel.jqm4gwt.html.Span;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 16 Sep 2012 00:52:48
@@ -89,8 +92,23 @@ public class PopupExamplePage extends JQMPage {
             btnDynamicPop.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    JQMPopup pop = new JQMPopup();
-                    pop.add(new Label("Dynamic popup works"));
+                    final JQMPopup pop = new JQMPopup();
+                    FlowPanel pa = new FlowPanel();
+                    Span la = new Span();
+                    la.setText("Dynamic popup works");
+                    pa.add(la);
+                    JQMButton btn = new JQMButton("More Info...");
+                    btn.setInline(true);
+                    btn.setMini(true);
+                    btn.addClickHandler(new ClickHandler() {
+                        @Override
+                        public void onClick(ClickEvent event) {
+                            Window.alert("Welcome to the Moon!");
+                            pop.close();
+                        }
+                    });
+                    pa.add(btn);
+                    pop.add(pa);
                     pop.setPosition("#btnDynamicPop");
                     Image img = new Image("http://www.hq.nasa.gov/alsj/a11/AS11-40-5903.jpg");
                     img.addStyleName("dynamicPopImg");
