@@ -377,13 +377,14 @@
           </t:JQMNavBar>
           <h:Paragraph />
           <h:Span text="Navbar with last clicked highlighting (icons pos is RIGHT)" />
-          <t:JQMNavBar iconPos="RIGHT" highlightLastClicked="true">
+          <t:JQMNavBar ui:field="navbar1" iconPos="RIGHT" highlightLastClicked="true">
             <t:button><b:JQMButton text="Button 1"/></t:button>
             <t:button><b:JQMButton text="Button 2" builtInIcon="GEAR" /></t:button>
-            <t:button><b:JQMButton text="Button 3"/></t:button>
+            <t:button><b:JQMButton ui:field="navbarBtn3" text="Button 3"/></t:button>
             <t:button><b:JQMButton text="Button 4"/></t:button>
             <t:buttonActivePersist><b:JQMButton text="Button 5"/></t:buttonActivePersist>
           </t:JQMNavBar>
+          <b:JQMButton ui:field="navBarTest1Btn" text="Remove Button3" mini="true" inline="true" />
           <h:Paragraph />
           <h:Paragraph />
           <h:Heading.H3 text="Tabs widget with headers as buttons"
@@ -397,6 +398,24 @@
             </t:button>
             <t:button>
               <b:JQMButton text="Tab3"/>
+            </t:button>
+            <t:button>
+              <b:JQMButton text="Tab4"/>
+            </t:button>
+            <t:button>
+              <b:JQMButton text="Tab5" builtInIcon="GEAR" />
+            </t:button>
+            <t:button>
+              <b:JQMButton text="Tab6"/>
+            </t:button>
+            <t:button>
+              <b:JQMButton text="Tab7"/>
+            </t:button>
+            <t:button>
+              <b:JQMButton text="Tab8" builtInIcon="GEAR" />
+            </t:button>
+            <t:button>
+              <b:JQMButton text="Tab9"/>
             </t:button>
             <t:content>
               <g:FlowPanel addStyleNames="ui-body-inherit ui-content"> <!-- styles are OPTIONAL -->
@@ -415,6 +434,36 @@
             <t:content>
               <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
                 <h:Heading.H3 text="Tab3 Content" />
+              </g:FlowPanel>
+            </t:content>
+            <t:content>
+              <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                <h:Heading.H3 text="Tab4 Content" />
+              </g:FlowPanel>
+            </t:content>
+            <t:content>
+              <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                <h:Heading.H3 text="Tab5 Content" />
+              </g:FlowPanel>
+            </t:content>
+            <t:content>
+              <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                <h:Heading.H3 text="Tab6 Content" />
+              </g:FlowPanel>
+            </t:content>
+            <t:content>
+              <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                <h:Heading.H3 text="Tab7 Content" />
+              </g:FlowPanel>
+            </t:content>
+            <t:content>
+              <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                <h:Heading.H3 text="Tab8 Content" />
+              </g:FlowPanel>
+            </t:content>
+            <t:content>
+              <g:FlowPanel addStyleNames="ui-body-inherit ui-content">
+                <h:Heading.H3 text="Tab9 Content" />
               </g:FlowPanel>
             </t:content>
           </t:JQMTabs>

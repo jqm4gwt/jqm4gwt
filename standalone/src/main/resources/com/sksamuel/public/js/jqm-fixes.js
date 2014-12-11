@@ -15,6 +15,8 @@ $.widget( "ui.tabs", $.ui.tabs, {
                 page.one( "pagebeforeshow", function() {
                     delayedCreate.call( that, options, element );
                 });
+            } else {
+                return this._super( options, element );
             }
         } else {
             return this._super( options, element );

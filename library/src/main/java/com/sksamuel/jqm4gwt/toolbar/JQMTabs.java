@@ -35,8 +35,6 @@ import com.sksamuel.jqm4gwt.toolbar.JQMTabsEvent.TabsState;
  */
 public class JQMTabs extends JQMWidget {
 
-    public static final int TAB_LIMIT = 5;
-
     /**
      * Predefined tab event, see {@link JQMTabs#setTabEvent(String)}
      */
@@ -146,7 +144,7 @@ public class JQMTabs extends JQMWidget {
         });
     }
 
-    @UiChild(limit = TAB_LIMIT, tagname = "button")
+    @UiChild(tagname = "button")
     public void addHeader(final JQMButton button) {
         if (list != null) throw new IllegalArgumentException(ERROR_HEADER);
         if (navbar == null) {
@@ -161,10 +159,20 @@ public class JQMTabs extends JQMWidget {
             }, ClickEvent.getType());
         }
         navbar.add(button);
+        if (navbar.getButtonCount() > 5) navbar.setColumns(5); // prevents default two column placing
         initHrefs();
     }
 
-    @UiChild(limit = TAB_LIMIT, tagname = "listitem")
+    public int getButtonCount() {
+        return navbar != null ? navbar.getButtonCount() : 0;
+    }
+
+    public JQMButton getButton(int index) {
+        if (navbar == null) return null;
+        return navbar.getButton(index);
+    }
+
+    @UiChild(tagname = "listitem")
     public void addHeader(JQMListItem item) {
         if (navbar != null) throw new IllegalArgumentException(ERROR_HEADER);
         if (list == null) {
@@ -183,7 +191,16 @@ public class JQMTabs extends JQMWidget {
         initHrefs();
     }
 
-    @UiChild(limit = TAB_LIMIT, tagname = "content")
+    public int getListItemCount() {
+        return list != null ? list.getItems().size() : 0;
+    }
+
+    public JQMListItem getListItem(int index) {
+        if (list == null) return null;
+        return list.getItem(index);
+    }
+
+    @UiChild(tagname = "content")
     public void addContent(final Widget widget) {
         widget.addStyleName("jqm4gwt-tabs-content");
         flow.add(widget);
@@ -397,7 +414,39 @@ public class JQMTabs extends JQMWidget {
         return rslt;
     }
 
-    protected List<Widget> findContents(String... ids) {
+    public int getContentCount() {
+        int cnt = 0;
+        for (int i = 0; i < flow.getWidgetCount(); i++) {
+            Widget w = flow.getWidget(i);
+            if (w == navbar || w == list) continue;
+            cnt++;
+        }
+        return cnt;
+    }
+
+    public Widget getContent(int index) {
+        int cnt = 0;
+        for (int i = 0; i < flow.getWidgetCount(); i++) {
+            Widget w = flow.getWidget(i);
+            if (w == navbar || w == list) continue;
+            if (cnt == index) return w;
+            cnt++;
+        }
+        return null;
+    }
+
+    public List<Widget> getContents() {
+        ArrayList<Widget> rslt = null;
+        for (int i = 0; i < flow.getWidgetCount(); i++) {
+            Widget w = flow.getWidget(i);
+            if (w == navbar || w == list) continue;
+            if (rslt == null) rslt = new ArrayList<Widget>(flow.getWidgetCount());
+            rslt.add(w);
+        }
+        return rslt;
+    }
+
+    public List<Widget> findContents(String... ids) {
         if (ids.length == 0) return null;
         Map<String, Widget> found = new HashMap<String, Widget>();
         for (int i = 0; i < flow.getWidgetCount(); i++) {
@@ -636,6 +685,18 @@ public class JQMTabs extends JQMWidget {
         if (w.data('mobile-tabs') !== undefined) {
             w.tabs('refresh');
         }
+    }-*/;
+
+    /**
+     * Initialize/enhance dynamically created JQMTabs, refresh() is not working in dynamic case.
+     */
+    public void renderTabs() {
+        renderTabs(getElement());
+        doActiveHighlight();
+    }
+
+    private static native void renderTabs(Element elt) /*-{
+        $wnd.$(elt).tabs().enhanceWithin();
     }-*/;
 
     public HandlerRegistration addTabsHandler(JQMTabsEvent.Handler handler) {

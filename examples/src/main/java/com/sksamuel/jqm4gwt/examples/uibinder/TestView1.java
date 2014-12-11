@@ -65,6 +65,7 @@ import com.sksamuel.jqm4gwt.list.JQMListDivider;
 import com.sksamuel.jqm4gwt.list.JQMListItem;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox;
 import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
+import com.sksamuel.jqm4gwt.toolbar.JQMNavBar;
 import com.sksamuel.jqm4gwt.toolbar.JQMTabs;
 import com.sksamuel.jqm4gwt.toolbar.JQMTabsEvent;
 
@@ -395,6 +396,15 @@ public class TestView1 {
 
     @UiField
     JQMSelectFilterable selectFilterable;
+
+    @UiField
+    JQMButton navBarTest1Btn;
+
+    @UiField
+    JQMButton navbarBtn3;
+
+    @UiField
+    JQMNavBar navbar1;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -773,6 +783,13 @@ public class TestView1 {
     @UiHandler("showPctColBtn")
     void showPctColBtnClick(ClickEvent e) {
         percentCols.hidePercentageColumns();
+    }
+
+    @UiHandler("navBarTest1Btn")
+    void navBarTest1BtnClick(ClickEvent e) {
+        if (navbarBtn3 == null) return;
+        navbar1.remove(navbarBtn3);
+        navbarBtn3 = null;
     }
 
 
