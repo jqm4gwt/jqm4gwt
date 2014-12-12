@@ -234,7 +234,7 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
     }-*/;
 
     private static native boolean isReady(Element elt) /*-{
-        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
+        if ($wnd.$ === undefined || $wnd.$ === null) return false; // jQuery is not loaded
         var w = $wnd.$(elt);
         return w.data('mobile-flipswitch') !== undefined;
     }-*/;

@@ -335,6 +335,24 @@ public class JQMTabs extends JQMWidget {
         }
     }
 
+    private void clearHighlight() {
+        if (navbar != null) {
+            for (int j = 0; j < navbar.getButtonCount(); j++) {
+                JQMButton b = navbar.getButton(j);
+                if (JQMCommon.isBtnActive(b)) JQMCommon.setBtnActive(b, false);
+            }
+        } else if (list != null) {
+            List<JQMListItem> items = list.getItems();
+            if (items != null) {
+                for (int j = 0; j < items.size(); j++) {
+                    JQMListItem li = items.get(j);
+                    if (li == null) continue;
+                    if (li.isActiveHighlight()) li.setActiveHighlight(false);
+                }
+            }
+        }
+    }
+
     @Override
     protected void onUnload() {
         unbindEvents(this.getElement());
@@ -603,12 +621,36 @@ public class JQMTabs extends JQMWidget {
     }
 
     public int getActiveIndex() {
-        String s = JQMCommon.getAttribute(this, DATA_ACTIVE);
-        if (s == null || s.isEmpty()) return 0;
-        try {
-            return Integer.parseInt(s);
-        } catch (NumberFormatException e) {
-            return 0;
+        Element elt = getElement();
+        if (isReady(elt)) {
+            return getActive(elt);
+        } else {
+            String s = JQMCommon.getAttribute(this, DATA_ACTIVE);
+            if (s == null || s.isEmpty()) return 0;
+            try {
+                return Integer.parseInt(s);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        }
+    }
+
+    /**
+     * @return - true if there is active tab/index (collapsible tabs may have no active tab/index).
+     */
+    public boolean isActiveIndex() {
+        Element elt = getElement();
+        if (isReady(elt)) {
+            return isActive(elt);
+        } else {
+            String s = JQMCommon.getAttribute(this, DATA_ACTIVE);
+            if (s == null || s.isEmpty()) return false;
+            try {
+                Integer.parseInt(s);
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
         }
     }
 
@@ -618,10 +660,39 @@ public class JQMTabs extends JQMWidget {
      */
     public void setActiveIndex(int tabIndex) {
         JQMCommon.setAttribute(this, DATA_ACTIVE, String.valueOf(tabIndex));
+        Element elt = getElement();
+        if (isReady(elt)) {
+            setActive(elt, tabIndex);
+        }
     }
+
+    private static native void setActive(Element elt, int index) /*-{
+        $wnd.$(elt).tabs("option", "active", index);
+    }-*/;
+
+    private static native void removeActive(Element elt) /*-{
+        $wnd.$(elt).tabs("option", "active", false);
+    }-*/;
+
+    private static native int getActive(Element elt) /*-{
+        var v = $wnd.$(elt).tabs("option", "active");
+        if (v === false) return 0;
+        else return v;
+    }-*/;
+
+    private static native boolean isActive(Element elt) /*-{
+        var v = $wnd.$(elt).tabs("option", "active");
+        if (v === false) return false;
+        else return true;
+    }-*/;
 
     public void removeActiveIndex() {
         JQMCommon.setAttribute(this, DATA_ACTIVE, null);
+        Element elt = getElement();
+        if (isReady(elt)) {
+            removeActive(elt);
+            clearHighlight();
+        }
     }
 
     public boolean isCollapseAll() {
@@ -674,7 +745,8 @@ public class JQMTabs extends JQMWidget {
     }
 
     /**
-     * Call to refresh the list after a programmatic change is made.
+     * Process any tabs that were added or removed directly in the DOM and recompute
+     * the height of the tab panels. Results depend on the content and the heightStyle option.
      */
     public void refresh() {
         refresh(getElement());
@@ -682,9 +754,15 @@ public class JQMTabs extends JQMWidget {
 
     private static native void refresh(Element elt) /*-{
         var w = $wnd.$(elt);
-        if (w.data('mobile-tabs') !== undefined) {
+        if (w.data('ui-tabs') !== undefined) {
             w.tabs('refresh');
         }
+    }-*/;
+
+    private static native boolean isReady(Element elt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return false; // jQuery is not loaded
+        var w = $wnd.$(elt);
+        return w.data('ui-tabs') !== undefined;
     }-*/;
 
     /**

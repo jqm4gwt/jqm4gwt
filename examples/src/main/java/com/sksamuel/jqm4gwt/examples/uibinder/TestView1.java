@@ -406,6 +406,21 @@ public class TestView1 {
     @UiField
     JQMNavBar navbar1;
 
+    @UiField
+    JQMTabs tabs1;
+
+    @UiField
+    JQMButton tabsGetActiveBtn;
+
+    @UiField
+    JQMButton tabsSetActiveBtn;
+
+    @UiField
+    JQMNumber tabsSetActiveEd;
+
+    @UiField
+    JQMButton tabsRemoveActiveBtn;
+
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
             @Override
@@ -790,6 +805,32 @@ public class TestView1 {
         if (navbarBtn3 == null) return;
         navbar1.remove(navbarBtn3);
         navbarBtn3 = null;
+    }
+
+    @UiHandler("tabsGetActiveBtn")
+    void tabsGetActiveBtnClick(ClickEvent e) {
+        if (tabs1.isActiveIndex()) {
+            Window.alert(String.valueOf(tabs1.getActiveIndex()));
+        } else {
+            Window.alert("No active index");
+        }
+    }
+
+    @UiHandler("tabsSetActiveBtn")
+    void tabsSetActiveBtnClick(ClickEvent e) {
+        String s = tabsSetActiveEd.getValue();
+        if (s == null) return;
+        s = s.trim();
+        if (s.isEmpty()) return;
+        int i = Integer.parseInt(s);
+        if (i >= 0 && i < tabs1.getContentCount()) {
+            tabs1.setActiveIndex(i);
+        }
+    }
+
+    @UiHandler("tabsRemoveActiveBtn")
+    void tabsRemoveActiveBtnClick(ClickEvent e) {
+        tabs1.removeActiveIndex();
     }
 
 

@@ -84,6 +84,7 @@ public class JQMForm extends FlowPanel {
      * Constructor used by UiBinder. A SubmissionHandler must be set before calling submit.
      */
     public JQMForm() {
+        setStyleName("jqm4gwt-form");
         add(generalErrors);
     }
 

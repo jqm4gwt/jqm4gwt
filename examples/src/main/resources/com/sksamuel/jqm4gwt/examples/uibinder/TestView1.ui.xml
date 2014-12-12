@@ -471,7 +471,7 @@
           <h:Paragraph />
           <h:Heading.H3 text="Tabs widget with headers as listview"
             addStyleNames="{style.headerImportantColor}" />
-          <t:JQMTabs collapsible="true" activeIndex="1">
+          <t:JQMTabs ui:field="tabs1" collapsible="true" activeIndex="1">
             <!-- tabDisabled="[2]" collapseAll="true" -->
             <t:listitem>
               <l:JQMListItem text="Tab1" />
@@ -498,6 +498,13 @@
               </g:FlowPanel>
             </t:content>
           </t:JQMTabs>
+          <g:FlowPanel>
+            <b:JQMButton ui:field="tabsGetActiveBtn" text="Get Active Index" mini="true" inline="true" />
+            <e:JQMNumber ui:field="tabsSetActiveEd" labelHidden="true" 
+              addStyleNames="{style.inlineBlock}" />
+            <b:JQMButton ui:field="tabsSetActiveBtn" text="Set Active Index" mini="true" inline="true" />
+            <b:JQMButton ui:field="tabsRemoveActiveBtn" text="Remove Active" mini="true" inline="true" />
+          </g:FlowPanel>
           <h:Paragraph />
           <h:Paragraph />
           <h:Heading.H3 text="Tabs widget with headers as listview - horizontal style"
