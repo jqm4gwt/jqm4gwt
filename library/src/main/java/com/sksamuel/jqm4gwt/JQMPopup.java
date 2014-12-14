@@ -1,8 +1,6 @@
 package com.sksamuel.jqm4gwt;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
@@ -366,6 +364,27 @@ public class JQMPopup extends JQMContainer {
         else return tolerance;
     }
 
+    /**
+     * @param tolerance - Default: "30,15,30,15"
+     * <p/> Sets the minimum distance from the edge of the window for the corresponding edge
+     * of the popup. By default, the values above will be used for the distance from
+     * the top, right, bottom, and left edge of the window, respectively.
+     *
+     * <p/> You can specify a value for this option in one of four ways:
+     * <p/> 1. Empty string, null, or some other falsy value. This will cause the popup to revert
+     * to the above default values.
+     *
+     * <p/> 2. A single number. This number will be used for all four edge tolerances.
+     *
+     * <p/> 3. Two numbers separated by a comma. The first number will be used for tolerances
+     * from the top and bottom edge of the window, and the second number will be used for tolerances
+     * from the left and right edge of the window.
+     *
+     * <p/> 4. Four comma-separated numbers. The first will be used for tolerance from the top edge,
+     * the second for tolerance from the right edge, the third for tolerance from the bottom edge,
+     * and the fourth for tolerance from the left edge.
+     *
+     */
     public void setTolerance(String tolerance) {
         this.tolerance = tolerance;
         Element elt = getElement();
@@ -460,25 +479,26 @@ public class JQMPopup extends JQMContainer {
         popup.off("popupafterclose");
         popup.off("popupafteropen");
         popup.off("popupbeforeposition");
+        popup.off("popupcreate");
     }-*/;
+
+    private static native void bindCreated(Element elt, JQMPopup pop) /*-{
+        $wnd.$(elt).on( 'popupcreate', function( event, ui ) {
+            pop.@com.sksamuel.jqm4gwt.JQMPopup::created()();
+        });
+    }-*/;
+
+    private void created() {
+        setTolerance(getElement(), tolerance);
+    }
 
     @Override
     protected void onLoad() {
         super.onLoad();
-        bindLifecycleEvents(this, getElement());
+        Element elt = getElement();
+        bindLifecycleEvents(this, elt);
         if (tolerance != null) {
-            Scheduler.get().scheduleFinally(new RepeatingCommand() {
-                @Override
-                public boolean execute() {
-                    Element elt = getElement();
-                    if (isInitialized(elt)) {
-                        setTolerance(elt, tolerance);
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-            });
+            bindCreated(elt, this);
         }
     }
 

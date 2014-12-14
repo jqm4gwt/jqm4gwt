@@ -1,8 +1,6 @@
 package com.sksamuel.jqm4gwt.panel;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -260,18 +258,19 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
                 unbindFilterCallback();
             } else {
                 bindFilterEvents();
-                Scheduler.get().scheduleFinally(new RepeatingCommand() {
-                    @Override
-                    public boolean execute() {
-                        if (!isFilterable()) return false;
-                        Element elt = getDataFilterWidget().getElement();
-                        if (!JQMCommon.isFilterableReady(elt)) return true;
-                        bindFilterCallback();
-                        return false;
-                    }
-                });
+                bindFilterableCreated(getDataFilterWidget().getElement(), this);
             }
         }
+    }
+
+    private static native void bindFilterableCreated(Element elt, JQMControlGroup cg) /*-{
+        $wnd.$(elt).on( 'filterablecreate', function( event, ui ) {
+            cg.@com.sksamuel.jqm4gwt.panel.JQMControlGroup::filterableCreated()();
+        });
+    }-*/;
+
+    private void filterableCreated() {
+        bindFilterCallback();
     }
 
     @Override
@@ -283,6 +282,7 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
     @Override
     protected void onUnload() {
         unbindFilterEvents();
+        unbindFilterCallback();
         super.onUnload();
     }
 

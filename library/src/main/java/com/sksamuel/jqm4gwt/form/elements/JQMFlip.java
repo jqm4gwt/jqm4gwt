@@ -14,13 +14,10 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMCommon;
-import com.sksamuel.jqm4gwt.JQMPage;
-import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.events.HasTapHandlers;
 import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
@@ -404,26 +401,32 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
         }
     }
 
+    private static native void bindCreated(Element elt, JQMFlip flip) /*-{
+        $wnd.$(elt).on( 'flipswitchcreate', function( event, ui ) {
+            flip.@com.sksamuel.jqm4gwt.form.elements.JQMFlip::created()();
+        });
+    }-*/;
+
+    private static native void unbindCreated(Element elt) /*-{
+        $wnd.$(elt).off( 'flipswitchcreate' );
+    }-*/;
+
+    private void created() {
+        refreshTrackTheme();
+    }
+
     @Override
     protected void onLoad() {
         super.onLoad();
         if (trackTheme != null && !trackTheme.isEmpty()) {
-            Widget p = getParent();
-            while (p != null) {
-                if (p instanceof JQMPage) {
-                    ((JQMPage) p).addPageHandler(new JQMPageEvent.DefaultHandler() {
-                        @Override
-                        public void onShow(JQMPageEvent event) {
-                            super.onShow(event);
-                            refreshTrackTheme();
-                        }
-                    });
-                    break;
-                }
-                p = p.getParent();
-            }
-            if (!(p instanceof JQMPage)) refreshTrackTheme();
+            bindCreated(getElement(), this);
         }
+    }
+
+    @Override
+    protected void onUnload() {
+        unbindCreated(getElement());
+        super.onUnload();
     }
 
 }

@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasIconPos;
 import com.sksamuel.jqm4gwt.HasInline;
@@ -22,8 +21,6 @@ import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.HasTheme;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
-import com.sksamuel.jqm4gwt.JQMPage;
-import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 //import com.google.gwt.event.dom.client.ClickEvent;
 //import com.google.gwt.event.dom.client.ClickHandler;
@@ -267,32 +264,39 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
         return this;
     }
 
+    private static native void bindCreated(Element elt, JQMCheckbox cb) /*-{
+        $wnd.$(elt).on( 'checkboxradiocreate', function( event, ui ) {
+            cb.@com.sksamuel.jqm4gwt.form.elements.JQMCheckbox::created()();
+        });
+    }-*/;
+
+    private static native void unbindCreated(Element elt) /*-{
+        $wnd.$(elt).off( 'checkboxradiocreate' );
+    }-*/;
+
+    private void created() {
+        // workaround for issue with data-iconpos resetting on js checkbox initialization
+        IconPos pos = getIconPos();
+        if (pos != iconPos) {
+            setIconPos(iconPos);
+            refresh(input.getElement());
+        }
+        // Also data-corners is ignored, and 'ui-corner-all' class is added on init
+        if (JQMCommon.isCorners(label) != JQMCommon.isCornersEx(label)) {
+            setCorners(JQMCommon.isCorners(label));
+        }
+    }
+
     @Override
     protected void onLoad() {
         super.onLoad();
-        // workaround for issue with data-iconpos resetting on js checkbox initialization
-        Widget p = getParent();
-        while (p != null) {
-            if (p instanceof JQMPage) {
-                ((JQMPage) p).addPageHandler(new JQMPageEvent.DefaultHandler() {
-                    @Override
-                    public void onInit(JQMPageEvent event) {
-                        super.onInit(event);
-                        IconPos pos = getIconPos();
-                        if (pos != iconPos) {
-                            setIconPos(iconPos);
-                            refresh(input.getElement());
-                        }
-                        // Also data-corners is ignored, and 'ui-corner-all' class is added on init
-                        if (JQMCommon.isCorners(label) != JQMCommon.isCornersEx(label)) {
-                            setCorners(JQMCommon.isCorners(label));
-                        }
-                    }
-                });
-                break;
-            }
-            p = p.getParent();
-        }
+        bindCreated(getElement(), this);
+    }
+
+    @Override
+    protected void onUnload() {
+        unbindCreated(getElement());
+        super.onUnload();
     }
 
     @Override

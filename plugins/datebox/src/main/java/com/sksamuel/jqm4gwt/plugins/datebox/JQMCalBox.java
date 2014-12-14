@@ -11,11 +11,8 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.shared.DateTimeFormat;
-import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContext;
-import com.sksamuel.jqm4gwt.JQMPage;
-import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBoxEvent.DisplayChangeData;
 
@@ -783,30 +780,32 @@ public class JQMCalBox extends JQMText {
         }
     }
 
+    private static native void bindCreated(Element elt, JQMCalBox cal) /*-{
+        $wnd.$(elt).on( 'dateboxcreate', function( event, ui ) {
+            cal.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::created()();
+        });
+    }-*/;
+
+    private static native void unbindCreated(Element elt) /*-{
+        $wnd.$(elt).off( 'dateboxcreate' );
+    }-*/;
+
+    private void created() {
+        setDate(delayedSetDate);
+        initGridDateFormatter();
+        initDisplayChange();
+    }
+
     @Override
     protected void onLoad() {
         super.onLoad();
-        Widget p = getParent();
-        while (p != null) {
-            if (p instanceof JQMPage) {
-                ((JQMPage) p).addPageHandler(new JQMPageEvent.DefaultHandler() {
-                    @Override
-                    public void onInit(JQMPageEvent event) {
-                        super.onInit(event);
-                        setDate(delayedSetDate);
-                        initGridDateFormatter();
-                        initDisplayChange();
-                    }
-                });
-                break;
-            }
-            p = p.getParent();
-        }
+        bindCreated(input.getElement(), this);
     }
 
     @Override
     protected void onUnload() {
         final Date d = getDate();
+        unbindCreated(input.getElement());
         super.onUnload();
         delayedSetDate = d;
     }

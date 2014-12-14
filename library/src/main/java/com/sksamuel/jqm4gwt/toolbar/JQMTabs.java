@@ -17,8 +17,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
-import com.sksamuel.jqm4gwt.JQMPage;
-import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.button.JQMButton;
@@ -258,27 +256,36 @@ public class JQMTabs extends JQMWidget {
        if (navbar != null) navbar.setIconPos(pos);
     }
 
+    private static native void bindCreated(Element elt, JQMTabs tabs) /*-{
+        $wnd.$(elt).on( 'tabscreate', function( event, ui ) {
+            tabs.@com.sksamuel.jqm4gwt.toolbar.JQMTabs::created()();
+        });
+    }-*/;
+
+    private static native void unbindCreated(Element elt) /*-{
+        $wnd.$(elt).off( 'tabscreate' );
+    }-*/;
+
+    private void created() {
+        // workaround for issue with listview active item resetting on initialization
+        // (buttons are processed here as well just for symmetry).
+        doActiveHighlight();
+    }
+
     @Override
     protected void onLoad() {
         super.onLoad();
-        bindEvents(this, this.getElement());
+        Element elt = getElement();
+        bindEvents(this, elt);
+        bindCreated(elt, this);
+    }
 
-        // workaround for issue with listview active item resetting on initialization
-        // (buttons are processed here as well just for symmetry).
-        Widget p = getParent();
-        while (p != null) {
-            if (p instanceof JQMPage) {
-                ((JQMPage) p).addPageHandler(new JQMPageEvent.DefaultHandler() {
-                    @Override
-                    public void onShow(JQMPageEvent event) {
-                        super.onShow(event);
-                        doActiveHighlight();
-                    }
-                });
-                break;
-            }
-            p = p.getParent();
-        }
+    @Override
+    protected void onUnload() {
+        Element elt = getElement();
+        unbindEvents(elt);
+        unbindCreated(elt);
+        super.onUnload();
     }
 
     private static LIElement getBtnLi(JQMButton btn) {
@@ -351,12 +358,6 @@ public class JQMTabs extends JQMWidget {
                 }
             }
         }
-    }
-
-    @Override
-    protected void onUnload() {
-        unbindEvents(this.getElement());
-        super.onUnload();
     }
 
     private static native void bindEvents(JQMTabs tabs, Element tabsElt) /*-{

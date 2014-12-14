@@ -10,8 +10,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
@@ -61,11 +59,8 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
     private static final String IMG_ONLY = "img-only";
 
     // See http://stackoverflow.com/a/2709855
-    @SuppressWarnings("unused")
-    private static final String COMMA_SPLIT = "(?<!\\\\),";
-
-    @SuppressWarnings("unused")
-    private static final String BACKSLASH_COMMA = "\\\\,";
+    //private static final String COMMA_SPLIT = "(?<!\\\\),";
+    //private static final String BACKSLASH_COMMA = "\\\\,";
 
     private final ComplexPanel tHead;
     private final ComplexPanel tBody;
@@ -608,7 +603,6 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
         refreshBody();
     }
 
-    @SuppressWarnings("unused")
     private void setDataObj(Map<Widget, Boolean> lst) {
         dataObj = lst;
         dataStr = null;
@@ -894,18 +888,19 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
                 unbindFilterCallback();
             } else {
                 bindFilterEvents();
-                Scheduler.get().scheduleFinally(new RepeatingCommand() {
-                    @Override
-                    public boolean execute() {
-                        if (!isFilterable()) return false;
-                        Element elt = getDataFilterWidget().getElement();
-                        if (!JQMCommon.isFilterableReady(elt)) return true;
-                        bindFilterCallback();
-                        return false;
-                    }
-                });
+                bindFilterableCreated(getDataFilterWidget().getElement(), this);
             }
         }
+    }
+
+    private static native void bindFilterableCreated(Element elt, JQMColumnToggle ct) /*-{
+        $wnd.$(elt).on( 'filterablecreate', function( event, ui ) {
+            ct.@com.sksamuel.jqm4gwt.table.JQMColumnToggle::filterableCreated()();
+        });
+    }-*/;
+
+    private void filterableCreated() {
+        bindFilterCallback();
     }
 
     @Override
@@ -919,6 +914,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
     @Override
     protected void onUnload() {
         unbindFilterEvents();
+        unbindFilterCallback();
         super.onUnload();
     }
 

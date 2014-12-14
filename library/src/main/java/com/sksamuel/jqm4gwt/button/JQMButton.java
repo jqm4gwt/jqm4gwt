@@ -33,8 +33,6 @@ import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContainer;
 import com.sksamuel.jqm4gwt.JQMContext;
-import com.sksamuel.jqm4gwt.JQMPage;
-import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.Transition;
@@ -132,7 +130,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     /**
      * Convenience constructor that creates a button that shows the given
-     * {@link JQMPage} when clicked. The link will use a Transition.POP type.
+     * JQMPage when clicked. The link will use a Transition.POP type.
      * <p/>
      * Note that the page param is an already instantiated page and thus will
      * be immediately inserted into the DOM. Do not use this constructor when
@@ -146,8 +144,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     }
 
     /**
-     * Convenience constructor that creates a button that shows the given
-     * {@link JQMPage} when clicked.
+     * Convenience constructor that creates a button that shows the given JQMPage when clicked.
      * <p/>
      * Note that the page param is an already instantiated page and thus will
      * be immediately inserted into the DOM. Do not use this constructor when
@@ -645,25 +642,23 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         checkAlwaysHover();
     }
 
+    // buttoncreate event is only fired for INPUT element, but not for A or BUTTON
+    // see https://github.com/jquery/jquery-mobile/issues/6023
+    // Currently we don't need this event, because checkAlwaysHover() is working safely for any of these three elements.
+
+    /*private static native void bindCreated(Element elt, JQMButton btn) /*-{
+        $wnd.$(elt).on( 'buttoncreate', function( event, ui ) {
+            btn.@com.sksamuel.jqm4gwt.button.JQMButton::created()();
+        });
+    }-*/
+
+    //private void created() { }
+
     @Override
     protected void onLoad() {
         super.onLoad();
         if (alwaysHover) {
-            Widget p = getParent();
-            while (p != null) {
-                if (p instanceof JQMPage) {
-                    ((JQMPage) p).addPageHandler(new JQMPageEvent.DefaultHandler() {
-                        @Override
-                        public void onShow(JQMPageEvent event) {
-                            super.onShow(event);
-                            checkAlwaysHover();
-                        }
-                    });
-                    break;
-                }
-                p = p.getParent();
-            }
-            if (!(p instanceof JQMPage)) checkAlwaysHover();
+            checkAlwaysHover();
         }
     }
 
