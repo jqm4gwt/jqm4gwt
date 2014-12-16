@@ -751,7 +751,9 @@ public class JQMCalBox extends JQMText {
         public void onValueChange(ValueChangeEvent<String> event) {
             ValueChangeEvent<String> newEvent = event instanceof CalBoxValueChangeEvent
                     ? event : new CalBoxValueChangeEvent(calBox.getValue());
-            handler.onValueChange(newEvent);
+            if (!calBox.isInternSetDate) {
+                handler.onValueChange(newEvent);
+            }
         }
     }
 
