@@ -155,6 +155,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     /** See {@link JQMSelect#getDelayedValue()} */
     private String delayedValue;
     private Boolean delayedFireEvents;
+    private boolean addingOptions;
 
     /**
      * Creates a new {@link JQMSelect} with no label text.
@@ -256,6 +257,18 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
             if (icon != null) JQMCommon.setIcon(opt, icon);
             else if (customIcon != null) JQMCommon.setIcon(opt, customIcon);
         }
+        if (!addingOptions && delayedValue != null) tryResolveDelayed();
+    }
+
+    /**
+     * Improves performance in case of mass/long options list population, always use with try..finally block.
+     */
+    public void beginAddOptions() {
+        addingOptions = true;
+    }
+
+    public void endAddOptions() {
+        addingOptions = false;
         if (delayedValue != null) tryResolveDelayed();
     }
 
@@ -530,7 +543,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }-*/;
 
     /**
-     * Refreshes the select after a programmatic change has taken place.
+     * Refreshes the select after a programmatic options change has taken place.
      */
     public void refresh() {
         refresh(select.getElement());
@@ -564,8 +577,8 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     public void clear() {
         clearDelayed();
+        select.clear();
         select.setSelectedIndex(-1);
-    	select.clear();
     }
 
     private void clearDelayed() {

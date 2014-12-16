@@ -758,9 +758,9 @@ public class TestView1 {
     @UiHandler("addSelectItemsBtn")
     void addSelectItemsBtnClick(ClickEvent e) {
         if (select1.indexOf("option5value") >= 0) return;
-        select1.addOption("option5Text", "option5value");
-        select1.addOption("option6Text", "option6value");
-        select1.addOption("option7Text", "option7value");
+        select1.addOption("option5value", "option5Text");
+        select1.addOption("option6value", "option6Text");
+        select1.addOption("option7value", "option7Text");
         Option opt = new JQMSelect.Option();
         opt.setText("option8Text");
         opt.setValue("option8value");
