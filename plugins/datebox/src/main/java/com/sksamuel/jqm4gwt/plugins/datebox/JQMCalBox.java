@@ -259,10 +259,18 @@ public class JQMCalBox extends JQMText {
             getElement().removeClassName("jqm4gwt-non-editable");
         }
         if (yearPickMin != null && !yearPickMin.isEmpty()) {
-            sb.append(',').append(YEAR_PICK_MIN).append('"').append(yearPickMin).append('"');
+            if (YEAR_PICK_NOW.equals(yearPickMin)) {
+                sb.append(',').append(YEAR_PICK_MIN).append('"').append(yearPickMin).append('"');
+            } else {
+                sb.append(',').append(YEAR_PICK_MIN).append(yearPickMin);
+            }
         }
         if (yearPickMax != null && !yearPickMax.isEmpty()) {
-            sb.append(',').append(YEAR_PICK_MAX).append('"').append(yearPickMax).append('"');
+            if (YEAR_PICK_NOW.equals(yearPickMax)) {
+                sb.append(',').append(YEAR_PICK_MAX).append('"').append(yearPickMax).append('"');
+            } else {
+                sb.append(',').append(YEAR_PICK_MAX).append(yearPickMax);
+            }
         }
         if (lockInput != null) {
             sb.append(',').append(LOCK_INPUT).append(bool2Str(lockInput));

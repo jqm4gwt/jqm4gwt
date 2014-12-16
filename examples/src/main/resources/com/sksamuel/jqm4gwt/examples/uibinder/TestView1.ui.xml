@@ -185,7 +185,8 @@
           </ly:JQMTable>
 
           <dt:JQMCalBox ui:field="datePicker" text="Date Picker"
-            dateFormat="%A %m/%d/%y" value="2013-10-25" useClearButton="true" />
+            dateFormat="%A %m/%d/%y" value="2013-10-25" useClearButton="true" 
+            usePickers="true" yearPickMin="10" yearPickMax="10" />
             <!-- useInline="true" lockInput="false" placeHolder="DayOfWeek mm/dd/yy" dialogLabel="Date Picker" 
               buttonIcon="gear" editable="false" 
               invalidateUnlockedInputOnBlur="false" iconNoDisc="true" iconAlt="true" /-->
