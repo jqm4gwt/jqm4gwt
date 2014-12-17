@@ -164,9 +164,8 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
     /**
      * Adds a header element containing the given text.
      *
-     * @param n    the Hn element to use, eg if n is 2 then a <h2>element is
-     *             created
-     * @param html the value to set as the inner html of the <hn> element
+     * @param n - the Hn element to use, e.g. if n is 2 then a {@code <h2>} element is created.
+     * @param html - the value to set as the inner html of the {@code <hn>} element.
      */
     public JQMListItem addHeaderText(int n, String html) {
         Element e = Document.get().createHElement(n);
@@ -176,12 +175,24 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
     }
 
     /**
-     * Adds a paragraph element containing the given text
+     * Adds a paragraph element containing the given text.
      *
-     * @param html the value to set as the inner html of the p element
+     * @param html - the value to set as the inner html of the p element.
      */
     public JQMListItem addText(String html) {
         Element e = Document.get().createPElement();
+        e.setInnerHTML(html);
+        attachChild(e);
+        return this;
+    }
+
+    /**
+     * Adds a div element containing the given text.
+     *
+     * @param html - the value to set as the inner html of the div element.
+     */
+    public JQMListItem addDiv(String html) {
+        Element e = Document.get().createDivElement();
         e.setInnerHTML(html);
         attachChild(e);
         return this;
@@ -221,8 +232,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
      * Returns the value of the count bubble or null if no count has been set
      */
     public Integer getCount() {
-        if (countElem == null)
-            return null;
+        if (countElem == null) return null;
         return Integer.parseInt(countElem.getInnerText());
     }
 
