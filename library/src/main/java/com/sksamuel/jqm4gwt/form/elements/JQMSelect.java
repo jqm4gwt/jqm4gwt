@@ -1,7 +1,9 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -23,6 +25,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasValue;
@@ -141,7 +144,22 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     private static final String SELECT_STYLENAME = "jqm4gwt-select";
 
-    protected final ListBox select;
+    protected class ListBoxEx extends ListBox {
+
+        public ListBoxEx(boolean isMultipleSelect) {
+            super(isMultipleSelect);
+        }
+
+        @Override
+        public void setOptionText(OptionElement option, String text, Direction dir) {
+            super.setOptionText(option, text, dir);
+        }
+    }
+
+    protected final ListBoxEx select;
+
+    /** Unique search index: value, index in select */
+    protected final Map<String, Integer> selectIdx = new HashMap<String, Integer>(); // search index
 
     protected final FormLabel label;
 
@@ -156,6 +174,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     private String delayedValue;
     private Boolean delayedFireEvents;
     private boolean addingOptions;
+    private ArrayList<OptionElement> addingOptionList;
 
     /**
      * Creates a new {@link JQMSelect} with no label text.
@@ -174,7 +193,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         label.setFor(id);
         add(label);
 
-        select = new ListBox(false);
+        select = new ListBoxEx(false);
         select.getElement().setId(id);
         add(select);
 
@@ -236,39 +255,83 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         addOption(text, text);
     }
 
+    private static void prepareOption(OptionElement opt, String value, String filterText,
+                           boolean placeholder, boolean selected, boolean disabled,
+                           DataIcon icon, String customIcon) {
+
+        if (value == null) JQMCommon.setAttribute(opt, "value", null);
+        if (filterText != null && !filterText.isEmpty()) {
+            JQMCommon.setFilterText(opt, filterText);
+        }
+        if (placeholder) JQMCommon.setAttribute(opt, "data-placeholder", "true");
+        if (selected) JQMCommon.setAttribute(opt, "selected", "selected");
+        if (disabled) JQMCommon.setAttribute(opt, "disabled", "disabled");
+        if (icon != null) JQMCommon.setIcon(opt, icon);
+        else if (customIcon != null) JQMCommon.setIcon(opt, customIcon);
+    }
+
     private void addOption(String value, String text, String filterText,
                            boolean placeholder, boolean selected,
                            boolean disabled, DataIcon icon, String customIcon) {
-        select.addItem(text, value);
 
-        if (value == null || (filterText != null && !filterText.isEmpty())
-                || placeholder || selected || disabled
-                || icon != null || customIcon != null) {
-            SelectElement selElt = select.getElement().cast();
-            NodeList<OptionElement> opts = selElt.getOptions();
-            OptionElement opt = opts.getItem(opts.getLength() - 1);
-            if (value == null) JQMCommon.setAttribute(opt, "value", null);
-            if (filterText != null && !filterText.isEmpty()) {
-                JQMCommon.setFilterText(opt, filterText);
+        if (addingOptions) {
+            OptionElement opt = Document.get().createOptionElement();
+            select.setOptionText(opt, text, null/*dir*/);
+            opt.setValue(value);
+            prepareOption(opt, value, filterText, placeholder, selected, disabled, icon, customIcon);
+            addingOptionList.add(opt);
+        } else {
+            select.addItem(text, value);
+            if (value == null || (filterText != null && !filterText.isEmpty())
+                    || placeholder || selected || disabled || icon != null || customIcon != null) {
+                SelectElement selElt = select.getElement().cast();
+                NodeList<OptionElement> opts = selElt.getOptions();
+                int i = opts.getLength() - 1;
+                OptionElement opt = opts.getItem(i);
+                prepareOption(opt, value, filterText, placeholder, selected, disabled, icon, customIcon);
+                selectIdx.put(opt.getValue(), i);
+            } else {
+                int i = select.getItemCount() - 1;
+                String v = select.getValue(i);
+                selectIdx.put(v, i);
             }
-            if (placeholder) JQMCommon.setAttribute(opt, "data-placeholder", "true");
-            if (selected) JQMCommon.setAttribute(opt, "selected", "selected");
-            if (disabled) JQMCommon.setAttribute(opt, "disabled", "disabled");
-            if (icon != null) JQMCommon.setIcon(opt, icon);
-            else if (customIcon != null) JQMCommon.setIcon(opt, customIcon);
+            if (delayedValue != null) tryResolveDelayed();
         }
-        if (!addingOptions && delayedValue != null) tryResolveDelayed();
+    }
+
+    protected void rebuildSearchIndex() {
+        selectIdx.clear();
+        for (int i = 0; i < select.getItemCount(); i++) {
+            String v = select.getValue(i);
+            selectIdx.put(v, i);
+        }
     }
 
     /**
      * Improves performance in case of mass/long options list population, always use with try..finally block.
      */
-    public void beginAddOptions() {
+    public void beginAddOptions(int initialCapacity) {
         addingOptions = true;
+        addingOptionList = initialCapacity < 0 ? new ArrayList<OptionElement>()
+                                               : new ArrayList<OptionElement>(initialCapacity);
+    }
+
+    public void beginAddOptions() {
+        beginAddOptions(-1);
     }
 
     public void endAddOptions() {
         addingOptions = false;
+        if (!addingOptionList.isEmpty()) {
+            SelectElement selElt = select.getElement().cast();
+            int i = selElt.getOptions().getLength();
+            for (OptionElement opt : addingOptionList) {
+                selElt.add(opt, null);
+                selectIdx.put(opt.getValue(), i);
+                i++;
+            }
+        }
+        addingOptionList = null;
         if (delayedValue != null) tryResolveDelayed();
     }
 
@@ -433,19 +496,13 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     /**
-     * Returns the index of the first option that matches the given value or
-     * -1 if no such option exists.
+     * Returns the index of the last option that matches the given value
+     * or -1 if no such option exists.
      */
     public int indexOf(String value) {
-        for (int k = 0; k < select.getItemCount(); k++) {
-            String v = select.getValue(k);
-            if (value == null) {
-                if (v == null) return k;
-            } else if (value.equals(v)) {
-                return k;
-            }
-        }
-        return -1;
+        if (value == null) return -1;
+        Integer i = selectIdx.get(value);
+        return i == null ? -1 : i;
     }
 
     @Override
@@ -578,6 +635,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     public void clear() {
         clearDelayed();
         select.clear();
+        selectIdx.clear();
         select.setSelectedIndex(-1);
     }
 
@@ -715,16 +773,25 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     public void setSelectedValue(String value, boolean ignoreCase) {
+        if (value == null) {
+            setSelectedIndex(-1);
+            return;
+        }
+        if (!ignoreCase) {
+            int i = indexOf(value);
+            setSelectedIndex(i);
+            return;
+        } else {
+            int i = indexOf(value);
+            if (i >= 0) {
+                setSelectedIndex(i);
+                return;
+            }
+        }
+        // Can be optimized with search index as well, but it's expensive to support additional index
         for (int k = 0; k < select.getItemCount(); k++) {
             String v = select.getValue(k);
-            if (v == null) {
-                if (value == null) {
-                    setSelectedIndex(k);
-                    return;
-                }
-                continue;
-            }
-            boolean eq = ignoreCase ? v.equalsIgnoreCase(value) : v.equals(value);
+            boolean eq = value.equalsIgnoreCase(v);
             if (eq) {
                 setSelectedIndex(k);
                 return;
