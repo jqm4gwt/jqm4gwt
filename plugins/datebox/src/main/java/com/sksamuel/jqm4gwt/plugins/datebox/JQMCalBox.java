@@ -4,6 +4,8 @@ import java.util.Date;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsDate;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -128,6 +130,18 @@ public class JQMCalBox extends JQMText {
     private String themeDateHigh = null;
     private String themeDateHighAlt = null;
     private String themeDateHighRec = null;
+
+    /**
+     * GWT Date and JsDate are both created in current browser's timezone.
+     * Calbox's setTheDate() takes date and use year/month/day from it (time and timezone are ignored).
+     * <p/> Example: we are in PST (i.e. GMT-8) timezone.
+     * So new JsDate(0) gives us: 12/31/1969 16:00 GMT-8
+     * <p/> Therefore we cannot use 0 constant, and need proper number for our timezone,
+     * which is 2.88E7 in that case.
+     * <p/> For person in GMT timezone this constant is 0 of course.
+     */
+    @SuppressWarnings("deprecation")
+    private static final double NULL_DATE = new Date(70, 0, 1).getTime();
 
     private Date delayedSetDate = null; // used when not initialized yet
 
@@ -748,10 +762,23 @@ public class JQMCalBox extends JQMText {
         }
 
         @Override
-        public void onValueChange(ValueChangeEvent<String> event) {
-            ValueChangeEvent<String> newEvent = event instanceof CalBoxValueChangeEvent
-                    ? event : new CalBoxValueChangeEvent(calBox.getValue());
-            if (!calBox.isInternSetDate) {
+        public void onValueChange(final ValueChangeEvent<String> event) {
+            if (calBox.isInternSetDate) return;
+            if (event instanceof CalBoxValueChangeEvent) {
+                handler.onValueChange(event);
+                return;
+            }
+            if (calBox.lockInput != null && !calBox.lockInput) {
+                // On manual input calBox.getValue() is still old here, so we have to wait
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        ValueChangeEvent<String> newEvent = new CalBoxValueChangeEvent(calBox.getValue());
+                        handler.onValueChange(newEvent);
+                    }
+                });
+            } else {
+                ValueChangeEvent<String> newEvent = new CalBoxValueChangeEvent(calBox.getValue());
                 handler.onValueChange(newEvent);
             }
         }
@@ -879,8 +906,9 @@ public class JQMCalBox extends JQMText {
     }
 
     private void updateInputText() {
-        JsDate jsd = internGetDate(input.getElement());
-        String fs = internFormat(input.getElement(), getActiveDateFormat(), jsd);
+        Element elt = input.getElement();
+        JsDate jsd = internGetDate(elt);
+        String fs = internFormat(elt, getActiveDateFormat(), jsd);
         input.setText(fs);
     }
 
@@ -993,11 +1021,18 @@ public class JQMCalBox extends JQMText {
     }-*/;
 
     private void internSetDate(Date d) {
+        final double v = d == null ? NULL_DATE : d.getTime();
+        final Element elt = input.getElement();
+        JsDate jsd = internGetDate(elt);
+        if (jsd != null) {
+            double t = jsd.getTime();
+            if (t == v) return; // setTheDate() is expensive!
+        }
         isInternSetDate = true;
         internDateToSet = d;
         try {
             // ValueChange may occur!
-            internalSetDate(input.getElement(), d == null ? 0d : d.getTime());
+            internalSetDate(elt, v);
         } finally {
             isInternSetDate = false;
         }
