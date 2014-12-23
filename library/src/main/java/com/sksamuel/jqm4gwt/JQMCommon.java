@@ -63,11 +63,15 @@ public class JQMCommon {
     private static final String DATA_FILTER_REVEAL = "data-filter-reveal";
 
     public static boolean isVisible(Widget widget) {
-        return widget != null && Mobile.isVisible(widget.getElement());
+        if (widget == null || !widget.isAttached()) return false;
+        Element elt = widget.getElement();
+        return UIObject.isVisible(elt) && Mobile.isVisible(elt);
     }
 
     public static boolean isHidden(Widget widget) {
-        return widget != null && Mobile.isHidden(widget.getElement());
+        if (widget == null || !widget.isAttached()) return true;
+        Element elt = widget.getElement();
+        return !UIObject.isVisible(elt) || Mobile.isHidden(elt);
     }
 
     /**
