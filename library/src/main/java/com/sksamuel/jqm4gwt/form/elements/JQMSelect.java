@@ -633,7 +633,19 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     public void clear() {
-        clearDelayed();
+        clear(false/*delayValue*/);
+    }
+
+    public void clear(boolean delayValue) {
+        if (!delayValue) clearDelayed();
+        else {
+            String v = getValue();
+            if (v != null) {
+                delayedValue = v;
+                delayedFireEvents = false;
+            }
+            // else - delayedValue is not cleared
+        }
         select.clear();
         selectIdx.clear();
         select.setSelectedIndex(-1);
