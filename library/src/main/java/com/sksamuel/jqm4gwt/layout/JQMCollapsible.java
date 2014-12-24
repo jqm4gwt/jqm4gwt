@@ -66,10 +66,10 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
      * Creates a new {@link JQMCollapsible} with the given header text and
      * collapsed if param collapsed is true.
      * <br>
-     * The created header will use a &lt;hN> element where N is determined by the param headerN.
+     * The created header will use a &lt;hN&gt; element where N is determined by the param headerN.
      * <br>
      * Once the {@link JQMCollapsible} has been created it is not possible to
-     * change the <hN> tag used for the header.
+     * change the &lt;hN&gt; tag used for the header.
      */
     public JQMCollapsible(String text, int headerN, boolean collapsed) {
         flow = new FlowPanel();

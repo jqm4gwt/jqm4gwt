@@ -2,9 +2,9 @@ package com.sksamuel.jqm4gwt;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 10:36:07
- *         <br>
- *         Interface for elements that are themeable.
- * @link http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/api/themes.html
+ * <br>
+ * Interface for elements that are themeable.
+ * <br> See http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/api/themes.html
  */
 public interface HasTheme<T> {
 

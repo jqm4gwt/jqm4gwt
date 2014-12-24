@@ -13,11 +13,10 @@ import com.sksamuel.jqm4gwt.button.JQMButton.PosOnBand;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 4 May 2011 21:21:13
  *
- *         This class models a Jquery Mobile header element. It can contain
- *         text, and two optional buttons, one left and one right.
+ * <br> This class models a Jquery Mobile header element.
+ * It can contain text, and two optional buttons, one left and one right.
  *
- * @link
- *       http://jquerymobile.com/demos/1.2.0/docs/toolbars/docs-headers.html
+ * <br> See <a href="http://jquerymobile.com/demos/1.2.0/docs/toolbars/docs-headers.html">Header structure</a>
  *
  */
 public class JQMHeader extends JQMToolbar implements HasText<JQMHeader>, HasJqmHeader {

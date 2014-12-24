@@ -3,7 +3,7 @@ package com.sksamuel.jqm4gwt.html;
 import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
- * An implemenation of a &lt;div> element exposed as a widget. Shorter equivalent of FlowPanel.
+ * An implementation of a &lt;div&gt; element exposed as a widget. Shorter equivalent of FlowPanel.
  *
  */
 public class Div extends FlowPanel {

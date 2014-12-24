@@ -66,7 +66,7 @@ public class Mobile {
 
     /**
      * It's not enough for IE9, see <a href="http://stackoverflow.com/a/17852518">jQuery Mobile, disable all button when loading overlay is showed</a>
-     * <p> So &lt;div class="ui-loader-background">&lt;/div> must be added to html body. </p>
+     * <p> So &lt;div class="ui-loader-background"&gt;&lt;/div&gt; must be added to html body. </p>
      */
     public static native void disableUI() /*-{
         $wnd.$('body').addClass('ui-state-disabled');

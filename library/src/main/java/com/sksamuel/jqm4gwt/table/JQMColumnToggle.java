@@ -186,7 +186,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
     /**
      * @param colNames - comma separated column names with optional priority (1 = highest, 6 = lowest).
      * If you need comma in name use \, to preserve it.
-     * <br> Column name can be valid HTML, i.e. &lt;abbr title="Rotten Tomato Rating">Rating&lt;/abbr>=1
+     * <br> Column name can be valid HTML, i.e. &lt;abbr title="Rotten Tomato Rating">Rating&lt;/abbr&gt;=1
      * <br> Example: Rank,Movie Title,Year=3,Reviews=5
      * <br> To make a column persistent so it's not available for hiding, just omit priority.
      * This will make the column visible at all widths and won't be available in the column chooser menu.
@@ -239,7 +239,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
      * @param colGroups - comma separated grouped column headers with colspan and priority (1 = highest, 6 = lowest).
      * If you need comma in name use \, to preserve it.
      * <br> Expected format: colspan=GroupName=priority
-     * <br> Group name can be valid HTML, i.e. 4=&lt;abbr title="Previous Year Results">2012&lt;/abbr>=1
+     * <br> Group name can be valid HTML, i.e. 4=&lt;abbr title="Previous Year Results">2012&lt;/abbr&gt;=1
      * <br> Example: 3=Q1 2012=5, 3=Q2 2012=4, 3=Q3 2012=3, 3=Q4 2012=2, 3=2012 Totals=1
      */
     public void setColGroups(String colGroups) {
@@ -273,7 +273,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
     /**
      * @param cells - comma separated table cells, each string/cell can be valid HTML.
      * If you need comma in name use \, to preserve it.
-     * <br> Example: &lt;th>1&lt;/th>, The Matrix, 1999, 8.7, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5
+     * <br> Example: &lt;th&gt;1&lt;/th&gt;, The Matrix, 1999, 8.7, &lt;th&gt;2&lt;/th&gt;, Falling Down, 1993, 7.5
      */
     public void setCells(String cells) {
         if (this.cells == cells || this.cells != null && this.cells.equals(cells)) return;
@@ -610,7 +610,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
     }
 
     /**
-     * @param asTh - &lt;th> will be used for creating cell instead of &lt;td>,
+     * @param asTh - &lt;th&gt; will be used for creating cell instead of &lt;td&gt;,
      * so such cell will be styled differently, like columnNames/header cells.
      */
     @UiChild(tagname = "cell")

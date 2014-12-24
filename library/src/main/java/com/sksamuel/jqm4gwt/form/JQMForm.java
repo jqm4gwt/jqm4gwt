@@ -155,7 +155,7 @@ public class JQMForm extends FlowPanel {
     }
 
     /**
-     * @see addValidator(null, validator);
+     * see addValidator(null, validator);
      */
     public void addValidator(Validator validator) {
         addValidator(validator, (JQMFormWidget) null);

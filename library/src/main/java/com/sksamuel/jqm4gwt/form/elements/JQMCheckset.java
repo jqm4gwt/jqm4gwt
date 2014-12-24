@@ -50,8 +50,8 @@ import com.sksamuel.jqm4gwt.html.Legend;
  * can add Checkboes via child elements. For example:
  * <pre>
  * &lt;jqm:form.elements.JQMCheckset>
- *    &lt;jqm:check>&lt;jqm:form.elements.JQMCheckbox name="cb20" text="Check1"/>&lt;/jqm:check>
- *    &lt;jqm:check>&lt;jqm:form.elements.JQMCheckbox name="cb21" text="Check2"/>&lt;/jqm:check>
+ *    &lt;jqm:check>&lt;jqm:form.elements.JQMCheckbox name="cb20" text="Check1"/&gt;&lt;/jqm:check&gt;
+ *    &lt;jqm:check>&lt;jqm:form.elements.JQMCheckbox name="cb21" text="Check2"/&gt;&lt;/jqm:check&gt;
  * &lt;/jqm:form.elements.JQMCheckset>
  * </pre>
  *

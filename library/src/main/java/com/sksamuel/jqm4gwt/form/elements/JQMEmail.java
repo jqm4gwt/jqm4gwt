@@ -2,10 +2,9 @@ package com.sksamuel.jqm4gwt.form.elements;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 18 May 2011 04:17:45
- *         <br>
- *         Text element specialised for email
- * @link http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/forms/forms-text.
- * html
+ * <br>
+ * Text element specialised for email
+ * http://jquerymobile.com/demos/1.0b1/#/demos/1.0b1/docs/forms/forms-text.html
  */
 public class JQMEmail extends JQMText {
 

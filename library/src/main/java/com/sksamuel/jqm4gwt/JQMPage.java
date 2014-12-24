@@ -321,7 +321,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     /**
      * Returns the primary content container
      *
-     * @returns the primary content container
+     * @return the primary content container
      */
     public JQMContent getPrimaryContent() {
         return content;
@@ -675,8 +675,9 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     /**
      * Additional class names can be added directly to content div for better custom styling.
      * The same idea as UiBinder's embedded addStyleNames functionality.
-     * <p> Example:
-     * <pre>&lt;jqm:JQMPage contentAddStyleNames="aaa bbb ccc"/></pre></p>
+     *
+     * <br> Example:
+     * <pre>&lt;jqm:JQMPage contentAddStyleNames="aaa bbb ccc"/&gt;</pre>
      */
     public void setContentAddStyleNames(String value) {
         if (value == null || value.isEmpty()) return;

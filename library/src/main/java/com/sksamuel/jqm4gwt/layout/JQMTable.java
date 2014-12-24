@@ -18,19 +18,19 @@ import com.sksamuel.jqm4gwt.JQMWidget;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 9 May 2011 23:54:07
  *
- * <br>    The {@link JQMTable} widget is a panel that allows other widgets to
+ * <br> -  The {@link JQMTable} widget is a panel that allows other widgets to
  *         be added in a regular grid. The grid is regular in the sense that
  *         there is no concept of "cell span" like a normal HTML table has.
  *
- * <br>    This table can accept any {@link JQMWidget} or any regular GWT
+ * <br> -  This table can accept any {@link JQMWidget} or any regular GWT
  *         {@link Widget} as a child element. Each added widget is wrapped in a
  *         div element.
  *
- * <br>    The table can be resized after being created by calling
+ * <br> -  The table can be resized after being created by calling
  *         withColumns(int). That can be an expensive operation, see the javadoc
  *         for the withColumns(int) method for more information on why.
  *
- * <br>    Tables must have at least 1 and at most 5 columns
+ * <br> -  Tables must have at least 1 and at most 5 columns
  *
  * <p>See <a href="http://demos.jquerymobile.com/1.4.5/grids/">Grids</a></p>
  *

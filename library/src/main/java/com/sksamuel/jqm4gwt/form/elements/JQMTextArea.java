@@ -24,8 +24,8 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 11 May 2011 13:49:09
- *         <br>
- *         An implementation of a standard HTML Textarea
+ * <br>
+ * An implementation of a standard HTML Textarea
  */
 public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<JQMTextArea>, HasText<JQMTextArea>, HasValue<String>, HasReadOnly<JQMTextArea>,
 		HasPlaceHolder<JQMTextArea>,HasMini<JQMTextArea>, HasKeyDownHandlers, HasKeyUpHandlers, HasFocusHandlers, HasBlurHandlers, Focusable {
@@ -212,20 +212,20 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
 	}
 
 	@Override
-	public void setReadOnly(boolean readOnly) 
+	public void setReadOnly(boolean readOnly)
 	{
 		input.setReadOnly(readOnly);
 	}
-	
+
 	@Override
-	public JQMTextArea withReadOnly(boolean readOnly) 
+	public JQMTextArea withReadOnly(boolean readOnly)
 	{
 		setReadOnly(readOnly);
 		return this;
 	}
 
 	@Override
-	public String getPlaceHolder() 
+	public String getPlaceHolder()
 	{
 		return input.getElement().getAttribute(HasPlaceHolder.ATTRIBUTE_PLACEHOLDER);
 	}

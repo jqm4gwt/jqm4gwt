@@ -2,7 +2,7 @@ package com.sksamuel.jqm4gwt.events;
 
 /**
  * Constants that map to JQM component events.
- * See {@link http://api.jquerymobile.com/category/events/}
+ * See http://api.jquerymobile.com/category/events/
  *
  * @author Andrei Costescu costescuandrei@gmail.com 31 Oct 2013
  */

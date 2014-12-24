@@ -28,7 +28,7 @@ import com.sksamuel.jqm4gwt.button.JQMButton;
  *         within a header or footer.
  *
  *
- * <p><a href="http://demos.jquerymobile.com/1.4.5/navbar/">Navbar</a></p>
+ * <p> See <a href="http://demos.jquerymobile.com/1.4.5/navbar/">Navbar</a></p>
  *
  *
  */

@@ -458,7 +458,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
     }
 
     /**
-     * Adds secondary image to this list item. It's forcefully added directly to &lt;li> element.
+     * Adds secondary image to this list item. It's forcefully added directly to &lt;li&gt; element.
      * <br> Additional CSS is needed to control appearance of this image, for example right side
      * icon on the static band can be implemented, see <b>jqm4gwt-list-static-item-img-right</b> CSS rule.
      */

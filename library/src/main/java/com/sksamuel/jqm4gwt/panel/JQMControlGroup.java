@@ -15,8 +15,8 @@ import com.sksamuel.jqm4gwt.form.elements.JQMFilterableEvent;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 11 Jul 2011 22:09:41
- *         <br>
- *         An implementation of {@link JQMPanel} for control groups.
+ * <br>
+ * An implementation of {@link JQMPanel} for control groups.
  */
 public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMControlGroup>,
         HasMini<JQMControlGroup>, HasCorners<JQMControlGroup>, HasFilterable {
