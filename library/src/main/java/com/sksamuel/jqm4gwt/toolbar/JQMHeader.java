@@ -382,7 +382,7 @@ public class JQMHeader extends JQMToolbar implements HasText<JQMHeader>, HasJqmH
      * Sets whether or not this page should have an auto generated back
      * button. If so, it will be placed in the left slot and override any left
      * button already there.
-     * <p/>
+     *
      * If you want a back button in the right, then programatically create a
      * button, set it to back using btn.setBack(), and call header.setRightButton(btn) with
      * the button as the param.

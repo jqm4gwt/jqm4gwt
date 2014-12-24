@@ -7,7 +7,7 @@ import com.sksamuel.jqm4gwt.panel.JQMControlGroup;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 18:09:41
- *         <p/>
+ *
  *         Groups a collection of {@link JQMButton} instances together
  * @link http://jquerymobile.com/demos/1.2.0/docs/buttons/buttons-grouped.html
  */
@@ -45,7 +45,7 @@ public class JQMButtonGroup extends JQMControlGroup implements HasInline<JQMButt
     /**
      * If inline is true then sets all the buttons in this group to inline,
      * otherwise sets them to not-inline.
-     * <p/>
+     *
      * If the buttons are in a group then it is best to call this method
      * instead of withInline on each button
      *
@@ -62,7 +62,7 @@ public class JQMButtonGroup extends JQMControlGroup implements HasInline<JQMButt
     /**
      * If inline is true then sets all the buttons in this group to inline,
      * otherwise sets them to not-inline.
-     * <p/>
+     *
      * If the buttons are in a group then it is best to call this method
      * instead of withInline on each button
      *

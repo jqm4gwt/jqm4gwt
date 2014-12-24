@@ -16,7 +16,7 @@ import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 16 Sep 2012 00:22:18
- * <p/>
+ *
  * A JQMContainer is any "page level" widget, such as dialogs, popups and pages themselves,
  * which are directly attached to the DOM.
  * It is meant to contain the common functionality for showing these containers.

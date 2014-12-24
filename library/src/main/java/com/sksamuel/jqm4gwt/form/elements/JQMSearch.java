@@ -16,9 +16,9 @@ import com.sksamuel.jqm4gwt.events.JQMInputHandler;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 18 May 2011 04:17:45
  *
- * <p/> Text element stylised as a search box.
+ *  Text element stylised as a search box.
  *
- * <p/> See <a href="http://demos.jquerymobile.com/1.4.5/forms/#search">Search Input</a>
+ *  See <a href="http://demos.jquerymobile.com/1.4.5/forms/#search">Search Input</a>
  *
  */
 public class JQMSearch extends JQMText {
@@ -73,7 +73,7 @@ public class JQMSearch extends JQMText {
 
 	/**
      * Occurs on every entered/deleted symbol.
-     * <p/><b>Warning!</b> Clear button does not raise this event, use
+     * <b>Warning!</b> Clear button does not raise this event, use
      * addValueChangeHandler() to react on it.
 	 */
 	public HandlerRegistration addInputHandler(JQMInputHandler handler) {

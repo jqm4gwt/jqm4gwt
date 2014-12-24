@@ -10,8 +10,8 @@ import com.sksamuel.jqm4gwt.JQMCommon;
 /**
  * @author SlavaP
  *
- * <p/> See <a href="http://demos.jquerymobile.com/1.4.5/filterable/">Filterable</a>
- * <p/> See <a href="http://api.jquerymobile.com/filterable/">Filterable API</a>
+ *  See <a href="http://demos.jquerymobile.com/1.4.5/filterable/">Filterable</a>
+ *  See <a href="http://api.jquerymobile.com/filterable/">Filterable API</a>
  *
  */
 public class JQMFilterable extends SimplePanel implements HasPlaceHolder<JQMFilterable>,

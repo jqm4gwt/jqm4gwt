@@ -8,7 +8,7 @@ import com.sksamuel.jqm4gwt.HasText;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 18 May 2011 05:36:02
  *
- * <p/> Implementation of a &lt;p> element
+ *  Implementation of a &lt;p> element
  *
  */
 public class Paragraph extends Widget implements HasText<Paragraph>, HasHTML<Paragraph> {

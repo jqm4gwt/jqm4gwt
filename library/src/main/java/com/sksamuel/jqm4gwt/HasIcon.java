@@ -19,8 +19,8 @@ public interface HasIcon<T> extends HasIconPos<T> {
 
 	/**
 	 * Removes any icon previously set on the implementing class, i.e. reverts back to default icon (if any).
-	 * <p/> If no icon has been previously set then this has no effect.
-	 * <p/> To hide icon use {@link HasIcon#setBuiltInIcon(DataIcon)} with DataIcon.NONE parameter.
+	 *  If no icon has been previously set then this has no effect.
+	 *  To hide icon use {@link HasIcon#setBuiltInIcon(DataIcon)} with DataIcon.NONE parameter.
 	 */
 	T removeIcon();
 

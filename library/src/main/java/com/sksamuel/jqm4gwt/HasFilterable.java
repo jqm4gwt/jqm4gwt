@@ -3,9 +3,9 @@ package com.sksamuel.jqm4gwt;
 import com.google.gwt.dom.client.Element;
 
 /**
- * <p/> Filterable functionality support.
- * <p/> See <a href="http://demos.jquerymobile.com/1.4.5/filterable/">Filterable</a>
- * <p/> See <a href="http://api.jquerymobile.com/filterable/">Filterable API</a>
+ *  Filterable functionality support.
+ *  See <a href="http://demos.jquerymobile.com/1.4.5/filterable/">Filterable</a>
+ *  See <a href="http://api.jquerymobile.com/filterable/">Filterable API</a>
  *
  * @author SlavaP
  *

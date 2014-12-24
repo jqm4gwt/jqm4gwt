@@ -134,11 +134,11 @@ public class JQMCalBox extends JQMText {
     /**
      * GWT Date and JsDate are both created in current browser's timezone.
      * Calbox's setTheDate() takes date and use year/month/day from it (time and timezone are ignored).
-     * <p/> Example: we are in PST (i.e. GMT-8) timezone.
+     *  Example: we are in PST (i.e. GMT-8) timezone.
      * So new JsDate(0) gives us: 12/31/1969 16:00 GMT-8
-     * <p/> Therefore we cannot use 0 constant, and need proper number for our timezone,
+     *  Therefore we cannot use 0 constant, and need proper number for our timezone,
      * which is 2.88E7 in that case.
-     * <p/> For person in GMT timezone this constant is 0 of course.
+     *  For person in GMT timezone this constant is 0 of course.
      */
     @SuppressWarnings("deprecation")
     private static final double NULL_DATE = new Date(70, 0, 1).getTime();
@@ -571,7 +571,7 @@ public class JQMCalBox extends JQMText {
      * which will be added/subtracted from the current year
      * (with Max, use a negative integer to go into the past - negative numbers for min will be abs()ed appropriatly),
      * or if the number is greater than 1800, it will be assumed to be a hard year.
-     * <p/> Finally, the string "NOW" (UPCASE!) will use the current year (today's date, not the picker year).
+     *  Finally, the string "NOW" (UPCASE!) will use the current year (today's date, not the picker year).
      */
     public void setYearPickMax(String yearPickMax) {
         this.yearPickMax = yearPickMax;
@@ -596,8 +596,8 @@ public class JQMCalBox extends JQMText {
 
     /**
      * This is the class of the button in the input element.
-     * <p/>Default value is calendar.
-     * <p/><a href="http://demos.jquerymobile.com/1.4.5/icons/">Icons</a>
+     * Default value is calendar.
+     * <a href="http://demos.jquerymobile.com/1.4.5/icons/">Icons</a>
      */
     public void setButtonIcon(String buttonIcon) {
         this.buttonIcon = buttonIcon;
@@ -610,8 +610,8 @@ public class JQMCalBox extends JQMText {
 
     /**
      * This allows customization of the Next Month button in the calendar header.
-     * <p/>Default value is plus.
-     * <p/><a href="http://demos.jquerymobile.com/1.4.5/icons/">Icons</a>
+     * Default value is plus.
+     * <a href="http://demos.jquerymobile.com/1.4.5/icons/">Icons</a>
      */
     public void setNextMonthIcon(String nextMonthIcon) {
         this.nextMonthIcon = nextMonthIcon;
@@ -624,8 +624,8 @@ public class JQMCalBox extends JQMText {
 
     /**
      * This allows customization of the Previous Month button in the calendar header.
-     * <p/>Default value is minus.
-     * <p/><a href="http://demos.jquerymobile.com/1.4.5/icons/">Icons</a>
+     * Default value is minus.
+     * <a href="http://demos.jquerymobile.com/1.4.5/icons/">Icons</a>
      */
     public void setPrevMonthIcon(String prevMonthIcon) {
         this.prevMonthIcon = prevMonthIcon;
@@ -1010,7 +1010,7 @@ public class JQMCalBox extends JQMText {
 
     /**
      * @return - true if the selected calendar date is visible.
-     * <p/> Only valid for calbox, otherwise it will always return true.
+     *  Only valid for calbox, otherwise it will always return true.
      */
     public boolean isSelectedDateVisible() {
         return internIsSelDateVisible(input.getElement());

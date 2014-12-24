@@ -18,10 +18,10 @@ import com.sksamuel.jqm4gwt.toolbar.JQMPanelEvent.PanelState;
 /**
  * @author Gabi Boros gabi.boros@gmail.com 7 June 2013 15:24:13
  *
- * <p/> This class models a Jquery Mobile
+ *  This class models a Jquery Mobile
  *
  * <a href="http://demos.jquerymobile.com/1.4.5/panel/">Panel Widget</a>
- * <p/> See also <a href="http://api.jquerymobile.com/panel/">API for Panel Widget</a>
+ *  See also <a href="http://api.jquerymobile.com/panel/">API for Panel Widget</a>
  *
  *
  */
@@ -154,7 +154,7 @@ public class JQMPanel extends JQMWidget {
 
     /**
      * @param positionFixed - if true contents will appear no matter how far down the page you're scrolled.
-     * <p/> The framework also checks to see if the panel contents will fit within the viewport before
+     *  The framework also checks to see if the panel contents will fit within the viewport before
      * applying the fixed positioning because this property would prevent the panel contents from
      * scrolling and make it inaccessible.
      */

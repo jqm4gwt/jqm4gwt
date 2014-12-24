@@ -29,10 +29,10 @@ import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
 
 /**
  * See <a href="http://demos.jquerymobile.com/1.4.5/table-column-toggle/">Table: Column Toggle</a>
- * <p/> See <a href="http://demos.jquerymobile.com/1.4.5/table-reflow/">Table: Reflow</a>
+ *  See <a href="http://demos.jquerymobile.com/1.4.5/table-reflow/">Table: Reflow</a>
  *
- * <p/> See also <a href="http://jquerymobile.com/demos/1.3.0-rc.1/docs/tables/">Responsive tables</a>
- * <p/> See also <a href="http://jquerymobile.com/demos/1.3.0-beta.1/docs/demos/tables/financial-grouped-columns.html">Grouped column headers</a>
+ *  See also <a href="http://jquerymobile.com/demos/1.3.0-rc.1/docs/tables/">Responsive tables</a>
+ *  See also <a href="http://jquerymobile.com/demos/1.3.0-beta.1/docs/demos/tables/financial-grouped-columns.html">Grouped column headers</a>
  *
  * @author slavap
  *
@@ -186,9 +186,9 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
     /**
      * @param colNames - comma separated column names with optional priority (1 = highest, 6 = lowest).
      * If you need comma in name use \, to preserve it.
-     * <p/> Column name can be valid HTML, i.e. &lt;abbr title="Rotten Tomato Rating">Rating&lt;/abbr>=1
-     * <p/> Example: Rank,Movie Title,Year=3,Reviews=5
-     * <p/> To make a column persistent so it's not available for hiding, just omit priority.
+     *  Column name can be valid HTML, i.e. &lt;abbr title="Rotten Tomato Rating">Rating&lt;/abbr>=1
+     *  Example: Rank,Movie Title,Year=3,Reviews=5
+     *  To make a column persistent so it's not available for hiding, just omit priority.
      * This will make the column visible at all widths and won't be available in the column chooser menu.
      */
     public void setColNames(String colNames) {
@@ -238,9 +238,9 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
     /**
      * @param colGroups - comma separated grouped column headers with colspan and priority (1 = highest, 6 = lowest).
      * If you need comma in name use \, to preserve it.
-     * <p/> Expected format: colspan=GroupName=priority
-     * <p/> Group name can be valid HTML, i.e. 4=&lt;abbr title="Previous Year Results">2012&lt;/abbr>=1
-     * <p/> Example: 3=Q1 2012=5, 3=Q2 2012=4, 3=Q3 2012=3, 3=Q4 2012=2, 3=2012 Totals=1
+     *  Expected format: colspan=GroupName=priority
+     *  Group name can be valid HTML, i.e. 4=&lt;abbr title="Previous Year Results">2012&lt;/abbr>=1
+     *  Example: 3=Q1 2012=5, 3=Q2 2012=4, 3=Q3 2012=3, 3=Q4 2012=2, 3=2012 Totals=1
      */
     public void setColGroups(String colGroups) {
         if (this.colGroups == colGroups || this.colGroups != null && this.colGroups.equals(colGroups)) return;
@@ -273,7 +273,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
     /**
      * @param cells - comma separated table cells, each string/cell can be valid HTML.
      * If you need comma in name use \, to preserve it.
-     * <p/> Example: &lt;th>1&lt;/th>, The Matrix, 1999, 8.7, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5
+     *  Example: &lt;th>1&lt;/th>, The Matrix, 1999, 8.7, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5
      */
     public void setCells(String cells) {
         if (this.cells == cells || this.cells != null && this.cells.equals(cells)) return;

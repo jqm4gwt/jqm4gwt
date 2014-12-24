@@ -15,7 +15,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMFilterableEvent;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 11 Jul 2011 22:09:41
- *         <p/>
+ *
  *         An implementation of {@link JQMPanel} for control groups.
  */
 public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMControlGroup>,
@@ -123,9 +123,9 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
 
     /**
      * After dynamic changes to widgets, can be called in conjunction with JQMContext.render().
-     * <p/> Example:
-     * <p/> JQMContext.render(grp.getElement().getId());
-     * <p/> grp.refresh();
+     *  Example:
+     *  JQMContext.render(grp.getElement().getId());
+     *  grp.refresh();
      */
     public void refresh() {
         refresh(getElement());

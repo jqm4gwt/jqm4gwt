@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.WidgetCollection;
 
 /**
  * Flow panel based on the given HTML element sent as constructor argument.
- * <p/> A panel that formats its child widgets using the default HTML layout behavior.
+ *  A panel that formats its child widgets using the default HTML layout behavior.
  */
 public class CustomFlowPanel extends ComplexPanel {
 

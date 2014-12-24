@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 9 Jul 2011 12:57:43
  *
- * <p/>    The {@link JQMContext} provides methods that facilitate interaction
+ *     The {@link JQMContext} provides methods that facilitate interaction
  *         between GWT, JQM and the DOM.
  *
  */
@@ -219,15 +219,15 @@ public class JQMContext {
 
     /**
      * See <a href="http://stackoverflow.com/a/12629050">Read :hover pseudo class with javascript</a>
-     * <p/>
+     *
      * @param rule - substring for css rule search
      * @param props - requested property names
      * @param regexProps - regular expressions for requested properties, see the following links:
      *
-     * <p/> <a href="http://www.w3schools.com/jsref/jsref_obj_regexp.asp">JavaScript RegExp Object</a>
-     * <p/> <a href="http://www.regular-expressions.info/javascriptexample.html">Regex Tester</a>
-     * <p/> <a href="http://www.regular-expressions.info/anchors.html">Start of String and End of String Anchors</a>
-     * <p/>
+     *  <a href="http://www.w3schools.com/jsref/jsref_obj_regexp.asp">JavaScript RegExp Object</a>
+     *  <a href="http://www.regular-expressions.info/javascriptexample.html">Regex Tester</a>
+     *  <a href="http://www.regular-expressions.info/anchors.html">Start of String and End of String Anchors</a>
+     *
      *
      * @return - property/value javascript object
      */

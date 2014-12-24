@@ -4,7 +4,7 @@ import com.google.gwt.dom.client.Element;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 13 May 2011 11:14:24
- * <p/>
+ *
  *         Utility methods. The static methods in this class map through to the
  *         equivalent JQM method in $.mobile
  *
@@ -13,9 +13,9 @@ public class Mobile {
 
     /**
      * See <a href="http://api.jquerymobile.com/pagecontainer/#method-change">Pagecontainer.change -> options.role</a>
-     * <p/> The data-role value to be used when displaying the page.
+     *  The data-role value to be used when displaying the page.
      * By default this is undefined which means rely on the value of the data-role attribute defined on the element.
-     * <p/> For example: pagecontainer.change() with dialog option is not deprecated, and as result of
+     *  For example: pagecontainer.change() with dialog option is not deprecated, and as result of
      * such call page's data-role will be set to "dialog" and cause conflict with explicitly
      * defined data-dialog property.
      */

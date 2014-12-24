@@ -8,7 +8,7 @@ import com.sksamuel.jqm4gwt.HasText;
 
 /**
  * An implemenation of a &lt;abbr> element exposed as a widget.
- * <p/> The &lt;abbr> tag indicates an abbreviation or an acronym, like "WWW" or "NATO".
+ *  The &lt;abbr> tag indicates an abbreviation or an acronym, like "WWW" or "NATO".
  *
  * @author slavap
  *

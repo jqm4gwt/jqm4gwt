@@ -10,14 +10,14 @@ public class JQMTabsEvent extends GwtEvent<JQMTabsEvent.Handler> {
     public interface Handler extends EventHandler {
         /**
          *  If the tabs are currently collapsed, event.oldTabHeader and event.oldTabContent will be null.
-         *  <p/> If the tabs are collapsing, event.newTabHeader and event.newTabContent will be null.
+         *   If the tabs are collapsing, event.newTabHeader and event.newTabContent will be null.
          */
         void onActivate(JQMTabsEvent event);
 
         /**
          * If any exception is thrown then tabs won't be switched and current tab remains active.
-         *  <p/> If the tabs are currently collapsed, event.oldTabHeader and event.oldTabContent will be null.
-         *  <p/> If the tabs are collapsing, event.newTabHeader and event.newTabContent will be null.
+         *   If the tabs are currently collapsed, event.oldTabHeader and event.oldTabContent will be null.
+         *   If the tabs are collapsing, event.newTabHeader and event.newTabContent will be null.
          */
         void onBeforeActivate(JQMTabsEvent event);
     }
