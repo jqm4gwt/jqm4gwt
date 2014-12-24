@@ -305,6 +305,10 @@ public class JQMTabs extends JQMWidget {
         return sel != null && "true".equals(sel);
     }
 
+    public void checkActiveHighlighted() {
+        doActiveHighlight();
+    }
+
     private void doActiveHighlight() {
         if (navbar != null) {
             for (int i = 0; i < navbar.getButtonCount(); i++) {
