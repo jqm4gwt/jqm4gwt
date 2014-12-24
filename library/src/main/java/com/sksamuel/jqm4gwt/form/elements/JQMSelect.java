@@ -54,8 +54,8 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 10:58:58
- * <p/> An implementation of a jQuery mobile select element.
- * <p/> See <a href="http://demos.jquerymobile.com/1.4.5/selectmenu/">Select menu</a>
+ * <br> An implementation of a jQuery mobile select element.
+ * <br> See <a href="http://demos.jquerymobile.com/1.4.5/selectmenu/">Select menu</a>
  */
 public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>, HasText<JQMSelect>,
         HasFocusHandlers, HasChangeHandlers, HasClickHandlers, HasTapHandlers, HasValue<String>,
@@ -247,7 +247,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     /**
      * Adds an option with the given text. The text is also used as the value.
      * The option is added at the end of the list of options.
-     * <p/>
+     * <br>
      * If you want to specify a value diferent from the display text, then
      * invoke addOption(String, String).
      */
@@ -486,10 +486,10 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     /**
      * setValue() can be called before options are populated (or in the middle of their population).
      * For example: asynchronous options loading or data binding scenarios.
-     * <p/> if value != null and cannot be resolved immediately through current options,
+     * <br> if value != null and cannot be resolved immediately through current options,
      * it will be memorized and probably resolved later, when more options are added.
-     * <p/> On successful resolution regular setValue() will be called (and events fired if it was requested).
-     * <p/> Calling clear() resets delayedValue processing.
+     * <br> On successful resolution regular setValue() will be called (and events fired if it was requested).
+     * <br> Calling clear() resets delayedValue processing.
      */
     public String getDelayedValue() {
         return delayedValue;
@@ -773,11 +773,11 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     /**
      * Change the selection to the option at the given index.
-     * <p/> Setting the selected index programmatically does <em>NOT</em>
+     * <br> Setting the selected index programmatically does <em>NOT</em>
      * cause the {@link ChangeHandler#onChange(ChangeEvent)}
      * nor {@link ValueChangeHandler#onValueChange(ValueChangeEvent)}
      * events to be fired.
-     * <p/> Call {@link JQMSelect#setValue(String, boolean)} with <b>true</b> if you need them raised.
+     * <br> Call {@link JQMSelect#setValue(String, boolean)} with <b>true</b> if you need them raised.
      */
     public void setSelectedIndex(int index) {
         select.setSelectedIndex(index);
@@ -908,7 +908,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     /**
      * Default is true.
-     * <p/> Sets whether placeholder menu items are hidden.
+     * <br> Sets whether placeholder menu items are hidden.
      * When true, the menu item used as the placeholder for the select menu widget
      * will not appear in the list of choices.
      */

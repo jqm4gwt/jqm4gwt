@@ -26,12 +26,12 @@ import com.sksamuel.jqm4gwt.form.validators.Validator;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 12 Jul 2011 21:36:02
- *         <p/>
+ *         <br>
  *         A {@link JQMForm} is a standard GWT panel that offers extra
  *         functionality for quick building of input forms. The framework offers
  *         built in validation and error reporting and simplified submission
  *         processing.
- *         <p/>
+ *         <br>
  *         Any {@link JQMSubmit} widgets that are added will be automatically
  *         wired to submit this form. Alternatively, any widget can be set to
  *         programatically submit the form by invoking submit();
@@ -137,10 +137,10 @@ public class JQMForm extends FlowPanel {
      * This method will automatically add a label element which will be made
      * visible with an error message when validate is called on this field and
      * fails.
-     * <p/>
+     * <br>
      * The label element will be located immediately after the supplied widget
      * (as first sibling).
-     * <p/>
+     * <br>
      * If the widget is not null then the an onBlur handler will be registered
      * that will trigger validation for this validator only.
      *
@@ -341,7 +341,7 @@ public class JQMForm extends FlowPanel {
     /**
      * Sets the given widget to be required with a custom message. Then this
      * field will be checked to ensure it has a value set before the form will be submitted.
-     * <p/>
+     * <br>
      * In effect, setting a field to required adds an implicit "not null or empty" validator.
      */
     public void setRequired(JQMFormWidget widget, String msg) {
@@ -360,13 +360,13 @@ public class JQMForm extends FlowPanel {
      * This method is invoked when the form is ready for submission. Typically
      * this method would be called from one of your submission buttons
      * automatically but it is possible to invoke it programmatically.
-     * <p/>
+     * <br>
      * Before validation, the general errors are cleared.
-     * <p/>
+     * <br>
      * If the validation phase is passed the the submission handler will be
      * invoked. Before the handler is invoked, the page loading dialog will be
      * shown so that async requests can complete in the background.
-     * <p/>
+     * <br>
      * The {@link SubmissionHandler} must hide the loading dialog by calling
      * hideFormProcessingDialog() on the form or by calling Mobile.hideLoadingDialog()
      */

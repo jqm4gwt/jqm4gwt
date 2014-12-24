@@ -45,10 +45,10 @@ import com.sksamuel.jqm4gwt.events.TapHandler;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 5 May 2011 14:02:24
- * <p/>
+ * <br>
  * An implementation of a Jquery mobile button.
- * <p/>See <a href="http://demos.jquerymobile.com/1.4.5/button-markup/">Buttons</a>
- * <p/>See also <a href="http://jquerymobile.com/demos/1.2.1/docs/buttons/buttons-types.html">Button basics</a>
+ * <br>See <a href="http://demos.jquerymobile.com/1.4.5/button-markup/">Buttons</a>
+ * <br>See also <a href="http://jquerymobile.com/demos/1.2.1/docs/buttons/buttons-types.html">Button basics</a>
  */
 public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<JQMButton>,
         HasTransition<JQMButton>, HasClickHandlers, HasInline<JQMButton>,
@@ -131,7 +131,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     /**
      * Convenience constructor that creates a button that shows the given
      * JQMPage when clicked. The link will use a Transition.POP type.
-     * <p/>
+     * <br>
      * Note that the page param is an already instantiated page and thus will
      * be immediately inserted into the DOM. Do not use this constructor when
      * you want to lazily add the page.
@@ -145,7 +145,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     /**
      * Convenience constructor that creates a button that shows the given JQMPage when clicked.
-     * <p/>
+     * <br>
      * Note that the page param is an already instantiated page and thus will
      * be immediately inserted into the DOM. Do not use this constructor when
      * you want to lazily add the page.
@@ -162,7 +162,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     /**
      * Convenience constructor that creates a button that shows the given url
      * when clicked. The link will use a Transition.POP type.
-     * <p/>
+     * <br>
      * Note that the page param is an already instantiated page and thus will
      * be immediately inserted into the DOM. Do not use this constructor when
      * you want to lazily add the page.
@@ -177,7 +177,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     /**
      * Convenience constructor that creates a button that shows the given url
      * when clicked.
-     * <p/>
+     * <br>
      * Note that the page param is an already instantiated page and thus will
      * be immediately inserted into the DOM. Do not use this constructor when
      * you want to lazily add the page.
@@ -458,7 +458,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     /**
      * Sets this button to be inline.
-     * <p/>
+     * <br>
      * NOTE: If this button is inside a {@link JQMButtonGroup} then you must
      * call withInline(boolean) on the button group itself and not each button
      * individually.
@@ -472,7 +472,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     /**
      * Sets this button to be inline.
-     * <p/>
+     * <br>
      * NOTE: If this button is inside a {@link JQMButtonGroup} then you must
      * call withInline(boolean) on the button group itself and not each button
      * individually.

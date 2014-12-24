@@ -30,10 +30,10 @@ import com.sksamuel.jqm4gwt.html.ListWidget;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 4 May 2011 21:21:13
- * <p/>
+ * <br>
  * An implementation of a jquery mobile list view as seen here:
  * <a href="http://jquerymobile.com/demos/1.2.1/docs/lists/index.html">Listviews</a>
- * <p/>
+ * <br>
  * This list can be ordered or unordered (which must be set at constructor time).
  * The list can be dynamically modified with random access.
  *
@@ -108,7 +108,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
 
     /**
      * Registers a new {@link ClickHandler} on this list.
-     * <p/>
+     * <br>
      * When a click event has been fired, you can get a reference to the position that was clicked by getClickIndex()
      * and a reference to the item that was clicked with getClickItem()
      */
@@ -238,7 +238,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
 
     /**
      * Adds a new {@link JQMListItem} that contains the given @param text as the heading element.
-     * <p/>
+     * <br>
      * The list item is made linkable to the given page
      *
      * @param text the text to use as the content of the header element
@@ -252,9 +252,9 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
      * Adds a new {@link JQMListItem} that contains the given @param text as the content. Note that if you want to
      * navigate to an internal url (ie, another JQM Page) then you must prefix the url with a hash. IE, the hash is
      * not added automatically. This allows you to navigate to external urls as well.
-     * <p/>
+     * <br>
      * If you add an item after the page has been created then you must call .refresh() to update the layout.
-     * <p/>
+     * <br>
      * The list item is made linkable to the @param url
      */
     public JQMListItem addItem(String text, String url) {
@@ -466,7 +466,7 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
 
     /**
      * Call to refresh the list after a programmatic change is made.
-     * <p/> In some cases you have to call recreate() first, and then refresh(), for example
+     * <br> In some cases you have to call recreate() first, and then refresh(), for example
      * when adding complex list items.
      */
     public void refresh() {

@@ -6,9 +6,9 @@ import java.util.Map;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 9 Jul 2011 14:23:25
  *
- * <p/>This enum represents the default iconset available in jquery mobile.
+ * <br>This enum represents the default iconset available in jquery mobile.
  *
- * <p/>To see what the icon set looks like, visit the following site:
+ * <br>To see what the icon set looks like, visit the following site:
  *
  * <p><a href="http://demos.jquerymobile.com/1.4.5/icons/">JQM Icons</a></p>
  *

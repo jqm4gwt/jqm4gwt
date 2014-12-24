@@ -14,13 +14,13 @@ import com.sksamuel.jqm4gwt.JQMWidget;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 24 Jul 2011 10:44:29
- * <p/>
+ * <br>
  * An implementation of a group or set of collapsibles.
  * When {@link JQMCollapsible} widgets are placed inside a {@link JQMCollapsibleSet}
  * they behave like an accordion widget - that is only one can be open at any time.
  * If a user opens another collapsible panel, then any others will be closed automatically.
  *
- * <p/> See <a href="http://demos.jquerymobile.com/1.4.5/collapsibleset/">Collapsible set</a>
+ * <br> See <a href="http://demos.jquerymobile.com/1.4.5/collapsibleset/">Collapsible set</a>
  */
 public class JQMCollapsibleSet extends JQMWidget implements HasIconPos<JQMCollapsibleSet>,
         HasMini<JQMCollapsibleSet>, HasInset<JQMCollapsibleSet>, HasCorners<JQMCollapsibleSet> {

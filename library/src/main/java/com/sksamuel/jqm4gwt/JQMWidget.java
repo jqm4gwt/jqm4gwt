@@ -22,16 +22,16 @@ import com.sksamuel.jqm4gwt.list.JQMList;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 11 Jul 2011 17:02:40
- *         <p/>
+ *         <br>
  *         An extension of the standard GWT {@link Widget} that adds
  *         functionality common to all JQM elements, as well as convenience
  *         methods used by subclasses.
- *         <p/>
+ *         <br>
  *         The {@link JQMWidget} is an extension of composite because
  *         {@link JQMWidget}s do not typically add new functionality (in terms
  *         of new elements), they are mostly compositions of existing HTML
  *         elements.
- *         <p/>
+ *         <br>
  *         This abstract superclass does not define the nature of the
  *         composition in use. Implementating subclasses must decide how to
  *         compose and thus call initWidget() themselves.
@@ -182,7 +182,7 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
 
     /**
      * {@link JQMFilterable} will use this text when searching through this widget.
-     * <p/><b>Detail description:</b> By default, the filter simply searches against
+     * <br><b>Detail description:</b> By default, the filter simply searches against
      * the contents of each list item.
      * If you want the filter to search against different content, add the data-filtertext
      * attribute to the item and populate it with one or many keywords and phrases that
@@ -217,9 +217,9 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
 
     /**
      * To be used in conjunction with {@link JQMFilterable}.
-     * <p/> May not work for any widget or require {@link JQMWidget#getDataFilterWidget()} override
+     * <br> May not work for any widget or require {@link JQMWidget#getDataFilterWidget()} override
      * for composite widgets like {@link JQMSelect}.
-     * <p/> But {@link JQMList}, {@link JQMCollapsibleSet}, and others with children collection are supported.
+     * <br> But {@link JQMList}, {@link JQMCollapsibleSet}, and others with children collection are supported.
      *
      * @param filterSelector - a jQuery selector that will be used to retrieve the element
      * that will serve as the input source, UiBinder example: dataFilter="#{fltr1.getFilterId}"
@@ -317,9 +317,9 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
      * @param searchValue - filtering text
      *
      * @return - must return <b>true</b> if the element is to be <b>filtered out</b>.
-     * <p/> - must return <b>false</b> if the element is to be <b>shown</b>.
-     * <p/> - null means default filtering should be used.
-     * <p/> JQMCommon.getTextForFiltering(elt) can be used to get filtering element's text
+     * <br> - must return <b>false</b> if the element is to be <b>shown</b>.
+     * <br> - null means default filtering should be used.
+     * <br> JQMCommon.getTextForFiltering(elt) can be used to get filtering element's text
      */
     protected Boolean onFiltering(Element elt, Integer index, String searchValue) {
         //String s = JQMCommon.getTextForFiltering(elt);

@@ -8,7 +8,7 @@ import com.sksamuel.jqm4gwt.HasText;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 11 Jul 2011 13:38:38
  *
- * <p/> An implemenation of a &lt;label> element
+ * <br> An implemenation of a &lt;label> element
  *
  */
 public class FormLabel extends Widget implements HasText<FormLabel>, HasHTML<FormLabel> {

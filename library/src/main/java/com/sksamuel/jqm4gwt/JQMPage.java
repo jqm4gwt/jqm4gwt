@@ -25,7 +25,7 @@ import com.sksamuel.jqm4gwt.toolbar.JQMPanel;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 4 May 2011 23:55:27
- * <p/>
+ * <br>
  * A {@link JQMPage} is the base container for a single page. Any JQM widgets can be added
  * to the page. You can consider a JQMPage as like a GWT "view" in the MVP paradigm.
  */
@@ -751,7 +751,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     /**
      * Fixed Header and Footer will be hidden if content area height percent is below
      * than specified percent of window height (default is 50%).
-     * <p/> Useful in cases with activated virtual keyboard, especially on Android.
+     * <br> Useful in cases with activated virtual keyboard, especially on Android.
      */
     public void setHideFixedToolbarsIfContentAreaPercentBelow(double value) {
         double oldVal = hideFixedToolbarsIfContentAreaPercentBelow;
@@ -770,7 +770,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     /**
      * Fixed Header and Footer will be hidden if virtual/on-screen keyboard is activated.
-     * <p/> This property is used as threshold(keyboard's height) in pixels
+     * <br> This property is used as threshold(keyboard's height) in pixels
      * for keyboard detection (to work must be > 0, default is 0).
      */
     public void setHideFixedToolbarsIfVirtualKeyboard(int value) {
@@ -1007,7 +1007,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * then true means show faded previous page under dialog window
      * and don't bother prev page with lifecycle events (show, hide, ...).
      *
-     * <p/> See <a href="http://tqcblog.com/2012/04/19/transparent-jquery-mobile-dialogs/">Transparent jQuery mobile dialogs</a>
+     * <br> See <a href="http://tqcblog.com/2012/04/19/transparent-jquery-mobile-dialogs/">Transparent jQuery mobile dialogs</a>
      */
     public void setDlgTransparent(boolean transparent) {
         this.transparent = transparent;

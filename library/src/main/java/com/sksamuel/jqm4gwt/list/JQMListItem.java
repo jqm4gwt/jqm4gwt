@@ -398,7 +398,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
 
     /**
      * Sets the image to be used to the given source url.
-     * <p/> The same as setImage(), but image is marked as icon class.
+     * <br> The same as setImage(), but image is marked as icon class.
      */
     public void setIcon(String src) {
         setImage(src);
@@ -416,7 +416,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
 
     /**
      * Sets the image to be used to the given source url.
-     * <p/> The same as setImage(), but image is marked as thumbnail class.
+     * <br> The same as setImage(), but image is marked as thumbnail class.
      */
     public void setThumbnail(String src) {
         setImage(src);
@@ -434,7 +434,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
 
     /**
      * Sets the image on this list item to the given source url.
-     * <p/> Neither 'jqm4gwt-listitem-thumb' nor 'jqm4gwt-listitem-icon' class is added.
+     * <br> Neither 'jqm4gwt-listitem-thumb' nor 'jqm4gwt-listitem-icon' class is added.
      */
     public void setImage(String src) {
         if (src == null) {
@@ -459,7 +459,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
 
     /**
      * Adds secondary image to this list item. It's forcefully added directly to &lt;li> element.
-     * <p/> Additional CSS is needed to control appearance of this image, for example right side
+     * <br> Additional CSS is needed to control appearance of this image, for example right side
      * icon on the static band can be implemented, see <b>jqm4gwt-list-static-item-img-right</b> CSS rule.
      */
     public ImageElement addSecondaryImage(String src) {

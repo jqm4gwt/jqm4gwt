@@ -18,19 +18,19 @@ import com.sksamuel.jqm4gwt.JQMWidget;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 9 May 2011 23:54:07
  *
- * <p/>    The {@link JQMTable} widget is a panel that allows other widgets to
+ * <br>    The {@link JQMTable} widget is a panel that allows other widgets to
  *         be added in a regular grid. The grid is regular in the sense that
  *         there is no concept of "cell span" like a normal HTML table has.
  *
- * <p/>    This table can accept any {@link JQMWidget} or any regular GWT
+ * <br>    This table can accept any {@link JQMWidget} or any regular GWT
  *         {@link Widget} as a child element. Each added widget is wrapped in a
  *         div element.
  *
- * <p/>    The table can be resized after being created by calling
+ * <br>    The table can be resized after being created by calling
  *         withColumns(int). That can be an expensive operation, see the javadoc
  *         for the withColumns(int) method for more information on why.
  *
- * <p/>    Tables must have at least 1 and at most 5 columns
+ * <br>    Tables must have at least 1 and at most 5 columns
  *
  * <p>See <a href="http://demos.jquerymobile.com/1.4.5/grids/">Grids</a></p>
  *
@@ -302,7 +302,7 @@ public class JQMTable extends JQMWidget {
     /**
      *
      * @param percents - comma separated percent size for each column.
-     * <p/>For example: 10,30,30,30 defines table/grid with four columns.
+     * <br>For example: 10,30,30,30 defines table/grid with four columns.
      */
     public void setPercentageColumns(String percents) {
         if (percents == null || percents.isEmpty()) {

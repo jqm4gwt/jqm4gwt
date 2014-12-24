@@ -13,7 +13,7 @@ public interface JQMFormWidget extends IsWidget, HasValue<String>, HasBlurHandle
 
     /**
      * Optional, can return null, then JQMForm will create label by itself.
-     * <p/> Create and return a new Label for displaying errors and attach to the form widget.
+     * <br> Create and return a new Label for displaying errors and attach to the form widget.
      **/
     Label addErrorLabel();
 }

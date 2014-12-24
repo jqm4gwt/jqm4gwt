@@ -23,7 +23,7 @@ import com.sksamuel.jqm4gwt.button.JQMButton;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 24 Jul 2011 23:09:12
  *
- * <p/>    jQuery Mobile has a very basic navbar widget that is useful for
+ * <br>    jQuery Mobile has a very basic navbar widget that is useful for
  *         providing up to 5 buttons with optional icons in a bar, typically
  *         within a header or footer.
  *

@@ -249,7 +249,7 @@ public class JQMTabs extends JQMWidget {
 
     /**
      * Works only in case of JQMButton were used for tab headers.
-     * <p/> Sets the position of the icons on tab headers.
+     * <br> Sets the position of the icons on tab headers.
      * If you desire an icon only button then set the position to IconPos.NOTEXT.
      */
     public void setIconPos(IconPos pos) {
@@ -495,7 +495,7 @@ public class JQMTabs extends JQMWidget {
 
     /**
      *  If the tabs are currently collapsed, oldTabHeader and oldTabContent will be null.
-     *  <p/> If the tabs are collapsing, newTabHeader and newTabContent will be null.
+     *  <br> If the tabs are collapsing, newTabHeader and newTabContent will be null.
      *
      * @param newTabHeader - JQMButton or JQMListItem
      * @param oldTabHeader - JQMButton or JQMListItem
@@ -508,7 +508,7 @@ public class JQMTabs extends JQMWidget {
 
     /**
      *  If the tabs are currently collapsed, oldTabHeader and oldTabContent will be null.
-     *  <p/> If the tabs are collapsing, newTabHeader and newTabContent will be null.
+     *  <br> If the tabs are collapsing, newTabHeader and newTabContent will be null.
      *
      * @param newTabHeader - JQMButton or JQMListItem
      * @param oldTabHeader - JQMButton or JQMListItem
@@ -719,8 +719,8 @@ public class JQMTabs extends JQMWidget {
 
     /**
      * @param value - Multiple types supported:
-     * <p/> Boolean: Enable or disable all tabs.
-     * <p/> Array: An array containing the zero-based indexes of the tabs that should be disabled,
+     * <br> Boolean: Enable or disable all tabs.
+     * <br> Array: An array containing the zero-based indexes of the tabs that should be disabled,
      * e.g., [ 0, 2 ] would disable the first and third tab.
      */
     public void setTabDisabled(String value) {
@@ -734,7 +734,7 @@ public class JQMTabs extends JQMWidget {
     /**
      * @param value - The type of event that the tabs should react to in order to activate the tab.
      * To activate on hover, use "mouseover" {@link JQMTabs#ACTIVATE_TAB_ON_HOVER}.
-     * <p/> Default value is "click" {@link JQMTabs#ACTIVATE_TAB_ON_CLICK} .
+     * <br> Default value is "click" {@link JQMTabs#ACTIVATE_TAB_ON_CLICK} .
      */
     public void setTabEvent(String value) {
         JQMCommon.setAttribute(this, "data-event", value);

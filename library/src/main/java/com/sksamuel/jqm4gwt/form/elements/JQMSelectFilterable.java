@@ -7,7 +7,7 @@ import com.sksamuel.jqm4gwt.JQMCommon;
 
 /**
  * See <a href="http://demos.jquerymobile.com/1.4.5/selectmenu-custom-filter/">Filterable inside custom select</a>
- * <p/> See also <a href="https://github.com/jquery/jquery-mobile/blob/9cb1040f1da9309c30b70eccbbfb54a8ddf253aa/demos/selectmenu-custom-filter/index.php">Github Demos</a>
+ * <br> See also <a href="https://github.com/jquery/jquery-mobile/blob/9cb1040f1da9309c30b70eccbbfb54a8ddf253aa/demos/selectmenu-custom-filter/index.php">Github Demos</a>
  *
  * @author SlavaP
  */
@@ -31,8 +31,8 @@ public class JQMSelectFilterable extends JQMSelect {
 
     /**
      * There is predefined ui-select-filterable CSS class added to menu dialog/popup.
-     * <p/> You can style listview by defining rule .ui-selectmenu.ui-select-filterable .ui-selectmenu-list { ... }
-     * <p/> For additional flexibility you can specify custom classes to be added together with ui-select-filterable
+     * <br> You can style listview by defining rule .ui-selectmenu.ui-select-filterable .ui-selectmenu-list { ... }
+     * <br> For additional flexibility you can specify custom classes to be added together with ui-select-filterable
      * @param dialogStyleNames - space separated custom classes
      */
     public void setMenuStyleNames(String dialogStyleNames) {

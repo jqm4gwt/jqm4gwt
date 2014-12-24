@@ -46,7 +46,7 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 11 May 2011 13:49:09
- *         <p/>
+ *         <br>
  *         An implementation of a standard HTML text input.
  */
 public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasFocusHandlers,

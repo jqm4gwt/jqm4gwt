@@ -13,9 +13,9 @@ public class JQMFilterableEvent extends GwtEvent<JQMFilterableEvent.Handler> {
 
         /**
          * @return - must return <b>true</b> if the element is to be <b>filtered out</b>.
-         * <p/> - must return <b>false</b> if the element is to be <b>shown</b>.
-         * <p/> - null means default filtering should be used.
-         * <p/> JQMCommon.getTextForFiltering(elt) can be used to get filtering element's text
+         * <br> - must return <b>false</b> if the element is to be <b>shown</b>.
+         * <br> - null means default filtering should be used.
+         * <br> JQMCommon.getTextForFiltering(elt) can be used to get filtering element's text
          */
         Boolean onFiltering(JQMFilterableEvent event);
     }

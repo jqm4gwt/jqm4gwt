@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * See <a href="http://demos.jquerymobile.com/1.4.5/pages-dialog/">Dialogs</a>
  *
- * <p/> Also see <a href="http://vernonkesner.com/blog/2013/04/10/jquery-mobile-dialogs-and-popups/">
+ * <br> Also see <a href="http://vernonkesner.com/blog/2013/04/10/jquery-mobile-dialogs-and-popups/">
  * jQuery Mobile: Dialogs and Popups</a>
  *
  * @author SlavaP
