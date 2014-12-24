@@ -772,7 +772,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     /**
      * Fixed Header and Footer will be hidden if virtual/on-screen keyboard is activated.
      * <br> This property is used as threshold(keyboard's height) in pixels
-     * for keyboard detection (to work must be > 0, default is 0).
+     * for keyboard detection (to work must be &gt; 0, default is 0).
      */
     public void setHideFixedToolbarsIfVirtualKeyboard(int value) {
         int oldVal = hideFixedToolbarsIfVirtualKeyboard;

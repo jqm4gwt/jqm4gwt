@@ -12,7 +12,7 @@ import com.google.gwt.dom.client.Element;
 public class Mobile {
 
     /**
-     * See <a href="http://api.jquerymobile.com/pagecontainer/#method-change">Pagecontainer.change -> options.role</a>
+     * See <a href="http://api.jquerymobile.com/pagecontainer/#method-change">Pagecontainer.change -&gt; options.role</a>
      * <br> The data-role value to be used when displaying the page.
      * By default this is undefined which means rely on the value of the data-role attribute defined on the element.
      * <br> For example: pagecontainer.change() with dialog option is not deprecated, and as result of
