@@ -8,7 +8,7 @@ import com.sksamuel.jqm4gwt.HasText;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 11 Jul 2011 13:38:38
  *
- *  An implemenation of a &lt;span> element exposed as a widget
+ *  An implemenation of a &lt;span&gt; element exposed as a widget
  *
  */
 public class Span extends Widget implements HasText<Span>, HasHTML<Span> {

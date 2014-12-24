@@ -31,7 +31,7 @@ import com.sksamuel.jqm4gwt.events.TapHandler;
  * @author Stephen K Samuel samspade79@gmail.com 17 Jul 2011 15:38:47
  *
  *         An implementation of an anchor tag that wraps an image tag and optional text.
- *         <pre> &lt;a href='mylink'>&lt;img src='myimage'/>&lt;/a> </pre>
+ *         <pre> &lt;a href='mylink'&gt;&lt;img src='myimage'/&gt;&lt;/a&gt; </pre>
  *
  */
 public class ImageLink extends Widget implements HasClickHandlers, HasTapHandlers, HasEnabled,

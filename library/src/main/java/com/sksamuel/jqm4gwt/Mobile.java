@@ -12,7 +12,7 @@ import com.google.gwt.dom.client.Element;
 public class Mobile {
 
     /**
-     * See <a href="http://api.jquerymobile.com/pagecontainer/#method-change">Pagecontainer.change -> options.role</a>
+     * See <a href="http://api.jquerymobile.com/pagecontainer/#method-change">Pagecontainer.change -&gt; options.role</a>
      *  The data-role value to be used when displaying the page.
      * By default this is undefined which means rely on the value of the data-role attribute defined on the element.
      *  For example: pagecontainer.change() with dialog option is not deprecated, and as result of
@@ -66,7 +66,7 @@ public class Mobile {
 
     /**
      * It's not enough for IE9, see <a href="http://stackoverflow.com/a/17852518">jQuery Mobile, disable all button when loading overlay is showed</a>
-     * <p> So &lt;div class="ui-loader-background">&lt;/div> must be added to html body. </p>
+     * <p> So &lt;div class="ui-loader-background"/&lt; must be added to html body. </p>
      */
     public static native void disableUI() /*-{
         $wnd.$('body').addClass('ui-state-disabled');

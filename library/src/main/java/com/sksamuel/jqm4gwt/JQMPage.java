@@ -321,7 +321,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     /**
      * Returns the primary content container
      *
-     * @returns the primary content container
+     * @return the primary content container
      */
     public JQMContent getPrimaryContent() {
         return content;
@@ -675,8 +675,9 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     /**
      * Additional class names can be added directly to content div for better custom styling.
      * The same idea as UiBinder's embedded addStyleNames functionality.
-     * <p> Example:
-     * <pre>&lt;jqm:JQMPage contentAddStyleNames="aaa bbb ccc"/></pre></p>
+     *
+     * Example:
+     * <pre>&lt;jqm:JQMPage contentAddStyleNames="aaa bbb ccc"/&gt;</pre>
      */
     public void setContentAddStyleNames(String value) {
         if (value == null || value.isEmpty()) return;
@@ -771,7 +772,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     /**
      * Fixed Header and Footer will be hidden if virtual/on-screen keyboard is activated.
      *  This property is used as threshold(keyboard's height) in pixels
-     * for keyboard detection (to work must be > 0, default is 0).
+     * for keyboard detection (to work must be &gt; 0, default is 0).
      */
     public void setHideFixedToolbarsIfVirtualKeyboard(int value) {
         int oldVal = hideFixedToolbarsIfVirtualKeyboard;

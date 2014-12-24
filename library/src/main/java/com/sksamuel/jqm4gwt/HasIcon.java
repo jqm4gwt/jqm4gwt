@@ -9,7 +9,7 @@ package com.sksamuel.jqm4gwt;
  * {@link com.google.gwt.uibinder.client.UiBinder UiBinder} templates in defining it in the 'icon attribute.
  * For example:
  * <pre>
- * &lt;jqm:button.JQMButton icon="RIGHT"/>
+ * &lt;jqm:button.JQMButton icon="RIGHT"/&gt;
  * </pre>
  *
  * Valid values for the icon attribute are defined in @see DataIcon

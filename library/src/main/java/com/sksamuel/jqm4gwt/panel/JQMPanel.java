@@ -20,8 +20,8 @@ import com.sksamuel.jqm4gwt.list.JQMListItem;
  * be either {@link JQMWidget} widgets or regular GWT {@link Widget} widgets.
  *
  * The panel can use any HTML element type as the containing element. So
- * for example, this class can be used by {@link JQMListItem} as an &lt;li>
- * element panel, or by {@link JQMSelect} as a &lt;select> element panel.
+ * for example, this class can be used by {@link JQMListItem} as an &lt;li&gt;
+ * element panel, or by {@link JQMSelect} as a &lt;select&gt; element panel.
  *
  * This is the reason for the existence of this class. Jquery mobile
  * uses many elements as containers for other elements. GWT does not

@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 12 Jul 2011 07:24:00
  *
- * Implementation of an &lt;ul> or &lt;ol> element.
+ * Implementation of an &lt;ul&gt; or &lt;ol&gt; element.
  *
  */
 public class ListWidget extends ComplexPanel {

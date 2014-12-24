@@ -43,11 +43,11 @@ import com.sksamuel.jqm4gwt.html.ListWidget;
  * {@link com.google.gwt.uibinder.client.UiBinder UiBinder} templates, you
  * can set the List Items and Separators via child elements. For example:
  * <pre>
- * &lt;jqm:list.JQMList>
- *     &lt;jqm:item>&lt;jqm:list.JQMListItem text="List Item #1 Text Here"/>&lt;/jqm:item>
- *     &lt;jqm:divider>&lt;jqm:list.JQMListDivider text="List divider text here"/>&lt;/jqm:divider>
- *     &lt;jqm:item>&lt;jqm:list.JQMListItem text="List Item #2 Text Here"/>&lt;/jqm:item>
- * &lt;/jqm:list.JQMList>
+ * &lt;jqm:list.JQMList&gt;
+ *     &lt;jqm:item>&lt;jqm:list.JQMListItem text="List Item #1 Text Here"/&gt;&lt;/jqm:item&gt;
+ *     &lt;jqm:divider>&lt;jqm:list.JQMListDivider text="List divider text here"/&gt;&lt;/jqm:divider&gt;
+ *     &lt;jqm:item>&lt;jqm:list.JQMListItem text="List Item #2 Text Here"/>&lt;/jqm:item&gt;
+ * &lt;/jqm:list.JQMList&gt;
  * </pre>
  */
 public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandlers,

@@ -7,7 +7,7 @@ import com.sksamuel.jqm4gwt.HasText;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 11 Jul 2011 13:38:38
  * 
- *         An implemenation of a <legend> element
+ *         An implemenation of a &lt;legend&gt; element
  * 
  */
 public class Legend extends Widget implements HasText<Legend> {

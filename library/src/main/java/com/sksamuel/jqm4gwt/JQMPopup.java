@@ -9,7 +9,7 @@ import com.sksamuel.jqm4gwt.JQMPopupEvent.PopupState;
 /**
  * @author Stephen K Samuel samspade79@gmail.com 16 Sep 2012 00:26:35
  *
- * See <a href="http://demos.jquerymobile.com/1.4.5/popup/">Popup<a/>
+ * See <a href="http://demos.jquerymobile.com/1.4.5/popup/">Popup</a>
  */
 public class JQMPopup extends JQMContainer {
 

@@ -239,7 +239,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
      * @param colGroups - comma separated grouped column headers with colspan and priority (1 = highest, 6 = lowest).
      * If you need comma in name use \, to preserve it.
      *  Expected format: colspan=GroupName=priority
-     *  Group name can be valid HTML, i.e. 4=&lt;abbr title="Previous Year Results">2012&lt;/abbr>=1
+     *  Group name can be valid HTML, i.e. 4=&lt;abbr title="Previous Year Results"&gt;2012&lt;/abbr&gt;=1
      *  Example: 3=Q1 2012=5, 3=Q2 2012=4, 3=Q3 2012=3, 3=Q4 2012=2, 3=2012 Totals=1
      */
     public void setColGroups(String colGroups) {
@@ -273,7 +273,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
     /**
      * @param cells - comma separated table cells, each string/cell can be valid HTML.
      * If you need comma in name use \, to preserve it.
-     *  Example: &lt;th>1&lt;/th>, The Matrix, 1999, 8.7, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5
+     *  Example: &lt;th&gt;1&lt;/th&gt;, The Matrix, 1999, 8.7, &lt;th&gt;&lt;/th&gt;, Falling Down, 1993, 7.5
      */
     public void setCells(String cells) {
         if (this.cells == cells || this.cells != null && this.cells.equals(cells)) return;
@@ -610,7 +610,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
     }
 
     /**
-     * @param asTh - &lt;th> will be used for creating cell instead of &lt;td>,
+     * @param asTh - &lt;th&gt; will be used for creating cell instead of &lt;td&gt;,
      * so such cell will be styled differently, like columnNames/header cells.
      */
     @UiChild(tagname = "cell")
