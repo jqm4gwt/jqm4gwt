@@ -1088,7 +1088,8 @@ public class JQMCalBox extends JQMText {
 
     private static native void initGridDateFormatter(Element elt, JQMCalBox ctrl) /*-{
         if (ctrl == null) {
-            $wnd.$(elt).datebox( { 'calFormatter': false } );
+            var v = $wnd.$(elt).datebox( 'getOption', 'calFormatter' );
+            if (v !== false) $wnd.$(elt).datebox( { 'calFormatter': false } );
         } else {
             $wnd.$(elt).datebox( { 'calFormatter': function( date ) {
                 var t = ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::getGridDateFormatterType()();
