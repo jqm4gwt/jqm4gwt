@@ -14,7 +14,7 @@
 
     <groupId>com.sksamuel.jqm4gwt</groupId>
     <artifactId>jqm4gwt</artifactId>
-    <version>1.4.5.Final</version>
+    <version>1.4.6-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>jqm4gwt: JQuery Mobile For GWT</name>
