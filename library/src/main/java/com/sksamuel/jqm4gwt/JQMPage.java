@@ -385,7 +385,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     protected void doPageBeforeHide(Element nextPage) {
         onPageBeforeHide();
-        JQMPageEvent.fire(this, PageState.BEFORE_HIDE);
+        JQMPageEvent.fire(this, PageState.BEFORE_HIDE, this, findPage(nextPage));
     }
 
     /**
@@ -404,7 +404,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     protected void doPageBeforeShow(Element prevPage) {
         onPageBeforeShow();
-        JQMPageEvent.fire(this, PageState.BEFORE_SHOW);
+        JQMPageEvent.fire(this, PageState.BEFORE_SHOW, findPage(prevPage), this);
 
         if (isDialog()) {
             if (transparent && prevPage != null) {
@@ -445,7 +445,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     protected void doPageHide(Element nextPage) {
         onPageHide();
-        JQMPageEvent.fire(this, PageState.HIDE);
+        JQMPageEvent.fire(this, PageState.HIDE, this, findPage(nextPage));
 
         if (transparentPrevPage != null) {
             transparentPrevPage.removeClassName(UI_DIALOG_BACKGROUND);
@@ -481,7 +481,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     protected void doPageShow(Element prevPage) {
         initialWindowHeight = Window.getClientHeight();
         onPageShow();
-        JQMPageEvent.fire(this, PageState.SHOW);
+        JQMPageEvent.fire(this, PageState.SHOW, findPage(prevPage), this);
         if (contentCentered || pseudoFixedToolbars || contentHeightPercent > 0
                 || hideFixedToolbarsIfContentAreaPercentBelow > 0
                 || hideFixedToolbarsIfVirtualKeyboard > 0) {
@@ -546,7 +546,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     protected void doPageInit() {
         onPageInit();
-        JQMPageEvent.fire(this, PageState.INIT);
+        JQMPageEvent.fire(this, PageState.INIT, null/*prevPage*/, this);
     }
 
     public HandlerRegistration addPageHandler(JQMPageEvent.Handler handler) {

@@ -425,7 +425,7 @@ public class TestView1 {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
             @Override
             public void onShow(JQMPageEvent event) {
-                //Window.alert("TestView1.page.onShow() is called");
+                //Window.alert(event.toDebugString());
             }
         });
     }

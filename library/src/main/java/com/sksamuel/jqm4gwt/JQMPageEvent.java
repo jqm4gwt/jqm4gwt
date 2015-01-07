@@ -44,9 +44,10 @@ public class JQMPageEvent extends GwtEvent<JQMPageEvent.Handler> {
      * @param <S> The handler source type
      * @param source - the source of the handlers
      */
-    public static <S extends HasAttachHandlers> void fire(S source, PageState pageState) {
+    public static <S extends HasAttachHandlers> void fire(S source, PageState pageState,
+            JQMPage prevPage, JQMPage nextPage) {
       if (TYPE != null) {
-        JQMPageEvent event = new JQMPageEvent(pageState);
+        JQMPageEvent event = new JQMPageEvent(pageState, prevPage, nextPage);
         source.fireEvent(event);
       }
     }
@@ -62,12 +63,33 @@ public class JQMPageEvent extends GwtEvent<JQMPageEvent.Handler> {
 
     private final PageState pageState;
 
-    protected JQMPageEvent(PageState pageState) {
+    private final JQMPage prevPage;
+    private final JQMPage nextPage;
+
+    protected JQMPageEvent(PageState pageState, JQMPage prevPage, JQMPage nextPage) {
         this.pageState = pageState;
+        this.prevPage = prevPage;
+        this.nextPage = nextPage;
     }
 
     public PageState getPageState() {
         return pageState;
+    }
+
+    /**
+     * When HIDE - current page to be hidden. <br>
+     * When SHOW - previous page we are transitioning from.
+     **/
+    public JQMPage getPrevPage() {
+        return prevPage;
+    }
+
+    /**
+     * When HIDE - next page to be shown. <br>
+     * When SHOW - current page we are transitioning to.
+     **/
+    public JQMPage getNextPage() {
+        return nextPage;
     }
 
     @Override
@@ -78,7 +100,10 @@ public class JQMPageEvent extends GwtEvent<JQMPageEvent.Handler> {
     @Override
     public String toDebugString() {
         assertLive();
-        return super.toDebugString() + " pageState = " + pageState;
+        String s = super.toDebugString() + " pageState = " + pageState;
+        s += "; prevPage = " + (prevPage != null ? prevPage.getId() : "null");
+        s += "; nextPage = " + (nextPage != null ? nextPage.getId() : "null");
+        return s;
     }
 
     @Override
@@ -105,5 +130,4 @@ public class JQMPageEvent extends GwtEvent<JQMPageEvent.Handler> {
                 break;
         }
     }
-
 }
