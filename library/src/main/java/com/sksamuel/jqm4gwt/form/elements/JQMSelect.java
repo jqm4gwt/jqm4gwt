@@ -142,12 +142,30 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         }
     }
 
+    public static interface ChangeOptionsAction {
+        /**
+         * Something like that:
+         * <pre>
+         * if (!select.isEmpty()) select.clear();
+         * select.beginAddOptions();
+         * try {
+         *     select.addOption(...);
+         *     return true;
+         * } finally {
+         *     select.endAddOptions();
+         * }
+         * </pre>
+         *
+         * @return - must return true in case options were changed
+         */
+        boolean doChange(JQMSelect select);
+    }
+
     private static final String SELECT_STYLENAME = "jqm4gwt-select";
 
     protected class ListBoxEx extends ListBox {
 
-        public ListBoxEx(boolean isMultipleSelect) {
-            super(isMultipleSelect);
+        public ListBoxEx() {
         }
 
         @Override
@@ -193,7 +211,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         label.setFor(id);
         add(label);
 
-        select = new ListBoxEx(false);
+        select = new ListBoxEx();
         select.getElement().setId(id);
         add(select);
 
@@ -301,8 +319,10 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     protected void rebuildSearchIndex() {
         selectIdx.clear();
-        for (int i = 0; i < select.getItemCount(); i++) {
-            String v = select.getValue(i);
+        SelectElement selElt = select.getElement().cast();
+        NodeList<OptionElement> opts = selElt.getOptions();
+        for (int i = 0; i < opts.getLength(); i++) {
+            String v = opts.getItem(i).getValue();
             selectIdx.put(v, i);
         }
     }
@@ -333,6 +353,27 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         }
         addingOptionList = null;
         if (delayedValue != null) tryResolveDelayed();
+    }
+
+    /** May be needed in ChangeOptionsAction.doChange() implementation */
+    public SelectElement getSelectElt() {
+        return select.getElement().cast();
+    }
+
+    public void massChangeOptions(ChangeOptionsAction action) {
+        if (action == null) return;
+        String v = getValue();
+        final String val = v != null ? v : getDelayedValue();
+        boolean changed = action.doChange(this);
+        if (!changed) return;
+        rebuildSearchIndex();
+        if (val != null) {
+            if (!val.equals(getValue())) {
+                setValue(val, false/*fireEvents*/);
+            }
+        } else {
+            setSelectedIndex(-1); // any addOption() call resets selectedIndex from -1 to 0, so we have to fix that
+        }
     }
 
     private void addOption(String value, String text, String filterText,
