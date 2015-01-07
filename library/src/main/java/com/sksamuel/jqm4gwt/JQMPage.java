@@ -152,6 +152,13 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
             add(widgets);
     }
 
+    @Override
+    public boolean isVisible() {
+        return super.isVisible() && JQMCommon.isVisible(this)
+                && JQMCommon.hasStyle(getElement(), "ui-page-active");
+        // ui-page-active works for both: pages and dialogs
+    }
+
     /**
      * Sets the footer of the page. Alias for setFooter(). Any existing footer
      * will be replaced.
@@ -480,7 +487,13 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
                 || hideFixedToolbarsIfVirtualKeyboard > 0) {
             processFixedToolbars();
             recalcContentHeightPercent();
-            centerContent();
+            // we have to wait till CSS rules execution is completed, otherwise heights could be incorrect
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    centerContent();
+                }
+            });
             initWindowResize();
             if (hideFixedToolbarsIfVirtualKeyboard > 0) initOrientationChange();
         }
@@ -915,7 +928,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     public void centerContent() {
         if (!isVisible()) return;
 
-        Integer windowH = null;
+        boolean windowHset = false;
+        int windowH = 0;
         int headerH = 0;
         int footerH = 0;
         int contentH = 0;
@@ -936,6 +950,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
                     if (header != null) headerH = header.getOffsetHeight();
                     if (footer != null) footerH = footer.getOffsetHeight();
                     windowH = Window.getClientHeight();
+                    windowHset = true;
                     marginTop = (windowH - headerH - footerH - contentH) / 2;
                 }
             }
@@ -947,8 +962,9 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
             int footerMarginTop = 0;
             footerH = footer.getOffsetHeight();
             if (pseudoFixedToolbars && footerH > 0 && !footer.isFixed()) {
-                if (windowH == null) {
+                if (!windowHset) {
                     windowH = Window.getClientHeight();
+                    windowHset = true;
                     contentH = content.getOffsetHeight();
                     if (header != null) headerH = header.getOffsetHeight();
                 }

@@ -109,6 +109,8 @@ public class Mobile {
 
     /**
      * jQuery based check if this element is visible, much more correct than GWT default implementation.
+     * <br> Expensive, but gives realistic visibility (CSS rules, parent chain considered,
+     * width and height are explicitly set to 0, ...)
      */
     public static native boolean isVisible(Element elt) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return false; // jQuery is not loaded

@@ -588,12 +588,12 @@ public class TestView1 {
     void headerTestBtn1Click(ClickEvent e) {
         boolean visible = Mobile.isVisible(nextView.testPage2.getElement());
         boolean hidden = Mobile.isHidden(nextView.testPage2.getElement());
-        String s2 = "nextView.testPage2: visible=" + String.valueOf(visible) + "; hidden="
+        String s2 = "nextView.testPage2: Mobile.isVisible=" + String.valueOf(visible) + "; Mobile.isHidden="
                     + String.valueOf(hidden) + "; HasVisibility.isVisible()=" + nextView.testPage2.isVisible();
 
         visible = Mobile.isVisible(page.getElement());
         hidden = Mobile.isHidden(page.getElement());
-        String s1 = "This page: visible=" + String.valueOf(visible) + "; hidden="
+        String s1 = "This page: Mobile.isVisible=" + String.valueOf(visible) + "; Mobile.isHidden="
                     + String.valueOf(hidden) + "; HasVisibility.isVisible()=" + page.isVisible();
 
         Window.alert(headerTestBtn1.getText() + " is clicked!\n\n" + s1 + "\n\n" + s2);

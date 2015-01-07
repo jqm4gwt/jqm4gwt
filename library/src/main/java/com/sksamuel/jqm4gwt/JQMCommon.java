@@ -65,6 +65,18 @@ public class JQMCommon {
     public static boolean isVisible(Widget widget) {
         if (widget == null || !widget.isAttached()) return false;
         Element elt = widget.getElement();
+        return UIObject.isVisible(elt); // Mobile.isVisible(elt) must not be used here for performance reason
+    }
+
+    /**
+     * Expensive, but gives realistic visibility (CSS rules, parent chain considered,
+     * width and height are explicitly set to 0, ...)
+     * <br> If you need logical visibility of this particular widget,
+     * use {@link UIObject#isVisible(Element elem)}
+     */
+    public static boolean isRealVisible(Widget widget) {
+        if (widget == null || !widget.isAttached()) return false;
+        Element elt = widget.getElement();
         return UIObject.isVisible(elt) && Mobile.isVisible(elt);
     }
 

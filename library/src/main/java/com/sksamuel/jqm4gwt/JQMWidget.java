@@ -8,7 +8,6 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
-import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.events.HasJQMEventHandlers;
 import com.sksamuel.jqm4gwt.events.JQMEventFactory;
@@ -153,11 +152,6 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
         return JQMCommon.isEnabled(this);
     }
 
-    /**
-     * Gives realistic visibility (parent chain considered, ...)
-     * If you need logical visibility of this particular widget,
-     * use {@link UIObject#isVisible(Element elem)}
-     */
     @Override
     public boolean isVisible() {
         return super.isVisible() && JQMCommon.isVisible(this);
