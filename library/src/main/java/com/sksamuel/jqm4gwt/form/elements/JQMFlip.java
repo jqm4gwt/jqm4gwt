@@ -218,7 +218,7 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
         }
     }
 
-    protected void refresh() {
+    public void refresh() {
         refresh(select.getElement());
     }
 

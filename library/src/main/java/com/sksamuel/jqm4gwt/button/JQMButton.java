@@ -781,4 +781,16 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         }
     }
 
+    public void refresh() {
+        refresh(getElement());
+    }
+
+    private static native void refresh(Element elt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
+        var w = $wnd.$(elt);
+        if (w.data('mobile-button') !== undefined) {
+            w.button('refresh');
+        }
+    }-*/;
+
 }
