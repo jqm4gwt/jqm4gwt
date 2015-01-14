@@ -2,8 +2,10 @@ package com.sksamuel.jqm4gwt.form.elements;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -193,6 +195,8 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     private Boolean delayedFireEvents;
     private boolean addingOptions;
     private ArrayList<OptionElement> addingOptionList;
+
+    private String multiValueSeparator = ",";
 
     /**
      * Creates a new {@link JQMSelect} with no label text.
@@ -514,7 +518,42 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      */
     @Override
     public String getValue() {
-        return getValue(getSelectedIndex());
+        if (!isMultiple()) {
+            return getValue(getSelectedIndex());
+        } else {
+            SelectElement selElt = select.getElement().cast();
+            NodeList<OptionElement> opts = selElt.getOptions();
+            StringBuilder sb = null;
+            for (int i = 0; i < opts.getLength(); i++) {
+                OptionElement opt = opts.getItem(i);
+                if (opt.isSelected()) {
+                    String v = opt.getValue();
+                    if (sb == null) {
+                        sb = new StringBuilder();
+                        sb.append(v);
+                    } else {
+                        sb.append(multiValueSeparator);
+                        sb.append(v);
+                    }
+                }
+            }
+            if (sb == null) return null;
+            else {
+                String rslt = sb.toString();
+                if (rslt.isEmpty()) rslt = null;
+                return rslt;
+            }
+        }
+    }
+
+    private boolean isMultiValNotEmpty() {
+        SelectElement selElt = select.getElement().cast();
+        NodeList<OptionElement> opts = selElt.getOptions();
+        for (int i = 0; i < opts.getLength(); i++) {
+            OptionElement opt = opts.getItem(i);
+            if (opt.isSelected()) return true;
+        }
+        return false;
     }
 
     /**
@@ -673,6 +712,9 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         return getSelectedIndex() == -1 && getOptionCount() == 0;
     }
 
+    /**
+     * Clears all (options too). Then refresh() should be called to update visual state.
+     */
     public void clear() {
         clear(false/*delayValue*/);
     }
@@ -813,7 +855,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     /**
-     * Change the selection to the option at the given index.
+     * Change the selection to the option at the given index, refresh() is called automatically.
      * <br> Setting the selected index programmatically does <em>NOT</em>
      * cause the {@link ChangeHandler#onChange(ChangeEvent)}
      * nor {@link ValueChangeHandler#onValueChange(ValueChangeEvent)}
@@ -821,6 +863,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      * <br> Call {@link JQMSelect#setValue(String, boolean)} with <b>true</b> if you need them raised.
      */
     public void setSelectedIndex(int index) {
+        clearDelayed();
         select.setSelectedIndex(index);
         refresh();
     }
@@ -886,14 +929,39 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      */
     @Override
     public void setValue(String value, boolean fireEvents) {
-        int newIdx = value == null ? -1 : indexOf(value);
-        if (newIdx == -1 && value != null) {
-            delayedValue = value;
-            delayedFireEvents = fireEvents;
+        if (!isMultiple()) {
+            int newIdx = value == null ? -1 : indexOf(value);
+            setNewSelectedIndex(newIdx, fireEvents);
+            if (newIdx == -1 && value != null) {
+                delayedValue = value;
+                delayedFireEvents = fireEvents;
+            }
         } else {
-            clearDelayed();
+            if (value == null || value.isEmpty() || value.trim().isEmpty()) {
+                boolean oldValNotEmpty = fireEvents ? isMultiValNotEmpty() : false;
+                boolean changed = unselectAllOptions();
+                clearDelayed();
+                if (changed) refresh();
+                if (fireEvents && oldValNotEmpty) ValueChangeEvent.fire(this, null);
+            } else {
+                if (getOptionCount() == 0) {
+                    delayedValue = value;
+                    delayedFireEvents = fireEvents;
+                } else {
+                    Set<String> newVals = new HashSet<String>();
+                    if (!verifyMultiValue(value, newVals)) {
+                        boolean oldValNotEmpty = fireEvents ? isMultiValNotEmpty() : false;
+                        boolean changed = unselectAllOptions();
+                        delayedValue = value;
+                        delayedFireEvents = fireEvents;
+                        if (changed) refresh();
+                        if (fireEvents && oldValNotEmpty) ValueChangeEvent.fire(this, null);
+                        return;
+                    }
+                    setNewMultiVals(newVals, fireEvents);
+                }
+            }
         }
-        setNewSelectedIndex(newIdx, fireEvents);
     }
 
     private void setNewSelectedIndex(int newIdx, boolean fireEvents) {
@@ -907,13 +975,80 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         }
     }
 
+    private void setNewMultiVals(Set<String> newVals, boolean fireEvents) {
+        StringBuilder sb = fireEvents ? new StringBuilder() : null;
+        boolean changed = selectOptions(newVals, sb);
+        if (changed) refresh();
+        if (fireEvents && changed && sb != null) {
+            String newVal = sb.toString();
+            if (newVal.isEmpty()) newVal = null;
+            ValueChangeEvent.fire(this, newVal);
+        }
+    }
+
+    private boolean verifyMultiValue(String value, Set<String> newVals) {
+        if (!newVals.isEmpty()) newVals.clear();
+        String[] arr = value.split(multiValueSeparator);
+        for (int i = 0; i < arr.length; i++) {
+            String s = arr[i].trim();
+            if (s.isEmpty()) continue;
+            int idx = indexOf(s);
+            if (idx == -1) {
+                return false;
+            }
+            newVals.add(s);
+        }
+        return true;
+    }
+
+    private boolean unselectAllOptions() {
+        SelectElement selElt = select.getElement().cast();
+        NodeList<OptionElement> opts = selElt.getOptions();
+        boolean changed = false;
+        for (int i = 0; i < opts.getLength(); i++) {
+            OptionElement opt = opts.getItem(i);
+            if (opt.isSelected()) {
+                opt.setSelected(false);
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
+    private boolean selectOptions(Set<String> selected, StringBuilder sbSelectedValues) {
+        SelectElement selElt = select.getElement().cast();
+        NodeList<OptionElement> opts = selElt.getOptions();
+        boolean changed = false;
+        for (int i = 0; i < opts.getLength(); i++) {
+            OptionElement opt = opts.getItem(i);
+            String v = opt.getValue();
+            boolean sel = selected.contains(v);
+            if (opt.isSelected() != sel) {
+                opt.setSelected(sel);
+                changed = true;
+            }
+            if (sbSelectedValues != null && sel) {
+                if (sbSelectedValues.length() > 0) sbSelectedValues.append(multiValueSeparator);
+                sbSelectedValues.append(v);
+            }
+        }
+        return changed;
+    }
+
     private void tryResolveDelayed() {
         if (delayedValue == null) return;
-        int newIdx = indexOf(delayedValue);
-        if (newIdx == -1) return;
-        boolean fireEvents = delayedFireEvents != null ? delayedFireEvents : false;
-        clearDelayed();
-        setNewSelectedIndex(newIdx, fireEvents);
+        if (!isMultiple()) {
+            int newIdx = indexOf(delayedValue);
+            if (newIdx == -1) return;
+            boolean fireEvents = delayedFireEvents != null ? delayedFireEvents : false;
+            setNewSelectedIndex(newIdx, fireEvents);
+        } else {
+            Set<String> newVals = new HashSet<String>();
+            if (!verifyMultiValue(delayedValue, newVals)) return;
+            boolean fireEvents = delayedFireEvents != null ? delayedFireEvents : false;
+            clearDelayed();
+            setNewMultiVals(newVals, fireEvents);
+        }
     }
 
     public String getCloseText() {
@@ -1077,6 +1212,14 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      */
     public void setDlgTransparentDoPrevPageLifecycle(boolean transparentDoPrevPageLifecycle) {
         this.transparentDoPrevPageLifecycle = transparentDoPrevPageLifecycle;
+    }
+
+    public String getMultiValueSeparator() {
+        return multiValueSeparator;
+    }
+
+    public void setMultiValueSeparator(String multiValueSeparator) {
+        this.multiValueSeparator = multiValueSeparator;
     }
 
 }

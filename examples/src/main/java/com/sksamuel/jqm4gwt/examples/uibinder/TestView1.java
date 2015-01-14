@@ -421,6 +421,30 @@ public class TestView1 {
     @UiField
     JQMButton tabsRemoveActiveBtn;
 
+    @UiField
+    JQMSelect multiSel;
+
+    @UiField
+    JQMButton btnMultiSelGetValue;
+
+    @UiField
+    JQMText edMultiSelValue;
+
+    @UiField
+    JQMButton btnMultiSelSetValue;
+
+    @UiField
+    JQMButton btnMultiSelAddOptions;
+
+    @UiField
+    JQMText edMultiSetSelIdx;
+
+    @UiField
+    JQMButton btnMultiSelSetSelIdx;
+
+    @UiField
+    JQMButton btnMultiSelClear;
+
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
             @Override
@@ -831,6 +855,48 @@ public class TestView1 {
     @UiHandler("tabsRemoveActiveBtn")
     void tabsRemoveActiveBtnClick(ClickEvent e) {
         tabs1.removeActiveIndex();
+    }
+
+    @UiHandler("btnMultiSelGetValue")
+    void btnMultiSelGetValueClick(ClickEvent e) {
+        String v = multiSel.getValue();
+        Window.alert(v == null ? "null" : v);
+    }
+
+    @UiHandler("btnMultiSelSetValue")
+    void btnMultiSelSetValueClick(ClickEvent e) {
+        multiSel.setValue(edMultiSelValue.getValue());
+    }
+
+    @UiHandler("btnMultiSelAddOptions")
+    void btnMultiSelAddOptionsClick(ClickEvent e) {
+        if (multiSel.indexOf("10") >= 0) return;
+        multiSel.addOption("10", "Ten");
+        multiSel.addOption("11", "Eleven");
+        multiSel.addOption("12", "Twelve");
+        multiSel.addOption("13", "Thirteen");
+        multiSel.addOption("14", "Fourteen");
+        multiSel.addOption("15", "Fifteen");
+        multiSel.addOption("16", "Sixteen");
+        multiSel.addOption("17", "Seventeen");
+        multiSel.addOption("18", "Eighteen");
+        multiSel.addOption("19", "Nineteen");
+        multiSel.addOption("20", "Twenty");
+        multiSel.refresh();
+    }
+
+    @UiHandler("btnMultiSelSetSelIdx")
+    void btnMultiSelSetSelIdxClick(ClickEvent e) {
+        String s = edMultiSetSelIdx.getValue().trim();
+        if (s.isEmpty()) return;
+        int idx = Integer.parseInt(s);
+        multiSel.setSelectedIndex(idx);
+    }
+
+    @UiHandler("btnMultiSelClear")
+    void btnMultiSelClearClick(ClickEvent e) {
+        multiSel.clear();
+        multiSel.refresh();
     }
 
 

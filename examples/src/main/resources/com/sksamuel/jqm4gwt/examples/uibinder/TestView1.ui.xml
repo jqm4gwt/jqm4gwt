@@ -281,14 +281,29 @@
             <e:option><e:JQMSelect.Option text="Loader" value="4" customIcon="loader" /></e:option>
           </e:JQMSelectWithIcons>
           <h:Paragraph />
-          <e:JQMSelect text="Dropdown with multiple select" mulitple="true" native="false"
+          <e:JQMSelect ui:field="multiSel" text="Dropdown with multiple select" mulitple="true" native="false"
             closeText="Discard" selectInline="true">
             <e:option><e:JQMSelect.Option text="One" value="1" /></e:option>
             <e:option><e:JQMSelect.Option text="Two" value="2" /></e:option>
             <e:option><e:JQMSelect.Option text="Three" value="3" /></e:option>
             <e:option><e:JQMSelect.Option text="Four" value="4" /></e:option>
             <e:option><e:JQMSelect.Option text="Five" value="5" /></e:option>
+            <e:option><e:JQMSelect.Option text="Six" value="6" /></e:option>
+            <e:option><e:JQMSelect.Option text="Seven" value="7" /></e:option>
+            <e:option><e:JQMSelect.Option text="Eight" value="8" /></e:option>
+            <e:option><e:JQMSelect.Option text="Nine" value="9" /></e:option>
           </e:JQMSelect>
+          <g:FlowPanel>
+            <b:JQMButton ui:field="btnMultiSelGetValue" text="Get Value" mini="true" inline="true" />
+            <e:JQMText ui:field="edMultiSelValue" labelHidden="true" 
+              addStyleNames="{style.inlineBlock} {style.marginTopBottom0}" />
+            <b:JQMButton ui:field="btnMultiSelSetValue" text="Set Value" mini="true" inline="true" />
+            <b:JQMButton ui:field="btnMultiSelAddOptions" text="Add options to 20" mini="true" inline="true" />
+            <e:JQMText ui:field="edMultiSetSelIdx" labelHidden="true" width="50px" 
+              addStyleNames="{style.inlineBlock} {style.marginTopBottom0}" />
+            <b:JQMButton ui:field="btnMultiSelSetSelIdx" text="Set Sel.Index" mini="true" inline="true" />
+            <b:JQMButton ui:field="btnMultiSelClear" text="Clear" mini="true" inline="true" />
+          </g:FlowPanel>
           <h:Paragraph />
           <h:Heading.H4 text="Filter Select/Dropdown"
             addStyleNames="{style.inlineBlock} {style.marginRight10}" />
