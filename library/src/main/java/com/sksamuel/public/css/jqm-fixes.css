@@ -7,3 +7,11 @@
 .ui-slider-track.ui-mini { /* https://github.com/jquery/jquery-mobile/issues/7821 */
   margin: 0 15px 0 68px;
 }
+div.ui-slider-switch.ui-mini {
+  margin: .5em 0;
+}
+
+/* fix for mini inline multiple select: https://github.com/jquery/jquery-mobile/issues/7918 */
+.ui-select.ui-mini .ui-btn-icon-right .ui-li-count {
+  right: 2.6em;
+}
