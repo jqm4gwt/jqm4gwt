@@ -18,6 +18,15 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class JQMContext {
 
+    public static interface WidgetDefaults {
+        /**
+         * Called after a widget becomes attached to the browser's document.
+         */
+        void loaded(Widget w);
+    }
+
+    private static WidgetDefaults widgetDefaults;
+
     private static boolean defaultTransistionDirection = false;
     private static boolean defaultChangeHash = true;
 
@@ -332,6 +341,18 @@ public class JQMContext {
         double multipicationFactor = Math.pow(10, numberOfDecimalPlaces);
         double interestedInZeroDPs = valueToRound * multipicationFactor;
         return Math.round(interestedInZeroDPs) / multipicationFactor;
+    }
+
+    public static WidgetDefaults getWidgetDefaults() {
+        return widgetDefaults;
+    }
+
+    public static void setWidgetDefaults(WidgetDefaults widgetDefaults) {
+        JQMContext.widgetDefaults = widgetDefaults;
+    }
+
+    public static void widgetDefaultsNotifyLoaded(Widget w) {
+        if (w != null && widgetDefaults != null) widgetDefaults.loaded(w);
     }
 
 }

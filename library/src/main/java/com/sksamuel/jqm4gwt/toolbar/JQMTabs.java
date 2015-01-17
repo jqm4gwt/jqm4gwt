@@ -125,6 +125,9 @@ public class JQMTabs extends JQMWidget {
     private JQMNavBar navbar;
     private JQMList list;
 
+    private String mainTheme;
+    private String headerTheme;
+
     public JQMTabs() {
         flow = new FlowPanel();
         initWidget(flow);
@@ -148,6 +151,8 @@ public class JQMTabs extends JQMWidget {
         if (navbar == null) {
             navbar = new JQMNavBar();
             navbar.addStyleName("jqm4gwt-tabs-header-btn");
+            String theme = getHeaderTheme();
+            if (theme != null && !theme.isEmpty()) navbar.setTheme(theme);
             flow.insert(navbar, 0);
             navbar.addDomHandler(new ClickHandler() {
                 @Override
@@ -177,6 +182,8 @@ public class JQMTabs extends JQMWidget {
             list = new JQMList();
             list.setInset(true);
             list.addStyleName("jqm4gwt-tabs-header-list");
+            String theme = getHeaderTheme();
+            if (theme != null && !theme.isEmpty()) list.setTheme(theme);
             flow.insert(list, 0);
             list.addClickHandler(new ClickHandler() {
                 @Override
@@ -201,6 +208,9 @@ public class JQMTabs extends JQMWidget {
     @UiChild(tagname = "content")
     public void addContent(final Widget widget) {
         widget.addStyleName("jqm4gwt-tabs-content");
+        if (headerTheme != null && !headerTheme.isEmpty() && mainTheme != null && !mainTheme.isEmpty()) {
+            JQMCommon.setThemeEx(widget, mainTheme, JQMCommon.STYLE_UI_BODY);
+        }
         flow.add(widget);
         initHrefs();
     }
@@ -801,4 +811,49 @@ public class JQMTabs extends JQMWidget {
     public void setHideEffect(HideEffect value) {
         JQMCommon.setAttribute(this, "data-hide", value != null ? value.getJqmValue() : null);
     }
+
+    @Override
+    public String getTheme() {
+        return mainTheme;
+    }
+
+    @Override
+    public void setTheme(String themeName) {
+        mainTheme = themeName;
+        recalcTheme();
+    }
+
+    public String getHeaderTheme() {
+        return headerTheme;
+    }
+
+    /** Changes theme for header items only, can be different from "main" JQMTabs theme. */
+    public void setHeaderTheme(String themeName) {
+        headerTheme = themeName;
+        recalcTheme();
+    }
+
+    private void recalcTheme() {
+        final String rootTheme;
+        final String contentTheme;
+        if (headerTheme == null || headerTheme.isEmpty()) {
+            rootTheme = mainTheme;
+            contentTheme = null;
+        } else {
+            rootTheme = null;
+            contentTheme = mainTheme;
+        }
+        JQMCommon.setThemeEx(this, rootTheme, JQMCommon.STYLE_UI_BODY);
+        for (int i = 0; i < flow.getWidgetCount(); i++) {
+            Widget w = flow.getWidget(i);
+            if (w == navbar || w == list) continue;
+            JQMCommon.setThemeEx(w, contentTheme, JQMCommon.STYLE_UI_BODY);
+        }
+        if (navbar != null) {
+            navbar.setTheme(headerTheme);
+        } else if (list != null) {
+            list.setTheme(headerTheme);
+        }
+    }
+
 }

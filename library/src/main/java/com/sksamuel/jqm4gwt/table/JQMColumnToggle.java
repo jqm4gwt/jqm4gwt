@@ -707,28 +707,28 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
     }
 
     public String getBackgroundTheme() {
-        return JQMCommon.getStyleStartsWith(this.getElement(), "ui-body-");
+        return JQMCommon.getStyleStartsWith(this.getElement(), JQMCommon.STYLE_UI_BODY);
     }
 
     public void setBackgroundTheme(String value) {
         String s = getBackgroundTheme();
-        String newTheme = value != null && !value.isEmpty() ? "ui-body-" + value : null;
+        String newTheme = value != null && !value.isEmpty() ? JQMCommon.STYLE_UI_BODY + value : null;
         if (s == newTheme || s != null && s.equals(newTheme)) return;
-        JQMCommon.removeStylesStartsWith(this.getElement(), "ui-body-");
+        JQMCommon.removeStylesStartsWith(this.getElement(), JQMCommon.STYLE_UI_BODY);
         if (newTheme != null) this.getElement().addClassName(newTheme);
     }
 
     private static String getEltHeaderTheme(Element elt) {
         if (elt == null) return null;
-        return JQMCommon.getStyleStartsWith(elt, "ui-bar-");
+        return JQMCommon.getStyleStartsWith(elt, JQMCommon.STYLE_UI_BAR);
     }
 
     private static void setEltHeaderTheme(Element elt, String value) {
         if (elt == null) return;
         String s = getEltHeaderTheme(elt);
-        String newTheme = value != null && !value.isEmpty() ? "ui-bar-" + value : null;
+        String newTheme = value != null && !value.isEmpty() ? JQMCommon.STYLE_UI_BAR + value : null;
         if (s == newTheme || s != null && s.equals(newTheme)) return;
-        JQMCommon.removeStylesStartsWith(elt, "ui-bar-");
+        JQMCommon.removeStylesStartsWith(elt, JQMCommon.STYLE_UI_BAR);
         if (newTheme != null) elt.addClassName(newTheme);
     }
 
@@ -737,7 +737,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
         if (r == null) return headerTheme;
         String s = getEltHeaderTheme(r.getElement());
         if (s != null && !s.isEmpty()) {
-            s = s.substring("ui-bar-".length());
+            s = s.substring(JQMCommon.STYLE_UI_BAR.length());
             return s;
         }
         return headerTheme;

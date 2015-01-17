@@ -22,6 +22,9 @@ public class JQMCommon {
     public static final String POPUP_POS_WINDOW = "window";
     public static final String POPUP_POS_ORIGIN = "origin";
 
+    public static final String STYLE_UI_BODY = "ui-body-";
+    public static final String STYLE_UI_BAR = "ui-bar-";
+
     public static final String STYLE_UI_BTN = "ui-btn-";
     public static final String STYLE_UI_BTN_INLINE = "ui-btn-inline";
     public static final String STYLE_UI_BTN_ICONPOS = "ui-btn-icon-";
@@ -482,7 +485,10 @@ public class JQMCommon {
     public static void setThemeEx(Element elt, String themeName, String prefix, String... excludes) {
         String old = getThemeEx(elt, prefix, excludes);
         if (old != null && !old.isEmpty()) elt.removeClassName(prefix + old);
-        if (themeName != null && !themeName.isEmpty()) elt.addClassName(prefix + themeName);
+        if (themeName != null && !themeName.isEmpty()) {
+            elt.removeClassName(prefix + "inherit");
+            elt.addClassName(prefix + themeName);
+        }
         setAttribute(elt, DATA_THEME, themeName);
     }
 

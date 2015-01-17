@@ -47,6 +47,16 @@ public class Jqm4gwtExamplesEntryPoint implements EntryPoint {
     private static void runExamples() {
         JQMContext.disableHashListening();
 
+        /*JQMContext.setWidgetDefaults(new WidgetDefaults() {
+            @Override
+            public void loaded(Widget w) {
+                if (w instanceof JQMSelect) ((JQMSelect) w).setThemeIfCurrentEmpty("b");
+                else if (w instanceof JQMTabs) {
+                    //((JQMTabs) w).setThemeIfCurrentEmpty("b");
+                    ((JQMTabs) w).setHeaderTheme("b");
+                }
+            }});*/
+
         JQMPage page = new JQMPage("examples");
 
         page.add(new JQMHeader("Examples"));

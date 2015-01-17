@@ -240,6 +240,7 @@ public class JQMPanel extends JQMWidget {
 
     @Override
     protected void onLoad() {
+        super.onLoad();
         Widget parent = getParent();
         if (parent instanceof JQMPage) bindLifecycleEvents(this, ((JQMPage) parent).getId());
     }
@@ -248,6 +249,7 @@ public class JQMPanel extends JQMWidget {
     protected void onUnload() {
         Widget parent = getParent();
         if (parent instanceof JQMPage) unbindLifecycleEvents(((JQMPage) parent).getId());
+        super.onUnload();
     }
 
     private static native void bindLifecycleEvents(JQMPanel p, String id) /*-{

@@ -9,6 +9,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.JQMContext.WidgetDefaults;
 import com.sksamuel.jqm4gwt.events.HasJQMEventHandlers;
 import com.sksamuel.jqm4gwt.events.JQMEventFactory;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
@@ -42,6 +43,9 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
     private boolean boundFilterCallback;
     private JavaScriptObject origFilter;
 
+    public JQMWidget() {
+    }
+
     /**
      * Returns the value of the attribute with the given name
      */
@@ -56,11 +60,6 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
     @Override
     public String getDataRole() {
         return JQMCommon.getDataRole(this);
-    }
-
-    @Override
-    public String getTheme() {
-        return JQMCommon.getTheme(this);
     }
 
     /**
@@ -132,8 +131,24 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
     }
 
     @Override
+    public String getTheme() {
+        return JQMCommon.getTheme(this);
+    }
+
+    @Override
     public void setTheme(String themeName) {
         JQMCommon.setTheme(this, themeName);
+    }
+
+    /**
+     * Sets new theme only in case if currently no theme is defined for this widget.
+     */
+    public void setThemeIfCurrentEmpty(String themeName) {
+        if (themeName == null || themeName.isEmpty()) return;
+        String theme = getTheme();
+        if (theme == null || theme.isEmpty()) {
+            setTheme(themeName);
+        }
     }
 
     @Override
@@ -373,6 +388,8 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
     @Override
     protected void onLoad() {
         super.onLoad();
+        WidgetDefaults dflt = JQMContext.getWidgetDefaults();
+        if (dflt != null) dflt.loaded(this);
         checkFilterEvents();
     }
 

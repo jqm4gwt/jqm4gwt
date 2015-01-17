@@ -215,4 +215,17 @@ public class JQMNavBar extends JQMWidget implements HasFixedPosition {
         JQMCommon.setAttribute(this, "data-grid", grid);
     }
 
+    @Override
+    public String getTheme() {
+        return JQMCommon.getThemeEx(this, JQMCommon.STYLE_UI_BODY);
+    }
+
+    @Override
+    public void setTheme(String themeName) {
+        // Though in section "Theming navbars" at http://api.jquerymobile.com/navbar/
+        // says: "Note that applying a theme swatch to the navbar container is not supported."
+        // actually it works without any problem or I understand this statement incorrectly :-)
+        JQMCommon.setThemeEx(this, themeName, JQMCommon.STYLE_UI_BODY);
+    }
+
 }

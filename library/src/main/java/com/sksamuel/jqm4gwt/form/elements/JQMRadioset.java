@@ -131,12 +131,14 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
 
     @Override
     protected void onLoad() {
+        super.onLoad();
         if (blurHandler != null && blurHandlers.size() == 0) addRadiosBlurHandler(blurHandler);
     }
 
     @Override
     protected void onUnload() {
         clearBlurHandlers();
+        super.onUnload();
     }
 
     /**
@@ -155,16 +157,16 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
         return addDomHandler(handler, ClickEvent.getType());
     }
 
-	@Override
-	public HandlerRegistration addTapHandler(TapHandler handler) {
+    @Override
+    public HandlerRegistration addTapHandler(TapHandler handler) {
         // this is not a native browser event so we will have to manage it via JS
         return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
-			@Override
-			public int getHandlerCountForWidget(Type<?> type) {
-				return getHandlerCount(type);
-			}
+            @Override
+            public int getHandlerCountForWidget(Type<?> type) {
+                return getHandlerCount(type);
+            }
         }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
-	}
+    }
 
     @Override
     public Label addErrorLabel() {
