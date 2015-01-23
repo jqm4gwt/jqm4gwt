@@ -9,7 +9,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiConstructor;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextBox;
@@ -18,25 +17,20 @@ import com.sksamuel.jqm4gwt.HasIconPos;
 import com.sksamuel.jqm4gwt.HasInline;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasText;
-import com.sksamuel.jqm4gwt.HasTheme;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.html.FormLabel;
-//import com.google.gwt.event.dom.client.ClickEvent;
-//import com.google.gwt.event.dom.client.ClickHandler;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 12 Jul 2011 15:42:39
  */
-public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasValue<Boolean>,
-        HasMini<JQMCheckbox>, HasTheme<JQMCheckbox>, HasIconPos<JQMCheckbox>,
-        HasCorners<JQMCheckbox>, HasInline<JQMCheckbox> {
+public class JQMCheckbox extends JQMWidget implements HasText<JQMCheckbox>, HasValue<Boolean>,
+        HasMini<JQMCheckbox>, HasIconPos<JQMCheckbox>, HasCorners<JQMCheckbox>, HasInline<JQMCheckbox> {
 
     private TextBox input;
 
     private FormLabel label;
-
-    private String id;
 
     private boolean valueChangeHandlerInitialized;
 
@@ -60,7 +54,7 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
 
         setInput(input);
         setLabel(label);
-        setId(id);
+        if (id != null && !id.isEmpty()) setId(id);
     }
 
     @UiConstructor
@@ -76,7 +70,7 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
         label.setFor(id);
         label.setText(text);
 
-        init(input, label, id);
+        init(input, label, null/* id for flow is not needed */);
     }
 
     public FormLabel getLabel() {
@@ -107,10 +101,6 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
         return addHandler(handler, ValueChangeEvent.getType());
     }
 
-    public String getId() {
-        return id;
-    }
-
     public TextBox getInput() {
         return input;
     }
@@ -122,22 +112,16 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
 
     @Override
     public boolean isMini() {
-        InputElement e = input.getElement().cast();
-        return "true".equals(e.getAttribute("data-mini"));
+        return JQMCommon.isMini(input);
     }
 
-    /**
-     * If set to true then renders a smaller version of the standard-sized element.
-     */
+    /** If set to true then renders a smaller version of the standard-sized element. */
     @Override
     public void setMini(boolean mini) {
-        InputElement e = input.getElement().cast();
-        e.setAttribute("data-mini", String.valueOf(mini));
+        JQMCommon.setMini(input, mini);
     }
 
-    /**
-     * If set to true then renders a smaller version of the standard-sized element.
-     */
+    /** If set to true then renders a smaller version of the standard-sized element. */
     @Override
     public JQMCheckbox withMini(boolean mini) {
         setMini(mini);
@@ -223,22 +207,14 @@ public class JQMCheckbox extends Composite implements HasText<JQMCheckbox>, HasV
         });
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     @Override
     public String getTheme() {
-        return input.getElement().getAttribute("data-theme");
+        return JQMCommon.getTheme(input);
     }
 
     @Override
     public void setTheme(String themeName) {
-        if (themeName == null) {
-            input.getElement().removeAttribute("data-theme");
-        } else {
-            input.getElement().setAttribute("data-theme", themeName);
-        }
+        JQMCommon.setTheme(input, themeName);
     }
 
     @Override

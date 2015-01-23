@@ -138,7 +138,8 @@
             <b:JQMButton theme="e" text="E"/>
             <b:JQMButton theme="f" text="F"/>
           </b:JQMButtonGroup>
-          <e:JQMCheckbox ui:field="cbSetPageTheme" name="cbSetPageTheme" text="Set Page Theme on button click"/>
+          <e:JQMCheckbox ui:field="cbSetPageTheme" name="cbSetPageTheme" text="Set Page Theme on A-F button click"/>
+          <h:Paragraph />
           <b:JQMButtonGroup orientation="HORIZONTAL" mini="true" corners="false">
             <b:JQMButton theme="a" text="A"/>
             <b:JQMButton theme="b" text="B"/>
