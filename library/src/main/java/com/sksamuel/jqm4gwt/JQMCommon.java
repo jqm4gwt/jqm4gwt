@@ -224,7 +224,7 @@ public class JQMCommon {
                 if (excludes.length > 0) {
                     boolean excluded = false;
                     for (String excl : excludes) {
-                        if (s.equals(excl)) {
+                        if (s.equals(excl) || s.startsWith(excl)) {
                             p = j + 1;
                             excluded = true;
                             break;

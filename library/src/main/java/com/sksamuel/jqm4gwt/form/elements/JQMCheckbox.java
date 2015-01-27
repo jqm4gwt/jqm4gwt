@@ -20,6 +20,7 @@ import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
@@ -196,6 +197,10 @@ public class JQMCheckbox extends JQMWidget implements HasText<JQMCheckbox>, HasV
       }
     }-*/;
 
+    public void refresh() {
+        refresh(input.getElement());
+    }
+
     public void setInput(TextBox input) {
         this.input = input;
         input.addClickHandler(new ClickHandler() {
@@ -215,6 +220,7 @@ public class JQMCheckbox extends JQMWidget implements HasText<JQMCheckbox>, HasV
     @Override
     public void setTheme(String themeName) {
         JQMCommon.setTheme(input, themeName);
+        JQMButton.setTheme(label.getElement(), themeName); // to support dynamic theme changing
     }
 
     @Override
@@ -255,7 +261,7 @@ public class JQMCheckbox extends JQMWidget implements HasText<JQMCheckbox>, HasV
         IconPos pos = getIconPos();
         if (pos != iconPos) {
             setIconPos(iconPos);
-            refresh(input.getElement());
+            refresh();
         }
         // Also data-corners is ignored, and 'ui-corner-all' class is added on init
         if (JQMCommon.isCorners(label) != JQMCommon.isCornersEx(label)) {

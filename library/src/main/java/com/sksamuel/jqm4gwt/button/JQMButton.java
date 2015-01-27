@@ -735,14 +735,18 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     @Override
     public String getTheme() {
-        return JQMCommon.getThemeEx(this, JQMCommon.STYLE_UI_BTN,
-                /*excludes:*/ JQMCommon.STYLE_UI_BTN_INLINE, JQMCommon.STYLE_UI_BTN_ICONPOS,
-                JQMCommon.STYLE_UI_BTN_ACTIVE);
+        return getTheme(this.getElement());
     }
 
     @Override
     public void setTheme(String themeName) {
         setTheme(this.getElement(), themeName);
+    }
+
+    public static String getTheme(Element elt) {
+        return JQMCommon.getThemeEx(elt, JQMCommon.STYLE_UI_BTN,
+                /*excludes:*/ JQMCommon.STYLE_UI_BTN_INLINE, JQMCommon.STYLE_UI_BTN_ICONPOS,
+                JQMCommon.STYLE_UI_BTN_ACTIVE);
     }
 
     public static void setTheme(Element elt, String themeName) {
