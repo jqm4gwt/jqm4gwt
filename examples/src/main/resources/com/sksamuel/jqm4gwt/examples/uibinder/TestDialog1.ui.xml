@@ -3,13 +3,42 @@
 <ui:UiBinder 
   xmlns:ui='urn:ui:com.google.gwt.uibinder'
   xmlns:g='urn:import:com.google.gwt.user.client.ui'
-  xmlns:jqm='urn:import:com.sksamuel.jqm4gwt'>
+  xmlns:jqm='urn:import:com.sksamuel.jqm4gwt'
+  xmlns:b="urn:import:com.sksamuel.jqm4gwt.button">
+  
+  <ui:style>
+    .content {
+      max-height: 480px;
+      height: 480px;
+    }
+  </ui:style>
   
   <jqm:JQMDialog containerId="testDialog1" dlgTransparent="true" corners="false" 
-    dlgCloseBtn="RIGHT" dlgCloseBtnText="Discard Dialog">
+    dlgCloseBtn="RIGHT" dlgCloseBtnText="Discard Dialog"
+    contentAddStyleNames="jqm4gwt-scrollable-page-content {style.content}">
     <jqm:toolbar.JQMHeader text="Test Dialog 1 Header" />
-    <g:FlowPanel>
-      <jqm:html.Heading.H3 text="Some content could be placed here..."/>
+    <g:FlowPanel addStyleNames="jqm4gwt-scrollable-main-stage">
+      <jqm:html.Heading.H3 text="Some scrollable content could be placed here..."/>
+      <b:JQMButton text="Button01" />
+      <b:JQMButton text="Button02" />
+      <b:JQMButton text="Button03" />
+      <b:JQMButton text="Button04" />
+      <b:JQMButton text="Button05" />
+      <b:JQMButton text="Button06" />
+      <b:JQMButton text="Button07" />
+      <b:JQMButton text="Button08" />
+      <b:JQMButton text="Button09" />
+      <b:JQMButton text="Button10" />
+      <b:JQMButton text="Button11" />
+      <b:JQMButton text="Button12" />
+      <b:JQMButton text="Button13" />
+      <b:JQMButton text="Button14" />
+      <b:JQMButton text="Button15" />
+      <b:JQMButton text="Button16" />
+      <b:JQMButton text="Button17" />
+      <b:JQMButton text="Button18" />
+      <b:JQMButton text="Button19" />
+      <b:JQMButton text="Button20" />
     </g:FlowPanel>
   </jqm:JQMDialog>
 </ui:UiBinder>
