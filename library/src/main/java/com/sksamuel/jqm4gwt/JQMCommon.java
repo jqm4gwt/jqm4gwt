@@ -536,6 +536,13 @@ public class JQMCommon {
         setInlineEx(widget.getElement(), inline, className);
     }
 
+    /** @return - true in case corners where explicitly specified with data-corners attribute */
+    public static boolean hasExplicitCorners(Element elt) {
+        String s = getAttribute(elt, DATA_CORNERS);
+        if (s == null || s.isEmpty()) return false;
+        return true;
+    }
+
     public static boolean isCorners(Element elt) {
         String s = getAttribute(elt, DATA_CORNERS);
         if (s == null || s.isEmpty()) return true; // corners are ON by default
