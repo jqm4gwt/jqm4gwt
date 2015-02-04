@@ -9,6 +9,7 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.JQMContext.WidgetDefaults;
 import com.sksamuel.jqm4gwt.events.HasJQMEventHandlers;
 import com.sksamuel.jqm4gwt.events.JQMEventFactory;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
@@ -244,6 +245,13 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
                 return getHandlerCount(type);
             }
         }, this, handler, jqmEventName, t);
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        WidgetDefaults dflt = JQMContext.getWidgetDefaults();
+        if (dflt != null) dflt.loaded(this);
     }
 
 }
