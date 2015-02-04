@@ -69,6 +69,12 @@
   display: block;
   padding-left: 10px;
 }
+.jqm4gwt-error[class*=ui-icon-] {
+  position: relative;
+}
+.jqm4gwt-error.ui-btn-icon-left[class*=ui-icon-] {
+  padding-left: 2.5em; /* 2.5em is default for left icon */
+}
 
 .jqm4gwt-form-required > label:after {
   content: " *";

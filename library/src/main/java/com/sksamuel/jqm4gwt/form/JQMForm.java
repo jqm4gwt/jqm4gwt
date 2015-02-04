@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.form.elements.JQMFormWidget;
@@ -38,6 +39,9 @@ import com.sksamuel.jqm4gwt.form.validators.Validator;
  */
 public class JQMForm extends FlowPanel {
 
+    /** For example icon can be added: "ui-icon-alert ui-btn-icon-left" **/
+    public static String globalValidationErrorStyles;
+
     private static final String STYLE_OK_VALIDATED = "jqm4gwt-fieldvalidated";
 
     private static final String STYLE_ERRORCONTAIN = "jqm4gwt-errorcontain";
@@ -49,6 +53,7 @@ public class JQMForm extends FlowPanel {
     private static final String STYLE_FORM_VALIDATOR = "jqm4gwt-form-validator-";
 
     private static final String JQM4GWT_ERROR_LABEL_STYLENAME = "jqm4gwt-error";
+    private static final String JQM4GWT_GENERAL_ERROR_LABEL_STYLENAME = "jqm4gwt-general-error";
 
     /** The amount to adjust error scroll by so the error is not right at very top */
     private static final int ERROR_SCROLL_OFFSET = 80;
@@ -201,6 +206,9 @@ public class JQMForm extends FlowPanel {
         if (!labelAdded) {
             Label label = new InlineLabel(); // create a label that will show the validation error
             label.setStyleName(JQM4GWT_ERROR_LABEL_STYLENAME);
+            if (globalValidationErrorStyles != null && !globalValidationErrorStyles.isEmpty()) {
+                JQMCommon.addStyleNames(label, globalValidationErrorStyles);
+            }
             label.setVisible(false);
             addErrorLabel(validator, label);
             if (positionErrorAfter == null) {
@@ -334,6 +342,7 @@ public class JQMForm extends FlowPanel {
     public void setError(String string) {
         Label errorLabel = new Label(string);
         errorLabel.setStyleName(JQM4GWT_ERROR_LABEL_STYLENAME);
+        errorLabel.addStyleName(JQM4GWT_GENERAL_ERROR_LABEL_STYLENAME);
         generalErrors.add(errorLabel);
         Window.scrollTo(0, 0);
     }

@@ -34,6 +34,7 @@ public class FormShowcasePage extends JQMPage {
 	    add(h);
 		add(new Paragraph("This page shows all the different form elements in use."));
 
+		JQMForm.globalValidationErrorStyles = "ui-icon-alert ui-btn-icon-left";
 		JQMForm form = new JQMForm();
 		add(form);
 
