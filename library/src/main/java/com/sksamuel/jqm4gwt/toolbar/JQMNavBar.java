@@ -5,20 +5,20 @@ import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.UListElement;
-import com.google.gwt.event.dom.client.DomEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiChild;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.button.JQMButton;
+import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 24 Jul 2011 23:09:12
@@ -34,22 +34,22 @@ import com.sksamuel.jqm4gwt.button.JQMButton;
  */
 public class JQMNavBar extends JQMWidget implements HasFixedPosition {
 
-    private final UListElement ul;
+    private final FlowPanel flow;
+    private final ComplexPanel ulPanel;
 
     private List<JQMButton> buttons;
 
     private boolean highlightLastClicked;
 
-    /**
-     * Create a new {@link JQMNavBar} with no content
-     */
+    /** Creates a new {@link JQMNavBar} with no content */
     public JQMNavBar() {
-        Label label = new Label();
-        initWidget(label);
+        flow = new FlowPanel();
+        initWidget(flow);
         setDataRole("navbar");
         setStyleName("jqm4gwt-navbar");
-        ul = Document.get().createULElement();
-        label.getElement().appendChild(ul);
+        UListElement ul = Document.get().createULElement();
+        ulPanel = new CustomFlowPanel(ul);
+        flow.add(ulPanel);
     }
 
     @UiChild(tagname = "button")
@@ -63,15 +63,13 @@ public class JQMNavBar extends JQMWidget implements HasFixedPosition {
         if (btnP == null && p != null) button.setIconPos(p);
 
         LIElement li = Document.get().createLIElement();
-        li.appendChild(button.getElement());
-        ul.appendChild(li);
+        CustomFlowPanel liPanel = new CustomFlowPanel(li);
+        liPanel.add(button);
+        ulPanel.add(liPanel);
 
-        // button.addClickHandler(...) is not working without the following code
-        DOM.sinkEvents(li, Event.ONCLICK);
-        DOM.setEventListener(li, new EventListener() {
+        button.addClickHandler(new ClickHandler() {
             @Override
-            public void onBrowserEvent(Event event) {
-                DomEvent.fireNativeEvent(event, button);
+            public void onClick(ClickEvent event) {
                 checkHighlightLastClicked(button);
             }
         });
@@ -114,8 +112,8 @@ public class JQMNavBar extends JQMWidget implements HasFixedPosition {
         if (button == null || buttons == null) return;
         int i = buttons.indexOf(button);
         if (i == -1) return;
-        Element li = button.getElement().getParentElement();
-        ul.removeChild(li);
+        Widget liPanel = button.getParent();
+        ulPanel.remove(liPanel);
         buttons.remove(i);
     }
 
