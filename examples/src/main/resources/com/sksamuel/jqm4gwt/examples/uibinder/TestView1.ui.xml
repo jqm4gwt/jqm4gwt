@@ -607,8 +607,25 @@
         </h:ListWidget.Unordered>
         <h:Paragraph text="paragraphText"/>
         <h:Span text="spanText"/>
-        <ly:JQMCollapsible text="collapsibleText" collapsed="false">
-          <ly:widget><h:Span text="spanText in Collapsible"/></ly:widget>
+        <ly:JQMCollapsible collapsed="false">
+          <ly:headerWidget>
+            <b:JQMButton ui:field="btnCollaps1" text="Button1" builtInIcon="GEAR" mini="true" inline="true" />
+          </ly:headerWidget>
+          <ly:headerWidget>
+            <b:JQMButton text="Button2" builtInIcon="ALERT" mini="true" inline="true" />
+          </ly:headerWidget>
+          <ly:headerWidget>  
+            <b:JQMButton text="Button3" builtInIcon="INFO" mini="true" inline="true" />
+          </ly:headerWidget>
+          <ly:widget>
+            <h:Span text="spanText in Collapsible"/>
+          </ly:widget>
+          <ly:widget>
+            <h:Div text="" />
+          </ly:widget>
+          <ly:widget>
+            <b:JQMButton text="Button in Collapsible" builtInIcon="CLOCK" mini="true" inline="true" />
+          </ly:widget>
         </ly:JQMCollapsible>
         <ly:JQMCollapsibleSet>
           <ly:collapsible>

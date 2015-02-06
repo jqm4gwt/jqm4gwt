@@ -13,6 +13,7 @@ import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
 import com.sksamuel.jqm4gwt.html.Heading;
 
 /**
@@ -32,6 +33,8 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
     private final FlowPanel flow;
 
     private final Heading header;
+
+    private CustomFlowPanel headerPanel;
 
     /**
      * Creates a new {@link JQMCollapsible} with the no header text and
@@ -79,7 +82,7 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
         flow.add(header);
 
         setDataRole("collapsible");
-        withCollapsed(collapsed);
+        setCollapsed(collapsed);
         setText(text);
     }
 
@@ -89,6 +92,17 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
     @UiChild(tagname="widget")
     public void add(Widget widget) {
         flow.add(widget);
+    }
+
+    @UiChild(tagname="headerWidget")
+    public void addHeaderWidget(Widget w) {
+        if (w == null) return;
+        if (headerPanel == null) {
+            header.getElement().setInnerHTML(null);
+            headerPanel = new CustomFlowPanel(header.getElement());
+            flow.add(headerPanel);
+        }
+        headerPanel.add(w);
     }
 
     /**
@@ -241,6 +255,10 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
      */
     @Override
     public void setText(String text) {
+        if (headerPanel != null) {
+            flow.remove(headerPanel);
+            headerPanel = null;
+        }
         header.setText(text);
     }
 

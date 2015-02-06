@@ -445,6 +445,9 @@ public class TestView1 {
     @UiField
     JQMButton btnMultiSelClear;
 
+    @UiField
+    JQMButton btnCollaps1;
+
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
             @Override
@@ -897,6 +900,13 @@ public class TestView1 {
     void btnMultiSelClearClick(ClickEvent e) {
         multiSel.clear();
         multiSel.refresh();
+    }
+
+    @UiHandler("btnCollaps1")
+    void btnbtnCollaps1Click(ClickEvent e) {
+        Window.alert("Button1 clicked!");
+        e.preventDefault();
+        e.stopPropagation();
     }
 
 
