@@ -24,6 +24,10 @@ public class JQMCommon {
 
     public static final String STYLE_UI_BODY = "ui-body-";
     public static final String STYLE_UI_BAR = "ui-bar-";
+    /** Body panel which is inheriting parent's theme. */
+    public static final String STYLE_UI_BODY_INHERIT = "ui-body-inherit";
+    /** Bar panel/band which is inheriting parent's theme. */
+    public static final String STYLE_UI_BAR_INHERIT = "ui-bar-inherit";
 
     public static final String STYLE_UI_BTN = "ui-btn-";
     public static final String STYLE_UI_BTN_INLINE = "ui-btn-inline";
