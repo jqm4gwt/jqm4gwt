@@ -124,6 +124,7 @@ public class JQMTabs extends JQMWidget {
     private FlowPanel flow;
     private JQMNavBar navbar;
     private JQMList list;
+    private int buttonColumns;
 
     private String mainTheme;
     private String headerTheme;
@@ -148,6 +149,7 @@ public class JQMTabs extends JQMWidget {
     @UiChild(tagname = "button")
     public void addHeader(final JQMButton button) {
         if (list != null) throw new IllegalArgumentException(ERROR_HEADER);
+        boolean navbarWasNull = navbar == null;
         if (navbar == null) {
             navbar = new JQMNavBar();
             navbar.addStyleName("jqm4gwt-tabs-header-btn");
@@ -162,8 +164,21 @@ public class JQMTabs extends JQMWidget {
             }, ClickEvent.getType());
         }
         navbar.add(button);
-        if (navbar.getButtonCount() > 5) navbar.setColumns(5); // prevents default two column placing
+        if (navbarWasNull && buttonColumns > 0) {
+            navbar.setColumns(buttonColumns);
+        } else if (buttonColumns <= 0) {
+            if (navbar.getButtonCount() > 5) navbar.setColumns(5); // prevents default two column placing
+        }
         initHrefs();
+    }
+
+    public void setButtonColumns(int columns) {
+        buttonColumns = columns;
+        if (buttonColumns > 0 && navbar != null) navbar.setColumns(buttonColumns);
+    }
+
+    public int getButtonColumns() {
+        return navbar != null ? navbar.getColumns() : buttonColumns;
     }
 
     public int getButtonCount() {

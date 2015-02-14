@@ -407,7 +407,7 @@
           <h:Heading.H3 text="Tabs widget with headers as buttons"
             addStyleNames="{style.headerImportantColor}" />
           <t:JQMTabs iconPos="RIGHT" activeIndex="1" heightStyle="AUTO"> 
-            <!-- theme="b" headerTheme="a" -->
+            <!-- theme="b" headerTheme="a" buttonColumns="3" -->
             <t:button>
               <b:JQMButton text="Tab1"/>
             </t:button>
