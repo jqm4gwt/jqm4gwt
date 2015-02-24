@@ -80,6 +80,10 @@
   content: " *";
   display: inline;
 }
+.jqm4gwt-form-required > .ui-controlgroup .ui-controlgroup-label legend:after {
+  content: " *";
+  display: inline;
+}
 
 .jqm4gwt-errorcontain input {
   -webkit-box-shadow: 0 0 12px #CC3333;
