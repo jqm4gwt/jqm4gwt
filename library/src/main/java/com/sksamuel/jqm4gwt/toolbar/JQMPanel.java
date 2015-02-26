@@ -6,11 +6,13 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.toolbar.JQMPanelEvent.PanelState;
@@ -122,16 +124,29 @@ public class JQMPanel extends JQMWidget {
         $wnd.$(elt).trigger("updatelayout");
     }-*/;
 
+    /**
+     *  Default: true
+     *  <br> Sets whether the panel will animate when opening and closing.
+     *  If set to false, the panel will just appear and disappear without animation.
+     *  This is recommended for fastest performance.
+     */
     public void setAnimate(boolean animate) {
         setAttribute("data-animate", String.valueOf(animate));
     }
 
     public boolean isAnimate() {
-        return "true".equals(getAttribute("data-animate"));
+        String v = getAttribute("data-animate");
+        return (v == null || v.isEmpty() || "true".equals(v));
     }
 
     /**
      * @param display - reveal, overlay, push
+     * <br> Default: reveal
+     * <br> The relationship of the panel to the page contents.
+     * <br> This option accepts one of three values:
+     * <br> reveal - Push the page over
+     * <br> push -  Re-flow the content to fit the panel content as a column
+     * <br> overlay - Sit over the content
      */
     public void setDisplay(Display display) {
         setAttribute("data-display", display != null ? display.getJqmValue() : null);
@@ -142,7 +157,7 @@ public class JQMPanel extends JQMWidget {
     }
 
     /**
-     * @param position - left or right
+     * @param position - left or right (default: left)
      * */
     public void setPosition(Position position) {
         setAttribute("data-position", position != null ? position.getJqmValue() : null);
@@ -153,10 +168,12 @@ public class JQMPanel extends JQMWidget {
     }
 
     /**
-     * @param positionFixed - if true contents will appear no matter how far down the page you're scrolled.
-     * <br> The framework also checks to see if the panel contents will fit within the viewport before
-     * applying the fixed positioning because this property would prevent the panel contents from
-     * scrolling and make it inaccessible.
+     *  Default: false
+     *  <br> Sets whether the panel has fixed positioning so the contents are in view
+     *  even if the page is scrolled down. This also allows the page to scroll while
+     *  the panel stays fixed.
+     *  <br> We recommend not to enable this feature when panels are used within
+     *  Android apps because of poor performance and display issues.
      */
     public void setPositionFixed(boolean positionFixed) {
         setAttribute("data-position-fixed", String.valueOf(positionFixed));
@@ -166,24 +183,30 @@ public class JQMPanel extends JQMWidget {
         return "true".equals(getAttribute("data-position-fixed"));
     }
 
+    /**
+     * Default: true
+     * <br> Sets whether the panel can be closed by swiping left or right over the panel.
+     */
     public void setSwipeClose(boolean swipeClose) {
         setAttribute("data-swipe-close", String.valueOf(swipeClose));
     }
 
     public boolean isSwipeClose() {
-        return "true".equals(getAttribute("data-swipe-close"));
+        String v = getAttribute("data-swipe-close");
+        return (v == null || v.isEmpty() || "true".equals(v));
     }
 
     /**
-     * @param dismissible - if false then panel cannot be closed by clicking outside the panel
-     * onto the page contents.
+     * Default: true
+     * <br> Sets whether the panel can be closed by clicking outside onto the page.
      */
     public void setDismissible(boolean dismissible) {
         setAttribute("data-dismissible", String.valueOf(dismissible));
     }
 
     public boolean isDismissible() {
-        return "true".equals(getAttribute("data-dismissible"));
+        String v = getAttribute("data-dismissible");
+        return (v == null || v.isEmpty() || "true".equals(v));
     }
 
     public void open() {
@@ -236,6 +259,10 @@ public class JQMPanel extends JQMWidget {
     protected void doPanelOpen() {
         onPanelOpen();
         JQMPanelEvent.fire(this, PanelState.OPEN);
+    }
+
+    public HandlerRegistration addPanelHandler(JQMPanelEvent.Handler handler) {
+        return addHandler(handler, JQMPanelEvent.getType());
     }
 
     @Override
@@ -339,6 +366,9 @@ public class JQMPanel extends JQMWidget {
         return false;
     }
 
+    /**
+     * See <a href="http://demos.jquerymobile.com/1.4.5/panel-external/">External Panels</a>
+     */
     public void setExternal(boolean value) {
         if (value == isExternal()) return;
         if (value) {
@@ -359,4 +389,15 @@ public class JQMPanel extends JQMWidget {
     private static native void manualInitialize(Element elt) /*-{
         $wnd.$(elt).panel().enhanceWithin();
     }-*/;
+
+    @Override
+    public void setTheme(String themeName) {
+        JQMCommon.setThemeEx(getElement(), themeName, JQMCommon.STYLE_UI_BODY);
+    }
+
+    @Override
+    public String getTheme() {
+        return JQMCommon.getThemeEx(getElement(), JQMCommon.STYLE_UI_BODY);
+    }
+
 }

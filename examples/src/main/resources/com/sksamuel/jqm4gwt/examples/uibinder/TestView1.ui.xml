@@ -923,9 +923,13 @@
       </t:widget>
     </t:JQMFooter>
 
-    <t:JQMPanel panelId="testView1Panel">
+    <t:JQMPanel ui:field="testView1Panel" panelId="testView1Panel">
       <t:widget>
         <h:Heading.H3>Test Page 1 Panel Widget</h:Heading.H3>
+      </t:widget>
+      <t:widget>
+        <b:JQMButton ui:field="btnToggleThemeTestView1Panel" mini="true" inline="true"
+          text="Toggle theme A ~ B" />
       </t:widget>
       <t:widget>
         <b:JQMButton text="Close" builtInIcon="DELETE" rel="close" />

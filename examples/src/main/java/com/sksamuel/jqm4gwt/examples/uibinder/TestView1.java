@@ -66,6 +66,7 @@ import com.sksamuel.jqm4gwt.list.JQMListItem;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox;
 import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
 import com.sksamuel.jqm4gwt.toolbar.JQMNavBar;
+import com.sksamuel.jqm4gwt.toolbar.JQMPanel;
 import com.sksamuel.jqm4gwt.toolbar.JQMTabs;
 import com.sksamuel.jqm4gwt.toolbar.JQMTabsEvent;
 
@@ -447,6 +448,12 @@ public class TestView1 {
 
     @UiField
     JQMButton btnCollaps1;
+
+    @UiField
+    JQMButton btnToggleThemeTestView1Panel;
+
+    @UiField
+    JQMPanel testView1Panel;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -907,6 +914,14 @@ public class TestView1 {
         Window.alert("Button1 clicked!");
         e.preventDefault();
         e.stopPropagation();
+    }
+
+    @UiHandler("btnToggleThemeTestView1Panel")
+    void btnToggleThemeTestView1PanelClick(ClickEvent e) {
+        String s = testView1Panel.getTheme();
+        if (s == null || s.isEmpty() || "a".equals(s)) s = "b";
+        else s = "a";
+        testView1Panel.setTheme(s);
     }
 
 
