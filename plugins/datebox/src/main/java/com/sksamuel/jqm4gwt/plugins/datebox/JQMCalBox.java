@@ -17,6 +17,7 @@ import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBoxEvent.DisplayChangeData;
+import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBoxEvent.OffsetData;
 
 /**
  * <p> When you add {@literal <inherits name='com.sksamuel.Jqm4gwt-datebox' />} to yourApp.gwt.xml
@@ -831,6 +832,7 @@ public class JQMCalBox extends JQMText {
         setDate(delayedSetDate);
         initGridDateFormatter();
         initDisplayChange();
+        initOffset();
     }
 
     @Override
@@ -1146,6 +1148,7 @@ public class JQMCalBox extends JQMText {
         if (!calBoxHandlerAdded) {
             calBoxHandlerAdded = true;
             initDisplayChange();
+            initOffset();
         }
         return rslt;
     }
@@ -1163,15 +1166,38 @@ public class JQMCalBox extends JQMText {
         }
     }-*/;
 
+    private static native void initOffset(Element elt, JQMCalBox ctrl) /*-{
+        if (ctrl == null) {
+            $wnd.$(elt).off('datebox.offset');
+        } else {
+            $wnd.$(elt).on('datebox.offset', function (e, p) {
+                if ( p.method === 'offset' ) {
+                    var changeAmount = p.amount == null ? 0 : p.amount;
+                    ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::fireOffset(Lcom/google/gwt/core/client/JsDate;Ljava/lang/String;I)(p.newDate, p.type, changeAmount);
+                }
+            });
+        }
+    }-*/;
+
     private void initDisplayChange() {
         if (!calBoxHandlerAdded || !isReady()) return;
         initDisplayChange(input.getElement(), this);
+    }
+
+    private void initOffset() {
+        if (!calBoxHandlerAdded || !isReady()) return;
+        initOffset(input.getElement(), this);
     }
 
     private void fireDisplayChange(JsDate shownDate, JsDate selectedDate,
                                    String thisChange, int thisChangeAmount) {
         JQMCalBoxEvent.fire(this, new DisplayChangeData(JQMContext.jsDateToDate(shownDate),
                 JQMContext.jsDateToDate(selectedDate), thisChange, thisChangeAmount));
+    }
+
+    private void fireOffset(JsDate newDate, String changeType, int changeAmount) {
+        JQMCalBoxEvent.fire(this, new OffsetData(JQMContext.jsDateToDate(newDate),
+                changeType, changeAmount));
     }
 
 }

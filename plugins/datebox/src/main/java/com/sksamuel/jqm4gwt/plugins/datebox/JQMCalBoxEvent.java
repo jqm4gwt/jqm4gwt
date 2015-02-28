@@ -17,14 +17,14 @@ public class JQMCalBoxEvent extends GwtEvent<JQMCalBoxEvent.Handler> {
         public final Date selectedDate;
 
         /** Field Changed:
-            y - Year
-            m - Month
-            d - Date
-            h - Hour
-            i - Minute
-            s - Second
-            a - Meridiem
-            p - Special Case - offset changed by the picker controls (month/year)
+            <br> y - Year
+            <br> m - Month
+            <br> d - Date
+            <br> h - Hour
+            <br> i - Minute
+            <br> s - Second
+            <br> a - Meridiem
+            <br> p - Special Case - offset changed by the picker controls (month/year)
          */
         public final String thisChange;
 
@@ -48,6 +48,37 @@ public class JQMCalBoxEvent extends GwtEvent<JQMCalBoxEvent.Handler> {
         }
     }
 
+    public static class OffsetData {
+
+        public final Date newDate;
+
+        /**
+         * <br> y - Year
+         * <br> m - Month
+         * <br> d - Date
+         * <br> h - Hour
+         * <br> i - Minute
+         * <br> s - Second
+         * <br> a - Meridiem
+         */
+        public final String changeType;
+
+        /** Amount of change, +/- */
+        public final int changeAmount;
+
+        public OffsetData(Date newDate, String changeType, int changeAmount) {
+            this.newDate = newDate;
+            this.changeType = changeType;
+            this.changeAmount = changeAmount;
+        }
+
+        @Override
+        public String toString() {
+            return "OffsetData [newDate=" + newDate
+                    + ", changeType=" + changeType + ", changeAmount=" + changeAmount + "]";
+        }
+    }
+
     public interface Handler extends EventHandler {
         /**
          * Triggered when the calendar display is changed - but only if the "selected" date
@@ -55,11 +86,21 @@ public class JQMCalBoxEvent extends GwtEvent<JQMCalBoxEvent.Handler> {
          * or next month, this event will still fire)
          */
         void onDisplayChange(JQMCalBoxEvent event);
+
+        /**
+         * Triggered when the datebox control is changed.
+         * <br> See <a href="http://dev.jtsage.com/jQM-DateBox/api/offset/">offset event</a>
+         */
+        void onOffset(JQMCalBoxEvent event);
     }
 
     public static class DefaultHandler implements Handler {
         @Override
         public void onDisplayChange(JQMCalBoxEvent event) {
+        }
+
+        @Override
+        public void onOffset(JQMCalBoxEvent event) {
         }
     }
 
@@ -72,10 +113,17 @@ public class JQMCalBoxEvent extends GwtEvent<JQMCalBoxEvent.Handler> {
      * @param source - the source of the handlers
      */
     public static <S extends HasAttachHandlers> void fire(S source, DisplayChangeData data) {
-      if (TYPE != null) {
-          JQMCalBoxEvent event = new JQMCalBoxEvent(data);
-          source.fireEvent(event);
-      }
+        if (TYPE != null) {
+            JQMCalBoxEvent event = new JQMCalBoxEvent(data);
+            source.fireEvent(event);
+        }
+    }
+
+    public static <S extends HasAttachHandlers> void fire(S source, OffsetData data) {
+        if (TYPE != null) {
+            JQMCalBoxEvent event = new JQMCalBoxEvent(data);
+            source.fireEvent(event);
+        }
     }
 
     public static Type<JQMCalBoxEvent.Handler> getType() {
@@ -85,14 +133,25 @@ public class JQMCalBoxEvent extends GwtEvent<JQMCalBoxEvent.Handler> {
       return TYPE;
     }
 
-    private final DisplayChangeData data;
+    private final DisplayChangeData dataDisplay;
+    private final OffsetData dataOffset;
 
     protected JQMCalBoxEvent(DisplayChangeData data) {
-        this.data = data;
+        this.dataDisplay = data;
+        this.dataOffset = null;
+    }
+
+    protected JQMCalBoxEvent(OffsetData data) {
+        this.dataDisplay = null;
+        this.dataOffset = data;
     }
 
     public DisplayChangeData getData() {
-        return data;
+        return dataDisplay;
+    }
+
+    public OffsetData getDataOffset() {
+        return dataOffset;
     }
 
     @Override
@@ -103,12 +162,19 @@ public class JQMCalBoxEvent extends GwtEvent<JQMCalBoxEvent.Handler> {
     @Override
     public String toDebugString() {
         assertLive();
-        return super.toDebugString() + " data = " + data != null ? data.toString() : null;
+        String s = super.toDebugString();
+        if (dataDisplay != null) {
+            s += " dataDisplay = " + dataDisplay.toString();
+        } else if (dataOffset != null) {
+            s += " dataOffset = " + dataOffset.toString();
+        }
+        return s;
     }
 
     @Override
     protected void dispatch(JQMCalBoxEvent.Handler handler) {
-        handler.onDisplayChange(this);
+        if (this.dataDisplay != null) handler.onDisplayChange(this);
+        else if (this.dataOffset != null) handler.onOffset(this);
     }
 
 
