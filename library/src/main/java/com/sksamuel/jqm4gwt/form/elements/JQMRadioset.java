@@ -73,34 +73,44 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
 
     private Legend legend;
 
-    /**
-     * The input's that are used for the radio buttons
-     */
-    private final List<TextBox> radios = new ArrayList<TextBox>();
+    private final List<JQMRadio> radios = new ArrayList<JQMRadio>();
+
+    private String theme;
 
     /**
      * Creates a new {@link JQMRadioset} with no label
-     *
      */
     public JQMRadioset() {
         this(null);
     }
 
     /**
-     * Creates a new {@link JQMRadioset} with the label text set to the given
-     * value
+     * Creates a new {@link JQMRadioset} with the label text set to the given value
      *
-     * @param text
-     *            the text for the label
+     * @param text - the text for the label
      */
     public JQMRadioset(String text) {
         setupFieldset(text);
     }
 
     private void setupFieldset(String labelText) {
-        if (fieldset != null) remove(fieldset);
-        // the fieldset is the inner container and is contained inside the flow
-        fieldset = new JQMFieldset();
+        if (fieldset != null) {
+            boolean horz = fieldset.isHorizontal();
+            boolean vert = fieldset.isVertical();
+            IconPos iconPos = getIconPos();
+            boolean mini = isMini();
+
+            remove(fieldset);
+            fieldset = new JQMFieldset();
+
+            if (horz) fieldset.setHorizontal();
+            if (vert) fieldset.setVertical();
+            setIconPos(iconPos);
+            setMini(mini);
+        } else {
+            // the fieldset is the inner container and is contained inside the flow
+            fieldset = new JQMFieldset();
+        }
         fieldset.getElement().setId(Document.get().createUniqueId());
         add(fieldset);
 
@@ -114,7 +124,8 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
     ArrayList<HandlerRegistration> blurHandlers = new ArrayList<HandlerRegistration>();
 
     private void addRadiosBlurHandler(final BlurHandler handler) {
-        for (TextBox radio : radios) {
+        for (JQMRadio r : radios) {
+            TextBox radio = r.getInput();
             blurHandlers.add(radio.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -220,7 +231,9 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
     @UiChild(tagname = "radio")
     public void addRadio(JQMRadio radio) {
         radio.setName(fieldset.getId());
-        radios.add(radio.getInput());
+        radios.add(radio);
+        radio.setTheme(theme);
+
         fieldset.add(radio.getInput());
         fieldset.add(radio.getLabel());
     }
@@ -231,8 +244,15 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
     }
 
     @Override
+    public String getTheme() {
+        if (radios.isEmpty()) return theme;
+        return radios.get(0).getTheme();
+    }
+
+    @Override
     public void setTheme(String themeName) {
-        for (TextBox radio : radios) JQMCommon.applyTheme(radio, themeName);
+        theme = themeName;
+        for (JQMRadio radio : radios) radio.setTheme(theme);
     }
 
     @Override
@@ -251,7 +271,8 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
         // Initialization code
         if (!valueChangeHandlerInitialized) {
             valueChangeHandlerInitialized = true;
-            for (TextBox radio : radios) {
+            for (JQMRadio r : radios) {
+                TextBox radio = r.getInput();
                 radio.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
@@ -282,17 +303,17 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
     /**
      *
      * Note: this method will return null until after the jquery init phase has
-     * completed. That means if you call getValue() on an element in the intial
+     * completed. That means if you call getValue() on an element in the initial
      * construction of a page then it will return null.
      *
      * @return the value of the currently selected radio button or null if no
      *         button is currently selected.
      *
-     *
      */
     @Override
     public String getValue() {
-        for (TextBox radio : radios) {
+        for (JQMRadio r : radios) {
+            TextBox radio = r.getInput();
             Element element = radio.getElement();
             if (isChecked(element)) {
                 return element.getAttribute("value");
@@ -324,21 +345,10 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
         return null;
     }
 
-    @Override
-    public boolean isHorizontal() {
-        return fieldset.isHorizontal();
-    }
-
-    @Override
-    public boolean isVertical() {
-        return fieldset.isVertical();
-    }
-
     /**
      * Removes the given {@link JQMRadio} from this radioset
      *
-     * @param radio
-     *            the radio to remove
+     * @param radio - the radio to remove
      */
     public void removeRadio(JQMRadio radio) {
         if (radio == null) return;
@@ -352,10 +362,17 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
 
     /**
      * Removes the {@link JQMRadio} button that has the given value
+     *
+     * @param value
      */
     public void removeRadio(String value) {
         // TODO traverse all elements removing anything that has a "for" for
         // this id or actually has this id
+    }
+
+    @Override
+    public boolean isHorizontal() {
+        return fieldset.isHorizontal();
     }
 
     @Override
@@ -366,6 +383,22 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
     @Override
     public JQMRadioset withHorizontal() {
         setHorizontal();
+        return this;
+    }
+
+    @Override
+    public boolean isVertical() {
+        return fieldset.isVertical();
+    }
+
+    @Override
+    public void setVertical() {
+        fieldset.withVertical();
+    }
+
+    @Override
+    public JQMRadioset withVertical() {
+        setVertical();
         return this;
     }
 
@@ -395,7 +428,8 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
     public void setValue(String value, boolean fireEvents) {
         String oldValue = fireEvents ? getValue() : null;
         boolean changed = false;
-        for (TextBox radio : radios) { // first we have to uncheck already checked radios (UI refresh issue)
+        for (JQMRadio r : radios) { // first we have to uncheck already checked radios (UI refresh issue)
+            TextBox radio = r.getInput();
             if (!isChecked(radio)) continue;
             boolean checked = value != null && value.equals(radio.getValue()) ? true : false;
             if (!checked) {
@@ -403,7 +437,8 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
                 changed = true;
             }
         }
-        for (TextBox radio : radios) {
+        for (JQMRadio r : radios) {
+            TextBox radio = r.getInput();
             boolean checked = value != null && value.equals(radio.getValue()) ? true : false;
             if (isChecked(radio) != checked) {
                 setChecked(radio, checked);
@@ -450,25 +485,18 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
         $wnd.$(elt).prop('checked', value);
     }-*/;
 
-    protected static native void refreshAll() /*-{
-        $wnd.$("input[type='radio']").each(function() {
+    public void refresh() {
+        refreshAll(fieldset.getElement());
+    }
+
+    private static native void refreshAll(Element elt) /*-{
+        $wnd.$(elt).find("input[type='radio']").each(function() {
             var w = $wnd.$(this);
             if (w.data('mobile-checkboxradio') !== undefined) {
                 w.checkboxradio('refresh');
             }
         });
     }-*/;
-
-    @Override
-    public void setVertical() {
-        fieldset.withVertical();
-    }
-
-    @Override
-    public JQMRadioset withVertical() {
-        setVertical();
-        return this;
-    }
 
     /**
      * Returns the number of radio options set on this radioset
@@ -494,23 +522,19 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
     }
 
     public IconPos getIconPos() {
-        String string = fieldset.getElement().getAttribute("data-iconpos");
-        return string == null ? null : IconPos.valueOf(string);
+        return JQMCommon.getIconPos(fieldset);
     }
 
     /**
      * Sets the position of the icon.
      */
     public void setIconPos(IconPos pos) {
-        if (pos == null)
-            fieldset.getElement().removeAttribute("data-iconpos");
-        else
-            fieldset.getElement().setAttribute("data-iconpos", pos.getJqmValue());
+        JQMCommon.setIconPos(fieldset, pos);
     }
 
     @Override
     public boolean isMini() {
-        return "true".equals(fieldset.getElement().getAttribute("data-mini"));
+        return JQMCommon.isMini(fieldset);
     }
 
     /**
@@ -518,7 +542,7 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
      */
     @Override
     public void setMini(boolean mini) {
-        fieldset.getElement().setAttribute("data-mini", String.valueOf(mini));
+        JQMCommon.setMini(fieldset, mini);
     }
 
     /**

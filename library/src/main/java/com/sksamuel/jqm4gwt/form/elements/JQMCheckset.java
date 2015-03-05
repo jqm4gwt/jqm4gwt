@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt.form.elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -19,6 +20,7 @@ import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasOrientation;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.IconPos;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.Orientation;
 import com.sksamuel.jqm4gwt.events.HasTapHandlers;
@@ -66,6 +68,8 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 
     private final List<JQMCheckbox> checks = new ArrayList<JQMCheckbox>();
 
+    private String theme;
+
     /**
      * Creates a new {@link JQMCheckset} with no label text
      */
@@ -76,16 +80,31 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
     /**
      * Creates a new {@link JQMCheckset} with the label set to the given text.
      *
-     * @param text
-     *              the display text for the label
+     * @param text - the display text for the label
      */
     public JQMCheckset(String text) {
         setupFieldset(text);
     }
 
     private void setupFieldset(String labelText) {
-        if (fieldset != null) remove(fieldset);
-        fieldset = new JQMFieldset();
+        if (fieldset != null) {
+            boolean horz = fieldset.isHorizontal();
+            boolean vert = fieldset.isVertical();
+            IconPos iconPos = getIconPos();
+            boolean mini = isMini();
+
+            remove(fieldset);
+            fieldset = new JQMFieldset();
+
+            if (horz) fieldset.setHorizontal();
+            if (vert) fieldset.setVertical();
+            setIconPos(iconPos);
+            setMini(mini);
+        } else {
+            // the fieldset is the inner container and is contained inside the flow
+            fieldset = new JQMFieldset();
+        }
+        fieldset.getElement().setId(Document.get().createUniqueId());
         add(fieldset);
 
         legend = new Legend();
@@ -136,8 +155,9 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
 
     @UiChild(tagname = "check")
     public void addCheckbox(JQMCheckbox checkbox) {
-        fieldset.add(checkbox);
         checks.add(checkbox);
+        checkbox.setTheme(theme);
+        fieldset.add(checkbox);
     }
 
     public void clear() {
@@ -146,8 +166,15 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
     }
 
     @Override
+    public String getTheme() {
+        if (checks.isEmpty()) return theme;
+        return checks.get(0).getTheme();
+    }
+
+    @Override
     public void setTheme(String themeName) {
-        for (JQMCheckbox cb : checks) cb.setTheme(themeName);
+        theme = themeName;
+        for (JQMCheckbox cb : checks) cb.setTheme(theme);
     }
 
     @Override
@@ -210,7 +237,7 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
         return null;
     }
 
-    private String getValue(Element element) {
+    /*private String getValue(Element element) {
         while (element != null) {
             if ("label".equalsIgnoreCase(element.getTagName())
                     && element.getAttribute("class") != null
@@ -223,7 +250,7 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
             element = element.getNextSiblingElement();
         }
         return null;
-    }
+    }*/
 
     /**
      * Returns true if at least one checkbox in this checkset is selected.
@@ -232,16 +259,10 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
         return getValue() != null;
     }
 
-    @Override
-    public boolean isHorizontal() {
-        return fieldset.isHorizontal();
-    }
-
     /**
      * Returns true if the checkbox with the given id is selected.
      *
-     * @param id
-     *              the id of the checkbox to test
+     * @param id - the id of the checkbox to test
      */
     public boolean isSelected(String id) {
         for (JQMCheckbox box : checks) {
@@ -251,14 +272,18 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
         return false;
     }
 
-    @Override
-    public boolean isVertical() {
-        return fieldset.isVertical();
-    }
-
+    /**
+     * @param id
+     * @param label
+     */
     public void removeCheck(String id, String label) {
         // TODO traverse all elements removing anything that has a "for" for
         // this id or actually has this id
+    }
+
+    @Override
+    public boolean isHorizontal() {
+        return fieldset.isHorizontal();
     }
 
     @Override
@@ -270,6 +295,30 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
     public JQMCheckset withHorizontal() {
         setHorizontal();
         return this;
+    }
+
+    @Override
+    public boolean isVertical() {
+        return fieldset.isVertical();
+    }
+
+    @Override
+    public void setVertical() {
+        fieldset.withVertical();
+    }
+
+    @Override
+    public JQMCheckset withVertical() {
+        setVertical();
+        return this;
+    }
+
+    public void setOrientation(Orientation value) {
+        HasOrientation.Support.setOrientation(this, value);
+    }
+
+    public Orientation getOrientation() {
+        return HasOrientation.Support.getOrientation(this);
     }
 
     /**
@@ -304,43 +353,20 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
         }
     }
 
-    @Override
-    public void setVertical() {
-        fieldset.withVertical();
-    }
-
-    @Override
-    public JQMCheckset withVertical() {
-        setVertical();
-        return this;
-    }
-
-    public void setOrientation(Orientation value) {
-        HasOrientation.Support.setOrientation(this, value);
-    }
-
-    public Orientation getOrientation() {
-        return HasOrientation.Support.getOrientation(this);
-    }
-
     public IconPos getIconPos() {
-        String string = fieldset.getElement().getAttribute("data-iconpos");
-        return string == null ? null : IconPos.valueOf(string);
+        return JQMCommon.getIconPos(fieldset);
     }
 
     /**
      * Sets the position of the icon.
      */
     public void setIconPos(IconPos pos) {
-        if (pos == null)
-            fieldset.getElement().removeAttribute("data-iconpos");
-        else
-            fieldset.getElement().setAttribute("data-iconpos", pos.getJqmValue());
+        JQMCommon.setIconPos(fieldset, pos);
     }
 
     @Override
     public boolean isMini() {
-        return "true".equals(fieldset.getElement().getAttribute("data-mini"));
+        return JQMCommon.isMini(fieldset);
     }
 
     /**
@@ -348,7 +374,7 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
      */
     @Override
     public void setMini(boolean mini) {
-        fieldset.getElement().setAttribute("data-mini", String.valueOf(mini));
+        JQMCommon.setMini(fieldset, mini);
     }
 
     /**
@@ -359,4 +385,17 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
         setMini(mini);
         return this;
     }
+
+    public void refresh() {
+        refreshAll(fieldset.getElement());
+    }
+
+    private static native void refreshAll(Element elt) /*-{
+        $wnd.$(elt).find("input[type='checkbox']").each(function() {
+            var w = $wnd.$(this);
+            if (w.data('mobile-checkboxradio') !== undefined) {
+                w.checkboxradio('refresh');
+            }
+        });
+    }-*/;
 }
