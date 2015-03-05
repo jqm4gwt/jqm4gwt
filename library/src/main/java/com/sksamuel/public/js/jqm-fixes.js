@@ -13,8 +13,20 @@ $.widget( "ui.tabs", $.ui.tabs, {
             if ( page.length > 0 && !page.hasClass( "ui-page-active" ) ) {
                 delayedCreate = this._super;
                 page.one( "pagebeforeshow", function() {
-                    delayedCreate.call( that, options, element );
+                    //if (window.console) console.log("pagebeforeshow: delayedCreate exec");
+                    if (delayedCreate !== null) delayedCreate.call( that, options, element );
+                    delayedCreate = null;
                 });
+                var wait = setInterval(function() {
+                    if (delayedCreate === null) clearInterval(wait);
+                    else {
+                        if ( page.hasClass( "ui-page-active" ) ) {
+                            if (delayedCreate !== null) delayedCreate.call( that, options, element );
+                            delayedCreate = null;
+                            clearInterval(wait);
+                        }
+                    }
+                }, 200);
             } else {
                 return this._super( options, element );
             }
