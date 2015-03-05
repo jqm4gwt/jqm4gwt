@@ -354,7 +354,7 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
         if (radio == null) return;
         TextBox inp = radio.getInput();
         if (inp != null) {
-            radios.remove(inp);
+            radios.remove(radio);
             fieldset.remove(inp);
         }
         if (radio.getLabel() != null) fieldset.remove(radio.getLabel());
