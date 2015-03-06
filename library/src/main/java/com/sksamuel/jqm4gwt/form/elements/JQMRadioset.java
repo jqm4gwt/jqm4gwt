@@ -241,6 +241,7 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
     public void clear() {
         radios.clear();
         setupFieldset(getText());
+        valueChangeHandlerInitialized = false; // based on radios
     }
 
     @Override
@@ -261,13 +262,7 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
         return this;
     }
 
-    @Override
-    public HandlerRegistration addSelectionHandler(SelectionHandler<String> handler) {
-        return addHandler(handler, SelectionEvent.getType());
-    }
-
-    @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
+    private void initValueChangeHandler() {
         // Initialization code
         if (!valueChangeHandlerInitialized) {
             valueChangeHandlerInitialized = true;
@@ -282,6 +277,17 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
                 });
             }
         }
+    }
+
+    @Override
+    public HandlerRegistration addSelectionHandler(SelectionHandler<String> handler) {
+        initValueChangeHandler();
+        return addHandler(handler, SelectionEvent.getType());
+    }
+
+    @Override
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
+        initValueChangeHandler();
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

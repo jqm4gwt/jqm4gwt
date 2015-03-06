@@ -1,7 +1,9 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -10,7 +12,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -69,6 +73,9 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
     private final List<JQMCheckbox> checks = new ArrayList<JQMCheckbox>();
 
     private String theme;
+
+    private boolean valueChangeHandlerInitialized;
+    private boolean inProgressSetValue;
 
     /**
      * Creates a new {@link JQMCheckset} with no label text
@@ -163,6 +170,7 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
     public void clear() {
         checks.clear();
         setupFieldset(getText());
+        valueChangeHandlerInitialized = false; // based on checks
     }
 
     @Override
@@ -204,14 +212,34 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
         return null;
     }
 
+    private void initValueChangeHandler() {
+        // Initialization code
+        if (!valueChangeHandlerInitialized) {
+            valueChangeHandlerInitialized = true;
+            for (JQMCheckbox cb : checks) {
+                cb.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+                    @Override
+                    public void onValueChange(ValueChangeEvent<Boolean> event) {
+                        if (!inProgressSetValue) {
+                            SelectionEvent.fire(JQMCheckset.this, getValue());
+                            ValueChangeEvent.fire(JQMCheckset.this, getValue());
+                        }
+                    }
+                });
+            }
+        }
+    }
+
     @Override
     public HandlerRegistration addSelectionHandler(SelectionHandler<String> handler) {
-        return null;
+        initValueChangeHandler();
+        return addHandler(handler, SelectionEvent.getType());
     }
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
-        return null;
+        initValueChangeHandler();
+        return addHandler(handler, ValueChangeEvent.getType());
     }
 
     /**
@@ -223,18 +251,69 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
     }
 
     /**
-     * Returns the id of any checkbox that is checked or null if no checkbox
-     * in this checkset has been selected
-     *
-     * @return the first selected value
+     * @return - comma separated ids of all checked checkboxes or null if no checkbox
+     * in this checkset has been selected.
      */
     @Override
     public String getValue() {
+        StringBuilder sb = null;
         for (JQMCheckbox box : checks) {
-            if (box.isChecked())
-                return box.getId();
+            if (box.isChecked()) {
+                if (sb == null) {
+                    sb = new StringBuilder(box.getId());
+                } else {
+                    sb.append(',');
+                    sb.append(box.getId());
+                }
+            }
         }
-        return null;
+        return sb == null ? null : sb.toString();
+    }
+
+    /**
+     * Sets the checkboxes with the given ids to be checked.
+     *
+     * @param ids - comma separated ids (you can define JQMCheckbox widgetId in UiBinder templates).
+     */
+    @Override
+    public void setValue(String ids) {
+        setValue(ids, false);
+    }
+
+    @Override
+    public void setValue(String ids, boolean fireEvents) {
+        final Set<String> idSet;
+        if (ids != null && !ids.isEmpty()) {
+            String[] arr = ids.split(",");
+            idSet = new HashSet<String>(arr.length);
+            for (int i = 0; i < arr.length; i++) {
+                idSet.add(arr[i].trim());
+            }
+        } else {
+            idSet = null;
+        }
+        String oldValue = fireEvents ? getValue() : null;
+        boolean changed = false;
+        inProgressSetValue = true;
+        try {
+            for (JQMCheckbox box : checks) {
+                boolean checked = idSet != null && idSet.contains(box.getId());
+                if (box.isChecked() != checked) {
+                    changed = true;
+                    box.setValue(checked, fireEvents);
+                }
+            }
+        } finally {
+            inProgressSetValue = false;
+        }
+        if (fireEvents && changed) {
+            String newValue = getValue();
+            boolean eq = newValue == oldValue || newValue != null && newValue.equals(oldValue);
+            if (!eq) {
+                SelectionEvent.fire(this, newValue);
+                ValueChangeEvent.fire(this, newValue);
+            }
+        }
     }
 
     /*private String getValue(Element element) {
@@ -333,24 +412,6 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
     public JQMCheckset withText(String text) {
         setText(text);
         return this;
-    }
-
-    /**
-     * Sets the checkbox with the given value to be checked
-     */
-    @Override
-    public void setValue(String id) {
-        setValue(id, false);
-    }
-
-    @Override
-    public void setValue(String id, boolean fireEvents) {
-        for (JQMCheckbox box : checks) {
-            if (id.equals(box.getId())) {
-                box.setValue(true, fireEvents);
-                return;
-            }
-        }
     }
 
     public IconPos getIconPos() {

@@ -40,6 +40,7 @@ import com.sksamuel.jqm4gwt.events.JQMOrientationChangeHandler;
 import com.sksamuel.jqm4gwt.form.JQMForm;
 import com.sksamuel.jqm4gwt.form.SubmissionHandler;
 import com.sksamuel.jqm4gwt.form.elements.JQMCheckbox;
+import com.sksamuel.jqm4gwt.form.elements.JQMCheckset;
 import com.sksamuel.jqm4gwt.form.elements.JQMFilterable;
 import com.sksamuel.jqm4gwt.form.elements.JQMFilterableEvent;
 import com.sksamuel.jqm4gwt.form.elements.JQMFlip;
@@ -454,6 +455,9 @@ public class TestView1 {
 
     @UiField
     JQMPanel testView1Panel;
+
+    @UiField
+    JQMCheckset checkset1;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -1206,6 +1210,12 @@ public class TestView1 {
             }
         });
 
+        /*checkset1.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                Window.alert(checkset1.getText() + ": " + event.getValue());
+            }
+        });*/
     }
 
     public void show() {

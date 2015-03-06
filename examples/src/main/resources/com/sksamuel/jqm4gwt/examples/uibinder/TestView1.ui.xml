@@ -151,10 +151,11 @@
           <e:JQMCheckbox ui:field="cb4" name="cb4" text="Right Icon and No corners"
             corners="false" iconPos="RIGHT" />
           <b:JQMButton ui:field="checkboxInfoBtn" text="Show Checkboxes Info" />
-          <e:JQMCheckset text="Mini Horizontal Checkset" orientation="HORIZONTAL" mini="true">
-            <e:check><e:JQMCheckbox name="cb10" text="Check1" /></e:check>
-            <e:check><e:JQMCheckbox name="cb11" text="Check2" /></e:check>
-            <e:check><e:JQMCheckbox name="cb12" text="Check3" /></e:check>
+          <e:JQMCheckset ui:field="checkset1" text="Mini Horizontal Checkset" 
+            orientation="HORIZONTAL" mini="true">
+            <e:check><e:JQMCheckbox widgetId="cb_10" name="cb10" text="Check1" /></e:check>
+            <e:check><e:JQMCheckbox widgetId="cb_11" name="cb11" text="Check2" /></e:check>
+            <e:check><e:JQMCheckbox widgetId="cb_12" name="cb12" text="Check3" /></e:check>
           </e:JQMCheckset>
           <e:JQMCheckset text="Vertical Checkset"> <!-- iconPos="RIGHT" -->
             <e:check><e:JQMCheckbox name="cb20" text="Check1" /></e:check>
