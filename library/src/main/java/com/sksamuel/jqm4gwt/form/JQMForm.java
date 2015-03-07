@@ -220,7 +220,16 @@ public class JQMForm extends FlowPanel {
                 while (w != null) {
                     int i = getWidgetIndex(w);
                     if (i >= 0) {
-                        insert(label, i + 1);
+                        i++; // next after w
+                        while (i < getWidgetCount()) {
+                            Widget wi = getWidget(i);
+                            if (wi instanceof Label && JQMCommon.hasStyle(wi, JQM4GWT_ERROR_LABEL_STYLENAME)) {
+                                i++; // next after previous errors
+                            } else {
+                                break;
+                            }
+                        }
+                        insert(label, i);
                         inserted = true;
                         break;
                     }
