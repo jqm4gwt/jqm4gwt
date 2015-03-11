@@ -64,10 +64,14 @@
 }
 
 .jqm4gwt-error {
-  background-color: #FFEC98;
-  color: red;
   display: block;
   padding-left: 10px;
+
+  background-color: #FFCA96;
+  color: #000000;
+  border: solid 1px white;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 .jqm4gwt-error[class*=ui-icon-] {
   position: relative;
@@ -85,7 +89,19 @@
   display: inline;
 }
 
-.jqm4gwt-errorcontain input {
+.jqm4gwt-form-label-top .ui-field-contain > label,
+.jqm4gwt-form-label-top .ui-field-contain .ui-controlgroup-label,
+.jqm4gwt-form-label-top .ui-field-contain > .ui-rangeslider > label {
+  width: auto !important;
+  float: none !important;
+}
+.jqm4gwt-form-label-top .ui-field-contain > label ~ [class*="ui-"],
+.jqm4gwt-form-label-top .ui-field-contain .ui-controlgroup-controls {
+  width: auto !important;
+  float: none !important;
+}
+
+.jqm4gwt-errorcontain input, .jqm4gwt-errorcontain .ui-select, .jqm4gwt-errorcontain .ui-controlgroup-controls {
   -webkit-box-shadow: 0 0 12px #CC3333;
   -moz-box-shadow: 0 0 12px #CC3333;
   box-shadow: 0 0 12px #CC3333;
