@@ -9,6 +9,9 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -126,6 +129,11 @@ public class JQMTabs extends JQMWidget {
     private JQMList list;
     private int buttonColumns;
 
+    private FlowPanel leftHeaderStage;
+    private FlowPanel rightHeaderStage;
+    private List<Widget> leftHeaderWidgets;
+    private List<Widget> rightHeaderWidgets;
+
     private String mainTheme;
     private String headerTheme;
 
@@ -146,6 +154,70 @@ public class JQMTabs extends JQMWidget {
         });
     }
 
+    @UiChild(tagname = "leftHeaderWidget")
+    public void addLeftHeaderWidget(Widget w) {
+        if (w == null) return;
+        if (leftHeaderStage != null) {
+            leftHeaderStage.add(w);
+        } else {
+            if (leftHeaderWidgets == null) leftHeaderWidgets = new ArrayList<Widget>();
+            leftHeaderWidgets.add(w);
+        }
+    }
+
+    private void checkLeftHeader() {
+        if (leftHeaderWidgets == null || leftHeaderStage != null) return;
+
+        leftHeaderStage = new FlowPanel();
+        leftHeaderStage.getElement().getStyle().setFloat(Style.Float.LEFT);
+        for (Widget w : leftHeaderWidgets) leftHeaderStage.add(w);
+        flow.insert(leftHeaderStage, 0);
+        checkHeaderStyle();
+    }
+
+    @UiChild(tagname = "rightHeaderWidget")
+    public void addRightHeaderWidget(Widget w) {
+        if (w == null) return;
+        if (rightHeaderStage != null) {
+            rightHeaderStage.add(w);
+        } else {
+            if (rightHeaderWidgets == null) rightHeaderWidgets = new ArrayList<Widget>();
+            rightHeaderWidgets.add(w);
+        }
+    }
+
+    private void checkRightHeader() {
+        if (rightHeaderWidgets == null || rightHeaderStage != null) return;
+
+        rightHeaderStage = new FlowPanel();
+        rightHeaderStage.getElement().getStyle().setFloat(Style.Float.RIGHT);
+        for (Widget w : rightHeaderWidgets) rightHeaderStage.add(w);
+        int i = leftHeaderStage != null ? 1 : 0;
+        flow.insert(rightHeaderStage, i);
+        checkHeaderStyle();
+    }
+
+    private void checkHeaderStyle() {
+        if (leftHeaderStage == null && rightHeaderStage == null) return;
+        Style st = null;
+        if (navbar != null) {
+            st = navbar.getElement().getStyle();
+        } else if (list != null) {
+            st = list.getElement().getStyle();
+        }
+        if (st != null) { // See http://stackoverflow.com/a/1767270/714136
+            st.setProperty("width", "auto");
+            st.setOverflow(Overflow.AUTO);
+        }
+    }
+
+    private int getHeaderInsertPos() {
+        int i = 0;
+        if (leftHeaderStage != null) i++;
+        if (rightHeaderStage != null) i++;
+        return i;
+    }
+
     @UiChild(tagname = "button")
     public void addHeader(final JQMButton button) {
         if (list != null) throw new IllegalArgumentException(ERROR_HEADER);
@@ -155,7 +227,8 @@ public class JQMTabs extends JQMWidget {
             navbar.addStyleName("jqm4gwt-tabs-header-btn");
             String theme = getHeaderTheme();
             if (theme != null && !theme.isEmpty()) navbar.setTheme(theme);
-            flow.insert(navbar, 0);
+            checkHeaderStyle();
+            flow.insert(navbar, getHeaderInsertPos());
             navbar.addDomHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -196,10 +269,14 @@ public class JQMTabs extends JQMWidget {
         if (list == null) {
             list = new JQMList();
             list.setInset(true);
+            Style st = list.getElement().getStyle();
+            st.setMarginTop(0d, Unit.PX);
+            st.setMarginBottom(0d, Unit.PX);
             list.addStyleName("jqm4gwt-tabs-header-list");
             String theme = getHeaderTheme();
             if (theme != null && !theme.isEmpty()) list.setTheme(theme);
-            flow.insert(list, 0);
+            checkHeaderStyle();
+            flow.insert(list, getHeaderInsertPos());
             list.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -295,6 +372,8 @@ public class JQMTabs extends JQMWidget {
         // workaround for issue with listview active item resetting on initialization
         // (buttons are processed here as well just for symmetry).
         doActiveHighlight();
+        checkLeftHeader();
+        checkRightHeader();
     }
 
     @Override

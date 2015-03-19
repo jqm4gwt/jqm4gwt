@@ -436,6 +436,21 @@
             <t:button>
               <b:JQMButton text="Tab9"/>
             </t:button>
+            
+            <!-- t:leftHeaderWidget>
+              <b:JQMButton text="Left1" inline="true" mini="true" />
+            </t:leftHeaderWidget>
+            <t:leftHeaderWidget>
+              <b:JQMButton text="Left2" inline="true" mini="true" />
+            </t:leftHeaderWidget>
+            
+            <t:rightHeaderWidget>
+              <b:JQMButton text="Right1" inline="true" mini="true" />
+            </t:rightHeaderWidget>
+            <t:rightHeaderWidget>
+              <b:JQMButton text="Right2" inline="true" mini="true" />
+            </t:rightHeaderWidget -->
+            
             <t:content>
               <g:FlowPanel addStyleNames="ui-body-inherit ui-content"> <!-- styles are OPTIONAL -->
                 <h:Heading.H3 text="Tab1 Content" />
@@ -492,6 +507,21 @@
             addStyleNames="{style.headerImportantColor}" />
           <t:JQMTabs ui:field="tabs1" collapsible="true" activeIndex="1">
             <!-- tabDisabled="[2]" collapseAll="true" -->
+            
+            <!-- t:leftHeaderWidget>
+              <b:JQMButton text="Left1" inline="true" mini="true" />
+            </t:leftHeaderWidget>
+            <t:leftHeaderWidget>
+              <b:JQMButton text="Left2" inline="true" mini="true" />
+            </t:leftHeaderWidget>
+            
+            <t:rightHeaderWidget>
+              <b:JQMButton text="Right1" inline="true" mini="true" />
+            </t:rightHeaderWidget>
+            <t:rightHeaderWidget>
+              <b:JQMButton text="Right2" inline="true" mini="true" />
+            </t:rightHeaderWidget -->
+            
             <t:listitem>
               <l:JQMListItem text="Tab1" />
             </t:listitem>
