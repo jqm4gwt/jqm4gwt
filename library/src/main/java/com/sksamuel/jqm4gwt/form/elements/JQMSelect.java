@@ -461,10 +461,31 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         return JQMCommon.getIconPos(select);
     }
 
-    /** Sets the position of the icon. */
+    /**
+     * Sets the position of the icon.
+     * @param pos - if null means set default value, i.e. RIGHT.
+     **/
     @Override
     public void setIconPos(IconPos pos) {
         JQMCommon.setIconPos(select, pos);
+        final String prefix = JQMCommon.STYLE_UI_BTN_ICONPOS;
+        String newPos = pos != null ? prefix + pos.getJqmValue() : prefix + IconPos.RIGHT.getJqmValue();
+        refreshIconPos(getElement(), prefix, newPos);
+    }
+
+    public void setIconPosNone(boolean value) {
+        if (!value) {
+            setIconPos(null);
+            return;
+        }
+        JQMCommon.setAttribute(select, JQMCommon.DATA_ICONPOS, "");
+        refreshIconPos(getElement(), JQMCommon.STYLE_UI_BTN_ICONPOS, "");
+    }
+
+    public boolean isIconPosNone() {
+        if (!select.getElement().hasAttribute(JQMCommon.DATA_ICONPOS)) return false;
+        String v = JQMCommon.getAttribute(select, JQMCommon.DATA_ICONPOS);
+        return "".equals(v);
     }
 
     /** Sets the position of the icon. */
@@ -806,6 +827,15 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     private static native void refreshIcon(Element elt, String oldIcon, String newIcon) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         $wnd.$(elt).children().find('.ui-btn').removeClass(oldIcon).addClass(newIcon);
+    }-*/;
+
+    private static native void refreshIconPos(Element elt, String iconPosPrefix, String newIconPos) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
+        var s = '(^|\\s)' + iconPosPrefix + '\\S+';
+        var regex = new RegExp(s, 'g');
+        $wnd.$(elt).children().find('.ui-btn').removeClass(function(index, className) {
+            return (className.match(regex) || []).join(' ');
+        }).addClass(newIconPos);
     }-*/;
 
     /**

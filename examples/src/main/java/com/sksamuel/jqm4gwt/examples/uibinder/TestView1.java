@@ -346,6 +346,18 @@ public class TestView1 {
     JQMSelectWithIcons ddIcons;
 
     @UiField
+    JQMButton ddIconsLeft;
+
+    @UiField
+    JQMButton ddIconsRight;
+
+    @UiField
+    JQMButton ddIconsNone;
+
+    @UiField
+    JQMButton ddIconsNull;
+
+    @UiField
     JQMButton dividerShowBtn;
 
     @UiField
@@ -926,6 +938,26 @@ public class TestView1 {
         if (s == null || s.isEmpty() || "a".equals(s)) s = "b";
         else s = "a";
         testView1Panel.setTheme(s);
+    }
+
+    @UiHandler("ddIconsLeft")
+    void ddIconsLeftClick(ClickEvent e) {
+        ddIcons.setIconPos(IconPos.LEFT);
+    }
+
+    @UiHandler("ddIconsRight")
+    void ddIconsRightClick(ClickEvent e) {
+        ddIcons.setIconPos(IconPos.RIGHT);
+    }
+
+    @UiHandler("ddIconsNone")
+    void ddIconsNoneClick(ClickEvent e) {
+        ddIcons.setIconPosNone(true);
+    }
+
+    @UiHandler("ddIconsNull")
+    void ddIconsNullClick(ClickEvent e) {
+        ddIcons.setIconPos(null);
     }
 
 

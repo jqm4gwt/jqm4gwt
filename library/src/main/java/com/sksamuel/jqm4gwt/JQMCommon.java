@@ -55,7 +55,7 @@ public class JQMCommon {
     private static final String DATA_INLINE = "data-inline";
     private static final String DATA_CORNERS = "data-corners";
     private static final String DATA_ICON = "data-icon";
-    private static final String DATA_ICONPOS = "data-iconpos";
+    public  static final String DATA_ICONPOS = "data-iconpos";
     private static final String DATA_CLEAR_BTN = "data-clear-btn";
     private static final String DATA_MINI = "data-mini";
     private static final String DATA_POPUP_POSITION = "data-position-to";

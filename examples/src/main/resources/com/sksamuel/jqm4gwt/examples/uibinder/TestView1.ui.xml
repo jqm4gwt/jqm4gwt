@@ -282,6 +282,12 @@
             <e:option><e:JQMSelect.Option text="Audio" value="3" icon="AUDIO" /></e:option>
             <e:option><e:JQMSelect.Option text="Loader" value="4" customIcon="loader" /></e:option>
           </e:JQMSelectWithIcons>
+          <g:FlowPanel>
+            <b:JQMButton ui:field="ddIconsLeft" text="IconPos Left" inline="true" mini="true" />
+            <b:JQMButton ui:field="ddIconsRight" text="IconPos Right" inline="true" mini="true" />
+            <b:JQMButton ui:field="ddIconsNone" text="IconPos None" inline="true" mini="true" />
+            <b:JQMButton ui:field="ddIconsNull" text="IconPos Null (Default: Right)" inline="true" mini="true" />
+          </g:FlowPanel>
           <h:Paragraph />
           <e:JQMSelect ui:field="multiSel" text="Dropdown with multiple select" mulitple="true" native="false"
             closeText="Discard" selectInline="true">
