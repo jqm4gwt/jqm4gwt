@@ -2,7 +2,7 @@ package com.vx.sw.client.jqm4gwt;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -68,13 +68,13 @@ public class JQMListBindable<M> extends JQMList
          *
          * @param oldUiItems - the same items which have been returned earlier by addItem() / insertItem()
          * for this particular model item.
-         * <br>
+         *
          * @param oldItemDeleted - means item is not in data/model anymore, otherwise probably
          * it was just moved to a different position, for example by sort().
-         * <br>
+         *
          * @param newUiItems - if newItem is already in data/model, then these ui items were returned
          * earlier by addItem() / insertItem(). Otherwise is just null.
-         * <br>
+         *
          * @return - must return new UI items for this model item.
          */
         List<? extends ComplexPanel> itemChanged(JQMListBindable<M> list, int dataIndex,
@@ -269,6 +269,31 @@ public class JQMListBindable<M> extends JQMList
     }
 
     /**
+     * Should be used in case when each UI item is bindable by itself (i.e. actively listens for
+     * its model changes, so should not be recreated each time when data item changed).
+     */
+    public static abstract class ListRendererBoundUiItems<M> extends ListRenderer<M> {
+
+        public ListRendererBoundUiItems() {
+            super(true/*showEmptyMsg*/);
+        }
+
+        public ListRendererBoundUiItems(boolean showEmptyMsg) {
+            super(showEmptyMsg);
+        }
+
+        @Override
+        public List<? extends ComplexPanel> itemChanged(JQMListBindable<M> list, int dataIndex,
+                M oldItem, List<? extends ComplexPanel> oldUiItems, boolean oldItemDeleted,
+                M newItem, List<? extends ComplexPanel> newUiItems) {
+
+            if (!oldItemDeleted && oldItem == newItem && newUiItems != null) return newUiItems;
+            return super.itemChanged(list, dataIndex, oldItem, oldUiItems, oldItemDeleted,
+                                     newItem, newUiItems);
+        }
+    }
+
+    /**
      * An "ordered" JQMListBindable (in terms of Html, i.e. only 1, 2, 3, ... position indicator, no real data ordering)
      */
     public static class Ordered<M> extends JQMListBindable<M> {
@@ -290,7 +315,7 @@ public class JQMListBindable<M> extends JQMList
 
     private BindableListWrapper<M> dataItems;
 
-    private final Map<M, List<? extends ComplexPanel>> dataToUI = new HashMap<>();
+    private final Map<M, List<? extends ComplexPanel>> dataToUI = new IdentityHashMap<>();
 
     private boolean valueChangeHandlerInitialized;
 
@@ -363,12 +388,23 @@ public class JQMListBindable<M> extends JQMList
 
         List<? extends ComplexPanel> oldUi = dataToUI.get(oldItem);
         List<? extends ComplexPanel> newUi = dataToUI.get(newItem);
-        boolean oldInData = dataItems.contains(oldItem);
+        boolean oldInData = dataItemsContains(oldItem);
 
         newUi = renderer.itemChanged(this, index, oldItem, oldUi, !oldInData, newItem, newUi);
 
         if (oldItem != newItem && !oldInData) dataToUI.remove(oldItem);
         dataToUI.put(newItem, newUi);
+    }
+
+    // XXX: needed because of https://issues.jboss.org/browse/ERRAI-848
+    private boolean dataItemsContains(M oldItem) {
+        if (oldItem == null) return false;
+        Iterator<M> iter = dataItems.iterator();
+        while (iter.hasNext()) {
+            M i = iter.next();
+            if (i.equals(oldItem)) return true;
+        }
+        return false;
     }
 
     private void doRefresh() {
