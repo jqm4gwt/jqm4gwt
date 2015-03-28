@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt.form;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
@@ -62,11 +64,6 @@ public class JQMForm extends FlowPanel {
 
     private final List<Label> errors = new ArrayList<Label>();
 
-    /**
-     * The SubmissionHandler is invoked when the form is successfully submitted.
-     */
-    private SubmissionHandler<?> submissionHandler;
-
     /** A mapping between the validators and the labels they use to show errors */
     private final Map<Validator, Label> validatorLabels = new HashMap<Validator, Label>();
 
@@ -74,11 +71,17 @@ public class JQMForm extends FlowPanel {
     private final Map<JQMFormWidget, Collection<Validator>> widgetValidators =
             new HashMap<JQMFormWidget, Collection<Validator>>();
 
+    private final Map<JQMFormWidget, Collection<HandlerRegistration>> widgetHandlers =
+            new HashMap<JQMFormWidget, Collection<HandlerRegistration>>();
+
     /**
      * A map containing the validators and the elements/widgets that should
      * have the class changed depending on the result of the validation
      */
     private final Map<Validator, Widget> notifiedWidgets = new HashMap<Validator, Widget>();
+
+    /** The SubmissionHandler is invoked when the form is successfully submitted. */
+    private SubmissionHandler<?> submissionHandler;
 
     protected JQMForm(SubmissionHandler<?> handler) {
         this();
@@ -254,6 +257,39 @@ public class JQMForm extends FlowPanel {
         }
     }
 
+    public void removeValidator(JQMFormWidget firingWidget, Validator validator) {
+        if (firingWidget == null || validator == null) return;
+        Collection<Validator> validators = widgetValidators.get(firingWidget);
+        if (validators == null || !validators.contains(validator)) return;
+        validators.remove(validator);
+        if (validators.isEmpty()) {
+            widgetValidators.remove(firingWidget);
+            Collection<HandlerRegistration> handlers = widgetHandlers.get(firingWidget);
+            if (handlers != null) {
+                for (HandlerRegistration h : handlers) h.removeHandler();
+                widgetHandlers.remove(firingWidget);
+            }
+        }
+        Label label = validatorLabels.get(validator);
+        if (label != null) {
+            remove(label);
+            errors.remove(label);
+            validatorLabels.remove(validator);
+        }
+        boolean required = validator instanceof NotNullOrEmptyValidator;
+        String validatorClass = STYLE_FORM_VALIDATOR + getShortClassName(validator.getClass());
+        Widget notifiedWidget = notifiedWidgets.get(validator);
+        if (notifiedWidget != null) {
+            notifiedWidgets.remove(validator);
+            notifiedWidget.getElement().removeClassName(validatorClass);
+            if (required) notifiedWidget.getElement().removeClassName(STYLE_FORM_REQUIRED);
+            removeStyles(validator, notifiedWidget);
+        }
+        firingWidget.asWidget().getElement().removeClassName(validatorClass);
+        if (required) firingWidget.asWidget().getElement().removeClassName(STYLE_FORM_REQUIRED);
+        removeStyles(validator, firingWidget.asWidget());
+    }
+
     public void addValidator(Widget notifiedWidget, Validator validator, boolean immediate,
                              JQMFormWidget... firingWidgets) {
 
@@ -273,16 +309,15 @@ public class JQMForm extends FlowPanel {
         clearValidationStyles();
     }
 
-    /**
-     * Remove all validation styles
-     */
+    /** Remove all validation styles */
     public void clearValidationStyles() {
         for (JQMFormWidget widget : widgetValidators.keySet()) {
             UIObject ui = widget.asWidget();
             Collection<Validator> validators = widgetValidators.get(widget);
             for (Validator v : validators) {
-                if (notifiedWidgets.containsKey(v))
+                if (notifiedWidgets.containsKey(v)) {
                     ui = notifiedWidgets.get(v);
+                }
                 removeStyles(v, ui);
             }
         }
@@ -301,29 +336,59 @@ public class JQMForm extends FlowPanel {
         Mobile.hideLoadingDialog();
     }
 
-    private void registerValidatorWithFiringWidget(final JQMFormWidget widget, Validator validator, boolean immediate) {
+    private void registerValidatorWithFiringWidget(final JQMFormWidget widget, Validator validator,
+                                                   boolean immediate) {
+
+        boolean registered = widgetValidators.get(widget) != null;
+
         // add a blur handler to call validate on this widget but only if
         // this is the first time this widget has been registered with a validator
-        if (immediate)
-            if (widgetValidators.get(widget) == null)
-                widget.addBlurHandler(new BlurHandler() {
+        if (immediate) {
+            if (!registered) {
+                HandlerRegistration blurReg = widget.addBlurHandler(new BlurHandler() {
                     @Override
                     public void onBlur(BlurEvent event) {
                         validate(widget);
                     }
                 });
+                ArrayList<HandlerRegistration> handlerLst = new ArrayList<HandlerRegistration>();
+                handlerLst.add(blurReg);
+                widgetHandlers.put(widget, handlerLst);
+            }
+        }
 
-        if (widgetValidators.get(widget) == null) {
+        if (!registered) {
             widgetValidators.put(widget, new ArrayList<Validator>());
         }
         widgetValidators.get(widget).add(validator);
     }
 
-    private void registerValidatorWithFiringWidgets(Validator validator, JQMFormWidget[] widgets, boolean immediate) {
+    private void registerValidatorWithFiringWidgets(Validator validator, JQMFormWidget[] widgets,
+                                                    boolean immediate) {
         if (widgets != null)
             for (JQMFormWidget widget : widgets) {
                 registerValidatorWithFiringWidget(widget, validator, immediate);
             }
+    }
+
+    public int getValidatorCount(JQMFormWidget widget) {
+        if (widget == null) return 0;
+        Collection<Validator> validators = widgetValidators.get(widget);
+        return validators != null ? validators.size() : 0;
+    }
+
+    public Validator getValidator(JQMFormWidget widget, int validatorIndex) {
+        if (widget == null || validatorIndex < 0) return null;
+        Collection<Validator> validators = widgetValidators.get(widget);
+        if (validators == null || validatorIndex >= validators.size()) return null;
+        int i = 0;
+        Iterator<Validator> iter = validators.iterator();
+        while (iter.hasNext()) {
+            Validator v = iter.next();
+            if (i == validatorIndex) return v;
+            i++;
+        }
+        return null;
     }
 
     private static String getShortClassName(Class<?> clazz) {
@@ -368,6 +433,41 @@ public class JQMForm extends FlowPanel {
 
     public void setRequired(JQMFormWidget widget, String msg, boolean immediate) {
         addValidator(new NotNullOrEmptyValidator(widget, msg), immediate, widget);
+    }
+
+    public boolean isRequired(JQMFormWidget widget) {
+        if (widget == null) return false;
+        Collection<Validator> validators = widgetValidators.get(widget);
+        if (validators == null) return false;
+        Iterator<Validator> iter = validators.iterator();
+        while (iter.hasNext()) {
+            Validator validator = iter.next();
+            if (validator instanceof NotNullOrEmptyValidator) return true;
+        }
+        return false;
+    }
+
+    public void removeRequired(JQMFormWidget widget) {
+        if (widget == null) return;
+        Collection<Validator> validators = widgetValidators.get(widget);
+        if (validators == null) return;
+        Validator notNullV = null;
+        List<Validator> notNullLst = null;
+        Iterator<Validator> iter = validators.iterator();
+        while (iter.hasNext()) {
+            Validator validator = iter.next();
+            if (validator instanceof NotNullOrEmptyValidator) {
+                if (notNullV == null) notNullV = validator;
+                else {
+                    if (notNullLst == null) notNullLst = new ArrayList<Validator>();
+                    notNullLst.add(validator);
+                }
+            }
+        }
+        if (notNullV != null) removeValidator(widget, notNullV);
+        if (notNullLst != null) {
+            for (Validator v : notNullLst) removeValidator(widget, v);
+        }
     }
 
     public void showFormProcessingDialog(String msg) {
