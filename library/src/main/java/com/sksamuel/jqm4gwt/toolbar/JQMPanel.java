@@ -80,6 +80,8 @@ public class JQMPanel extends JQMWidget {
     private SimplePanel flowPanelContainer;
     private FlowPanel flowPanel;
 
+    private boolean open;
+
     public JQMPanel() {
         this(Document.get().createUniqueId());
     }
@@ -221,6 +223,10 @@ public class JQMPanel extends JQMWidget {
         _toggle(getElement());
     }
 
+    public boolean isOpen() {
+        return open;
+    }
+
     protected void onPanelBeforeClose() {
     }
 
@@ -247,6 +253,7 @@ public class JQMPanel extends JQMWidget {
     }
 
     protected void doPanelClose() {
+        open = false;
         onPanelClose();
         JQMPanelEvent.fire(this, PanelState.CLOSE);
     }
@@ -257,6 +264,7 @@ public class JQMPanel extends JQMWidget {
     }
 
     protected void doPanelOpen() {
+        open = true;
         onPanelOpen();
         JQMPanelEvent.fire(this, PanelState.OPEN);
     }
