@@ -253,6 +253,10 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
             p.@com.sksamuel.jqm4gwt.JQMPage::doPageShow(Lcom/google/gwt/dom/client/Element;)(ui.prevPage.get(0));
         });
 
+        page.on("pagebeforeshow", function(event, ui) {
+            p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeShow(Lcom/google/gwt/dom/client/Element;)(ui.prevPage.get(0));
+        });
+
         page.on("pagehide", function(event, ui) {
             p.@com.sksamuel.jqm4gwt.JQMPage::doPageHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
         });
@@ -260,10 +264,27 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         page.on("pagebeforehide", function(event, ui) {
             p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
         });
+    }-*/;
 
-        page.on("pagebeforeshow", function(event, ui) {
-            p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeShow(Lcom/google/gwt/dom/client/Element;)(ui.prevPage.get(0));
+    private static native void bindLifecycleHideEvents(JQMPage p, Element elt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
+
+        var page = $wnd.$(elt);
+
+        page.on("pagehide", function(event, ui) {
+            p.@com.sksamuel.jqm4gwt.JQMPage::doPageHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
         });
+
+        page.on("pagebeforehide", function(event, ui) {
+            p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
+        });
+    }-*/;
+
+    private static native void unbindLifecycleHideEvents(Element elt) /*-{
+        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
+        var page = $wnd.$(elt);
+        page.off("pagehide");
+        page.off("pagebeforehide");
     }-*/;
 
     public void bindLifecycleEvents() {
@@ -275,9 +296,9 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         var page = $wnd.$(elt);
         page.off("pagecreate");
         page.off("pageshow");
+        page.off("pagebeforeshow");
         page.off("pagehide");
         page.off("pagebeforehide");
-        page.off("pagebeforeshow");
     }-*/;
 
     public void unbindLifecycleEvents() {
@@ -455,10 +476,16 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
             if (!transparentDoPrevPageLifecycle) {
                 final JQMPage prev = allPages.get(transparentPrevPage);
                 if (prev != null) {
+                    // restore hide events bindings immediately, it could be a chain hiding case,
+                    // for example: closeDialog() -> changePage(newPage) -> prevPage.onPageHide()
+                    // will not occur, scheduleFinally() is too late.
+                    JQMPage.bindLifecycleHideEvents(prev, prev.getElement());
                     Scheduler.get().scheduleFinally(new ScheduledCommand() {
                         @Override
                         public void execute() {
-                            JQMPage.bindLifecycleEvents(prev, prev.getElement());
+                            Element prevElt = prev.getElement();
+                            JQMPage.unbindLifecycleHideEvents(prevElt);
+                            JQMPage.bindLifecycleEvents(prev, prevElt);
                         }
                     });
                 }
