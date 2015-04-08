@@ -374,11 +374,11 @@ public class JQMTable extends JQMWidget {
             }
             if (coeffsSum > 0) {
                 double oneChunk = avl / coeffsSum;
-                long incSum = 0;
+                int incSum = 0;
                 for (int i = 0; i < arr.length; i++) {
                     if (arr[i] <= 0) continue;
                     double v = oneChunk * coeffs[i];
-                    long incV = Math.round(Math.floor(v));
+                    int incV = Math.round((float) Math.floor(v));
                     incSum += incV;
                     arr[i] += incV;
                 }
