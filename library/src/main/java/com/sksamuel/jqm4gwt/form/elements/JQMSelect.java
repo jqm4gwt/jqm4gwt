@@ -177,6 +177,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     protected final ListBoxEx select;
+    protected Integer mandatorySelIdx; // See checkSelectedIndex()
 
     /** Unique search index: value, index in select */
     protected final Map<String, Integer> selectIdx = new HashMap<String, Integer>(); // search index
@@ -218,6 +219,15 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         select = new ListBoxEx();
         select.getElement().setId(id);
         add(select);
+        addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(ChangeEvent event) {
+                if (!isMultiple()) mandatorySelIdx = select.getSelectedIndex();
+                if (valueChangeHandlerInitialized) {
+                    ValueChangeEvent.fire(JQMSelect.this, getValue());
+                }
+            }
+        });
 
         setText(text);
         addStyleName(SELECT_STYLENAME);
@@ -304,18 +314,28 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
             addingOptionList.add(opt);
         } else {
             select.addItem(text, value);
+            final int i;
             if (value == null || (filterText != null && !filterText.isEmpty())
                     || placeholder || selected || disabled || icon != null || customIcon != null) {
                 SelectElement selElt = select.getElement().cast();
                 NodeList<OptionElement> opts = selElt.getOptions();
-                int i = opts.getLength() - 1;
+                i = opts.getLength() - 1;
                 OptionElement opt = opts.getItem(i);
                 prepareOption(opt, value, filterText, placeholder, selected, disabled, icon, customIcon);
                 selectIdx.put(opt.getValue(), i);
             } else {
-                int i = select.getItemCount() - 1;
+                i = select.getItemCount() - 1;
                 String v = select.getValue(i);
                 selectIdx.put(v, i);
+            }
+            if (i == 0) {
+                if (delayedValue == null) {
+                    if (!isMultiple()) internSetSelectedIndex(0); // for compatibility with previous versions
+                } else {
+                    checkSelectedIndex();
+                }
+            } else {
+                checkSelectedIndex();
             }
             if (delayedValue != null) tryResolveDelayed();
         }
@@ -350,10 +370,11 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
             SelectElement selElt = select.getElement().cast();
             int i = selElt.getOptions().getLength();
             for (OptionElement opt : addingOptionList) {
-                selElt.add(opt, null);
+                selElt.add(opt, null/*to tail*/);
                 selectIdx.put(opt.getValue(), i);
                 i++;
             }
+            checkSelectedIndex();
         }
         addingOptionList = null;
         if (delayedValue != null) tryResolveDelayed();
@@ -443,16 +464,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
-        // Initialization code
-        if (!valueChangeHandlerInitialized) {
-            valueChangeHandlerInitialized = true;
-            addChangeHandler(new ChangeHandler() {
-                @Override
-                public void onChange(ChangeEvent event) {
-                    ValueChangeEvent.fire(JQMSelect.this, getValue());
-                }
-            });
-        }
+        if (!valueChangeHandlerInitialized) valueChangeHandlerInitialized = true;
         return addHandler(handler, ValueChangeEvent.getType());
     }
 
@@ -517,7 +529,27 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      * Returns the index of the currently selected option
      */
     public int getSelectedIndex() {
+        checkSelectedIndex();
         return select.getSelectedIndex();
+    }
+
+    /**
+     * @return - true if selectedIndex has been fixed, refresh() must be called manually in that case.
+     *
+     * <br><br> Unfortunately jqm likes to change selectedIndex from -1 to 0 (for example it happens
+     * on initialization, i.e. selectmenucreate). Also this behavior is browser specific, so
+     * we need this guard method to make sure that null value is supported properly.
+     */
+    protected boolean checkSelectedIndex() {
+        if (mandatorySelIdx == null) return false;
+        int i = select.getSelectedIndex();
+        if (mandatorySelIdx != i) {
+            if (isMultiple()) return false;
+            select.setSelectedIndex(mandatorySelIdx);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public String getSelectedValue() {
@@ -720,8 +752,8 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     public void removeOption(String value) {
         int indexOf = indexOf(value);
         if (indexOf >= 0) {
-            int i = select.getSelectedIndex();
-            if (i == indexOf) select.setSelectedIndex(-1);
+            int i = getSelectedIndex();
+            if (i == indexOf) internSetSelectedIndex(-1);
             select.removeItem(indexOf);
         }
     }
@@ -752,7 +784,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         }
         select.clear();
         selectIdx.clear();
-        select.setSelectedIndex(-1);
+        internSetSelectedIndex(-1);
     }
 
     private void clearDelayed() {
@@ -894,8 +926,13 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      */
     public void setSelectedIndex(int index) {
         clearDelayed();
-        select.setSelectedIndex(index);
+        internSetSelectedIndex(index);
         refresh();
+    }
+
+    protected void internSetSelectedIndex(int index) {
+        select.setSelectedIndex(index);
+        mandatorySelIdx = index;
     }
 
     public void setSelectedValue(String value, boolean ignoreCase) {
@@ -1127,15 +1164,33 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         return select;
     }
 
+    private static native void bindCreated(Element elt, JQMSelect sel) /*-{
+        $wnd.$(elt).on( 'selectmenucreate', function( event, ui ) {
+            sel.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::created()();
+        });
+    }-*/;
+
+    private static native void unbindCreated(Element elt) /*-{
+        $wnd.$(elt).off( 'selectmenucreate' );
+    }-*/;
+
+    private void created() {
+        if (checkSelectedIndex()) refresh();
+    }
+
     @Override
     protected void onLoad() {
         super.onLoad();
-        bindLifecycleEvents(select.getElement().getId(), this);
+        Element elt = select.getElement();
+        bindCreated(elt, this);
+        bindLifecycleEvents(elt.getId(), this);
     }
 
     @Override
     protected void onUnload() {
-        unbindLifecycleEvents(select.getElement().getId());
+        Element elt = select.getElement();
+        unbindCreated(elt);
+        unbindLifecycleEvents(elt.getId());
         super.onUnload();
     }
 
