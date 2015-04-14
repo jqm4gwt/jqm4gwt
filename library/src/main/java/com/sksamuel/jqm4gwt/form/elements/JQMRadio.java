@@ -7,6 +7,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.HasTheme;
+import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
@@ -17,8 +19,8 @@ public class JQMRadio extends Widget implements HasText<JQMRadio>, HasMini<JQMRa
     private FormLabel label;
 
     // we must use a text box as the standard GWT radio/check inputs
-    // already have an associated label (but a div not a <label>) so we
-    // can't use them. Textboxes do not have such a label so will work
+    // already have an associated label (but a div not a label element)
+    // so we can't use them. Text boxes do not have such a label so will work
     // for us, as long as we coerce the type attribute to radio.
     private final TextBox input = new TextBox();
 
@@ -54,9 +56,7 @@ public class JQMRadio extends Widget implements HasText<JQMRadio>, HasMini<JQMRa
     }
 
     /**
-     * Returns the current display text for this radio button
-     *
-     * @return the buttons display text
+     * @return - the current display text for this radio button
      */
     @Override
     public String getText() {
@@ -65,16 +65,32 @@ public class JQMRadio extends Widget implements HasText<JQMRadio>, HasMini<JQMRa
 
     @Override
     public String getTheme() {
-        return label.getElement().getAttribute("data-theme");
+        return JQMButton.getTheme(label.getElement());
+    }
+
+    @Override
+    public void setTheme(String themeName) {
+        JQMButton.setTheme(label.getElement(), themeName);
+    }
+
+    @Override
+    public JQMRadio withTheme(String theme) {
+        setTheme(theme);
+        return this;
     }
 
     public String getValue() {
         return input.getValue();
     }
 
+    /** Sets the value for this radio button */
+    public void setValue(String value) {
+        input.setValue(value);
+    }
+
     @Override
     public boolean isMini() {
-        return "true".equals(label.getElement().getAttribute("data-mini"));
+        return JQMCommon.isMiniEx(label.getElement());
     }
 
     /**
@@ -82,7 +98,7 @@ public class JQMRadio extends Widget implements HasText<JQMRadio>, HasMini<JQMRa
      */
     @Override
     public void setMini(boolean mini) {
-        label.getElement().setAttribute("data-mini", String.valueOf(mini));
+        JQMCommon.setMiniEx(label.getElement(), mini);
     }
 
     /**
@@ -94,33 +110,10 @@ public class JQMRadio extends Widget implements HasText<JQMRadio>, HasMini<JQMRa
         return this;
     }
 
-    /**
-     * Sets the display text for this radio button
-     */
+    /** Sets the display text for this radio button */
     @Override
     public void setText(String text) {
         label.setText(text);
-    }
-
-    /**
-     * Sets the value for this radio button
-     */
-    public void setValue(String value) {
-        input.setValue(value);
-    }
-
-    @Override
-    public void setTheme(String themeName) {
-        if (themeName == null)
-            label.getElement().removeAttribute("data-theme");
-        else
-            label.getElement().setAttribute("data-theme", themeName);
-    }
-
-    @Override
-    public JQMRadio withTheme(String theme) {
-        setTheme(theme);
-        return this;
     }
 
     @Override
