@@ -77,6 +77,8 @@ public class JQMCalBox extends JQMText {
     protected static final String USE_PICKERS_ICONS   = "\"calUsePickersIcons\":";
     protected static final String YEAR_PICK_MIN       = "\"calYearPickMin\":";
     protected static final String YEAR_PICK_MAX       = "\"calYearPickMax\":";
+    protected static final String MIN_DAYS            = "\"minDays\":";
+    protected static final String MAX_DAYS            = "\"maxDays\":";
     protected static final String NO_HEADER           = "\"calNoHeader\":";
     protected static final String NO_TITLE            = "\"useHeader\":"; // Refers to the header with the close button and the title
 
@@ -111,6 +113,8 @@ public class JQMCalBox extends JQMText {
     private Boolean usePickersIcons = null;
     private String yearPickMin = null;
     private String yearPickMax = null;
+    private Integer minDays = null;
+    private Integer maxDays = null;
     private Boolean noHeader = null;
     private Boolean noTitle = null;
 
@@ -286,6 +290,12 @@ public class JQMCalBox extends JQMText {
             } else {
                 sb.append(',').append(YEAR_PICK_MAX).append(yearPickMax);
             }
+        }
+        if (minDays != null) {
+            sb.append(',').append(MIN_DAYS).append(String.valueOf(minDays));
+        }
+        if (maxDays != null) {
+            sb.append(',').append(MAX_DAYS).append(String.valueOf(maxDays));
         }
         if (lockInput != null) {
             sb.append(',').append(LOCK_INPUT).append(bool2Str(lockInput));
@@ -576,6 +586,26 @@ public class JQMCalBox extends JQMText {
      */
     public void setYearPickMax(String yearPickMax) {
         this.yearPickMax = yearPickMax;
+        refreshDataOptions();
+    }
+
+    public Integer getMinDays() {
+        return minDays;
+    }
+
+    /** See <a href="http://dev.jtsage.com/jQM-DateBox/api/minDays/">Minimum amount of days before today</a> */
+    public void setMinDays(Integer value) {
+        minDays = value;
+        refreshDataOptions();
+    }
+
+    public Integer getMaxDays() {
+        return maxDays;
+    }
+
+    /** See <a href="http://dev.jtsage.com/jQM-DateBox/api/maxDays/">Maximum number of days past today</a> */
+    public void setMaxDays(Integer value) {
+        maxDays = value;
         refreshDataOptions();
     }
 
