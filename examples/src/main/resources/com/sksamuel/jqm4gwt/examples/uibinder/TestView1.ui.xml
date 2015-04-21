@@ -157,10 +157,14 @@
             <e:check><e:JQMCheckbox widgetId="cb_11" name="cb11" text="Check2" /></e:check>
             <e:check><e:JQMCheckbox widgetId="cb_12" name="cb12" text="Check3" /></e:check>
           </e:JQMCheckset>
-          <e:JQMCheckset text="Vertical Checkset"> <!-- iconPos="RIGHT" -->
+          <e:JQMCheckset ui:field="checksetVert1" text="Vertical Checkset"> <!-- iconPos="RIGHT" -->
             <e:check><e:JQMCheckbox name="cb20" text="Check1" /></e:check>
             <e:check><e:JQMCheckbox name="cb21" text="Check2" /></e:check>
           </e:JQMCheckset>
+          <g:FlowPanel>
+            <b:JQMButton ui:field="btnChecksetThemeA" text="Checkset theme A" mini="true" inline="true" />
+            <b:JQMButton ui:field="btnChecksetThemeB" text="Checkset theme B" mini="true" inline="true" />
+          </g:FlowPanel>
           <e:JQMEmail text="email" corners="false" clearButton="true" />
           <e:JQMFile text="File" corners="false" />
           <e:JQMFlip ui:field="flip"

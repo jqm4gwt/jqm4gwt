@@ -471,6 +471,15 @@ public class TestView1 {
     @UiField
     JQMCheckset checkset1;
 
+    @UiField
+    JQMCheckset checksetVert1;
+
+    @UiField
+    JQMButton btnChecksetThemeA;
+
+    @UiField
+    JQMButton btnChecksetThemeB;
+
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
             @Override
@@ -958,6 +967,18 @@ public class TestView1 {
     @UiHandler("ddIconsNull")
     void ddIconsNullClick(ClickEvent e) {
         ddIcons.setIconPos(null);
+    }
+
+    @UiHandler("btnChecksetThemeA")
+    void btnChecksetThemeAClick(ClickEvent e) {
+        checkset1.setTheme("a");
+        checksetVert1.setTheme("a");
+    }
+
+    @UiHandler("btnChecksetThemeB")
+    void btnChecksetThemeBClick(ClickEvent e) {
+        checkset1.setTheme("b");
+        checksetVert1.setTheme("b");
     }
 
 
