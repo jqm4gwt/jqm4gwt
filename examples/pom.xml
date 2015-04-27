@@ -26,8 +26,8 @@
         <!-- Specify AppEngine version for your project. It should match SDK version
             pointed to by ${gae.home} property (Typically, one used by your Eclipse plug-in) -->
         <!--gae.home>/home/sam/development/appengine-java-sdk-1.8.8</gae.home-->
-        <gae.home>C:\appengine-java-sdk-1.9.7</gae.home> 
-        <gae.version>1.9.7</gae.version>
+        <gae.home>C:\appengine-java-sdk-1.9.19</gae.home> 
+        <gae.version>1.9.19</gae.version>
         <gae-runtime.version>1.8.8</gae-runtime.version>
         <gae.application.name>jqm4gwt</gae.application.name>
         <!-- Upload to http://test.latest.<gae.application.name>.appspot.com by default -->
