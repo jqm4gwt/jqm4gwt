@@ -681,14 +681,20 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
             JsArrayString keys = JQMContext.getJsObjKeys(hoverStyle);
             if (keys == null) return;
             for (int i = 0; i < keys.length(); i++) {
-                String val = JQMContext.getJsObjValue(hoverStyle, keys.get(i));
+                String key = keys.get(i);
+                String val = JQMContext.getJsObjValue(hoverStyle, key);
                 if (val == null) continue;
                 String prop = keys.get(i);
                 for (int j = 0; j < HOVER_REPLACE.length - 1; j = j + 2) {
                     prop = prop.replaceAll(HOVER_REPLACE[j], HOVER_REPLACE[j + 1]);
                 }
                 prop = JQMCommon.hyphenToCamelCase(prop);
-                String oldVal = st.getProperty(prop);
+                String oldVal = null;
+                try {
+                    oldVal = st.getProperty(prop);
+                } catch (Exception e) {
+                    continue; // property could be non-convertible to String and throw exception
+                }
                 String newVal = val.toString();
                 if (newVal.equals(oldVal)) continue;
                 hoverStyleApplied.add(new StyleItem(prop, oldVal, newVal));

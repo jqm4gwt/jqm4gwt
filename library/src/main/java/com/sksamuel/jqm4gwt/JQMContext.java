@@ -308,7 +308,8 @@ public class JQMContext {
     }-*/;
 
     public static native String getJsObjValue(JavaScriptObject jsObj, String key) /*-{
-        return jsObj[key];
+        var v = jsObj[key];
+        return '' + v; // prevents: JS value of type number cannot be converted to String
     }-*/;
 
     public static native void setJsObjValue(JavaScriptObject jsObj, String key, String value) /*-{
