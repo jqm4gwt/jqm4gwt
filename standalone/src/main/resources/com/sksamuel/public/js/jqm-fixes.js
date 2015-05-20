@@ -1,39 +1,154 @@
 // jqm 1.4.5 tabs widget fix: https://github.com/jquery/jquery-mobile/issues/7169
 $.widget( "ui.tabs", $.ui.tabs, {
 
-    _createWidget: function( options, element ) {
-        var page, delayedCreate,
-            that = this;
+    _isLocal: function( anchor ) {
+        var path, baseUrl, absUrl;
 
-        if ( $.mobile.page ) {
-            page = $( element )
-                .parents( ":jqmData(role='page'),:mobile-page" )
-                .first();
+        if ( $.mobile.ajaxEnabled ) {
+            path = $.mobile.path;
+            baseUrl = path.parseUrl( $.mobile.base.element.attr( "href" ) );
+            absUrl = path.parseUrl( path.makeUrlAbsolute( anchor.getAttribute( "href" ),
+                baseUrl ) );
 
-            if ( page.length > 0 && !page.hasClass( "ui-page-active" ) ) {
-                delayedCreate = this._super;
-                page.one( "pagebeforeshow", function() {
-                    //if (window.console) console.log("pagebeforeshow: delayedCreate exec");
-                    if (delayedCreate !== null) delayedCreate.call( that, options, element );
-                    delayedCreate = null;
-                });
-                var wait = setInterval(function() {
-                    if (delayedCreate === null) clearInterval(wait);
-                    else {
-                        if ( page.hasClass( "ui-page-active" ) ) {
-                            if (delayedCreate !== null) delayedCreate.call( that, options, element );
-                            delayedCreate = null;
-                            clearInterval(wait);
-                        }
-                    }
-                }, 200);
+            return ( path.isSameDomain( absUrl.href, baseUrl.href ) &&
+                absUrl.pathname === baseUrl.pathname );
+        }
+
+        var rhash = /#.*$/;
+        var anchorUrl, locationUrl;
+
+        anchorUrl = anchor.href.replace( rhash, "" );
+        locationUrl = location.href.replace( rhash, "" );
+
+        // decoding may throw an error if the URL isn't UTF-8 (#9518)
+        try {
+            anchorUrl = decodeURIComponent( anchorUrl );
+        } catch ( error ) {}
+        try {
+            locationUrl = decodeURIComponent( locationUrl );
+        } catch ( error ) {}
+
+        return anchor.hash.length > 1 && anchorUrl === locationUrl;
+    },
+
+    _processTabs: function() {
+        var that = this;
+
+        this.tablist = this._getList()
+            .addClass( "ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" )
+            .attr( "role", "tablist" );
+
+        this.tabs = this.tablist.find( "> li:has(a[href])" )
+            .addClass( "ui-state-default ui-corner-top" )
+            .attr({
+                role: "tab",
+                tabIndex: -1
+            });
+
+        this.anchors = this.tabs.map(function() {
+                return $( "a", this )[ 0 ];
+            })
+            .addClass( "ui-tabs-anchor" )
+            .attr({
+                role: "presentation",
+                tabIndex: -1
+            });
+
+        this.panels = $();
+
+        this.anchors.each(function( i, anchor ) {
+            var selector, panel, panelId,
+                anchorId = $( anchor ).uniqueId().attr( "id" ),
+                tab = $( anchor ).closest( "li" ),
+                originalAriaControls = tab.attr( "aria-controls" );
+
+            // inline tab
+            if ( that._isLocal( anchor ) ) {
+                selector = anchor.hash;
+                panel = that.element.find( that._sanitizeSelector( selector ) );
+            // remote tab
             } else {
-                return this._super( options, element );
+                panelId = that._tabId( tab );
+                selector = "#" + panelId;
+                panel = that.element.find( selector );
+                if ( !panel.length ) {
+                    panel = that._createPanel( panelId );
+                    panel.insertAfter( that.panels[ i - 1 ] || that.tablist );
+                }
+                panel.attr( "aria-live", "polite" );
             }
-        } else {
-            return this._super( options, element );
+
+            if ( panel.length) {
+                that.panels = that.panels.add( panel );
+            }
+            if ( originalAriaControls ) {
+                tab.data( "ui-tabs-aria-controls", originalAriaControls );
+            }
+            tab.attr({
+                "aria-controls": selector.substring( 1 ),
+                "aria-labelledby": anchorId
+            });
+            panel.attr( "aria-labelledby", anchorId );
+        });
+
+        this.panels
+            .addClass( "ui-tabs-panel ui-widget-content ui-corner-bottom" )
+            .attr( "role", "tabpanel" );
+    },
+
+    load: function( index, event ) {
+        index = this._getIndex( index );
+        var that = this,
+            tab = this.tabs.eq( index ),
+            anchor = tab.find( ".ui-tabs-anchor" ),
+            panel = this._getPanelForTab( tab ),
+            eventData = {
+                tab: tab,
+                panel: panel
+            };
+
+        // not remote
+        if ( that._isLocal( anchor[ 0 ] ) ) {
+            return;
+        }
+
+        this.xhr = $.ajax( this._ajaxSettings( anchor, event, eventData ) );
+
+        // support: jQuery <1.8
+        // jQuery <1.8 returns false if the request is canceled in beforeSend,
+        // but as of 1.8, $.ajax() always returns a jqXHR object.
+        if ( this.xhr && this.xhr.statusText !== "canceled" ) {
+            tab.addClass( "ui-tabs-loading" );
+            panel.attr( "aria-busy", "true" );
+
+            this.xhr
+                .success(function( response ) {
+                    // support: jQuery <1.8
+                    // http://bugs.jquery.com/ticket/11778
+                    setTimeout(function() {
+                        panel.html( response );
+                        that._trigger( "load", event, eventData );
+                    }, 1 );
+                })
+                .complete(function( jqXHR, status ) {
+                    // support: jQuery <1.8
+                    // http://bugs.jquery.com/ticket/11778
+                    setTimeout(function() {
+                        if ( status === "abort" ) {
+                            that.panels.stop( false, true );
+                        }
+
+                        tab.removeClass( "ui-tabs-loading" );
+                        panel.removeAttr( "aria-busy" );
+
+                        if ( jqXHR === that.xhr ) {
+                            delete that.xhr;
+                        }
+                    }, 1 );
+                });
         }
     }
+
 });
 
 // jqm 1.4.5 tabs widget heightStyle="auto" fix: https://github.com/jquery/jquery-mobile/issues/6392

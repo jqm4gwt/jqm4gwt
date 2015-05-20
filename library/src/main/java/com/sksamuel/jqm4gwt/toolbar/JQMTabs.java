@@ -785,8 +785,12 @@ public class JQMTabs extends JQMWidget {
 
     private static native int getActive(Element elt) /*-{
         var v = $wnd.$(elt).tabs("option", "active");
-        if (v === false) return 0;
-        else return v;
+        if (v) {
+            if (v === false) return 0;
+            else return v;
+        } else {
+            return 0;
+        }
     }-*/;
 
     private static native boolean isActive(Element elt) /*-{
