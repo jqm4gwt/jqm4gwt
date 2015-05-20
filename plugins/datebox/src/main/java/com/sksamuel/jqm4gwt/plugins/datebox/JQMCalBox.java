@@ -6,9 +6,11 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -170,6 +172,10 @@ public class JQMCalBox extends JQMText {
     private GridDateFormatter gridDateFormatter;
 
     private boolean calBoxHandlerAdded;
+    private boolean blurHandlerAdded;
+    private boolean isInternalBlur;
+
+    private boolean created;
 
     static {
         addJsParts();
@@ -190,6 +196,7 @@ public class JQMCalBox extends JQMText {
         input.addBlurHandler(new BlurHandler() {
             @Override
             public void onBlur(BlurEvent event) {
+                if (isInternalBlur) return;
                 if (lockInput != null && !lockInput && invalidateUnlockedInputOnBlur) {
                     String oldText = input.getText();
                     if (oldText == null || oldText.isEmpty()) return;
@@ -205,6 +212,12 @@ public class JQMCalBox extends JQMText {
             }
         });
         refreshDataOptions();
+    }
+
+    @Override
+    public HandlerRegistration addBlurHandler(BlurHandler handler) {
+        blurHandlerAdded = true;
+        return super.addBlurHandler(handler);
     }
 
     protected static String bool2Str(boolean value) {
@@ -806,11 +819,24 @@ public class JQMCalBox extends JQMText {
                     public void execute() {
                         ValueChangeEvent<String> newEvent = new CalBoxValueChangeEvent(calBox.getValue());
                         handler.onValueChange(newEvent);
+                        doArtificialBlur();
                     }
                 });
             } else {
                 ValueChangeEvent<String> newEvent = new CalBoxValueChangeEvent(calBox.getValue());
                 handler.onValueChange(newEvent);
+                doArtificialBlur();
+            }
+        }
+
+        private void doArtificialBlur() {
+            if (calBox.isAttached() && calBox.created && calBox.blurHandlerAdded) {
+                calBox.isInternalBlur = true;
+                try { // For example to rerun JQMForm's validation for this dropdown
+                    DomEvent.fireNativeEvent(Document.get().createBlurEvent(), calBox.input);
+                } finally {
+                    calBox.isInternalBlur = false;
+                }
             }
         }
     }
@@ -859,6 +885,7 @@ public class JQMCalBox extends JQMText {
     }-*/;
 
     private void created() {
+        created = true;
         setDate(delayedSetDate);
         initGridDateFormatter();
         initDisplayChange();
@@ -874,6 +901,7 @@ public class JQMCalBox extends JQMText {
     @Override
     protected void onUnload() {
         final Date d = getDate();
+        created = false;
         unbindCreated(input.getElement());
         super.onUnload();
         delayedSetDate = d;
