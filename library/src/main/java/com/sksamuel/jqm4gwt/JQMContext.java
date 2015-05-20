@@ -30,8 +30,24 @@ public class JQMContext {
     private static boolean defaultTransistionDirection = false;
     private static boolean defaultChangeHash = true;
 
+    // FIXME: it can work only if called from mobileinit event handler (i.e. before jqm is loaded)
+    /*
+      <script type="text/javascript">
+        // See http://www.gajotres.net/prevent-jquery-mobile-from-using-hash-navigation/
+        $(document).on("mobileinit", function () {
+          $.mobile.hashListeningEnabled = false;
+          $.mobile.pushStateEnabled = false;
+          $.mobile.changePage.defaults.changeHash = false;
+        });
+      </script>
+    */
     public static native void disableHashListening() /*-{
         $wnd.$.mobile.hashListeningEnabled = false;
+    }-*/;
+
+    // FIXME: it can work only if called from mobileinit event handler (i.e. before jqm is loaded)
+    public static native void disablePushStateEnabled() /*-{
+        $wnd.$.mobile.pushStateEnabled = false;
     }-*/;
 
     /**
