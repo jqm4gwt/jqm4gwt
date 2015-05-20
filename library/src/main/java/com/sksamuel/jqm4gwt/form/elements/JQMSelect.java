@@ -18,6 +18,7 @@ import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
@@ -185,6 +186,8 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     protected final FormLabel label;
 
     private boolean valueChangeHandlerInitialized;
+    private boolean blurHandlerAdded;
+    private boolean created;
 
     private boolean transparent = true;
     private Element transparentPrevPage;
@@ -223,9 +226,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
             @Override
             public void onChange(ChangeEvent event) {
                 if (!isMultiple()) mandatorySelIdx = select.getSelectedIndex();
-                if (valueChangeHandlerInitialized) {
-                    ValueChangeEvent.fire(JQMSelect.this, getValue());
-                }
+                fireValueChange(getValue());
             }
         });
 
@@ -233,8 +234,20 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         addStyleName(SELECT_STYLENAME);
     }
 
+    private void fireValueChange(String value) {
+        if (valueChangeHandlerInitialized) {
+            ValueChangeEvent.fire(this, value);
+        }
+        if (isAttached() && created && blurHandlerAdded && !isNative()) {
+            // TODO: could be fixed in next versions of jqm, but in 1.4.5 this problem exists
+            // For example to rerun JQMForm's validation for this dropdown
+            DomEvent.fireNativeEvent(Document.get().createBlurEvent(), select);
+        }
+    }
+
     @Override
     public HandlerRegistration addBlurHandler(BlurHandler handler) {
+        blurHandlerAdded = true;
         return select.addBlurHandler(handler);
     }
 
@@ -1009,7 +1022,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                 boolean changed = unselectAllOptions();
                 clearDelayed();
                 if (changed) refresh();
-                if (fireEvents && oldValNotEmpty) ValueChangeEvent.fire(this, null);
+                if (fireEvents && oldValNotEmpty) fireValueChange(null);
             } else {
                 if (getOptionCount() == 0) {
                     delayedValue = value;
@@ -1022,7 +1035,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                         delayedValue = value;
                         delayedFireEvents = fireEvents;
                         if (changed) refresh();
-                        if (fireEvents && oldValNotEmpty) ValueChangeEvent.fire(this, null);
+                        if (fireEvents && oldValNotEmpty) fireValueChange(null);
                         return;
                     }
                     setNewMultiVals(newVals, fireEvents);
@@ -1037,7 +1050,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         if (fireEvents) {
             newIdx = getSelectedIndex();
             if (oldIdx != newIdx) {
-                ValueChangeEvent.fire(this, getValue(newIdx));
+                fireValueChange(getValue(newIdx));
             }
         }
     }
@@ -1049,7 +1062,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         if (fireEvents && changed && sb != null) {
             String newVal = sb.toString();
             if (newVal.isEmpty()) newVal = null;
-            ValueChangeEvent.fire(this, newVal);
+            fireValueChange(newVal);
         }
     }
 
@@ -1175,6 +1188,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }-*/;
 
     private void created() {
+        created = true;
         if (checkSelectedIndex()) refresh();
     }
 
@@ -1188,6 +1202,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     @Override
     protected void onUnload() {
+        created = false;
         Element elt = select.getElement();
         unbindCreated(elt);
         unbindLifecycleEvents(elt.getId());
