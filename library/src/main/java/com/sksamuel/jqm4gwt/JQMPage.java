@@ -1,8 +1,6 @@
 package com.sksamuel.jqm4gwt;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -13,6 +11,8 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMPageEvent.PageState;
@@ -43,9 +43,6 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     private static int counter = 1;
 
-    /** Needed to find out JQMPage by its Element received usually from JS */
-    private static final Map<Element, JQMPage> allPages = new HashMap<Element, JQMPage>(); // there is no WeakHashMap in GWT
-
     /** The primary content div */
     private JQMContent content;
 
@@ -62,8 +59,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     private double hideFixedToolbarsIfContentAreaPercentBelow = 50.0d;
     private int hideFixedToolbarsIfVirtualKeyboard = 0; // threshold(height) for keyboard detection
 
-    private boolean windowResizeInitialized;
-    private boolean orientationChangeInitialized;
+    private HandlerRegistration windowResizeInitialized;
+    private HandlerRegistration orientationChangeInitialized;
     private int initialWindowHeight;
     private int hiddenHeaderH;
     private boolean hiddenHeaderFixed;
@@ -80,13 +77,19 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * until a containerID has been assigned.
      */
     private JQMPage() {
-        allPages.put(getElement(), this);
         setRole(getDfltRole());
         content = createContent();
     }
 
+    /**
+     * Needed to find out JQMPage widget by its Element received usually from JavaScript.
+     * <br> Only loaded (attached to DOM) pages can be found.
+     **/
     public static JQMPage findPage(Element elt) {
-        return elt == null ? null : allPages.get(elt);
+        if (elt == null) return null;
+        EventListener listener = DOM.getEventListener(elt);
+        if (listener == null || !(listener instanceof JQMPage)) return null;
+        return (JQMPage) listener;
     }
 
     /** Could be overridden by descendants */
@@ -314,6 +317,14 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     @Override
     protected void onUnload() {
     	unbindLifecycleEvents(getElement());
+    	if (windowResizeInitialized != null) {
+    	    windowResizeInitialized.removeHandler();
+    	    windowResizeInitialized = null;
+    	}
+    	if (orientationChangeInitialized != null) {
+    	    orientationChangeInitialized.removeHandler();
+    	    orientationChangeInitialized = null;
+    	}
     	super.onUnload();
     }
 
@@ -439,7 +450,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
                     prevPage.setAttribute(DATA_DOM_CACHE, "true");
                 }
                 if (!transparentDoPrevPageLifecycle) {
-                    JQMPage prev = allPages.get(transparentPrevPage);
+                    JQMPage prev = findPage(transparentPrevPage);
                     if (prev != null) JQMPage.unbindLifecycleEvents(prev.getElement());
                 }
                 if (content != null) content.addStyleName(UI_BODY_INHERIT);
@@ -474,7 +485,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
                 transparentPrevPage.removeAttribute(DATA_DOM_CACHE);
             }
             if (!transparentDoPrevPageLifecycle) {
-                final JQMPage prev = allPages.get(transparentPrevPage);
+                final JQMPage prev = findPage(transparentPrevPage);
                 if (prev != null) {
                     // restore hide events bindings immediately, it could be a chain hiding case,
                     // for example: closeDialog() -> changePage(newPage) -> prevPage.onPageHide()
@@ -527,9 +538,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     private void initWindowResize() {
-        if (windowResizeInitialized) return;
-        windowResizeInitialized = true;
-        Window.addResizeHandler(new ResizeHandler() {
+        if (windowResizeInitialized != null) return;
+        windowResizeInitialized = Window.addResizeHandler(new ResizeHandler() {
             @Override
             public void onResize(ResizeEvent event) {
                 processFixedToolbars();
@@ -540,9 +550,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     private void initOrientationChange() {
-        if (orientationChangeInitialized) return;
-        orientationChangeInitialized = true;
-        this.addJQMEventHandler(JQMComponentEvents.ORIENTATIONCHANGE,
+        if (orientationChangeInitialized != null) return;
+        orientationChangeInitialized = this.addJQMEventHandler(JQMComponentEvents.ORIENTATIONCHANGE,
                 new JQMOrientationChangeHandler() {
                     @Override
                     public void onEvent(JQMEvent<?> event) {

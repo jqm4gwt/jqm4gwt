@@ -41,6 +41,7 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
 
     private boolean boundFilterEvents;
     private boolean boundFilterCallback;
+    private boolean boundFilterCreate;
     private JavaScriptObject origFilter;
 
     public JQMWidget() {
@@ -370,15 +371,31 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
                 unbindFilterCallback();
             } else {
                 bindFilterEvents();
-                bindFilterableCreated(getDataFilterWidget().getElement(), this);
+                bindFilterableCreated();
             }
         }
+    }
+
+    private void bindFilterableCreated() {
+        if (boundFilterCreate) return;
+        bindFilterableCreated(getDataFilterWidget().getElement(), this);
+        boundFilterCreate = true;
+    }
+
+    private void unbindFilterableCreated() {
+        if (!boundFilterCreate) return;
+        unbindFilterableCreated(getDataFilterWidget().getElement());
+        boundFilterCreate = false;
     }
 
     private static native void bindFilterableCreated(Element elt, JQMWidget w) /*-{
         $wnd.$(elt).on( 'filterablecreate', function( event, ui ) {
             w.@com.sksamuel.jqm4gwt.JQMWidget::filterableCreated()();
         });
+    }-*/;
+
+    private static native void unbindFilterableCreated(Element elt) /*-{
+        $wnd.$(elt).off( 'filterablecreate' );
     }-*/;
 
     private void filterableCreated() {
@@ -397,6 +414,7 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
     protected void onUnload() {
         unbindFilterEvents();
         unbindFilterCallback();
+        unbindFilterableCreated();
         super.onUnload();
     }
 

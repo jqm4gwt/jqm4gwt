@@ -108,6 +108,7 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
 
     private boolean boundFilterEvents;
     private boolean boundFilterCallback;
+    private boolean boundFilterCreate;
     private JavaScriptObject origFilter;
 
     public JQMColumnToggle() {
@@ -888,15 +889,31 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
                 unbindFilterCallback();
             } else {
                 bindFilterEvents();
-                bindFilterableCreated(getDataFilterWidget().getElement(), this);
+                bindFilterableCreated();
             }
         }
+    }
+
+    private void bindFilterableCreated() {
+        if (boundFilterCreate) return;
+        bindFilterableCreated(getDataFilterWidget().getElement(), this);
+        boundFilterCreate = true;
+    }
+
+    private void unbindFilterableCreated() {
+        if (!boundFilterCreate) return;
+        unbindFilterableCreated(getDataFilterWidget().getElement());
+        boundFilterCreate = false;
     }
 
     private static native void bindFilterableCreated(Element elt, JQMColumnToggle ct) /*-{
         $wnd.$(elt).on( 'filterablecreate', function( event, ui ) {
             ct.@com.sksamuel.jqm4gwt.table.JQMColumnToggle::filterableCreated()();
         });
+    }-*/;
+
+    private static native void unbindFilterableCreated(Element elt) /*-{
+        $wnd.$(elt).off( 'filterablecreate' );
     }-*/;
 
     private void filterableCreated() {
@@ -913,8 +930,10 @@ public class JQMColumnToggle extends CustomFlowPanel implements HasFilterable,
 
     @Override
     protected void onUnload() {
+        loaded = false;
         unbindFilterEvents();
         unbindFilterCallback();
+        unbindFilterableCreated();
         super.onUnload();
     }
 

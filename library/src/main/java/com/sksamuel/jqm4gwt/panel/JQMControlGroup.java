@@ -23,6 +23,7 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
 
     private boolean boundFilterEvents;
     private boolean boundFilterCallback;
+    private boolean boundFilterCreate;
     private JavaScriptObject origFilter;
 
     protected JQMControlGroup(Element element, String styleName) {
@@ -258,15 +259,31 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
                 unbindFilterCallback();
             } else {
                 bindFilterEvents();
-                bindFilterableCreated(getDataFilterWidget().getElement(), this);
+                bindFilterableCreated();
             }
         }
+    }
+
+    private void bindFilterableCreated() {
+        if (boundFilterCreate) return;
+        bindFilterableCreated(getDataFilterWidget().getElement(), this);
+        boundFilterCreate = true;
+    }
+
+    private void unbindFilterableCreated() {
+        if (!boundFilterCreate) return;
+        unbindFilterableCreated(getDataFilterWidget().getElement());
+        boundFilterCreate = false;
     }
 
     private static native void bindFilterableCreated(Element elt, JQMControlGroup cg) /*-{
         $wnd.$(elt).on( 'filterablecreate', function( event, ui ) {
             cg.@com.sksamuel.jqm4gwt.panel.JQMControlGroup::filterableCreated()();
         });
+    }-*/;
+
+    private static native void unbindFilterableCreated(Element elt) /*-{
+        $wnd.$(elt).off( 'filterablecreate' );
     }-*/;
 
     private void filterableCreated() {
@@ -283,6 +300,7 @@ public class JQMControlGroup extends JQMPanel implements HasOrientation<JQMContr
     protected void onUnload() {
         unbindFilterEvents();
         unbindFilterCallback();
+        unbindFilterableCreated();
         super.onUnload();
     }
 
