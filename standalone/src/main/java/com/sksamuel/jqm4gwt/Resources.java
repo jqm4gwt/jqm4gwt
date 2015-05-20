@@ -14,7 +14,7 @@ public interface Resources {
         private static final String JQM_FIXES_CSS = "css/jqm-fixes.css";
         private static final String JQM4GWT_CSS = "css/jqm4gwt.css";
 
-        private static final String JQUERY_JS = "js/jquery-2.1.3.min.js";
+        private static final String JQUERY_JS = "js/jquery-2.1.4.min.js";
         private static final String JQM_JS = "js/jquery.mobile-1.4.5.min.js";
         private static final String JQUERY_ACTUAL = "js/jquery.actual.min.js";
         private static final String JQM_FIXES_JS = "js/jqm-fixes.js";
