@@ -203,7 +203,7 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         if (tag == null || !tag.equals("BUTTON")) JQMCommon.setRole(elt, "button");
         // TODO - defaults should be set based on $.fn.buttonMarkup.defaults
         JQMCommon.setShadowEx(elt, true);
-        JQMCommon.setCornersEx(elt, true);
+        JQMCommon.setCornersEx(elt, true, false/*explicitDataAttr*/);
     }
 
     protected JQMButton(Widget widget) {

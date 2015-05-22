@@ -22,6 +22,10 @@ public class JQMCommon {
     public static final String POPUP_POS_WINDOW = "window";
     public static final String POPUP_POS_ORIGIN = "origin";
 
+    /** For example: JQMSelect.setOverlayTheme(THEME_NONE) will prevent overlay "gray out" cover. */
+    public static final String THEME_NONE = "none";
+    public static final String THEME_INHERIT = "inherit";
+
     public static final String STYLE_UI_BODY = "ui-body-";
     public static final String STYLE_UI_BAR = "ui-bar-";
     /** Body panel which is inheriting parent's theme. */
@@ -574,18 +578,30 @@ public class JQMCommon {
         return isCornersEx(widget.getElement());
     }
 
-    public static void setCornersEx(Element elt, boolean corners) {
+    /**
+     * @param explicitDataAttr - if true then data-corners attribute will be always set,
+     * regardless of default value (needed for hasExplicitCorners() support).
+     */
+    public static void setCornersEx(Element elt, boolean corners, boolean explicitDataAttr) {
         if (corners) {
             elt.addClassName(STYLE_UI_CORNER_ALL);
-            setAttribute(elt, DATA_CORNERS, null);
+            setAttribute(elt, DATA_CORNERS, explicitDataAttr ? "true" : null); // for hasExplicitCorners()
         } else {
             elt.removeClassName(STYLE_UI_CORNER_ALL);
             setAttribute(elt, DATA_CORNERS, "false");
         }
     }
 
+    /**
+     * @param explicitDataAttr - if true then data-corners attribute will be always set,
+     * regardless of default value (needed for hasExplicitCorners() support).
+     */
+    public static void setCornersEx(Widget widget, boolean corners, boolean explicitDataAttr) {
+        setCornersEx(widget.getElement(), corners, explicitDataAttr);
+    }
+
     public static void setCornersEx(Widget widget, boolean corners) {
-        setCornersEx(widget.getElement(), corners);
+        setCornersEx(widget.getElement(), corners, true/*explicitDataAttr*/);
     }
 
     public static DataIcon getStyleIcon(Element elt) {
