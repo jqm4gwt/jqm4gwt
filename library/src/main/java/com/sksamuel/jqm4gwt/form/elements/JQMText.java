@@ -11,11 +11,16 @@ import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
+import com.google.gwt.event.dom.client.HasMouseMoveHandlers;
 import com.google.gwt.event.dom.client.HasMouseOutHandlers;
 import com.google.gwt.event.dom.client.HasMouseOverHandlers;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -49,11 +54,13 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * <br>
  * An implementation of a standard HTML text input.
  */
-public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasFocusHandlers,
-        HasClickHandlers, HasTapHandlers, HasChangeHandlers, HasValue<String>, HasReadOnly<JQMText>,
-        JQMFormWidget, HasKeyDownHandlers, HasKeyUpHandlers, HasMouseOverHandlers,
-        HasMouseOutHandlers, HasPreventFocusZoom, HasMini<JQMText>,
-        HasPlaceHolder<JQMText>, Focusable, HasClearButton<JQMText>, HasCorners<JQMText> {
+public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasValue<String>,
+        HasReadOnly<JQMText>, HasMini<JQMText>, HasCorners<JQMText>, HasPlaceHolder<JQMText>,
+        HasClearButton<JQMText>, JQMFormWidget, Focusable,
+        HasFocusHandlers, HasClickHandlers, HasTapHandlers, HasChangeHandlers,
+        HasKeyDownHandlers, HasKeyUpHandlers, HasKeyPressHandlers,
+        HasMouseOverHandlers, HasMouseOutHandlers, HasMouseMoveHandlers,
+        HasPreventFocusZoom {
 
     /**
      * The widget used for the label
@@ -138,6 +145,11 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasF
     }
 
     @Override
+    public HandlerRegistration addKeyPressHandler(KeyPressHandler handler) {
+        return input.addKeyPressHandler(handler);
+    }
+
+    @Override
     public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
         return flow.addDomHandler(handler, MouseOutEvent.getType());
     }
@@ -145,6 +157,11 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasF
     @Override
     public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
         return flow.addDomHandler(handler, MouseOverEvent.getType());
+    }
+
+    @Override
+    public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
+        return flow.addDomHandler(handler, MouseMoveEvent.getType());
     }
 
     @Override
