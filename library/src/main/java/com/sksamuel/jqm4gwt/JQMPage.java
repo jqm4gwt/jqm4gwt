@@ -37,7 +37,6 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     private static final String STYLE_UI_DIALOG = "ui-dialog";
     private static final String UI_DIALOG_CONTAIN = "ui-dialog-contain";
-    private static final String UI_BODY_INHERIT = "ui-body-inherit";
 
     private static final String JQM4GWT_FIXED_HIDDEN = "jqm4gwt-fixed-hidden";
 
@@ -453,15 +452,15 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
                     JQMPage prev = findPage(transparentPrevPage);
                     if (prev != null) JQMPage.unbindLifecycleEvents(prev.getElement());
                 }
-                if (content != null) content.addStyleName(UI_BODY_INHERIT);
+                if (content != null) content.addStyleName(JQMCommon.STYLE_UI_BODY_INHERIT);
                 Element dlgContain = JQMCommon.findChild(getElement(), UI_DIALOG_CONTAIN);
-                if (dlgContain != null) dlgContain.addClassName(UI_BODY_INHERIT);
+                if (dlgContain != null) dlgContain.addClassName(JQMCommon.STYLE_UI_BODY_INHERIT);
             } else {
                 transparentPrevPage = null;
                 transparentPrevPageClearCache = false;
-                if (content != null) content.removeStyleName(UI_BODY_INHERIT);
+                if (content != null) content.removeStyleName(JQMCommon.STYLE_UI_BODY_INHERIT);
                 Element dlgContain = JQMCommon.findChild(getElement(), UI_DIALOG_CONTAIN);
-                if (dlgContain != null) dlgContain.removeClassName(UI_BODY_INHERIT);
+                if (dlgContain != null) dlgContain.removeClassName(JQMCommon.STYLE_UI_BODY_INHERIT);
             }
         }
     }

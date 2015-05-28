@@ -484,7 +484,12 @@ public class JQMCommon {
         if (s == null || s.isEmpty()) return null;
         s = s.substring(prefix.length());
         // check length to prevent conflict with ui-btn-inline, ... in case of forgotten excludes
-        return s.length() > 1 ? null : s;
+        if (s.length() > 1) {
+            if (THEME_INHERIT.equals(s) || THEME_NONE.equals(s)) return s;
+            else return null;
+        } else {
+            return s;
+        }
     }
 
     public static String getThemeEx(Widget w, String prefix, String... excludes) {
@@ -493,9 +498,10 @@ public class JQMCommon {
 
     public static void setThemeEx(Element elt, String themeName, String prefix, String... excludes) {
         String old = getThemeEx(elt, prefix, excludes);
-        if (old != null && !old.isEmpty()) elt.removeClassName(prefix + old);
+        if (old != null && !old.isEmpty()) {
+            elt.removeClassName(prefix + old);
+        }
         if (themeName != null && !themeName.isEmpty()) {
-            elt.removeClassName(prefix + "inherit");
             elt.addClassName(prefix + themeName);
         }
         setAttribute(elt, DATA_THEME, themeName);

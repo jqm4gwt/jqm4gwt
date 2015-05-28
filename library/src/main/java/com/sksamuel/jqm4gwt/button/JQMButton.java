@@ -87,8 +87,8 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
 
     static {
         currentThemeSearch.put("ui-group-theme-", null);
-        currentThemeSearch.put("ui-body-", "ui-body-inherit");
-        currentThemeSearch.put("ui-bar-", "ui-bar-inherit");
+        currentThemeSearch.put("ui-body-", JQMCommon.STYLE_UI_BODY_INHERIT);
+        currentThemeSearch.put("ui-bar-", JQMCommon.STYLE_UI_BAR_INHERIT);
         currentThemeSearch.put("ui-page-theme-", null);
     }
 
