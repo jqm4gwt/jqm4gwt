@@ -27,7 +27,10 @@ public class JQMContext {
 
     private static WidgetDefaults widgetDefaults;
 
+    private static TransitionIntf<?> defaultTransition = Transition.FADE;
+    private static TransitionIntf<?> defaultDialogTransition = Transition.POP;
     private static boolean defaultTransistionDirection = false;
+
     private static boolean defaultChangeHash = true;
 
     // FIXME: it can work only if called from mobileinit event handler (i.e. before jqm is loaded)
@@ -68,25 +71,25 @@ public class JQMContext {
 
     /**
      * Programatically change the displayed page to the given {@link JQMPage}
-     * instance. This uses the default transition which is Transition.POP
+     * instance. This uses the default transition which is Transition.FADE
      */
     public static void changePage(JQMContainer container) {
         changePage(container, false/*dialog*/);
     }
 
     public static void changePage(JQMContainer container, boolean dialog) {
-        changePage(container, dialog, getDefaultTransition());
+        changePage(container, dialog, dialog ? getDefaultDialogTransition() : getDefaultTransition());
     }
 
     /**
      * Change the displayed page to the given {@link JQMPage} instance using
      * the supplied transition.
      */
-    public static void changePage(JQMContainer container, Transition transition) {
+    public static void changePage(JQMContainer container, TransitionIntf<?> transition) {
         changePage(container, false/*dialog*/, transition);
     }
 
-    public static void changePage(JQMContainer container, boolean dialog, Transition transition) {
+    public static void changePage(JQMContainer container, boolean dialog, TransitionIntf<?> transition) {
         changePage(container, dialog, transition, defaultTransistionDirection);
     }
 
@@ -94,11 +97,11 @@ public class JQMContext {
      * Change the displayed page to the given {@link JQMPage} instance using
      * the supplied transition and reverse setting.
      */
-    public static void changePage(JQMContainer container, Transition transition, boolean reverse) {
+    public static void changePage(JQMContainer container, TransitionIntf<?> transition, boolean reverse) {
         changePage(container, false/*dialog*/, transition, reverse);
     }
 
-    public static void changePage(JQMContainer container, boolean dialog, Transition transition,
+    public static void changePage(JQMContainer container, boolean dialog, TransitionIntf<?> transition,
                                   boolean reverse) {
         Mobile.changePage("#" + container.getId(), transition, reverse, defaultChangeHash, dialog);
     }
@@ -107,25 +110,24 @@ public class JQMContext {
         render(c.getElement());
     }
 
-    public static Transition getDefaultTransition() {
+    public static TransitionIntf<?> getDefaultTransition() {
         String val = getDefaultTransitionImpl();
-        Transition t = getTransitionForJQMString(val);
+        TransitionIntf<?> t = defaultTransition.parseJqmValue(val);
         return t != null ? t : Transition.FADE;
-    }
-
-    private static Transition getTransitionForJQMString(String val) {
-        if (val != null) {
-            for (Transition t : Transition.values()) {
-                if (val.equalsIgnoreCase(t.getJqmValue())) {
-                    return t;
-                }
-            }
-        }
-        return null;
     }
 
     private static native String getDefaultTransitionImpl() /*-{
         return $wnd.$.mobile.defaultPageTransition;
+    }-*/;
+
+    public static TransitionIntf<?> getDefaultDialogTransition() {
+        String val = getDefaultDialogTransitionImpl();
+        TransitionIntf<?> t = defaultDialogTransition.parseJqmValue(val);
+        return t != null ? t : Transition.POP;
+    }
+
+    private static native String getDefaultDialogTransitionImpl() /*-{
+        return $wnd.$.mobile.defaultDialogTransition;
     }-*/;
 
     /**
@@ -189,19 +191,55 @@ public class JQMContext {
         $wnd.$(elt).enhanceWithin();
     }-*/;
 
-    public static void setDefaultTransition(Transition defaultTransition) {
+    public static void setDefaultTransition(TransitionIntf<?> dfltTransition) {
+        defaultTransition = dfltTransition;
         setDefaultTransitionImpl(defaultTransition.getJqmValue());
     }
 
-    public static void setDefaultTransition(Transition defaultTransition,
-            boolean direction) {
-        setDefaultTransitionImpl(defaultTransition.getJqmValue());
+    /**
+     * @param direction - if true then "reverse" effect will be used,
+     *   see <a href="http://api.jquerymobile.com/pagecontainer/#method-change">Pagecontainer.change()</a>
+     */
+    public static void setDefaultTransition(TransitionIntf<?> dfltTransition, boolean direction) {
+        setDefaultTransition(dfltTransition);
         defaultTransistionDirection = direction;
     }
 
     private static native void setDefaultTransitionImpl(String transition) /*-{
         $wnd.$.mobile.defaultPageTransition = transition;
     }-*/;
+
+    public static void setDefaultDialogTransition(TransitionIntf<?> dfltDlgTransition) {
+        defaultDialogTransition = dfltDlgTransition;
+        setDefaultDialogTransitionImpl(defaultDialogTransition.getJqmValue());
+    }
+
+    private static native void setDefaultDialogTransitionImpl(String transition) /*-{
+        $wnd.$.mobile.defaultDialogTransition = transition;
+    }-*/;
+
+    /**
+     * @param maxWidth - Transitions can be disabled (set to "none") when the window
+     * width is greater than a certain pixel width. This feature is useful because transitions
+     * can be distracting or perform poorly on larger screens. This value is configurable via
+     * the global option $.mobile.maxTransitionWidth, which defaults to false. The option accepts
+     * any number representing a pixel width or false value. If it's not false, the handler will
+     * use a "none" transition when the window is wider than the specified value.
+     * <br> See <a href="http://view.jquerymobile.com/1.2.1/docs/pages/page-transitions.html">
+     * Page transitions</a>
+     */
+    private static native void setMaxTransitionWidthImpl(String maxWidth) /*-{
+        $wnd.$.mobile.maxTransitionWidth = maxWidth;
+    }-*/;
+
+    /**
+     * @param maxWidth - (null or &lt;= 0) means transitions will be used regardless of current
+     * window width, otherwise they will be disabled when window width &gt; maxWidth.
+     */
+    public static void setMaxTransitionWidth(Integer maxWidth) {
+        if (maxWidth == null || maxWidth.intValue() <= 0) setMaxTransitionWidthImpl("false");
+        else setMaxTransitionWidthImpl(maxWidth.toString());
+    }
 
     public static void setDefaultChangeHash(boolean defaultChangeHash) {
         JQMContext.defaultChangeHash = defaultChangeHash;

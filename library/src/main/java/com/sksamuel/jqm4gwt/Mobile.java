@@ -30,26 +30,37 @@ public class Mobile {
     }-*/;
 
     /**
-     * Invokes the $.mobile.changePage method
+     * Invokes the $.mobile.changePage method.
+     *
+     * @param _role - could be {@link Mobile#DATA_ROLE_DIALOG}
      */
-    private static native void changePage(String url, String t, boolean r, boolean ch, String rol) /*-{
-        if (rol != null) {
+    private static native void changePage(String url, String _transition, boolean _reverse,
+                                          boolean _changeHash, String _role) /*-{
+        if (_role !== null) {
             $wnd.$("body").pagecontainer("change", url,
-                    { transition: t, reverse: r, changeHash: ch, role: rol });
+                    { transition: _transition,
+                      reverse: _reverse,
+                      changeHash: _changeHash,
+                      role: _role
+                    });
         } else {
             $wnd.$("body").pagecontainer("change", url,
-                    { transition: t, reverse: r, changeHash: ch });
+                    { transition: _transition,
+                      reverse: _reverse,
+                      changeHash: _changeHash
+                    });
         }
     }-*/;
 
     /**
      * Invokes the $.mobile.changePage method
      */
-    static void changePage(String url, Transition t, boolean reverse, boolean changeHash, boolean dialog) {
+    static void changePage(String url, TransitionIntf<?> t, boolean reverse, boolean changeHash,
+                           boolean dialog) {
         changePage(url, t.getJqmValue(), reverse, changeHash, dialog ? DATA_ROLE_DIALOG : null);
     }
 
-    static void changePage(String url, Transition t, boolean reverse, boolean changeHash) {
+    static void changePage(String url, TransitionIntf<?> t, boolean reverse, boolean changeHash) {
         changePage(url, t, reverse, changeHash, false/*dialog*/);
     }
 

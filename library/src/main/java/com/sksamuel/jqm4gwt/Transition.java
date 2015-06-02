@@ -7,7 +7,7 @@ package com.sksamuel.jqm4gwt;
  * <br> See <a href="http://demos.jquerymobile.com/1.4.5/transitions/">Transitions</a>
  *
  */
-public enum Transition {
+public enum Transition implements TransitionIntf<Transition> {
     FADE("fade"), POP("pop"), FLIP("flip"), TURN("turn"), FLOW("flow"),
     SLIDE_FADE("slidefade"), SLIDE("slide"), SLIDE_UP("slideup"), SLIDE_DOWN("slidedown"),
     NONE("none");
@@ -19,8 +19,14 @@ public enum Transition {
     }
 
     /** Returns the string value that JQM expects */
+    @Override
     public String getJqmValue() {
         return jqmValue;
+    }
+
+    @Override
+    public Transition parseJqmValue(String jqmValue) {
+        return fromJqmValue(jqmValue);
     }
 
     public static Transition fromJqmValue(String jqmValue) {

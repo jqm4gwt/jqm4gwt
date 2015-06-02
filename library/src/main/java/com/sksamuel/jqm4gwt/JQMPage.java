@@ -1138,10 +1138,14 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }-*/;
 
     public void openDialog() {
+        TransitionIntf<?> t = this.getTransition();
+        if (t == null) t = JQMContext.getDefaultDialogTransition();
+
         if (JQMCommon.isDataDialog(getElement())) {
-            JQMContext.changePage(this);
+            // we don't need to forcefully pass "dialog=true" in that case
+            JQMContext.changePage(this, t);
         } else {
-            JQMContext.changePage(this, true/*dialog*/);
+            JQMContext.changePage(this, true/*dialog*/, t);
         }
     }
 
