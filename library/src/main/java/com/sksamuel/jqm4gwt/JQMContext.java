@@ -78,7 +78,12 @@ public class JQMContext {
     }
 
     public static void changePage(JQMContainer container, boolean dialog) {
-        changePage(container, dialog, dialog ? getDefaultDialogTransition() : getDefaultTransition());
+        TransitionIntf<?> t = container.getTransition();
+        if (t == null) {
+            t = dialog || JQMCommon.isDataDialog(container.getElement())
+                    ? getDefaultDialogTransition() : getDefaultTransition();
+        }
+        changePage(container, dialog, t);
     }
 
     /**
