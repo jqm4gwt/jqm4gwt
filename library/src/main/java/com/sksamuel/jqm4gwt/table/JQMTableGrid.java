@@ -1,0 +1,634 @@
+package com.sksamuel.jqm4gwt.table;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.dom.client.TableCellElement;
+import com.google.gwt.dom.client.TableRowElement;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.uibinder.client.UiChild;
+import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.StrUtils;
+import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
+
+/**
+ * Advanced wrapper for Html Table element. Not supposed to be used "per se", see descendants.
+ *
+ * @author slavap
+ */
+public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection<String>> {
+
+    // both are used in jqm4gwt.css
+    public static final String THEAD_GROUPS = "jqm4gwt-thead-groups";
+    public static final String IMG_ONLY = "img-only";
+
+    protected boolean loaded;
+
+    protected final ComplexPanel tHead;
+    protected final ComplexPanel tBody;
+    protected ComplexPanel tFoot;
+
+    protected static class ColumnDef {
+        public String title;
+        public String priority;
+        public int colspan; // needed for 'Grouped column headers' mode
+        public int rowspan;
+
+        public ColumnDef() {
+        }
+
+        public ColumnDef(String title, String priority) {
+            this();
+            this.title = title;
+            this.priority = priority;
+        }
+
+        public static ColumnDef create(String str, boolean colspanExpected) {
+            if (str == null) return null;
+            String spanStr = null;
+            if (colspanExpected) {
+                int j = str.indexOf('=');
+                if (j >= 0) {
+                    spanStr = str.substring(0, j).trim();
+                    str = str.substring(j + 1);
+                }
+            }
+            ColumnDef col = new ColumnDef();
+            int j = str.lastIndexOf('='); // searching from the end to prevent html title breakage
+            if (j >= 0) {
+                String s = str.substring(j + 1).trim();
+                if (s != null && !s.isEmpty()) col.priority = s;
+                col.title = str.substring(0, j);
+            } else {
+                col.title = str;
+            }
+            if (spanStr != null && !spanStr.isEmpty()) {
+                j = spanStr.indexOf(';');
+                if (j >= 0) {
+                    String s = spanStr.substring(0, j).trim();
+                    if (s != null && !s.isEmpty()) col.colspan = Integer.parseInt(s);
+                    s = spanStr.substring(j + 1).trim();
+                    if (s != null && !s.isEmpty()) col.rowspan = Integer.parseInt(s);
+                } else {
+                    col.colspan = Integer.parseInt(spanStr);
+                }
+            }
+            return col;
+        }
+    }
+
+    /** populated based on colNames parsing */
+    protected final Set<ColumnDef> columns = new LinkedHashSet<ColumnDef>();
+
+    /** populated directly by addColTitleWidget(), probably from UiBinder template */
+    protected final Map<Widget, ColumnDef> colTitleWidgets = new LinkedHashMap<Widget, ColumnDef>();
+
+    /** populated based on colGroups parsing */
+    protected final Set<ColumnDef> headGroups = new LinkedHashSet<ColumnDef>();
+
+    /** populated directly by addColGroupWidget(), probably from UiBinder template */
+    protected final Map<Widget, ColumnDef> colGroupWidgets = new LinkedHashMap<Widget, ColumnDef>();
+
+    private String colNames;
+    private String cells;
+    private String colGroups;
+
+    private Collection<String> dataStr;
+    /** Boolean - true means add as &lt;th&gt; */
+    private Map<Widget, Boolean> dataObj;
+
+    protected JQMTableGrid() {
+        super(Document.get().createTableElement());
+        Element table = getElement();
+        table.setId(Document.get().createUniqueId());
+        tHead = new CustomFlowPanel(Document.get().createTHeadElement());
+        tBody = new CustomFlowPanel(Document.get().createTBodyElement());
+        add(tHead);
+        add(tBody);
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        loaded = true;
+        if (tBody.getWidgetCount() == 0 && !colTitleWidgets.isEmpty()) populateBody();
+    }
+
+    @Override
+    protected void onUnload() {
+        loaded = false;
+        super.onUnload();
+    }
+
+    protected void checkFooterCreated() {
+        if (tFoot != null) return;
+        tFoot = new CustomFlowPanel(Document.get().createTFootElement());
+        add(tFoot);
+    }
+
+    public String getColNames() {
+        return colNames;
+    }
+
+    /**
+     * @param colNames - comma separated column names with optional priority (1 = highest, 6 = lowest).
+     * If you need comma in name use \, to preserve it.
+     * <br> Column name can be valid HTML, i.e. &lt;abbr title="Rotten Tomato Rating">Rating&lt;/abbr&gt;=1
+     * <br> Example: Rank,Movie Title,Year=3,Reviews=5
+     * <br> To make a column persistent so it's not available for hiding, just omit priority.
+     * This will make the column visible at all widths and won't be available in the column chooser menu.
+     */
+    public void setColNames(String colNames) {
+        if (this.colNames == colNames || this.colNames != null && this.colNames.equals(colNames)) return;
+        this.colNames = colNames;
+        colTitleWidgets.clear();
+
+        if (this.colNames == null || this.colNames.isEmpty()) {
+            setColumns(null);
+            return;
+        }
+        String[] arr = StrUtils.commaSplit(this.colNames);
+        Set<ColumnDef> cols = new LinkedHashSet<ColumnDef>();
+        for (int i = 0; i < arr.length; i++) {
+            String s = StrUtils.replaceAllBackslashCommas(arr[i].trim());
+            cols.add(ColumnDef.create(s, false/*colspanExpected*/));
+        }
+        setColumns(cols);
+    }
+
+    public String getColGroups() {
+        return colGroups;
+    }
+
+    /**
+     * @param colGroups - comma separated grouped column headers with colspan, rowspan,
+     * and priority (1 = highest, 6 = lowest). If you need comma in name use \, to preserve it.
+     * <br> Expected format: colspan;rowspan=GroupName=priority
+     * <br> Group name can be valid HTML, i.e. 4=&lt;abbr title="Previous Year Results">2012&lt;/abbr&gt;=1
+     * <br> Example: 3=Q1 2012=5, 3=Q2 2012=4, 3=Q3 2012=3, 3=Q4 2012=2, 3=2012 Totals=1
+     */
+    public void setColGroups(String colGroups) {
+        if (this.colGroups == colGroups || this.colGroups != null && this.colGroups.equals(colGroups)) return;
+        this.colGroups = colGroups;
+        colGroupWidgets.clear();
+
+        if (this.colGroups == null || this.colGroups.isEmpty()) {
+            setHeadGroups(null);
+            return;
+        }
+        String[] arr = StrUtils.commaSplit(this.colGroups);
+        Set<ColumnDef> groups = new LinkedHashSet<ColumnDef>();
+        for (int i = 0; i < arr.length; i++) {
+            String s = StrUtils.replaceAllBackslashCommas(arr[i].trim());
+            groups.add(ColumnDef.create(s, true/*colspanExpected*/));
+        }
+        setHeadGroups(groups);
+    }
+
+    private void setHeadGroups(Set<ColumnDef> groups) {
+        headGroups.clear();
+        if (groups != null) headGroups.addAll(groups);
+        populateHeadGroups();
+    }
+
+    public String getCells() {
+        return cells;
+    }
+
+    /**
+     * @param cells - comma separated table cells, each string/cell can be valid HTML.
+     * If you need comma in name use \, to preserve it.
+     * <br> Example: &lt;th&gt;1&lt;/th&gt;, The Matrix, 1999, 8.7, &lt;th&gt;2&lt;/th&gt;, Falling Down, 1993, 7.5
+     */
+    public void setCells(String cells) {
+        if (this.cells == cells || this.cells != null && this.cells.equals(cells)) return;
+        this.cells = cells;
+        if (this.cells == null || this.cells.isEmpty()) {
+            setDataStr(null);
+            return;
+        }
+        String[] arr = StrUtils.commaSplit(this.cells);
+        List<String> lst = new ArrayList<String>(arr.length);
+        for (int i = 0; i < arr.length; i++) {
+            String s = StrUtils.replaceAllBackslashCommas(arr[i].trim());
+            lst.add(s);
+        }
+        setDataStr(lst);
+    }
+
+    public Collection<String> getBodyData() {
+        return dataStr;
+    }
+
+    /**
+     * Set and refresh table cells/body. Each string/cell in collection can be valid HTML.
+     */
+    public void setBodyData(Collection<String> data) {
+        this.cells = null;
+        setDataStr(data);
+    }
+
+    private void setDataStr(Collection<String> lst) {
+        dataObj = null;
+        dataStr = lst;
+        refreshBody();
+    }
+
+    @SuppressWarnings("unused")
+    private void setDataObj(Map<Widget, Boolean> lst) {
+        dataObj = lst;
+        dataStr = null;
+        refreshBody();
+    }
+
+    public void refreshBody() {
+        tBody.clear();
+        populateBody();
+    }
+
+    private void setColumns(Set<ColumnDef> cols) {
+        int cnt = columns.size();
+        int newCnt = cols != null ? cols.size() : 0;
+        columns.clear();
+        if (cols != null) columns.addAll(cols);
+        removeHeadRow();
+        populateHead();
+        if (cnt == newCnt) {
+            if (tBody.getWidgetCount() == 0) populateBody();
+            return;
+        }
+        refreshBody();
+    }
+
+    private static class HeadGroupsPanel extends CustomFlowPanel {
+
+        public HeadGroupsPanel(Element e, String addnlClasses) {
+            super(e);
+            if (addnlClasses != null && !addnlClasses.isEmpty()) {
+                JQMCommon.addStyleNames(this, addnlClasses);
+            }
+        }
+    }
+
+    /** Space separated classes for adding to head groups panel. */
+    protected String getHeadGroupsClasses() {
+        return THEAD_GROUPS;
+    }
+
+    protected ComplexPanel findHeadRow() {
+        for (int i = 0; i < tHead.getWidgetCount(); i++) {
+            Widget child = tHead.getWidget(i);
+            if (child instanceof HeadGroupsPanel) continue;
+            if (child instanceof ComplexPanel && isTag(TableRowElement.TAG, child.getElement())) {
+                return (ComplexPanel) child;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param rows - collection of rows which are just added to head.
+     */
+    protected void addedToHead(ComplexPanel... rows) {
+    }
+
+    private ComplexPanel getHeadRow() {
+        ComplexPanel r = findHeadRow();
+        if (r != null) return r;
+        r = new CustomFlowPanel(Document.get().createTRElement());
+        tHead.add(r);
+        addedToHead(r);
+        return r;
+    }
+
+    private void removeHeadRow() {
+        ComplexPanel r = findHeadRow();
+        if (r != null) tHead.remove(r);
+    }
+
+    protected ComplexPanel findHeadGroupsRow() {
+        for (int i = 0; i < tHead.getWidgetCount(); i++) {
+            Widget child = tHead.getWidget(i);
+            if (child instanceof HeadGroupsPanel) return (ComplexPanel) child;
+        }
+        return null;
+    }
+
+    private ComplexPanel getHeadGroupsRow() {
+        ComplexPanel r = findHeadGroupsRow();
+        if (r != null) return r;
+        ComplexPanel headRow = getHeadRow();
+        r = new HeadGroupsPanel(Document.get().createTRElement(), getHeadGroupsClasses());
+        if (headRow == null) {
+            tHead.add(r);
+            addedToHead(r);
+        } else {
+            tHead.remove(headRow);
+            tHead.add(r);
+            tHead.add(headRow);
+            addedToHead(r, headRow);
+        }
+        return r;
+    }
+
+    private void removeHeadGroupsRow() {
+        ComplexPanel r = findHeadGroupsRow();
+        if (r != null) tHead.remove(r);
+    }
+
+    protected void populateHead() {
+        if (!columns.isEmpty()) {
+            int i = 0;
+            for (ColumnDef col : columns) {
+                addToHead(col.title, col.priority, i++);
+            }
+            return;
+        }
+        if (!colTitleWidgets.isEmpty()) {
+            int i = 0;
+            for (Entry<Widget, ColumnDef> j : colTitleWidgets.entrySet()) {
+                addToHead(j.getKey(), j.getValue().title, j.getValue().priority, i++);
+            }
+            return;
+        }
+    }
+
+    /**
+     * @param col
+     * @param priority
+     */
+    protected void setColPriority(ComplexPanel col, String priority) {
+    }
+
+    protected ComplexPanel addToHead(String title, String priority, int index) {
+        if (index < 0) return null;
+        ComplexPanel col = getCol(getHeadRow(), index, true/*addTh*/);
+        if (col == null) return null;
+        setColPriority(col, priority);
+        col.getElement().setInnerHTML(title);
+        applyImgOnly(col);
+        return col;
+    }
+
+    protected void addToHead(Widget w, String title, String priority, int index) {
+        ComplexPanel col = addToHead(title, priority, index);
+        if (col == null) return;
+        col.clear();
+        if (w != null) col.add(w);
+    }
+
+    protected void populateBody() {
+        if (dataStr != null) {
+            int i = 0;
+            for (String s : dataStr) {
+                addToBody(s, i++);
+            }
+            return;
+        }
+        if (dataObj != null) {
+            int i = 0;
+            for (Entry<Widget, Boolean> j : dataObj.entrySet()) {
+                addToBody(j.getKey(), i++, j.getValue() != null ? j.getValue() : false);
+            }
+            return;
+        }
+    }
+
+    protected int getNumOfCols() {
+        int headColCnt = 0;
+        if (!headGroups.isEmpty()) {
+            for (ColumnDef i : headGroups) {
+                if (i.rowspan > 1) headColCnt++;
+            }
+        }
+        if (!columns.isEmpty()) return headColCnt + columns.size();
+        if (!colTitleWidgets.isEmpty() && loaded) return headColCnt + colTitleWidgets.size();
+        return headColCnt;
+    }
+
+    protected void populateHeadGroups() {
+        if (!headGroups.isEmpty()) {
+            int i = 0;
+            for (ColumnDef grp : headGroups) {
+                addToHeadGroups(grp, i++);
+            }
+            return;
+        }
+        if (!colGroupWidgets.isEmpty()) {
+            int i = 0;
+            for (Entry<Widget, ColumnDef> j : colGroupWidgets.entrySet()) {
+                addToHeadGroups(j.getKey(), j.getValue(), i++);
+            }
+            return;
+        }
+        removeHeadGroupsRow();
+    }
+
+    protected ComplexPanel addToHeadGroups(ColumnDef grp, int index) {
+        if (grp == null || index < 0) return null;
+        boolean addTh = grp.colspan > 1 || grp.rowspan > 1 || isTh(grp.title);
+        ComplexPanel col = getCol(getHeadGroupsRow(), index, addTh);
+        if (col == null) return null;
+        setColPriority(col, grp.priority);
+        col.getElement().setInnerHTML(addTh ? removeTh(grp.title) : grp.title);
+        if (grp.colspan > 1) JQMCommon.setAttribute(col, "colspan", String.valueOf(grp.colspan));
+        if (grp.rowspan > 1) JQMCommon.setAttribute(col, "rowspan", String.valueOf(grp.rowspan));
+        applyImgOnly(col);
+        return col;
+    }
+
+    protected void addToHeadGroups(Widget w, ColumnDef grp, int index) {
+        ComplexPanel col = addToHeadGroups(grp, index);
+        if (col == null) return;
+        col.clear();
+        if (w != null) col.add(w);
+    }
+
+    private static boolean isTh(String s) {
+        return s != null && !s.isEmpty() && (s.startsWith("<th>") || s.startsWith("<TH>"));
+    }
+
+    private static String removeTh(String s) {
+        if (s == null || s.isEmpty() || !isTh(s)) return s;
+        return s.substring("<th>".length(), s.length() - "</th>".length()).trim();
+    }
+
+    private static boolean isImgOnly(Element elt) {
+        if (elt == null) return false;
+        String s = elt.getInnerHTML();
+        if (s == null || s.isEmpty()) return false;
+        int p = s.indexOf('<');
+        if (p == -1) return false;
+        int endP = p + 1 + ImageElement.TAG.length();
+        String t = s.substring(p + 1, endP);
+        if (!ImageElement.TAG.equalsIgnoreCase(t)) return false;
+        for (int i = endP; i < s.length(); i++) {
+            if (s.charAt(i) == '>') {
+                p = s.indexOf('<', i + 1);
+                return p == -1;
+            }
+        }
+        return false;
+    }
+
+    private static void applyImgOnly(Widget w) {
+        if (w == null) return;
+        Element elt = w.getElement();
+        if (isImgOnly(elt)) elt.addClassName(IMG_ONLY);
+        else elt.removeClassName(IMG_ONLY);
+    }
+
+    protected void addToBody(String cell, int index) {
+        if (cell == null || index < 0 || getNumOfCols() <= 0) return;
+        int row = index / getNumOfCols();
+        int col = index % getNumOfCols();
+        ComplexPanel r = getRow(row);
+        if (r == null) return;
+        boolean addTh = isTh(cell);
+        ComplexPanel c = getCol(r, col, addTh);
+        if (c == null) return;
+        if (addTh) {
+            String s = removeTh(cell);
+            c.getElement().setInnerHTML(s);
+        } else {
+            c.getElement().setInnerHTML(cell);
+        }
+        applyImgOnly(c);
+    }
+
+    protected void addToBody(Widget w, int index, boolean addTh) {
+        if (index < 0 || getNumOfCols() <= 0) return;
+        int row = index / getNumOfCols();
+        int col = index % getNumOfCols();
+        ComplexPanel r = getRow(row);
+        if (r == null) return;
+        ComplexPanel c = getCol(r, col, addTh);
+        if (c == null) return;
+        c.clear();
+        if (w != null) c.add(w);
+        applyImgOnly(c);
+    }
+
+    private static boolean isTag(String tag, Element elt) {
+        if (tag == null || elt == null) return false;
+        return tag.equalsIgnoreCase(elt.getTagName());
+    }
+
+    private ComplexPanel getRow(int row) {
+        int cnt = -1;
+        for (int i = 0; i < tBody.getWidgetCount(); i++) {
+            Widget child = tBody.getWidget(i);
+            if (child instanceof ComplexPanel && isTag(TableRowElement.TAG, child.getElement())) {
+                cnt++;
+                if (cnt == row) return (ComplexPanel) child;
+            }
+        }
+        ComplexPanel r = null;
+        for (int i = cnt; i < row; i++) {
+            r = new CustomFlowPanel(Document.get().createTRElement());
+            tBody.add(r);
+        }
+        return r;
+    }
+
+    private static ComplexPanel getCol(ComplexPanel r, int col, boolean addTh) {
+        if (r == null || col < 0) return null;
+        int cnt = -1;
+        for (int i = 0; i < r.getWidgetCount(); i++) {
+            Widget child = r.getWidget(i);
+            if (child instanceof ComplexPanel
+                    && (isTag(TableCellElement.TAG_TH, child.getElement())
+                            || isTag(TableCellElement.TAG_TD, child.getElement()))) {
+                cnt++;
+                if (cnt == col) return (ComplexPanel) child;
+            }
+        }
+        ComplexPanel c = null;
+        for (int i = cnt; i < col; i++) {
+            c = addTh ? new CustomFlowPanel(Document.get().createTHElement())
+                      : new CustomFlowPanel(Document.get().createTDElement());
+            r.add(c);
+        }
+        return c;
+    }
+
+    /**
+     * @param asTh - &lt;th&gt; will be used for creating cell instead of &lt;td&gt;,
+     * so such cell will be styled differently, like columnNames/header cells.
+     */
+    @UiChild(tagname = "cell")
+    public void addCellWidget(Widget w, Boolean asTh) {
+        if (dataStr != null) {
+            tBody.clear();
+            dataStr = null;
+        }
+        if (dataObj == null) dataObj = new LinkedHashMap<Widget, Boolean>();
+        dataObj.put(w, asTh);
+        addToBody(w, dataObj.size() - 1, asTh != null ? asTh : false);
+    }
+
+    @UiChild(tagname = "colTitle")
+    public void addColTitleWidget(Widget w, String priority, String text) {
+        if (colNames != null) {
+            removeHeadRow();
+            columns.clear();
+            colNames = null;
+        }
+        ColumnDef colDef = new ColumnDef(text, priority);
+        colTitleWidgets.put(w, colDef);
+        addToHead(w, colDef.title, colDef.priority, colTitleWidgets.size() - 1);
+    }
+
+    @UiChild(tagname = "colGroup")
+    public void addColGroupWidget(Widget w, String priority, String text, Integer colspan) {
+        if (colGroups != null) {
+            removeHeadGroupsRow();
+            headGroups.clear();
+            colGroups = null;
+        }
+        ColumnDef colDef = new ColumnDef(text, priority);
+        if (colspan != null && colspan > 0) colDef.colspan = colspan;
+        colGroupWidgets.put(w, colDef);
+        addToHeadGroups(w, colDef, colGroupWidgets.size() - 1);
+    }
+
+    @Override
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Collection<String>> handler) {
+        return addHandler(handler, ValueChangeEvent.getType());
+    }
+
+    @Override
+    public Collection<String> getValue() {
+        return getBodyData();
+    }
+
+    @Override
+    public void setValue(Collection<String> value) {
+        setValue(value, false/*fireEvents*/);
+    }
+
+    @Override
+    public void setValue(Collection<String> value, boolean fireEvents) {
+        Collection<String> oldValue = fireEvents ? getValue() : null;
+        setBodyData(value);
+        if (fireEvents) {
+            Collection<String> newValue = getValue();
+            ValueChangeEvent.fireIfNotEqual(this, oldValue, newValue);
+        }
+    }
+
+}

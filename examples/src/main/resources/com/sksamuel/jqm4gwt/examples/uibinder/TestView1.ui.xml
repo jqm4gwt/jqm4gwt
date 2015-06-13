@@ -13,7 +13,8 @@
   xmlns:e="urn:import:com.sksamuel.jqm4gwt.form.elements"
   xmlns:ta="urn:import:com.sksamuel.jqm4gwt.table"
   xmlns:dt="urn:import:com.sksamuel.jqm4gwt.plugins.datebox"
-  xmlns:gr960="urn:import:com.sksamuel.jqm4gwt.plugins.grid960">
+  xmlns:gr960="urn:import:com.sksamuel.jqm4gwt.plugins.grid960"
+  xmlns:dtbl="urn:import:com.sksamuel.jqm4gwt.plugins.datatables">
 
   <ui:style>
     .contentBorder { border: red solid 0px; }
@@ -936,6 +937,28 @@
             <b:JQMButton text="YTD Totals" inline="true" mini="true" />
           </ta:colGroup>
         </ta:JQMColumnToggle>
+        <h:Paragraph addStyleNames="{style.bevel}" />
+
+        <dtbl:JQMDataTable searching="false" 
+          colGroups="1;2=Rank=2, 1;2=Movie Title, 1;2=Year=3, 2=User Opinions="
+          colNames="&lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
+          colSorts="2=desc, 3"
+          cells="1, The Matrix, 1999, 8.7, 784\,311, 
+                 2, Falling Down, 1993, 7.5,  105\,111,
+                 3, a, 33, 3.0, 333, 
+                 4, b, 44, 4.0, 444, 
+                 5, c, 55, 5.0, 555, 
+                 6, d, 66, 6.0, 666,
+                 7, e, 77, 7.0, 777, 
+                 8, f, 88, 8.0, 888, 
+                 9, g, 99, 9.0, 999,
+                10, h, 1010, 10.0, 101010, 
+                11, i, 1111, 11.0, 111111, 
+                12, j, 1212, 12.0, 121212,
+                13, k, 1313, 13.0, 131313, 
+                14, l, 1414, 14.0, 141414, 
+                15, m, 1515, 15.0, 151515">
+        </dtbl:JQMDataTable>
         <h:Paragraph addStyleNames="{style.bevel}" />
       </g:FlowPanel>
     </g:FlowPanel>

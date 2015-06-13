@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+   <inherits name='com.google.gwt.user.User' />
+   <inherits name='com.sksamuel.Jqm4gwt' />
+
+   <!-- For compatibility with superdev mode, library's scripts could not be included here, see entry point code for their injection -->
+   
+   <!-- stylesheet src="css/jquery.dataTables.min.css"/>
+   <script src="js/jquery.dataTables.min.js"/-->
+
+   <source path='jqm4gwt' />
+   
+   <entry-point class='com.sksamuel.jqm4gwt.plugins.datatables.JQMInitializer'/>
+   
+</module>

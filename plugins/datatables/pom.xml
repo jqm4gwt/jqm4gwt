@@ -8,11 +8,11 @@
         <version>1.5.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jqm4gwt-iscroll</artifactId>
+    <artifactId>jqm4gwt-datatables</artifactId>
     <packaging>jar</packaging>
 
-    <name>jqm4gwt Plugin: iScroll</name>
-    <description>Plugin to jqm4gwt to use Jquery Mobile iScroll</description>
+    <name>jqm4gwt Plugin: DataTables</name>
+    <description>Plugin to jqm4gwt to use jQuery DataTables</description>
 
     <dependencies>
         <dependency>
@@ -60,8 +60,7 @@
                 <directory>src/main/java</directory>
                 <excludes>
                     <exclude>**/*.txt</exclude>
-                    <exclude>**/*.zip</exclude>
-                </excludes> 
+                </excludes>
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
