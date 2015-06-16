@@ -3,7 +3,10 @@ package com.sksamuel.jqm4gwt.plugins.datatables;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.dom.client.Element;
+import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.StrUtils;
 import com.sksamuel.jqm4gwt.table.JQMTableGrid;
 
@@ -18,6 +21,8 @@ public class JQMDataTable extends JQMTableGrid {
 
     /** Space separated classes for adding to head groups panel. */
     public static String headGroupsClasses;
+
+    private boolean enhanced;
 
     private boolean paging = true;
     private boolean info = true; // for paging and searching, like: Showing 1 to 10 of 51 entries (filtered from 57 total entries)
@@ -42,7 +47,7 @@ public class JQMDataTable extends JQMTableGrid {
         }
 
         public static SortKind fromJsName(String jsName) {
-            if (jsName == null || jsName.isEmpty()) return null;
+            if (Empty.is(jsName)) return null;
             for (SortKind v : values()) {
                 if (jsName.equalsIgnoreCase(v.getJsName())) return v;
             }
@@ -60,7 +65,7 @@ public class JQMDataTable extends JQMTableGrid {
         }
 
         public static ColSort create(String s) {
-            if (s == null || s.isEmpty()) return null;
+            if (Empty.is(s)) return null;
             int j = s.lastIndexOf('=');
             SortKind k = SortKind.ASC;
             if (j >= 0) {
@@ -90,6 +95,12 @@ public class JQMDataTable extends JQMTableGrid {
         enhance();
     }
 
+    @Override
+    protected void onUnload() {
+        enhanced = false;
+        super.onUnload();
+    }
+
     private String prepareEnhanceParams() {
         StringBuilder sb = null;
         if (!paging) {
@@ -108,25 +119,33 @@ public class JQMDataTable extends JQMTableGrid {
             if (sb == null) sb = new StringBuilder("{"); else sb.append(',');
             sb.append("\"searching\":false");
         }
-        if (sorts != null && !sorts.isEmpty()) {
-            if (sb == null) sb = new StringBuilder("{"); else sb.append(',');
-            sb.append("\"order\":[");
-            int j = 0;
-            for (ColSort sort : sorts) {
-                if (j > 0) sb.append(',');
-                sb.append('[');
-                sb.append(sort.num).append(",\"").append(sort.kind.getJsName()).append("\"");
-                sb.append(']');
-                j++;
-            }
-            sb.append(']');
-        }
-        if (sb == null) return null;
+        String orderArr = prepareOrder();
+        if (sb == null) sb = new StringBuilder("{"); else sb.append(',');
+        // No initial order: https://datatables.net/reference/option/order
+        sb.append("\"order\":").append(Empty.nonEmpty(orderArr, "[]"));
+
         sb.append('}');
         return sb.toString();
     }
 
+    private String prepareOrder() {
+        if (Empty.is(sorts)) return null;
+        StringBuilder sb = new StringBuilder("[");
+        int j = 0;
+        for (ColSort sort : sorts) {
+            if (j > 0) sb.append(',');
+            sb.append('[');
+            sb.append(sort.num).append(",\"").append(sort.kind.getJsName()).append("\"");
+            sb.append(']');
+            j++;
+        }
+        sb.append(']');
+        return sb.toString();
+    }
+
     private void enhance() {
+        if (enhanced) return;
+        enhanced = true;
         final Element elt = getElement();
         elt.addClassName("display");
         elt.setAttribute("width", "100%");
@@ -191,18 +210,40 @@ public class JQMDataTable extends JQMTableGrid {
     }
 
     public String getColSorts() {
-        return colSorts;
+        if (enhanced) {
+            JsSortItems jsSort = nativeGetOrder(getElement());
+            if (jsSort == null || jsSort.length() == 0) {
+                colSorts = null;
+                return colSorts;
+            }
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < jsSort.length(); i++) {
+                JsSortItem item = jsSort.get(i);
+                if (i > 0) sb.append(", ");
+                sb.append(item.getCol());
+                SortKind sk = SortKind.fromJsName(item.getJsSortKind());
+                if (SortKind.DESC.equals(sk)) sb.append('=').append(sk.getJsName());
+            }
+            colSorts = sb.toString();
+            return colSorts;
+        } else {
+            return colSorts;
+        }
     }
 
     /**
      * @param colSorts - expected: 0, 2=desc, 3
      **/
     public void setColSorts(String colSorts) {
-        if (this.colSorts == colSorts || this.colSorts != null && this.colSorts.equals(colSorts)) return;
+        String old = getColSorts();
+        if (old == colSorts || old != null && old.equals(colSorts)) return;
         this.colSorts = colSorts;
 
         if (sorts != null) sorts.clear();
-        if (this.colSorts == null || this.colSorts.isEmpty()) return;
+        if (Empty.is(this.colSorts)) {
+            if (enhanced) nativeSetOrder(getElement(), prepareOrder());
+            return;
+        }
         String[] arr = StrUtils.commaSplit(this.colSorts);
         for (int i = 0; i < arr.length; i++) {
             String s = StrUtils.replaceAllBackslashCommas(arr[i].trim());
@@ -212,6 +253,33 @@ public class JQMDataTable extends JQMTableGrid {
                 sorts.add(colSort);
             }
         }
+        if (enhanced) nativeSetOrder(getElement(), prepareOrder());
     }
+
+    static class JsSortItem extends JsArrayMixed {
+        protected JsSortItem() {}
+
+        public final int getCol() {
+            return (int) getNumber(0);
+        }
+
+        public final String getJsSortKind() {
+            return getString(1);
+        }
+    }
+
+    static class JsSortItems extends JsArray<JsSortItem> {
+        protected JsSortItems() {}
+    }
+
+    private static native void nativeSetOrder(Element elt, String jsonOrder) /*-{
+        var t = $wnd.$(elt).DataTable();
+        if (jsonOrder) t.order($wnd.$.parseJSON(jsonOrder)).draw();
+        else t.order.neutral().draw(); // http://datatables.net/plug-ins/api/order.neutral()
+    }-*/;
+
+    private static native JsSortItems nativeGetOrder(Element elt) /*-{
+        return $wnd.$(elt).DataTable().order();
+    }-*/;
 
 }

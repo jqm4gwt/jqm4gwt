@@ -939,7 +939,7 @@
         </ta:JQMColumnToggle>
         <h:Paragraph addStyleNames="{style.bevel}" />
 
-        <dtbl:JQMDataTable searching="false" 
+        <dtbl:JQMDataTable ui:field="dataTable1" searching="false" 
           colGroups="1;2=Rank=2, 1;2=Movie Title, 1;2=Year=3, 2=User Opinions="
           colNames="&lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
           colSorts="2=desc, 3"
@@ -959,6 +959,11 @@
                 14, l, 1414, 14.0, 141414, 
                 15, m, 1515, 15.0, 151515">
         </dtbl:JQMDataTable>
+        <g:FlowPanel>
+           <e:JQMText ui:field="edDataTableSort" labelHidden="true" 
+             addStyleNames="{style.inlineBlock} {style.marginTopBottom0}" /> 
+           <b:JQMButton ui:field="btnDataTableSort" text="Set Sort" inline="true" mini="true" />
+        </g:FlowPanel>
         <h:Paragraph addStyleNames="{style.bevel}" />
       </g:FlowPanel>
     </g:FlowPanel>

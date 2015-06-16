@@ -64,6 +64,7 @@ import com.sksamuel.jqm4gwt.layout.JQMTable;
 import com.sksamuel.jqm4gwt.list.JQMList;
 import com.sksamuel.jqm4gwt.list.JQMListDivider;
 import com.sksamuel.jqm4gwt.list.JQMListItem;
+import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox;
 import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
 import com.sksamuel.jqm4gwt.toolbar.JQMNavBar;
@@ -479,6 +480,15 @@ public class TestView1 {
 
     @UiField
     JQMButton btnChecksetThemeB;
+
+    @UiField
+    JQMDataTable dataTable1;
+
+    @UiField
+    JQMText edDataTableSort;
+
+    @UiField
+    JQMButton btnDataTableSort;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -979,6 +989,11 @@ public class TestView1 {
     void btnChecksetThemeBClick(ClickEvent e) {
         checkset1.setTheme("b");
         checksetVert1.setTheme("b");
+    }
+
+    @UiHandler("btnDataTableSort")
+    void btnDataTableSortClick(ClickEvent e) {
+        dataTable1.setColSorts(edDataTableSort.getValue());
     }
 
 

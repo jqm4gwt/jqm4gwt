@@ -10,6 +10,7 @@ public interface Resources {
 
         private static final String DATATABLES_CSS = "css/jquery.dataTables.min.css";
         private static final String DATATABLES_JS = "js/jquery.dataTables.min.js";
+        private static final String DATATABLES_API_JS = "js/jquery.dataTables.api.js";
 
         public static void injectAll(final InjectCallback done) {
             ScriptUtils.waitJqmLoaded(new Callback<Void, Throwable>() {
@@ -17,7 +18,7 @@ public interface Resources {
                 @Override
                 public void onSuccess(Void result) {
                     ScriptUtils.injectCss(DATATABLES_CSS);
-                    ScriptUtils.injectJs(done, DATATABLES_JS);
+                    ScriptUtils.injectJs(done, DATATABLES_JS, DATATABLES_API_JS);
                 }
 
                 @Override
