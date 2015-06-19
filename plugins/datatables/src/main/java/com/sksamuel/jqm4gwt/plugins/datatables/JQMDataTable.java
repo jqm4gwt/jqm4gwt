@@ -6,6 +6,9 @@ import java.util.List;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.uibinder.client.UiChild;
+import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.StrUtils;
 import com.sksamuel.jqm4gwt.table.JQMTableGrid;
@@ -28,6 +31,8 @@ public class JQMDataTable extends JQMTableGrid {
     private boolean info = true; // for paging and searching, like: Showing 1 to 10 of 51 entries (filtered from 57 total entries)
     private boolean ordering = true;
     private boolean searching = true;
+
+    private final List<ColumnDefEx> datacols = new ArrayList<>();
 
     // expected: 0, 2=desc, 3
     // then it should be translated to:  "order": [[0, "asc"], [2, "desc"], [3, "asc"]]
@@ -92,6 +97,7 @@ public class JQMDataTable extends JQMTableGrid {
     @Override
     protected void onLoad() {
         super.onLoad();
+        populateAll();
         enhance();
     }
 
@@ -244,9 +250,9 @@ public class JQMDataTable extends JQMTableGrid {
             if (enhanced) nativeSetOrder(getElement(), prepareOrder());
             return;
         }
-        String[] arr = StrUtils.commaSplit(this.colSorts);
-        for (int i = 0; i < arr.length; i++) {
-            String s = StrUtils.replaceAllBackslashCommas(arr[i].trim());
+        List<String> lst = StrUtils.commaSplit(this.colSorts);
+        for (String i : lst) {
+            String s = StrUtils.replaceAllBackslashCommas(i.trim());
             ColSort colSort = ColSort.create(s);
             if (colSort != null) {
                 if (sorts == null) sorts = new ArrayList<>();
@@ -281,5 +287,60 @@ public class JQMDataTable extends JQMTableGrid {
     private static native JsSortItems nativeGetOrder(Element elt) /*-{
         return $wnd.$(elt).DataTable().order();
     }-*/;
+
+    @UiChild(tagname = "column")
+    public void addColumn(ColumnDefEx col) {
+        if (col == null) return;
+        clearHead();
+        datacols.add(col); // head will be created later in onLoad()
+    }
+
+    @Override
+    protected int getNumOfCols() {
+        if (!Empty.is(datacols)) {
+            int i = 0;
+            for (ColumnDefEx col : datacols) {
+                if (!col.isGroup()) i++;
+            }
+            return i;
+        }
+        return super.getNumOfCols();
+    }
+
+    private void populateAll() {
+        if (Empty.is(datacols)) return;
+        List<ColumnDefEx> row0 = null;
+        List<ColumnDefEx> row1 = null;
+        for (ColumnDefEx col : datacols) {
+            if (col.isRegularInGroupRow() || col.isGroup()) {
+                if (row0 == null) row0 = new ArrayList<>();
+                row0.add(col);
+            } else {
+                if (row1 == null) row1 = new ArrayList<>();
+                row1.add(col);
+            }
+        }
+        if (row0 != null && !Empty.is(row0)) {
+            int i = 0;
+            for (ColumnDefEx col : row0) {
+                ComplexPanel pa = addToHeadGroups(col, i++);
+                if (pa != null && col.hasWidgets()) {
+                    List<Widget> lst = col.getWidgets();
+                    for (Widget w : lst) pa.add(w);
+                }
+            }
+        }
+        if (row1 != null && !Empty.is(row1)) {
+            int i = 0;
+            for (ColumnDefEx col : row1) {
+                ComplexPanel pa = addToHead(col.getTitle(), col.getPriority(), i++);
+                if (pa != null && col.hasWidgets()) {
+                    List<Widget> lst = col.getWidgets();
+                    for (Widget w : lst) pa.add(w);
+                }
+            }
+        }
+        refreshBody();
+    }
 
 }

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -21,6 +22,7 @@ import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.StrUtils;
 import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
@@ -42,70 +44,22 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
     protected final ComplexPanel tBody;
     protected ComplexPanel tFoot;
 
-    protected static class ColumnDef {
-        public String title;
-        public String priority;
-        public int colspan; // needed for 'Grouped column headers' mode
-        public int rowspan;
-
-        public ColumnDef() {
-        }
-
-        public ColumnDef(String title, String priority) {
-            this();
-            this.title = title;
-            this.priority = priority;
-        }
-
-        public static ColumnDef create(String str, boolean colspanExpected) {
-            if (str == null) return null;
-            String spanStr = null;
-            if (colspanExpected) {
-                int j = str.indexOf('=');
-                if (j >= 0) {
-                    spanStr = str.substring(0, j).trim();
-                    str = str.substring(j + 1);
-                }
-            }
-            ColumnDef col = new ColumnDef();
-            int j = str.lastIndexOf('='); // searching from the end to prevent html title breakage
-            if (j >= 0) {
-                String s = str.substring(j + 1).trim();
-                if (s != null && !s.isEmpty()) col.priority = s;
-                col.title = str.substring(0, j);
-            } else {
-                col.title = str;
-            }
-            if (spanStr != null && !spanStr.isEmpty()) {
-                j = spanStr.indexOf(';');
-                if (j >= 0) {
-                    String s = spanStr.substring(0, j).trim();
-                    if (s != null && !s.isEmpty()) col.colspan = Integer.parseInt(s);
-                    s = spanStr.substring(j + 1).trim();
-                    if (s != null && !s.isEmpty()) col.rowspan = Integer.parseInt(s);
-                } else {
-                    col.colspan = Integer.parseInt(spanStr);
-                }
-            }
-            return col;
-        }
-    }
-
     /** populated based on colNames parsing */
-    protected final Set<ColumnDef> columns = new LinkedHashSet<ColumnDef>();
+    protected final List<ColumnDef> columns = new ArrayList<ColumnDef>();
 
     /** populated directly by addColTitleWidget(), probably from UiBinder template */
     protected final Map<Widget, ColumnDef> colTitleWidgets = new LinkedHashMap<Widget, ColumnDef>();
 
     /** populated based on colGroups parsing */
-    protected final Set<ColumnDef> headGroups = new LinkedHashSet<ColumnDef>();
+    protected final List<ColumnDef> headGroups = new ArrayList<ColumnDef>();
 
     /** populated directly by addColGroupWidget(), probably from UiBinder template */
     protected final Map<Widget, ColumnDef> colGroupWidgets = new LinkedHashMap<Widget, ColumnDef>();
 
-    private String colNames;
+    protected String colNames;
+    protected String colGroups;
+
     private String cells;
-    private String colGroups;
 
     private Collection<String> dataStr;
     /** Boolean - true means add as &lt;th&gt; */
@@ -145,9 +99,10 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
     }
 
     /**
-     * @param colNames - comma separated column names with optional priority (1 = highest, 6 = lowest).
-     * If you need comma in name use \, to preserve it.
-     * <br> Column name can be valid HTML, i.e. &lt;abbr title="Rotten Tomato Rating">Rating&lt;/abbr&gt;=1
+     * @param colNames - comma separated column titles with optional priority (1 = highest, 6 = lowest),
+     * formally:<b> title~name=priority </b>
+     * <br> If you need comma in title use \, to preserve it.
+     * <br> Column title can be valid HTML, i.e. &lt;abbr title="Rotten Tomato Rating">Rating&lt;/abbr&gt;=1
      * <br> Example: Rank,Movie Title,Year=3,Reviews=5
      * <br> To make a column persistent so it's not available for hiding, just omit priority.
      * This will make the column visible at all widths and won't be available in the column chooser menu.
@@ -158,16 +113,16 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         colTitleWidgets.clear();
 
         if (this.colNames == null || this.colNames.isEmpty()) {
-            setColumns(null);
+            populateColumns(null);
             return;
         }
-        String[] arr = StrUtils.commaSplit(this.colNames);
+        List<String> lst = StrUtils.commaSplit(this.colNames);
         Set<ColumnDef> cols = new LinkedHashSet<ColumnDef>();
-        for (int i = 0; i < arr.length; i++) {
-            String s = StrUtils.replaceAllBackslashCommas(arr[i].trim());
-            cols.add(ColumnDef.create(s, false/*colspanExpected*/));
+        for (String i : lst) {
+            String s = StrUtils.replaceAllBackslashCommas(i.trim());
+            cols.add(ColumnDef.create(s, false/*headGroup*/));
         }
-        setColumns(cols);
+        populateColumns(cols);
     }
 
     public String getColGroups() {
@@ -175,10 +130,11 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
     }
 
     /**
-     * @param colGroups - comma separated grouped column headers with colspan, rowspan,
-     * and priority (1 = highest, 6 = lowest). If you need comma in name use \, to preserve it.
-     * <br> Expected format: colspan;rowspan=GroupName=priority
-     * <br> Group name can be valid HTML, i.e. 4=&lt;abbr title="Previous Year Results">2012&lt;/abbr&gt;=1
+     * @param colGroups - comma separated grouped column headers(titles) with colspan, rowspan,
+     * and priority (1 = highest, 6 = lowest),
+     * formally:<b> colspan;rowspan=GroupTitle~ColumnName=priority </b>
+     * <br> If you need comma in title use \, to preserve it.
+     * <br> Group title can be valid HTML, i.e. 4=&lt;abbr title="Previous Year Results">2012&lt;/abbr&gt;=1
      * <br> Example: 3=Q1 2012=5, 3=Q2 2012=4, 3=Q3 2012=3, 3=Q4 2012=2, 3=2012 Totals=1
      */
     public void setColGroups(String colGroups) {
@@ -190,11 +146,11 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
             setHeadGroups(null);
             return;
         }
-        String[] arr = StrUtils.commaSplit(this.colGroups);
+        List<String> lst = StrUtils.commaSplit(this.colGroups);
         Set<ColumnDef> groups = new LinkedHashSet<ColumnDef>();
-        for (int i = 0; i < arr.length; i++) {
-            String s = StrUtils.replaceAllBackslashCommas(arr[i].trim());
-            groups.add(ColumnDef.create(s, true/*colspanExpected*/));
+        for (String i : lst) {
+            String s = StrUtils.replaceAllBackslashCommas(i.trim());
+            groups.add(ColumnDef.create(s, true/*headGroup*/));
         }
         setHeadGroups(groups);
     }
@@ -211,7 +167,7 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
 
     /**
      * @param cells - comma separated table cells, each string/cell can be valid HTML.
-     * If you need comma in name use \, to preserve it.
+     * If you need comma in cell value use \, to preserve it.
      * <br> Example: &lt;th&gt;1&lt;/th&gt;, The Matrix, 1999, 8.7, &lt;th&gt;2&lt;/th&gt;, Falling Down, 1993, 7.5
      */
     public void setCells(String cells) {
@@ -221,11 +177,12 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
             setDataStr(null);
             return;
         }
-        String[] arr = StrUtils.commaSplit(this.cells);
-        List<String> lst = new ArrayList<String>(arr.length);
-        for (int i = 0; i < arr.length; i++) {
-            String s = StrUtils.replaceAllBackslashCommas(arr[i].trim());
-            lst.add(s);
+        List<String> lst = StrUtils.commaSplit(this.cells);
+        ListIterator<String> iter = lst.listIterator();
+        while (iter.hasNext()) {
+            String s = iter.next();
+            s = StrUtils.replaceAllBackslashCommas(s.trim());
+            iter.set(s);
         }
         setDataStr(lst);
     }
@@ -255,12 +212,13 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         refreshBody();
     }
 
+    /** Adjusts body to match current columns */
     public void refreshBody() {
         tBody.clear();
         populateBody();
     }
 
-    private void setColumns(Set<ColumnDef> cols) {
+    private void populateColumns(Set<ColumnDef> cols) {
         int cnt = columns.size();
         int newCnt = cols != null ? cols.size() : 0;
         columns.clear();
@@ -354,14 +312,14 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         if (!columns.isEmpty()) {
             int i = 0;
             for (ColumnDef col : columns) {
-                addToHead(col.title, col.priority, i++);
+                addToHead(col.getTitle(), col.getPriority(), i++);
             }
             return;
         }
         if (!colTitleWidgets.isEmpty()) {
             int i = 0;
             for (Entry<Widget, ColumnDef> j : colTitleWidgets.entrySet()) {
-                addToHead(j.getKey(), j.getValue().title, j.getValue().priority, i++);
+                addToHead(j.getKey(), j.getValue().getTitle(), j.getValue().getPriority(), i++);
             }
             return;
         }
@@ -384,11 +342,12 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         return col;
     }
 
-    protected void addToHead(Widget w, String title, String priority, int index) {
+    protected ComplexPanel addToHead(Widget w, String title, String priority, int index) {
         ComplexPanel col = addToHead(title, priority, index);
-        if (col == null) return;
+        if (col == null) return null;
         col.clear();
         if (w != null) col.add(w);
+        return col;
     }
 
     protected void populateBody() {
@@ -408,16 +367,17 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         }
     }
 
+    /** important for body, because exact number of columns should be known when populating */
     protected int getNumOfCols() {
-        int headColCnt = 0;
+        int headColumnCnt = 0;
         if (!headGroups.isEmpty()) {
             for (ColumnDef i : headGroups) {
-                if (i.rowspan > 1) headColCnt++;
+                if (!i.isGroup()) headColumnCnt++;
             }
         }
-        if (!columns.isEmpty()) return headColCnt + columns.size();
-        if (!colTitleWidgets.isEmpty() && loaded) return headColCnt + colTitleWidgets.size();
-        return headColCnt;
+        if (!columns.isEmpty()) return headColumnCnt + columns.size();
+        if (!colTitleWidgets.isEmpty() && loaded) return headColumnCnt + colTitleWidgets.size();
+        return headColumnCnt;
     }
 
     protected void populateHeadGroups() {
@@ -440,22 +400,26 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
 
     protected ComplexPanel addToHeadGroups(ColumnDef grp, int index) {
         if (grp == null || index < 0) return null;
-        boolean addTh = grp.colspan > 1 || grp.rowspan > 1 || isTh(grp.title);
+        final int colspan = grp.getColspan();
+        final int rowspan = grp.getRowspan();
+        final boolean isTitleTh = isTh(grp.getTitle());
+        boolean addTh = colspan > 1 || rowspan > 1 || isTitleTh;
         ComplexPanel col = getCol(getHeadGroupsRow(), index, addTh);
         if (col == null) return null;
-        setColPriority(col, grp.priority);
-        col.getElement().setInnerHTML(addTh ? removeTh(grp.title) : grp.title);
-        if (grp.colspan > 1) JQMCommon.setAttribute(col, "colspan", String.valueOf(grp.colspan));
-        if (grp.rowspan > 1) JQMCommon.setAttribute(col, "rowspan", String.valueOf(grp.rowspan));
+        setColPriority(col, grp.getPriority());
+        col.getElement().setInnerHTML(isTitleTh ? removeTh(grp.getTitle()) : grp.getTitle());
+        if (colspan > 1) JQMCommon.setAttribute(col, "colspan", String.valueOf(colspan));
+        if (rowspan > 1) JQMCommon.setAttribute(col, "rowspan", String.valueOf(rowspan));
         applyImgOnly(col);
         return col;
     }
 
-    protected void addToHeadGroups(Widget w, ColumnDef grp, int index) {
+    protected ComplexPanel addToHeadGroups(Widget w, ColumnDef grp, int index) {
         ComplexPanel col = addToHeadGroups(grp, index);
-        if (col == null) return;
+        if (col == null) return null;
         col.clear();
         if (w != null) col.add(w);
+        return col;
     }
 
     private static boolean isTh(String s) {
@@ -581,27 +545,46 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         addToBody(w, dataObj.size() - 1, asTh != null ? asTh : false);
     }
 
-    @UiChild(tagname = "colTitle")
-    public void addColTitleWidget(Widget w, String priority, String text) {
+    protected void clearColNames() {
         if (colNames != null) {
             removeHeadRow();
             columns.clear();
             colNames = null;
         }
-        ColumnDef colDef = new ColumnDef(text, priority);
-        colTitleWidgets.put(w, colDef);
-        addToHead(w, colDef.title, colDef.priority, colTitleWidgets.size() - 1);
     }
 
-    @UiChild(tagname = "colGroup")
-    public void addColGroupWidget(Widget w, String priority, String text, Integer colspan) {
+    protected void clearHead() {
+        clearColNames();
+        colTitleWidgets.clear();
+        clearColGroups();
+        colGroupWidgets.clear();
+    }
+
+    @UiChild(tagname = "colTitle")
+    public void addColTitleWidget(Widget w, String priority, String text, String colName) {
+        clearColNames();
+        ColumnDef colDef = new ColumnDef(text, priority);
+        if (!Empty.is(colName)) colDef.setName(colName);
+        colTitleWidgets.put(w, colDef);
+        addToHead(w, colDef.getTitle(), colDef.getPriority(), colTitleWidgets.size() - 1);
+    }
+
+    protected void clearColGroups() {
         if (colGroups != null) {
             removeHeadGroupsRow();
             headGroups.clear();
             colGroups = null;
         }
+    }
+
+    @UiChild(tagname = "colGroup")
+    public void addColGroupWidget(Widget w, String priority, String text, String colName,
+                                  Integer colspan, Integer rowspan) {
+        clearColGroups();
         ColumnDef colDef = new ColumnDef(text, priority);
-        if (colspan != null && colspan > 0) colDef.colspan = colspan;
+        if (!Empty.is(colName)) colDef.setName(colName);
+        if (colspan != null && colspan > 0) colDef.setColspan(colspan);
+        if (rowspan != null && rowspan > 0) colDef.setRowspan(rowspan);
         colGroupWidgets.put(w, colDef);
         addToHeadGroups(w, colDef, colGroupWidgets.size() - 1);
     }

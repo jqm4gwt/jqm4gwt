@@ -2,6 +2,8 @@ package com.sksamuel.jqm4gwt.examples.uibinder;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.dom.client.ButtonElement;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -12,6 +14,8 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -489,6 +493,9 @@ public class TestView1 {
 
     @UiField
     JQMButton btnDataTableSort;
+
+    @UiField
+    ButtonElement btnUserOpinions;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -1284,6 +1291,18 @@ public class TestView1 {
                 Window.alert(checkset1.getText() + ": " + event.getValue());
             }
         });*/
+
+        Event.sinkEvents(btnUserOpinions, Event.ONCLICK);
+        Event.setEventListener(btnUserOpinions, new EventListener() {
+            @Override
+            public void onBrowserEvent(Event event) {
+                if (Event.ONCLICK == event.getTypeInt()) {
+                    EventTarget t = event.getCurrentEventTarget();
+                    ButtonElement btn = t.cast();
+                    Window.alert(btn.getInnerHTML() + " - who cares?");
+                }
+            }
+        });
     }
 
     public void show() {

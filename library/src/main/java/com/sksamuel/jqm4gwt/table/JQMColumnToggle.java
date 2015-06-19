@@ -169,6 +169,7 @@ public class JQMColumnToggle extends JQMTableGrid implements HasFilterable {
         return headerTheme;
     }
 
+    /** Swatch header color "ui-bar-" + value will be used */
     public void setHeaderTheme(String value) {
         headerTheme = value;
         ComplexPanel r = findHeadRow();

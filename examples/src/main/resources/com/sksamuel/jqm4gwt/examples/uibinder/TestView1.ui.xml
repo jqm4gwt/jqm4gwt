@@ -14,7 +14,7 @@
   xmlns:ta="urn:import:com.sksamuel.jqm4gwt.table"
   xmlns:dt="urn:import:com.sksamuel.jqm4gwt.plugins.datebox"
   xmlns:gr960="urn:import:com.sksamuel.jqm4gwt.plugins.grid960"
-  xmlns:dtbl="urn:import:com.sksamuel.jqm4gwt.plugins.datatables">
+  xmlns:da="urn:import:com.sksamuel.jqm4gwt.plugins.datatables">
 
   <ui:style>
     .contentBorder { border: red solid 0px; }
@@ -939,9 +939,7 @@
         </ta:JQMColumnToggle>
         <h:Paragraph addStyleNames="{style.bevel}" />
 
-        <dtbl:JQMDataTable ui:field="dataTable1" searching="false" 
-          colGroups="1;2=Rank=2, 1;2=Movie Title, 1;2=Year=3, 2=User Opinions="
-          colNames="&lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
+        <da:JQMDataTable ui:field="dataTable1" searching="false" 
           colSorts="2=desc, 3"
           cells="1, The Matrix, 1999, 8.7, 784\,311, 
                  2, Falling Down, 1993, 7.5,  105\,111,
@@ -958,7 +956,31 @@
                 13, k, 1313, 13.0, 131313, 
                 14, l, 1414, 14.0, 141414, 
                 15, m, 1515, 15.0, 151515">
-        </dtbl:JQMDataTable>
+          <da:column>
+            <da:ColumnDefEx title="Rank" rowspan="2" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="Movie Title" rowspan="2" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="Year" rowspan="2" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx colspan="2">
+              <da:widget>
+                <g:HTMLPanel>
+                  <button ui:field="btnUserOpinions" type="button">User Opinions</button>
+                </g:HTMLPanel>
+              </da:widget>
+            </da:ColumnDefEx>
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="&lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="Reviews" />
+          </da:column>      
+        </da:JQMDataTable>
         <g:FlowPanel>
            <e:JQMText ui:field="edDataTableSort" labelHidden="true" 
              addStyleNames="{style.inlineBlock} {style.marginTopBottom0}" /> 
