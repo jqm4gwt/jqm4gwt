@@ -939,7 +939,7 @@
         </ta:JQMColumnToggle>
         <h:Paragraph addStyleNames="{style.bevel}" />
 
-        <da:JQMDataTable ui:field="dataTable1" searching="false" 
+        <da:JQMDataTable ui:field="dataTable1" searching="true" 
           colSorts="2=desc, 3"
           cells="1, The Matrix, 1999, 8.7, 784\,311, 
                  2, Falling Down, 1993, 7.5,  105\,111,

@@ -369,14 +369,18 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
 
     /** important for body, because exact number of columns should be known when populating */
     protected int getNumOfCols() {
+        if (!columns.isEmpty()) return getHeadRegularColCnt() + columns.size();
+        if (loaded && !colTitleWidgets.isEmpty()) return getHeadRegularColCnt() + colTitleWidgets.size();
+        return getHeadRegularColCnt();
+    }
+
+    private int getHeadRegularColCnt() {
         int headColumnCnt = 0;
         if (!headGroups.isEmpty()) {
             for (ColumnDef i : headGroups) {
                 if (!i.isGroup()) headColumnCnt++;
             }
         }
-        if (!columns.isEmpty()) return headColumnCnt + columns.size();
-        if (!colTitleWidgets.isEmpty() && loaded) return headColumnCnt + colTitleWidgets.size();
         return headColumnCnt;
     }
 

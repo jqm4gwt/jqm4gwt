@@ -130,6 +130,12 @@ public class JQMDataTable extends JQMTableGrid {
         // No initial order: https://datatables.net/reference/option/order
         sb.append("\"order\":").append(Empty.nonEmpty(orderArr, "[]"));
 
+        String cols = prepareColumns();
+        if (!Empty.is(cols)) {
+            sb.append(',');
+            sb.append(cols);
+        }
+
         sb.append('}');
         return sb.toString();
     }
@@ -144,6 +150,41 @@ public class JQMDataTable extends JQMTableGrid {
             sb.append(sort.num).append(",\"").append(sort.kind.getJsName()).append("\"");
             sb.append(']');
             j++;
+        }
+        sb.append(']');
+        return sb.toString();
+    }
+
+    private String prepareColumns() {
+        if (Empty.is(datacols)) return null;
+        boolean nothing = true;
+        List<String> lst = new ArrayList<>();
+        for (ColumnDefEx col : datacols) {
+            if (col.isGroup()) continue;
+            StringBuilder sb = null;
+            if (!col.isSearchable()) {
+                if (sb == null) sb = new StringBuilder("{");
+                sb.append("\"searchable\":false");
+            }
+            if (!col.isOrderable()) {
+                if (sb == null) sb = new StringBuilder("{"); else sb.append(',');
+                sb.append("\"orderable\":false");
+            }
+            if (sb == null) lst.add(null);
+            else {
+                nothing = false;
+                sb.append('}');
+                lst.add(sb.toString());
+            }
+        }
+        if (nothing) return null;
+        StringBuilder sb = new StringBuilder("\"columns\":[");
+        int i = 0;
+        for (String s : lst) {
+            if (i > 0) sb.append(',');
+            if (Empty.is(s)) sb.append("null");
+            else sb.append(s);
+            i++;
         }
         sb.append(']');
         return sb.toString();
@@ -297,7 +338,7 @@ public class JQMDataTable extends JQMTableGrid {
 
     @Override
     protected int getNumOfCols() {
-        if (!Empty.is(datacols)) {
+        if (loaded && !Empty.is(datacols)) {
             int i = 0;
             for (ColumnDefEx col : datacols) {
                 if (!col.isGroup()) i++;
