@@ -19,8 +19,14 @@ public class ColumnDefEx extends ColumnDef {
 
     private List<Widget> widgets;
 
+    private boolean visible = true;
     private boolean orderable = true;
     private boolean searchable = true;
+
+    private String classNames;
+    private boolean cellTypeTh;
+    private String defaultContent;
+    private String width;
 
     @UiChild(tagname = "widget")
     public void addWidget(Widget w) {
@@ -52,6 +58,53 @@ public class ColumnDefEx extends ColumnDef {
 
     public void setSearchable(boolean searchable) {
         this.searchable = searchable;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public String getClassNames() {
+        return classNames;
+    }
+
+    /** Space separated list of additional styling classes for table body cells. */
+    public void setClassNames(String classNames) {
+        this.classNames = classNames;
+    }
+
+    public boolean isCellTypeTh() {
+        return cellTypeTh;
+    }
+
+    /**
+     * This can be useful as TH cells have semantic meaning in the table body,
+     * allowing them to act as a header for a row.
+     */
+    public void setCellTypeTh(boolean cellTypeTh) {
+        this.cellTypeTh = cellTypeTh;
+    }
+
+    public String getDefaultContent() {
+        return defaultContent;
+    }
+
+    /** Set default, static, content for a column, for example simple edit and/or delete buttons. */
+    public void setDefaultContent(String defaultContent) {
+        this.defaultContent = defaultContent;
+    }
+
+    public String getWidth() {
+        return width;
+    }
+
+    /** Defines the width of a column, and may take any CSS value (3em, 20px, 10%, etc). */
+    public void setWidth(String width) {
+        this.width = width;
     }
 
 }

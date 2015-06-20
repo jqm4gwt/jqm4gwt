@@ -957,13 +957,13 @@
                 14, l, 1414, 14.0, 141414, 
                 15, m, 1515, 15.0, 151515">
           <da:column>
-            <da:ColumnDefEx title="Rank" rowspan="2" />
+            <da:ColumnDefEx title="Rank" rowspan="2" cellTypeTh="true" width="2em" />
           </da:column>
           <da:column>
-            <da:ColumnDefEx title="Movie Title" rowspan="2" />
+            <da:ColumnDefEx title="Movie Title" rowspan="2" classNames="aaa bbb" />
           </da:column>
           <da:column>
-            <da:ColumnDefEx title="Year" rowspan="2" />
+            <da:ColumnDefEx title="Year" rowspan="2" searchable="true" />
           </da:column>
           <da:column>
             <da:ColumnDefEx colspan="2">
@@ -978,7 +978,7 @@
             <da:ColumnDefEx title="&lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>" />
           </da:column>
           <da:column>
-            <da:ColumnDefEx title="Reviews" />
+            <da:ColumnDefEx title="Reviews" orderable="true" visible="true" />
           </da:column>      
         </da:JQMDataTable>
         <g:FlowPanel>

@@ -444,13 +444,10 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         int endP = p + 1 + ImageElement.TAG.length();
         String t = s.substring(p + 1, endP);
         if (!ImageElement.TAG.equalsIgnoreCase(t)) return false;
-        for (int i = endP; i < s.length(); i++) {
-            if (s.charAt(i) == '>') {
-                p = s.indexOf('<', i + 1);
-                return p == -1;
-            }
-        }
-        return false;
+        p = s.indexOf('>', endP);
+        if (p == -1) return false;
+        p = s.indexOf('<', p + 1);
+        return p == -1;
     }
 
     private static void applyImgOnly(Widget w) {
@@ -460,35 +457,48 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         else elt.removeClassName(IMG_ONLY);
     }
 
-    protected void addToBody(String cell, int index) {
-        if (cell == null || index < 0 || getNumOfCols() <= 0) return;
+    private ComplexPanel getRowByAbsIdx(int index) {
+        if (index < 0 || getNumOfCols() <= 0) return null;
         int row = index / getNumOfCols();
-        int col = index % getNumOfCols();
         ComplexPanel r = getRow(row);
-        if (r == null) return;
-        boolean addTh = isTh(cell);
-        ComplexPanel c = getCol(r, col, addTh);
+        return r;
+    }
+
+    /**
+     * @param colIdx - in range of 0..getNumOfCols-1
+     */
+    protected boolean isColCellTypeTh(int colIdx) {
+        return false;
+    }
+
+    private void addBodyCell(ComplexPanel row, int colIdx, String cell, boolean addTh, Widget... widgets) {
+        if (!addTh) addTh = isColCellTypeTh(colIdx);
+        ComplexPanel c = getCol(row, colIdx, addTh);
         if (c == null) return;
-        if (addTh) {
-            String s = removeTh(cell);
-            c.getElement().setInnerHTML(s);
+        c.clear();
+        if (widgets != null && widgets.length > 0) {
+            for (Widget w : widgets) c.add(w);
         } else {
             c.getElement().setInnerHTML(cell);
         }
         applyImgOnly(c);
     }
 
-    protected void addToBody(Widget w, int index, boolean addTh) {
-        if (index < 0 || getNumOfCols() <= 0) return;
-        int row = index / getNumOfCols();
-        int col = index % getNumOfCols();
-        ComplexPanel r = getRow(row);
+    protected void addToBody(String cell, int index) {
+        if (cell == null) return;
+        ComplexPanel r = getRowByAbsIdx(index);
         if (r == null) return;
-        ComplexPanel c = getCol(r, col, addTh);
-        if (c == null) return;
-        c.clear();
-        if (w != null) c.add(w);
-        applyImgOnly(c);
+        int col = index % getNumOfCols();
+        boolean addTh = isTh(cell);
+        if (addTh) cell = removeTh(cell);
+        addBodyCell(r, col, cell, addTh);
+    }
+
+    protected void addToBody(Widget w, int index, boolean addTh) {
+        ComplexPanel r = getRowByAbsIdx(index);
+        if (r == null) return;
+        int col = index % getNumOfCols();
+        addBodyCell(r, col, null/*cell*/, addTh, w);
     }
 
     private static boolean isTag(String tag, Element elt) {

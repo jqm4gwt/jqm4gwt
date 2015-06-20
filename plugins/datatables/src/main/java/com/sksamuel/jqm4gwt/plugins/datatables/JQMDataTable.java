@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt.plugins.datatables;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.dom.client.Element;
@@ -35,7 +36,7 @@ public class JQMDataTable extends JQMTableGrid {
     private final List<ColumnDefEx> datacols = new ArrayList<>();
 
     // expected: 0, 2=desc, 3
-    // then it should be translated to:  "order": [[0, "asc"], [2, "desc"], [3, "asc"]]
+    // then it should be translated to: "order": [[0, "asc"], [2, "desc"], [3, "asc"]]
     private String colSorts;
 
     protected static enum SortKind {
@@ -107,87 +108,78 @@ public class JQMDataTable extends JQMTableGrid {
         super.onUnload();
     }
 
-    private String prepareEnhanceParams() {
-        StringBuilder sb = null;
-        if (!paging) {
-            if (sb == null) sb = new StringBuilder("{");
-            sb.append("\"paging\":false");
+    private JsEnhanceParams prepareJsEnhanceParams() {
+        JsEnhanceParams p = JsEnhanceParams.create();
+        if (!paging) p.setPaging(false);
+        if (!info) p.setInfo(false);
+        if (!ordering) p.setOrdering(false);
+        if (!searching) p.setSearching(false);
+        JsSortItems order = prepareJsOrder();
+        if (order == null) { // No initial order: https://datatables.net/reference/option/order
+            order = JsSortItems.create(null);
         }
-        if (!info) {
-            if (sb == null) sb = new StringBuilder("{"); else sb.append(',');
-            sb.append("\"info\":false");
-        }
-        if (!ordering) {
-            if (sb == null) sb = new StringBuilder("{"); else sb.append(',');
-            sb.append("\"ordering\":false");
-        }
-        if (!searching) {
-            if (sb == null) sb = new StringBuilder("{"); else sb.append(',');
-            sb.append("\"searching\":false");
-        }
-        String orderArr = prepareOrder();
-        if (sb == null) sb = new StringBuilder("{"); else sb.append(',');
-        // No initial order: https://datatables.net/reference/option/order
-        sb.append("\"order\":").append(Empty.nonEmpty(orderArr, "[]"));
-
-        String cols = prepareColumns();
-        if (!Empty.is(cols)) {
-            sb.append(',');
-            sb.append(cols);
-        }
-
-        sb.append('}');
-        return sb.toString();
+        p.setOrder(order);
+        JsColumns cols = prepareJsColumns();
+        if (cols != null) p.setColumns(cols);
+        return p;
     }
 
-    private String prepareOrder() {
+    private JsSortItems prepareJsOrder() {
         if (Empty.is(sorts)) return null;
-        StringBuilder sb = new StringBuilder("[");
-        int j = 0;
+        JsSortItems rslt = null;
         for (ColSort sort : sorts) {
-            if (j > 0) sb.append(',');
-            sb.append('[');
-            sb.append(sort.num).append(",\"").append(sort.kind.getJsName()).append("\"");
-            sb.append(']');
-            j++;
+            JsSortItem jsSort = JsSortItem.create(sort.num, sort.kind.getJsName());
+            if (rslt == null) rslt = JsSortItems.create(jsSort);
+            else rslt.push(jsSort);
         }
-        sb.append(']');
-        return sb.toString();
+        return rslt;
     }
 
-    private String prepareColumns() {
+    @SuppressWarnings("null")
+    private JsColumns prepareJsColumns() {
         if (Empty.is(datacols)) return null;
         boolean nothing = true;
-        List<String> lst = new ArrayList<>();
+        JsColumns rslt = JsColumns.create(null);
         for (ColumnDefEx col : datacols) {
             if (col.isGroup()) continue;
-            StringBuilder sb = null;
+            JsColumn jsCol = null;
+            if (!Empty.is(col.getName())) {
+                if (jsCol == null) jsCol = JsColumn.create();
+                jsCol.setName(col.getName());
+            }
+            if (!col.isVisible()) {
+                if (jsCol == null) jsCol = JsColumn.create();
+                jsCol.setVisible(false);
+            }
             if (!col.isSearchable()) {
-                if (sb == null) sb = new StringBuilder("{");
-                sb.append("\"searchable\":false");
+                if (jsCol == null) jsCol = JsColumn.create();
+                jsCol.setSearchable(false);
             }
             if (!col.isOrderable()) {
-                if (sb == null) sb = new StringBuilder("{"); else sb.append(',');
-                sb.append("\"orderable\":false");
+                if (jsCol == null) jsCol = JsColumn.create();
+                jsCol.setOrderable(false);
             }
-            if (sb == null) lst.add(null);
-            else {
-                nothing = false;
-                sb.append('}');
-                lst.add(sb.toString());
+            if (!Empty.is(col.getClassNames())) {
+                if (jsCol == null) jsCol = JsColumn.create();
+                jsCol.setClassName(col.getClassNames());
             }
+            if (col.isCellTypeTh()) {
+                if (jsCol == null) jsCol = JsColumn.create();
+                jsCol.setCellType("th");
+            }
+            if (!Empty.is(col.getDefaultContent())) {
+                if (jsCol == null) jsCol = JsColumn.create();
+                jsCol.setDefaultContent(col.getDefaultContent());
+            }
+            if (!Empty.is(col.getWidth())) {
+                if (jsCol == null) jsCol = JsColumn.create();
+                jsCol.setWidth(col.getWidth());
+            }
+            if (jsCol != null) nothing = false;
+            rslt.push(jsCol);
         }
         if (nothing) return null;
-        StringBuilder sb = new StringBuilder("\"columns\":[");
-        int i = 0;
-        for (String s : lst) {
-            if (i > 0) sb.append(',');
-            if (Empty.is(s)) sb.append("null");
-            else sb.append(s);
-            i++;
-        }
-        sb.append(']');
-        return sb.toString();
+        return rslt;
     }
 
     private void enhance() {
@@ -198,7 +190,7 @@ public class JQMDataTable extends JQMTableGrid {
         elt.setAttribute("width", "100%");
         elt.setAttribute("cellspacing", "0"); // obsolete in HTML5, but used in DataTables examples
 
-        enhance(elt, prepareEnhanceParams());
+        enhance(elt, prepareJsEnhanceParams());
         String wrapId = elt.getId() + "_wrapper";
         Element p = elt.getParentElement();
         while (p != null) {
@@ -212,17 +204,6 @@ public class JQMDataTable extends JQMTableGrid {
             p = p.getParentElement();
         }
     }
-
-    private static native void enhance(Element elt, String jsonParams) /*-{
-        if (jsonParams) $wnd.$(elt).DataTable($wnd.$.parseJSON(jsonParams));
-        else $wnd.$(elt).DataTable();
-    }-*/;
-
-    private static native void setDataRoleNone(Element elt) /*-{
-        var i = $wnd.$(elt);
-        i.attr('data-role', 'none');
-        i.find('*').attr('data-role', 'none');
-    }-*/;
 
     public boolean isPaging() {
         return paging;
@@ -288,7 +269,7 @@ public class JQMDataTable extends JQMTableGrid {
 
         if (sorts != null) sorts.clear();
         if (Empty.is(this.colSorts)) {
-            if (enhanced) nativeSetOrder(getElement(), prepareOrder());
+            if (enhanced) nativeSetOrder(getElement(), null);
             return;
         }
         List<String> lst = StrUtils.commaSplit(this.colSorts);
@@ -300,34 +281,8 @@ public class JQMDataTable extends JQMTableGrid {
                 sorts.add(colSort);
             }
         }
-        if (enhanced) nativeSetOrder(getElement(), prepareOrder());
+        if (enhanced) nativeSetOrder(getElement(), prepareJsOrder());
     }
-
-    static class JsSortItem extends JsArrayMixed {
-        protected JsSortItem() {}
-
-        public final int getCol() {
-            return (int) getNumber(0);
-        }
-
-        public final String getJsSortKind() {
-            return getString(1);
-        }
-    }
-
-    static class JsSortItems extends JsArray<JsSortItem> {
-        protected JsSortItems() {}
-    }
-
-    private static native void nativeSetOrder(Element elt, String jsonOrder) /*-{
-        var t = $wnd.$(elt).DataTable();
-        if (jsonOrder) t.order($wnd.$.parseJSON(jsonOrder)).draw();
-        else t.order.neutral().draw(); // http://datatables.net/plug-ins/api/order.neutral()
-    }-*/;
-
-    private static native JsSortItems nativeGetOrder(Element elt) /*-{
-        return $wnd.$(elt).DataTable().order();
-    }-*/;
 
     @UiChild(tagname = "column")
     public void addColumn(ColumnDefEx col) {
@@ -346,6 +301,21 @@ public class JQMDataTable extends JQMTableGrid {
             return i;
         }
         return super.getNumOfCols();
+    }
+
+    @Override
+    protected boolean isColCellTypeTh(int colIdx) {
+        if (loaded && !Empty.is(datacols)) {
+            int i = 0;
+            for (ColumnDefEx col : datacols) {
+                if (!col.isGroup()) {
+                    if (i == colIdx) return col.isCellTypeTh();
+                    i++;
+                }
+            }
+            return false;
+        }
+        return super.isColCellTypeTh(colIdx);
     }
 
     private void populateAll() {
@@ -383,5 +353,201 @@ public class JQMDataTable extends JQMTableGrid {
         }
         refreshBody();
     }
+
+    static class JsSortItem extends JsArrayMixed {
+
+        protected JsSortItem() {}
+
+        public static native JsSortItem create(int col, String jsSortKind) /*-{
+            return [col, jsSortKind];
+        }-*/;
+
+        public final int getCol() {
+            return (int) getNumber(0);
+        }
+
+        public final void setCol(int value) {
+            set(0, value);
+        }
+
+        public final String getJsSortKind() {
+            return getString(1);
+        }
+
+        public final void setJsSortKind(String value) {
+            set(1, value);
+        }
+    }
+
+    static class JsSortItems extends JsArray<JsSortItem> {
+        protected JsSortItems() {}
+
+        /** @param item - if null returns empty array */
+        public static native JsSortItems create(JsSortItem item) /*-{
+            if(item) return [item];
+            else return [];
+        }-*/;
+    }
+
+    private static native void nativeSetOrder(Element elt, JsSortItems sorts) /*-{
+        var t = $wnd.$(elt).DataTable();
+        if (sorts) t.order(sorts).draw();
+        else t.order.neutral().draw(); // http://datatables.net/plug-ins/api/order.neutral()
+    }-*/;
+
+    private static native JsSortItems nativeGetOrder(Element elt) /*-{
+        return $wnd.$(elt).DataTable().order();
+    }-*/;
+
+    static class JsColumn extends JavaScriptObject {
+
+        protected JsColumn() {}
+
+        public static native JsColumn create() /*-{
+            return {};
+        }-*/;
+
+        public final native String getName() /*-{
+            return this.name;
+        }-*/;
+
+        public final native void setName(String value) /*-{
+            this.name = value;
+        }-*/;
+
+        public final native boolean getVisible() /*-{
+            return this.visible;
+        }-*/;
+
+        public final native void setVisible(boolean value) /*-{
+            this.visible = value;
+        }-*/;
+
+        public final native boolean getOrderable() /*-{
+            return this.orderable;
+        }-*/;
+
+        public final native void setOrderable(boolean value) /*-{
+            this.orderable = value;
+        }-*/;
+
+        public final native boolean getSearchable() /*-{
+            return this.searchable;
+        }-*/;
+
+        public final native void setSearchable(boolean value) /*-{
+            this.searchable = value;
+        }-*/;
+
+        public final native String getClassName() /*-{
+            return this.className;
+        }-*/;
+
+        public final native void setClassName(String value) /*-{
+            this.className = value;
+        }-*/;
+
+        public final native String getCellType() /*-{
+            return this.cellType;
+        }-*/;
+
+        public final native void setCellType(String value) /*-{
+            this.cellType = value;
+        }-*/;
+
+        public final native String getDefaultContent() /*-{
+            return this.defaultContent;
+        }-*/;
+
+        public final native void setDefaultContent(String value) /*-{
+            this.defaultContent = value;
+        }-*/;
+
+        public final native String getWidth() /*-{
+            return this.width;
+        }-*/;
+
+        public final native void setWidth(String value) /*-{
+            this.width = value;
+        }-*/;
+    }
+
+    static class JsColumns extends JsArray<JsColumn> {
+        protected JsColumns() {}
+
+        /** @param item - if null returns empty array */
+        public static native JsColumns create(JsColumn item) /*-{
+            if(item) return [item];
+            else return [];
+        }-*/;
+    }
+
+    static class JsEnhanceParams extends JavaScriptObject {
+
+        protected JsEnhanceParams() {}
+
+        public static native JsEnhanceParams create() /*-{
+            return {};
+        }-*/;
+
+        public final native boolean getPaging() /*-{
+            return this.paging;
+        }-*/;
+
+        public final native void setPaging(boolean value) /*-{
+            this.paging = value;
+        }-*/;
+
+        public final native boolean getInfo() /*-{
+            return this.info;
+        }-*/;
+
+        public final native void setInfo(boolean value) /*-{
+            this.info = value;
+        }-*/;
+
+        public final native boolean getOrdering() /*-{
+            return this.ordering;
+        }-*/;
+
+        public final native void setOrdering(boolean value) /*-{
+            this.ordering = value;
+        }-*/;
+
+        public final native boolean getSearching() /*-{
+            return this.searching;
+        }-*/;
+
+        public final native void setSearching(boolean value) /*-{
+            this.searching = value;
+        }-*/;
+
+        public final native JsSortItems getOrder() /*-{
+            return this.order;
+        }-*/;
+
+        public final native void setOrder(JsSortItems value) /*-{
+            this.order = value;
+        }-*/;
+
+        public final native JsColumns getColumns() /*-{
+            return this.columns;
+        }-*/;
+
+        public final native void setColumns(JsColumns value) /*-{
+            this.columns = value;
+        }-*/;
+    }
+
+    private static native void enhance(Element elt, JsEnhanceParams params) /*-{
+        if (params) $wnd.$(elt).DataTable(params); // $wnd.$.parseJSON(jsonParams)
+        else $wnd.$(elt).DataTable();
+    }-*/;
+
+    private static native void setDataRoleNone(Element elt) /*-{
+        var i = $wnd.$(elt);
+        i.attr('data-role', 'none');
+        i.find('*').attr('data-role', 'none');
+    }-*/;
 
 }
