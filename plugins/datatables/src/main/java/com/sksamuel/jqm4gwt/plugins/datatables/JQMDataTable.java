@@ -87,6 +87,43 @@ public class JQMDataTable extends JQMTableGrid {
 
     private List<ColSort> sorts;
 
+    private String scrollY;
+    private boolean scrollCollapse;
+
+    private Language language;
+
+    public static enum PagingType {
+
+        /** 'Previous' and 'Next' buttons only */
+        SIMPLE("simple"),
+        /** 'Previous' and 'Next' buttons, plus page numbers */
+        SIMPLE_NUMBERS("simple_numbers"),
+        /** 'First', 'Previous', 'Next' and 'Last' buttons */
+        FULL("full"),
+        /** 'First', 'Previous', 'Next' and 'Last' buttons, plus page numbers */
+        FULL_NUMBERS("full_numbers");
+
+        private final String jsName;
+
+        PagingType(String jsName) {
+            this.jsName = jsName;
+        }
+
+        public String getJsName() {
+            return jsName;
+        }
+
+        public static PagingType fromJsName(String jsName) {
+            if (Empty.is(jsName)) return null;
+            for (PagingType v : values()) {
+                if (jsName.equalsIgnoreCase(v.getJsName())) return v;
+            }
+            return null;
+        }
+    }
+
+    private PagingType pagingType;
+
     public JQMDataTable() {
     }
 
@@ -111,6 +148,7 @@ public class JQMDataTable extends JQMTableGrid {
     private JsEnhanceParams prepareJsEnhanceParams() {
         JsEnhanceParams p = JsEnhanceParams.create();
         if (!paging) p.setPaging(false);
+        if (pagingType != null) p.setPagingType(pagingType.getJsName());
         if (!info) p.setInfo(false);
         if (!ordering) p.setOrdering(false);
         if (!searching) p.setSearching(false);
@@ -121,6 +159,13 @@ public class JQMDataTable extends JQMTableGrid {
         p.setOrder(order);
         JsColumns cols = prepareJsColumns();
         if (cols != null) p.setColumns(cols);
+        if (!Empty.is(scrollY)) p.setScrollY(scrollY);
+        if (scrollCollapse) p.setScrollCollapse(true);
+        if (language != null) {
+            JsLanguage l = JsLanguage.create();
+            Language.Builder.copy(language, l, true/*nonEmpty*/);
+            p.setLanguage(l);
+        }
         return p;
     }
 
@@ -175,6 +220,13 @@ public class JQMDataTable extends JQMTableGrid {
                 if (jsCol == null) jsCol = JsColumn.create();
                 jsCol.setWidth(col.getWidth());
             }
+            if (col.getDataIdx() != null) {
+                jsCol.setDataIdx(col.getDataIdx());
+            } else if (col.getData() != null) {
+                String s = col.getData();
+                jsCol.setData(s.isEmpty() || "null".equals(s) ? null : s);
+            }
+
             if (jsCol != null) nothing = false;
             rslt.push(jsCol);
         }
@@ -213,6 +265,14 @@ public class JQMDataTable extends JQMTableGrid {
         this.paging = paging;
     }
 
+    public PagingType getPagingType() {
+        return pagingType;
+    }
+
+    public void setPagingType(PagingType pagingType) {
+        this.pagingType = pagingType;
+    }
+
     public boolean isInfo() {
         return info;
     }
@@ -235,6 +295,30 @@ public class JQMDataTable extends JQMTableGrid {
 
     public void setSearching(boolean searching) {
         this.searching = searching;
+    }
+
+    public String getScrollY() {
+        return scrollY;
+    }
+
+    /**
+     * Max table's vertical height.
+     * <br> Any CSS measurement is acceptable, or just a number which is treated as pixels.
+     **/
+    public void setScrollY(String scrollY) {
+        this.scrollY = scrollY;
+    }
+
+    public boolean isScrollCollapse() {
+        return scrollCollapse;
+    }
+
+    /**
+     * @param scrollCollapse - if true then table will match the height of the rows shown
+     * if that height is smaller than that given height by the scrollY.
+     */
+    public void setScrollCollapse(boolean scrollCollapse) {
+        this.scrollCollapse = scrollCollapse;
     }
 
     public String getColSorts() {
@@ -282,6 +366,15 @@ public class JQMDataTable extends JQMTableGrid {
             }
         }
         if (enhanced) nativeSetOrder(getElement(), prepareJsOrder());
+    }
+
+    @UiChild(tagname = "language", limit = 1)
+    public void setLanguage(Language value) {
+        language = value;
+    }
+
+    public Language getLanguage() {
+        return language;
     }
 
     @UiChild(tagname = "column")
@@ -470,6 +563,23 @@ public class JQMDataTable extends JQMTableGrid {
         public final native void setWidth(String value) /*-{
             this.width = value;
         }-*/;
+
+        public final native String getData() /*-{
+            return this.data;
+        }-*/;
+
+        public final native void setData(String value) /*-{
+            this.data = value;
+        }-*/;
+
+        public final native int getDataIdx() /*-{
+            if (typeof this.data === 'number') return this.data;
+            else return -1;
+        }-*/;
+
+        public final native void setDataIdx(int value) /*-{
+            this.data = value;
+        }-*/;
     }
 
     static class JsColumns extends JsArray<JsColumn> {
@@ -479,6 +589,190 @@ public class JQMDataTable extends JQMTableGrid {
         public static native JsColumns create(JsColumn item) /*-{
             if(item) return [item];
             else return [];
+        }-*/;
+    }
+
+    /** See <a href="https://datatables.net/reference/option/#Internationalisation">Internationalisation</a> */
+    static class JsLanguage extends JavaScriptObject implements Language {
+
+        protected JsLanguage() {}
+
+        public static native JsLanguage create() /*-{
+            return {};
+        }-*/;
+
+        @Override
+        public final native String getDecimal() /*-{
+            return this.decimal;
+        }-*/;
+
+        @Override
+        public final native void setDecimal(String value) /*-{
+            this.decimal = value;
+        }-*/;
+
+        @Override
+        public final native String getThousands() /*-{
+            return this.thousands;
+        }-*/;
+
+        @Override
+        public final native void setThousands(String value) /*-{
+            this.thousands = value;
+        }-*/;
+
+        @Override
+        public final native String getLengthMenu() /*-{
+            return this.lengthMenu;
+        }-*/;
+
+        @Override
+        public final native void setLengthMenu(String value) /*-{
+            this.lengthMenu = value;
+        }-*/;
+
+        @Override
+        public final native String getZeroRecords() /*-{
+            return this.zeroRecords;
+        }-*/;
+
+        @Override
+        public final native void setZeroRecords(String value) /*-{
+            this.zeroRecords = value;
+        }-*/;
+
+        @Override
+        public final native String getInfo() /*-{
+            return this.info;
+        }-*/;
+
+        @Override
+        public final native void setInfo(String value) /*-{
+            this.info = value;
+        }-*/;
+
+        @Override
+        public final native String getInfoEmpty() /*-{
+            return this.infoEmpty;
+        }-*/;
+
+        @Override
+        public final native void setInfoEmpty(String value) /*-{
+            this.infoEmpty = value;
+        }-*/;
+
+        @Override
+        public final native String getInfoFiltered() /*-{
+            return this.infoFiltered;
+        }-*/;
+
+        @Override
+        public final native void setInfoFiltered(String value) /*-{
+            this.infoFiltered = value;
+        }-*/;
+
+        @Override
+        public final native String getLoadingRecords() /*-{
+            return this.loadingRecords;
+        }-*/;
+
+        @Override
+        public final native void setLoadingRecords(String value) /*-{
+            this.loadingRecords = value;
+        }-*/;
+
+        @Override
+        public final native String getProcessing() /*-{
+            return this.processing;
+        }-*/;
+
+        @Override
+        public final native void setProcessing(String value) /*-{
+            this.processing = value;
+        }-*/;
+
+        @Override
+        public final native String getSearch() /*-{
+            return this.search;
+        }-*/;
+
+        @Override
+        public final native void setSearch(String value) /*-{
+            this.search = value;
+        }-*/;
+
+        @Override
+        public final native String getSearchPlaceholder() /*-{
+            return this.searchPlaceholder;
+        }-*/;
+
+        @Override
+        public final native void setSearchPlaceholder(String value) /*-{
+            this.searchPlaceholder = value;
+        }-*/;
+
+        @Override
+        public final native String getUrl() /*-{
+            return this.url;
+        }-*/;
+
+        @Override
+        public final native void setUrl(String value) /*-{
+            this.url = value;
+        }-*/;
+
+        @Override
+        public final String getPaginate() {
+            return getPaginateStr();
+        }
+
+        @Override
+        public final void setPaginate(String value) {
+            setPaginateStr(value);
+            if (!Empty.is(value)) {
+                List<String> lst = StrUtils.commaSplit(value);
+                String[] arr = new String[] { null, null, null, null };
+                if (lst != null) {
+                    for (int i = 0; i < lst.size(); i++) {
+                        if (i >= arr.length) break;
+                        arr[i] = StrUtils.replaceAllBackslashCommas(lst.get(i).trim());
+                    }
+                }
+                nativeSetPaginate(arr[0], arr[1], arr[2], arr[3]);
+            } else {
+                nativeSetPaginate(null, null, null, null);
+            }
+        }
+
+        private final native String getPaginateStr() /*-{
+            return this.paginateStr;
+        }-*/;
+
+        private final native void setPaginateStr(String value) /*-{
+            this.paginateStr = value;
+        }-*/;
+
+        private final native void nativeSetPaginate(String sPrev, String sNext,
+                                                    String sFirst, String sLast) /*-{
+            var empty = true;
+            var p = {};
+            if (sPrev) {
+                empty = false;
+                p.previous = sPrev;
+            }
+            if (sNext) {
+                empty = false;
+                p.next = sNext;
+            }
+            if (sFirst) {
+                empty = false;
+                p.first = sFirst;
+            }
+            if (sLast) {
+                empty = false;
+                p.last = sLast;
+            }
+            if (!empty) this.paginate = p;
         }-*/;
     }
 
@@ -537,6 +831,39 @@ public class JQMDataTable extends JQMTableGrid {
         public final native void setColumns(JsColumns value) /*-{
             this.columns = value;
         }-*/;
+
+        public final native String getScrollY() /*-{
+            return this.scrollY;
+        }-*/;
+
+        public final native void setScrollY(String value) /*-{
+            this.scrollY = value;
+        }-*/;
+
+        public final native boolean getScrollCollapse() /*-{
+            return this.scrollCollapse;
+        }-*/;
+
+        public final native void setScrollCollapse(boolean value) /*-{
+            this.scrollCollapse = value;
+        }-*/;
+
+        public final native JsLanguage getLanguage() /*-{
+            return this.language;
+        }-*/;
+
+        public final native void setLanguage(JsLanguage value) /*-{
+            this.language = value;
+        }-*/;
+
+        public final native String getPagingType() /*-{
+            return this.pagingType;
+        }-*/;
+
+        public final native void setPagingType(String value) /*-{
+            this.pagingType = value;
+        }-*/;
+
     }
 
     private static native void enhance(Element elt, JsEnhanceParams params) /*-{

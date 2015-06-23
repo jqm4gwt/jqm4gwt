@@ -939,7 +939,7 @@
         </ta:JQMColumnToggle>
         <h:Paragraph addStyleNames="{style.bevel}" />
 
-        <da:JQMDataTable ui:field="dataTable1" searching="true" 
+        <da:JQMDataTable ui:field="dataTable1" searching="true" pagingType="FULL_NUMBERS"
           colSorts="2=desc, 3"
           cells="1, The Matrix, 1999, 8.7, 784\,311, 
                  2, Falling Down, 1993, 7.5,  105\,111,
@@ -956,6 +956,9 @@
                 13, k, 1313, 13.0, 131313, 
                 14, l, 1414, 14.0, 141414, 
                 15, m, 1515, 15.0, 151515">
+          <da:language>
+            <da:LanguageImpl lengthMenu="_MENU_ records per page" paginate="&lt;, &gt;" />
+          </da:language>      
           <da:column>
             <da:ColumnDefEx title="Rank" rowspan="2" cellTypeTh="true" width="2em" />
           </da:column>

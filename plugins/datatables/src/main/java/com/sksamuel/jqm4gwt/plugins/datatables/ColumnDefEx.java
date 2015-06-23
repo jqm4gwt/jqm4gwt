@@ -28,6 +28,9 @@ public class ColumnDefEx extends ColumnDef {
     private String defaultContent;
     private String width;
 
+    private Integer dataIdx;
+    private String  data;
+
     @UiChild(tagname = "widget")
     public void addWidget(Widget w) {
         if (w != null) {
@@ -105,6 +108,30 @@ public class ColumnDefEx extends ColumnDef {
     /** Defines the width of a column, and may take any CSS value (3em, 20px, 10%, etc). */
     public void setWidth(String width) {
         this.width = width;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    /**
+     * Set the data source for the column from the rows data object/array.
+     * <br> data and dataIdx are mutually exclusive, so you cannot use them simultaneously.
+     * <br> See <a href="https://datatables.net/reference/option/columns.data">columns.data</a>
+     **/
+    public void setData(String data) {
+        this.dataIdx = null;
+        this.data = data;
+    }
+
+    public Integer getDataIdx() {
+        return dataIdx;
+    }
+
+    /** Treated as an array index for the data source. Also see data property. */
+    public void setDataIdx(Integer dataIdx) {
+        this.data = null;
+        this.dataIdx = dataIdx;
     }
 
 }
