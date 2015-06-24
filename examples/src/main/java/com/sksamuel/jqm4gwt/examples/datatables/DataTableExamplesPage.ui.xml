@@ -1,0 +1,75 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder 
+  xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+  xmlns:g="urn:import:com.google.gwt.user.client.ui"
+  xmlns:jqm='urn:import:com.sksamuel.jqm4gwt'
+  xmlns:b="urn:import:com.sksamuel.jqm4gwt.button"
+  xmlns:t="urn:import:com.sksamuel.jqm4gwt.toolbar"
+  xmlns:h="urn:import:com.sksamuel.jqm4gwt.html"
+  xmlns:da="urn:import:com.sksamuel.jqm4gwt.plugins.datatables">
+  
+  <ui:style>
+    .contentBorder { border: red solid 0px; }
+
+    .pageContent {
+      margin-left: 1%;
+      margin-right: 1%;
+      width: 98%;
+    }
+    
+    .separator { height: 30px; }
+  
+  </ui:style>
+  
+  <jqm:JQMPage containerId="dataTableTestPage" backButton="true"
+    contentCentered="true" contentHeightPercent="98.0"
+    contentAddStyleNames="jqm4gwt-scrollable-page-content {style.contentBorder}">
+
+    <t:JQMHeader fixed="true">
+      <t:widget>
+        <h:Heading.H1 text="DataTables Test" />
+      </t:widget>
+    </t:JQMHeader>
+
+    <g:FlowPanel addStyleNames="jqm4gwt-scrollable-main-stage">
+      <g:FlowPanel addStyleNames="{style.pageContent}">
+        
+        <!-- See https://www.datatables.net/examples/ajax/simple.html --> 
+        <da:JQMDataTable ui:field="dataTable1" searching="true" pagingType="FULL_NUMBERS"
+          colSorts="0" colNames="Name, Position, Office, Extn., Start date, Salary"
+          ajax="data/array.json">
+        </da:JQMDataTable>
+        
+        <g:FlowPanel addStyleNames="{style.separator}" />
+        
+        <!-- See https://www.datatables.net/examples/ajax/deep.html -->
+        <da:JQMDataTable ui:field="dataTable2" searching="true" pagingType="FULL_NUMBERS"
+          stateSave="true" stateDuration="60"
+          colSorts="0" ajax="data/nested-objects.json">
+          
+          <da:column>
+            <da:ColumnDefEx title="Name" data="name" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="Position" data="hr.position" />
+          </da:column> 
+          <da:column>
+            <da:ColumnDefEx title="Office" data="contact.0" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="Extn." data="contact.1" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="Start date" data="hr.start_date" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="Salary" data="hr.salary" />
+          </da:column>
+
+        </da:JQMDataTable>
+        
+      </g:FlowPanel>
+    </g:FlowPanel>
+  </jqm:JQMPage>  
+</ui:UiBinder>
+ 

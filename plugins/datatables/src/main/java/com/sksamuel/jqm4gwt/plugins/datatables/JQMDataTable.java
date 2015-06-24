@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.StrUtils;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsAjax;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsColumn;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsColumns;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsEnhanceParams;
@@ -32,7 +33,8 @@ public class JQMDataTable extends JQMTableGrid {
     private boolean enhanced;
 
     private boolean paging = true;
-    private boolean info = true; // for paging and searching, like: Showing 1 to 10 of 51 entries (filtered from 57 total entries)
+    private boolean lengthChange = true;
+    private boolean info = true;
     private boolean ordering = true;
     private boolean searching = true;
 
@@ -127,6 +129,14 @@ public class JQMDataTable extends JQMTableGrid {
 
     private PagingType pagingType;
 
+    private String ajax;
+    private String dataSrc;
+    private boolean serverSide;
+    private boolean deferRender;
+    private boolean processing;
+    private boolean stateSave;
+    private int stateDuration = 7200;
+
     public JQMDataTable() {
     }
 
@@ -151,6 +161,7 @@ public class JQMDataTable extends JQMTableGrid {
     private JsEnhanceParams prepareJsEnhanceParams() {
         JsEnhanceParams p = JsEnhanceParams.create();
         if (!paging) p.setPaging(false);
+        if (!lengthChange) p.setLengthChange(false);
         if (pagingType != null) p.setPagingType(pagingType.getJsName());
         if (!info) p.setInfo(false);
         if (!ordering) p.setOrdering(false);
@@ -168,6 +179,22 @@ public class JQMDataTable extends JQMTableGrid {
             JsLanguage l = JsLanguage.create();
             Language.Builder.copy(language, l, true/*nonEmpty*/);
             p.setLanguage(l);
+        }
+        if (!Empty.is(ajax)) {
+            if (dataSrc == null) p.setAjax(ajax);
+            else {
+                JsAjax aj = JsAjax.create();
+                aj.setUrl(ajax);
+                aj.setDataSrc(dataSrc);
+                p.setAjaxObj(aj);
+            }
+        }
+        if (serverSide) p.setServerSide(true);
+        if (deferRender) p.setDeferRender(true);
+        if (processing) p.setProcessing(true);
+        if (stateSave) {
+            p.setStateSave(true);
+            p.setStateDuration(stateDuration);
         }
         return p;
     }
@@ -224,8 +251,10 @@ public class JQMDataTable extends JQMTableGrid {
                 jsCol.setWidth(col.getWidth());
             }
             if (col.getDataIdx() != null) {
+                if (jsCol == null) jsCol = JsColumn.create();
                 jsCol.setDataIdx(col.getDataIdx());
             } else if (col.getData() != null) {
+                if (jsCol == null) jsCol = JsColumn.create();
                 String s = col.getData();
                 jsCol.setData(s.isEmpty() || "null".equals(s) ? null : s);
             }
@@ -280,6 +309,7 @@ public class JQMDataTable extends JQMTableGrid {
         return info;
     }
 
+    /** For paging and searching, like: Showing 1 to 10 of 51 entries (filtered from 57 total entries) */
     public void setInfo(boolean info) {
         this.info = info;
     }
@@ -448,6 +478,99 @@ public class JQMDataTable extends JQMTableGrid {
             }
         }
         refreshBody();
+    }
+
+    public String getAjax() {
+        return ajax;
+    }
+
+    public void setAjax(String ajax) {
+        this.ajax = ajax;
+    }
+
+    public String getDataSrc() {
+        return dataSrc;
+    }
+
+    /**
+     * Defines the property from the data source object (i.e. that returned by the Ajax request) to read.
+     * <br> empty string means read data from a plain array rather than an array in an object.
+     * <br> See <a href="https://datatables.net/reference/option/ajax.dataSrc">ajax dataSrc</a>
+     **/
+    public void setDataSrc(String dataSrc) {
+        this.dataSrc = dataSrc;
+    }
+
+    public boolean isDeferRender() {
+        return deferRender;
+    }
+
+    /**
+     * @param deferRender - if true then DataTables will create the nodes (rows and cells
+     * in the table body) only when they are needed for a draw.
+     * <br> See <a href="https://datatables.net/reference/option/deferRender">deferRender</a>
+     */
+    public void setDeferRender(boolean deferRender) {
+        this.deferRender = deferRender;
+    }
+
+    public boolean isLengthChange() {
+        return lengthChange;
+    }
+
+    /** Feature control the end user's ability to change the paging display length of the table. */
+    public void setLengthChange(boolean lengthChange) {
+        this.lengthChange = lengthChange;
+    }
+
+    public boolean isProcessing() {
+        return processing;
+    }
+
+    /**
+     * Enable or disable the display of a 'processing' indicator when the table is being processed
+     * (e.g. a sort). This is particularly useful for tables with large amounts of data
+     * where it can take a noticeable amount of time to sort the entries.
+     */
+    public void setProcessing(boolean processing) {
+        this.processing = processing;
+    }
+
+    public boolean isServerSide() {
+        return serverSide;
+    }
+
+    /** Server-side processing - where filtering, paging and sorting calculations are all performed by a server. */
+    public void setServerSide(boolean serverSide) {
+        this.serverSide = serverSide;
+    }
+
+    public boolean isStateSave() {
+        return stateSave;
+    }
+
+    /**
+     * When enabled a DataTables will storage state information such as pagination position,
+     * display length, filtering and sorting. When the end user reloads the page the table's
+     * state will be altered to match what they had previously set up.
+     *
+     * <br><br> See <a href="https://datatables.net/reference/option/stateSave">stateSave</a>
+     */
+    public void setStateSave(boolean stateSave) {
+        this.stateSave = stateSave;
+    }
+
+    public int getStateDuration() {
+        return stateDuration;
+    }
+
+    /**
+     * Value is given in seconds. The value 0 is a special value as it indicates that the state
+     * can be stored and retrieved indefinitely with no time limit.
+     * <br> When set to -1 sessionStorage will be used, while for 0 or greater localStorage will be used.
+     */
+    public void setStateDuration(int stateDuration) {
+        this.stateDuration = stateDuration;
     }
 
 }

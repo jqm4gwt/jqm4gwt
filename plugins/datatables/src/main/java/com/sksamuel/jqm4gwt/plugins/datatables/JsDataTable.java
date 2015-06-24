@@ -342,6 +342,31 @@ public class JsDataTable {
         }-*/;
     }
 
+    static class JsAjax extends JavaScriptObject {
+
+        protected JsAjax() {}
+
+        public static native JsAjax create() /*-{
+            return {};
+        }-*/;
+
+        public final native String getUrl() /*-{
+            return this.url;
+        }-*/;
+
+        public final native void setUrl(String value) /*-{
+            this.url = value;
+        }-*/;
+
+        public final native String getDataSrc() /*-{
+            return this.dataSrc;
+        }-*/;
+
+        public final native void setDataSrc(String value) /*-{
+            this.dataSrc = value;
+        }-*/;
+    }
+
     static class JsEnhanceParams extends JavaScriptObject {
 
         protected JsEnhanceParams() {}
@@ -356,6 +381,14 @@ public class JsDataTable {
 
         public final native void setPaging(boolean value) /*-{
             this.paging = value;
+        }-*/;
+
+        public final native boolean getLengthChange() /*-{
+            return this.lengthChange;
+        }-*/;
+
+        public final native void setLengthChange(boolean value) /*-{
+            this.lengthChange = value;
         }-*/;
 
         public final native boolean getInfo() /*-{
@@ -428,6 +461,63 @@ public class JsDataTable {
 
         public final native void setPagingType(String value) /*-{
             this.pagingType = value;
+        }-*/;
+
+        public final native String getAjax() /*-{
+            return this.ajax;
+        }-*/;
+
+        public final native void setAjax(String value) /*-{
+            this.ajax = value;
+        }-*/;
+
+        public final native JsAjax getAjaxObj() /*-{
+            if (typeof this.ajax === 'string') return { url: this.ajax }
+            else return this.ajax;
+        }-*/;
+
+        public final native void setAjaxObj(JsAjax value) /*-{
+            this.ajax = value;
+        }-*/;
+
+        public final native boolean getServerSide() /*-{
+            return this.serverSide;
+        }-*/;
+
+        public final native void setServerSide(boolean value) /*-{
+            this.serverSide = value;
+        }-*/;
+
+        public final native boolean getDeferRender() /*-{
+            return this.deferRender;
+        }-*/;
+
+        public final native void setDeferRender(boolean value) /*-{
+            this.deferRender = value;
+        }-*/;
+
+        public final native boolean getProcessing() /*-{
+            return this.processing;
+        }-*/;
+
+        public final native void setProcessing(boolean value) /*-{
+            this.processing = value;
+        }-*/;
+
+        public final native boolean getStateSave() /*-{
+            return this.stateSave;
+        }-*/;
+
+        public final native void setStateSave(boolean value) /*-{
+            this.stateSave = value;
+        }-*/;
+
+        public final native int getStateDuration() /*-{
+            return this.stateDuration;
+        }-*/;
+
+        public final native void setStateDuration(int value) /*-{
+            this.stateDuration = value;
         }-*/;
 
     }
