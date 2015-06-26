@@ -182,6 +182,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     /** Unique search index: value, index in select */
     protected final Map<String, Integer> selectIdx = new HashMap<String, Integer>(); // search index
+    private boolean nonUniqueFindFirst;
 
     protected final FormLabel label;
 
@@ -315,6 +316,16 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         else if (customIcon != null) JQMCommon.setIcon(opt, customIcon);
     }
 
+    private void addToSelectIdx(String key, Integer value) {
+        if (nonUniqueFindFirst) {
+            if (!selectIdx.containsKey(key)) { // preserves first non-unique item
+                selectIdx.put(key, value);
+            }
+        } else { // overwrites already existing, i.e. last one has higher priority than first one.
+            selectIdx.put(key, value);
+        }
+    }
+
     private void addOption(String value, String text, String filterText,
                            boolean placeholder, boolean selected,
                            boolean disabled, DataIcon icon, String customIcon) {
@@ -335,11 +346,11 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                 i = opts.getLength() - 1;
                 OptionElement opt = opts.getItem(i);
                 prepareOption(opt, value, filterText, placeholder, selected, disabled, icon, customIcon);
-                selectIdx.put(opt.getValue(), i);
+                addToSelectIdx(opt.getValue(), i);
             } else {
                 i = select.getItemCount() - 1;
                 String v = select.getValue(i);
-                selectIdx.put(v, i);
+                addToSelectIdx(v, i);
             }
             if (i == 0) {
                 if (delayedValue == null) {
@@ -360,7 +371,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         NodeList<OptionElement> opts = selElt.getOptions();
         for (int i = 0; i < opts.getLength(); i++) {
             String v = opts.getItem(i).getValue();
-            selectIdx.put(v, i);
+            addToSelectIdx(v, i);
         }
     }
 
@@ -384,7 +395,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
             int i = selElt.getOptions().getLength();
             for (OptionElement opt : addingOptionList) {
                 selElt.add(opt, null/*to tail*/);
-                selectIdx.put(opt.getValue(), i);
+                addToSelectIdx(opt.getValue(), i);
                 i++;
             }
             checkSelectedIndex();
@@ -642,13 +653,25 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     /**
-     * Returns the index of the last option that matches the given value
-     * or -1 if no such option exists.
+     * Returns the index of the last option (or first, see {@link JQMSelect#setNonUniqueFindFirst(boolean)})
+     * that matches the given value or -1 if no such option exists.
      */
     public int indexOf(String value) {
         if (value == null) return -1;
         Integer i = selectIdx.get(value);
         return i == null ? -1 : i;
+    }
+
+    public boolean isNonUniqueFindFirst() {
+        return nonUniqueFindFirst;
+    }
+
+    /** if select contains non-unique items, this property controls how indexOf() search will be working. */
+    public void setNonUniqueFindFirst(boolean value) {
+        if (this.nonUniqueFindFirst != value) {
+            this.nonUniqueFindFirst = value;
+            if (!selectIdx.isEmpty()) rebuildSearchIndex();
+        }
     }
 
     @Override
