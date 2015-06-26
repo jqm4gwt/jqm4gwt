@@ -13,6 +13,10 @@ public class JsDataTable {
 
     private JsDataTable() {} // static class
 
+    static {
+        defineChangeRowsFunc();
+    }
+
     static class JsSortItem extends JsArrayMixed {
 
         protected JsSortItem() {}
@@ -431,6 +435,14 @@ public class JsDataTable {
             this.columns = value;
         }-*/;
 
+        public final native boolean getScrollX() /*-{
+            return this.scrollX;
+        }-*/;
+
+        public final native void setScrollX(boolean value) /*-{
+            this.scrollX = value;
+        }-*/;
+
         public final native String getScrollY() /*-{
             return this.scrollY;
         }-*/;
@@ -520,6 +532,14 @@ public class JsDataTable {
             this.stateDuration = value;
         }-*/;
 
+        public final native boolean getAutoWidth() /*-{
+            return this.autoWidth;
+        }-*/;
+
+        public final native void setAutoWidth(boolean value) /*-{
+            this.autoWidth = value;
+        }-*/;
+
     }
 
     static native void enhance(Element elt, JsEnhanceParams params) /*-{
@@ -531,6 +551,85 @@ public class JsDataTable {
         var i = $wnd.$(elt);
         i.attr('data-role', 'none');
         i.find('*').attr('data-role', 'none');
+    }-*/;
+
+    static native void ajaxReload(Element elt, boolean resetPaging) /*-{
+        $wnd.$(elt).ajax.reload( null, resetPaging );
+    }-*/;
+
+    public static interface CellClickHandler {
+        /**
+         * @return - if true then event.stopPropagation() will be called.
+         */
+        boolean onClick(Element elt, JavaScriptObject rowData);
+    }
+
+    /**
+     * @param cellWidget - for example "button", "input[type='checkbox']"
+     */
+    static native void addCellClickHandler(Element elt, String cellWidget, CellClickHandler handler) /*-{
+        var t = $wnd.$(elt);
+        t.children('tbody').first().on('click', cellWidget, function(event) {
+            var data = t.DataTable().row($wnd.$(this).parents('tr')).data();
+            var rslt = handler.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler::onClick(
+              Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/core/client/JavaScriptObject;)
+              (this, data);
+            if (rslt) event.stopPropagation();
+        });
+    }-*/;
+
+    /** Predefined class for cell checkboxes, which are going to select/unselect rows. */
+    static final String CHECKBOX_ROWSEL = "checkbox-rowsel";
+
+    private static native void defineChangeRowsFunc() /*-{
+        if ($wnd.dataTableChangeRows) return;
+        $wnd.dataTableChangeRows = function(rows, selected) {
+            if (rows) {
+                if (selected) {
+                    rows.addClass('selected');
+                    rows.find('.checkbox-rowsel').prop('checked', true);
+                } else {
+                    rows.removeClass('selected');
+                    rows.find('.checkbox-rowsel').prop('checked', false);
+                }
+            }
+        };
+    }-*/;
+
+    static native void switchOffSingleRowSelect(Element elt) /*-{
+        var t = $wnd.$(elt);
+        t.children('tbody').off('click.singlerowsel', 'tr');
+    }-*/;
+
+    static native void switchOnSingleRowSelect(Element elt) /*-{
+        var t = $wnd.$(elt);
+        t.children('tbody').on('click.singlerowsel', 'tr', function() {
+            var $this = $wnd.$(this);
+            if ($this.hasClass('selected')) {
+                $wnd.dataTableChangeRows($this, false);
+            } else {
+                $wnd.dataTableChangeRows(t.DataTable().$('tr.selected'), false);
+                $wnd.dataTableChangeRows($this, true);
+            }
+        });
+    }-*/;
+
+    public static native void changeRow(Element cellElt, boolean selected) /*-{
+        $wnd.dataTableChangeRows($wnd.$(cellElt).parents('tr'), selected);
+    }-*/;
+
+    public static native void selectOneRowOnly(Element cellElt) /*-{
+        var rows = $wnd.$(cellElt).parents('tr');
+        if (rows.length) {
+            var row = rows.first();
+            $wnd.dataTableChangeRows(row.parents('tbody').children('tr.selected'), false);
+            $wnd.dataTableChangeRows(row, true);
+        }
+    }-*/;
+
+    public static native void unselectAllRows(Element tableElt) /*-{
+        var t = $wnd.$(tableElt);
+        $wnd.dataTableChangeRows(t.DataTable().$('tr.selected'), false);
     }-*/;
 
 }

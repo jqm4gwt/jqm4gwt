@@ -44,11 +44,16 @@
         
         <!-- See https://www.datatables.net/examples/ajax/deep.html -->
         <da:JQMDataTable ui:field="dataTable2" searching="true" pagingType="FULL_NUMBERS"
+          rowSelectMode="SINGLE"
           stateSave="true" stateDuration="60"
-          colSorts="0" ajax="data/nested-objects.json">
+          colSorts="1" ajax="data/nested-objects.json">
           
           <da:column>
-            <da:ColumnDefEx title="Name" data="name" />
+            <da:ColumnDefEx title="" data="" searchable="false" orderable="false"
+              defaultContent="&lt;input type='checkbox' class='checkbox-rowsel' data-role='none'&gt;&lt;/input&gt;" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="Name" data="name" name="name" />
           </da:column>
           <da:column>
             <da:ColumnDefEx title="Position" data="hr.position" />
@@ -65,8 +70,15 @@
           <da:column>
             <da:ColumnDefEx title="Salary" data="hr.salary" />
           </da:column>
+          <da:column>
+            <da:ColumnDefEx title="" data="" searchable="false" orderable="false"
+              defaultContent="&lt;button data-role='none'&gt;Edit&lt;/button&gt;" />
+          </da:column>
 
         </da:JQMDataTable>
+        <g:FlowPanel>
+          <b:JQMButton ui:field="btnUnselectAll" text="Unselect All Rows" inline="true" mini="true" />
+        </g:FlowPanel>
         
       </g:FlowPanel>
     </g:FlowPanel>

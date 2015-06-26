@@ -3,12 +3,15 @@ package com.sksamuel.jqm4gwt.plugins.datatables;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.StrUtils;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsAjax;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsColumn;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsColumns;
@@ -92,6 +95,7 @@ public class JQMDataTable extends JQMTableGrid {
 
     private List<ColSort> sorts;
 
+    private boolean scrollX;
     private String scrollY;
     private boolean scrollCollapse;
 
@@ -136,6 +140,11 @@ public class JQMDataTable extends JQMTableGrid {
     private boolean processing;
     private boolean stateSave;
     private int stateDuration = 7200;
+    private boolean autoWidth;
+
+    public static enum RowSelectMode { SINGLE, MULTIPLE }
+
+    private RowSelectMode rowSelectMode;
 
     public JQMDataTable() {
     }
@@ -173,6 +182,7 @@ public class JQMDataTable extends JQMTableGrid {
         p.setOrder(order);
         JsColumns cols = prepareJsColumns();
         if (cols != null) p.setColumns(cols);
+        if (scrollX) p.setScrollX(true);
         if (!Empty.is(scrollY)) p.setScrollY(scrollY);
         if (scrollCollapse) p.setScrollCollapse(true);
         if (language != null) {
@@ -196,6 +206,7 @@ public class JQMDataTable extends JQMTableGrid {
             p.setStateSave(true);
             p.setStateDuration(stateDuration);
         }
+        if (!autoWidth) p.setAutoWidth(false);
         return p;
     }
 
@@ -287,6 +298,11 @@ public class JQMDataTable extends JQMTableGrid {
             }
             p = p.getParentElement();
         }
+        afterEnhance();
+    }
+
+    private void afterEnhance() {
+        initRowSelectMode();
     }
 
     public boolean isPaging() {
@@ -328,6 +344,15 @@ public class JQMDataTable extends JQMTableGrid {
 
     public void setSearching(boolean searching) {
         this.searching = searching;
+    }
+
+    public boolean isScrollX() {
+        return scrollX;
+    }
+
+    /** See <a href="https://datatables.net/reference/option/scrollX">scrollX</a> */
+    public void setScrollX(boolean scrollX) {
+        this.scrollX = scrollX;
     }
 
     public String getScrollY() {
@@ -417,14 +442,46 @@ public class JQMDataTable extends JQMTableGrid {
         datacols.add(col); // head will be created later in onLoad()
     }
 
-    @Override
-    protected int getNumOfCols() {
-        if (loaded && !Empty.is(datacols)) {
+    public ColumnDefEx findColumn(String colName) {
+        if (Empty.is(colName) || Empty.is(datacols)) return null;
+        for (ColumnDefEx col : datacols) {
+            if (!col.isGroup()) {
+                if (colName.equals(col.getName())) return col;
+            }
+        }
+        return null;
+    }
+
+    public ColumnDefEx getColumn(int index) {
+        if (index < 0) return null;
+        if (!Empty.is(datacols)) {
+            if (index >= datacols.size()) return null;
+            int i = 0;
+            for (ColumnDefEx col : datacols) {
+                if (!col.isGroup()) {
+                    if (i == index) return col;
+                    i++;
+                }
+            }
+        }
+        return null;
+    }
+
+    public int getColumnCount() {
+        if (!Empty.is(datacols)) {
             int i = 0;
             for (ColumnDefEx col : datacols) {
                 if (!col.isGroup()) i++;
             }
             return i;
+        }
+        return 0;
+    }
+
+    @Override
+    protected int getNumOfCols() {
+        if (loaded && !Empty.is(datacols)) {
+            return getColumnCount();
         }
         return super.getNumOfCols();
     }
@@ -486,6 +543,10 @@ public class JQMDataTable extends JQMTableGrid {
 
     public void setAjax(String ajax) {
         this.ajax = ajax;
+    }
+
+    public void ajaxReload(boolean resetPaging) {
+        JsDataTable.ajaxReload(getElement(), resetPaging);
     }
 
     public String getDataSrc() {
@@ -571,6 +632,50 @@ public class JQMDataTable extends JQMTableGrid {
      */
     public void setStateDuration(int stateDuration) {
         this.stateDuration = stateDuration;
+    }
+
+    public boolean isAutoWidth() {
+        return autoWidth;
+    }
+
+    /** See <a href="https://datatables.net/reference/option/autoWidth">autoWidth</a> */
+    public void setAutoWidth(boolean autoWidth) {
+        this.autoWidth = autoWidth;
+    }
+
+    public void addCellBtnClickHandler(CellClickHandler handler) {
+        if (handler == null) return;
+        JsDataTable.addCellClickHandler(getElement(), ButtonElement.TAG, handler);
+    }
+
+    public void addCellCheckboxClickHandler(CellClickHandler handler) {
+        if (handler == null) return;
+        JsDataTable.addCellClickHandler(getElement(), InputElement.TAG + "[type='checkbox']", handler);
+    }
+
+    public RowSelectMode getRowSelectMode() {
+        return rowSelectMode;
+    }
+
+    public void setRowSelectMode(RowSelectMode value) {
+        if (rowSelectMode == value) return;
+        doneRowSelectMode();
+        rowSelectMode = value;
+        initRowSelectMode();
+    }
+
+    protected void doneRowSelectMode() {
+        if (!enhanced || rowSelectMode == null) return;
+        if (RowSelectMode.SINGLE.equals(rowSelectMode)) {
+            JsDataTable.switchOffSingleRowSelect(getElement());
+        }
+    }
+
+    protected void initRowSelectMode() {
+        if (!enhanced || rowSelectMode == null) return;
+        if (RowSelectMode.SINGLE.equals(rowSelectMode)) {
+            JsDataTable.switchOnSingleRowSelect(getElement());
+        }
     }
 
 }
