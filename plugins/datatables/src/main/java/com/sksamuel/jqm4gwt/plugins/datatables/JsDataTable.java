@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.dom.client.Element;
 import com.sksamuel.jqm4gwt.Empty;
@@ -561,7 +562,7 @@ public class JsDataTable {
         /**
          * @return - if true then event.stopPropagation() will be called.
          */
-        boolean onClick(Element elt, JavaScriptObject rowData);
+        boolean onClick(Element elt, JavaScriptObject rowData, int rowIndex);
     }
 
     /**
@@ -570,10 +571,10 @@ public class JsDataTable {
     static native void addCellClickHandler(Element elt, String cellWidget, CellClickHandler handler) /*-{
         var t = $wnd.$(elt);
         t.children('tbody').first().on('click', cellWidget, function(event) {
-            var data = t.DataTable().row($wnd.$(this).parents('tr')).data();
+            var row = t.DataTable().row($wnd.$(this).closest('tr'));
             var rslt = handler.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler::onClick(
-              Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/core/client/JavaScriptObject;)
-              (this, data);
+              Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/core/client/JavaScriptObject;I)
+              (this, row.data(), row.index());
             if (rslt) event.stopPropagation();
         });
     }-*/;
@@ -614,15 +615,32 @@ public class JsDataTable {
         });
     }-*/;
 
+    static native void switchOffMultiRowSelect(Element elt) /*-{
+        var t = $wnd.$(elt);
+        t.children('tbody').off('click.multirowsel', 'tr');
+    }-*/;
+
+    static native void switchOnMultiRowSelect(Element elt) /*-{
+        var t = $wnd.$(elt);
+        t.children('tbody').on('click.multirowsel', 'tr', function() {
+            var $this = $wnd.$(this);
+            if ($this.hasClass('selected')) {
+                $wnd.dataTableChangeRows($this, false);
+            } else {
+                $wnd.dataTableChangeRows($this, true);
+            }
+        });
+    }-*/;
+
     public static native void changeRow(Element cellElt, boolean selected) /*-{
-        $wnd.dataTableChangeRows($wnd.$(cellElt).parents('tr'), selected);
+        $wnd.dataTableChangeRows($wnd.$(cellElt).closest('tr'), selected);
     }-*/;
 
     public static native void selectOneRowOnly(Element cellElt) /*-{
-        var rows = $wnd.$(cellElt).parents('tr');
+        var rows = $wnd.$(cellElt).closest('tr');
         if (rows.length) {
             var row = rows.first();
-            $wnd.dataTableChangeRows(row.parents('tbody').children('tr.selected'), false);
+            $wnd.dataTableChangeRows(row.closest('tbody').children('tr.selected'), false);
             $wnd.dataTableChangeRows(row, true);
         }
     }-*/;
@@ -630,6 +648,51 @@ public class JsDataTable {
     public static native void unselectAllRows(Element tableElt) /*-{
         var t = $wnd.$(tableElt);
         $wnd.dataTableChangeRows(t.DataTable().$('tr.selected'), false);
+    }-*/;
+
+    public static native JsArrayInteger getSelRowIndexes(Element tableElt) /*-{
+        return $wnd.$(tableElt).DataTable().rows('tr.selected').indexes().toArray();
+    }-*/;
+
+    public static native JsArray<JavaScriptObject> getSelRowDatas(Element tableElt) /*-{
+        return $wnd.$(tableElt).DataTable().rows('tr.selected').data().toArray();
+    }-*/;
+
+    public static interface RowDetailsRenderer {
+
+        String getHtml(JavaScriptObject rowData, int rowIndex);
+    }
+
+    static native void addRowDetailsRenderer(Element elt, RowDetailsRenderer renderer) /*-{
+        // Add event listener for opening and closing details
+        var t = $wnd.$(elt);
+        t.children('tbody').first().on('click', 'td.details-control', function(event) {
+            var tr = $wnd.$(this).closest('tr');
+            var row = t.DataTable().row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+                // Open this row
+                var html = renderer.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer::getHtml(
+                    Lcom/google/gwt/core/client/JavaScriptObject;I)(row.data(), row.index());
+                row.child(html).show();
+                tr.addClass('shown');
+            }
+            event.stopPropagation(); // no row selection is needed
+        });
+    }-*/;
+
+    static native JavaScriptObject getCellData(Element elt, int rowIndex, int colIndex) /*-{
+        var v = $wnd.$(elt).DataTable().cells(rowIndex, colIndex).data();
+        return v.toArray();
+    }-*/;
+
+    static native JavaScriptObject getCellData(Element elt, int rowIndex, String colName) /*-{
+        var v = $wnd.$(elt).DataTable().cells(rowIndex, colName + ':name').data();
+        return v.toArray();
     }-*/;
 
 }

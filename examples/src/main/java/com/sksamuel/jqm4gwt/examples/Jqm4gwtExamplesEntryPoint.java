@@ -26,6 +26,10 @@ import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
  */
 public class Jqm4gwtExamplesEntryPoint implements EntryPoint {
 
+    static {
+        com.sksamuel.jqm4gwt.plugins.datatables.Resources.Loader.loadCssRowDetails = true;
+    }
+
 	/**
 	 * This is the entry point method.
 	 */

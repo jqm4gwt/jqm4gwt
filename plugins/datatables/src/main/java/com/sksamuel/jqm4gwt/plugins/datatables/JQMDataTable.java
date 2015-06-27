@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt.plugins.datatables;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
@@ -19,6 +20,7 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsEnhanceParams;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsLanguage;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItem;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItems;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer;
 import com.sksamuel.jqm4gwt.table.JQMTableGrid;
 
 /**
@@ -142,7 +144,7 @@ public class JQMDataTable extends JQMTableGrid {
     private int stateDuration = 7200;
     private boolean autoWidth;
 
-    public static enum RowSelectMode { SINGLE, MULTIPLE }
+    public static enum RowSelectMode { SINGLE, MULTI }
 
     private RowSelectMode rowSelectMode;
 
@@ -253,9 +255,9 @@ public class JQMDataTable extends JQMTableGrid {
                 if (jsCol == null) jsCol = JsColumn.create();
                 jsCol.setCellType("th");
             }
-            if (!Empty.is(col.getDefaultContent())) {
+            if (col.calcDefaultContent() != null) { // empty is valid value for content
                 if (jsCol == null) jsCol = JsColumn.create();
-                jsCol.setDefaultContent(col.getDefaultContent());
+                jsCol.setDefaultContent(col.calcDefaultContent());
             }
             if (!Empty.is(col.getWidth())) {
                 if (jsCol == null) jsCol = JsColumn.create();
@@ -264,7 +266,7 @@ public class JQMDataTable extends JQMTableGrid {
             if (col.getDataIdx() != null) {
                 if (jsCol == null) jsCol = JsColumn.create();
                 jsCol.setDataIdx(col.getDataIdx());
-            } else if (col.getData() != null) {
+            } else if (col.getData() != null) { // empty is valid value and means that data is null
                 if (jsCol == null) jsCol = JsColumn.create();
                 String s = col.getData();
                 jsCol.setData(s.isEmpty() || "null".equals(s) ? null : s);
@@ -478,6 +480,34 @@ public class JQMDataTable extends JQMTableGrid {
         return 0;
     }
 
+    public String getCellData(int rowIndex, int colIndex) {
+        JavaScriptObject cellData = JsDataTable.getCellData(getElement(), rowIndex, colIndex);
+        return cellData != null ? cellData.toString() : null;
+    }
+
+    public String getCellData(int rowIndex, String colName) {
+        JavaScriptObject cellData = JsDataTable.getCellData(getElement(), rowIndex, colName);
+        return cellData != null ? cellData.toString() : null;
+    }
+
+    public String getColumnsAsTableHtml(int rowIndex, String addAttrsToResult) {
+        if (Empty.is(datacols)) return null;
+        int colIdx = -1;
+        String rslt = "";
+        for (ColumnDefEx col : datacols) {
+            if (col.isGroup()) continue;
+            colIdx++;
+            if (Empty.is(col.getData())) continue;
+            String v = Empty.nonNull(getCellData(rowIndex, colIdx), "");
+            String k = Empty.nonNull(col.getTitle(), "");
+            if (Empty.is(k) && Empty.is(v)) continue;
+            rslt += "<tr><td>" + k + "</td><td>" + v + "</td></tr>";
+        }
+        if (Empty.is(rslt)) return null;
+        String s = Empty.is(addAttrsToResult) ? "<table>" : "<table " + addAttrsToResult + ">";
+        return s + rslt + "</table>";
+    }
+
     @Override
     protected int getNumOfCols() {
         if (loaded && !Empty.is(datacols)) {
@@ -668,6 +698,8 @@ public class JQMDataTable extends JQMTableGrid {
         if (!enhanced || rowSelectMode == null) return;
         if (RowSelectMode.SINGLE.equals(rowSelectMode)) {
             JsDataTable.switchOffSingleRowSelect(getElement());
+        } else if (RowSelectMode.MULTI.equals(rowSelectMode)) {
+            JsDataTable.switchOffMultiRowSelect(getElement());
         }
     }
 
@@ -675,7 +707,14 @@ public class JQMDataTable extends JQMTableGrid {
         if (!enhanced || rowSelectMode == null) return;
         if (RowSelectMode.SINGLE.equals(rowSelectMode)) {
             JsDataTable.switchOnSingleRowSelect(getElement());
+        } else if (RowSelectMode.MULTI.equals(rowSelectMode)) {
+            JsDataTable.switchOnMultiRowSelect(getElement());
         }
+    }
+
+    public void addRowDetailsRenderer(RowDetailsRenderer renderer) {
+        if (renderer == null) return;
+        JsDataTable.addRowDetailsRenderer(getElement(), renderer);
     }
 
 }

@@ -25,8 +25,17 @@ public class ColumnDefEx extends ColumnDef {
 
     private String classNames;
     private boolean cellTypeTh;
-    private String defaultContent;
     private String width;
+
+    // must be in sync with dataTables-row-details.css
+    private static final String ROW_DETAILS_CLASS = "details-control";
+
+    public static enum DefaultContentType {
+        BUTTON, CHECKBOX, CHECKBOX_ROWSELECT, ROW_DETAILS
+    }
+
+    private String defaultContent;
+    private DefaultContentType defaultContentType;
 
     private Integer dataIdx;
     private String  data;
@@ -72,7 +81,12 @@ public class ColumnDefEx extends ColumnDef {
     }
 
     public String getClassNames() {
-        return classNames;
+        String s = classNames;
+        if (DefaultContentType.ROW_DETAILS.equals(defaultContentType)) {
+            if (Empty.is(s)) s = ROW_DETAILS_CLASS;
+            else s += " " + ROW_DETAILS_CLASS;
+        }
+        return s;
     }
 
     /** Space separated list of additional styling classes for table body cells. */
@@ -99,6 +113,52 @@ public class ColumnDefEx extends ColumnDef {
     /** Set default, static, content for a column, for example simple edit and/or delete buttons. */
     public void setDefaultContent(String defaultContent) {
         this.defaultContent = defaultContent;
+    }
+
+    public DefaultContentType getDefaultContentType() {
+        return defaultContentType;
+    }
+
+    /** Set default, static, content for a column - predefined widgets, defaultContent will be used
+     * for innerHtml if defined. */
+    public void setDefaultContentType(DefaultContentType value) {
+        defaultContentType = value;
+        if (defaultContentType != null) {
+            setData("");
+            searchable = false;
+            orderable = false;
+        }
+    }
+
+    /** Combines both defaultContentType and defaultContent and generates proper content. */
+    public String calcDefaultContent() {
+        if (defaultContentType == null) return defaultContent;
+        String s;
+        switch (defaultContentType) {
+        case BUTTON:
+            s = "<button data-role='none'>";
+            if (!Empty.is(defaultContent)) s += defaultContent;
+            return s + "</button>";
+
+        case CHECKBOX:
+        case CHECKBOX_ROWSELECT:
+            s = "<input type='checkbox' data-role='none'";
+            if (DefaultContentType.CHECKBOX_ROWSELECT.equals(defaultContentType)) {
+                s += " class='" + JsDataTable.CHECKBOX_ROWSEL + "'";
+            }
+            if (!Empty.is(defaultContent)) {
+                s += ">" + defaultContent + "</input>";
+            } else {
+                s += "></input>";
+            }
+            return s;
+
+        case ROW_DETAILS:
+            return "";
+
+        default:
+            return defaultContent;
+        }
     }
 
     public String getWidth() {
