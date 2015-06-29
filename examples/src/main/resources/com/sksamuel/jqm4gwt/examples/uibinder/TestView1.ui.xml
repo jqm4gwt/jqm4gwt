@@ -793,6 +793,10 @@
         <jqm:JQMPopup ui:field="popup" arrows="t,b" padding="true" position="#popupOpenButton">
           <g:FlowPanel>
             <h:Heading.H2>Popup with arrows demo</h:Heading.H2>
+            <f:JQMForm ui:field="popupFlipTest">
+              <e:JQMFlip label1="On" label2="Off" value1="ON" value2="OFF" value="ON"
+                mini="true" text="Static flip:" textHidden="true" />
+            </f:JQMForm>    
             <b:JQMButton builtInIcon="MINUS" ui:field="popupCloseButton" text="Close Pop-up" />
           </g:FlowPanel>
         </jqm:JQMPopup>

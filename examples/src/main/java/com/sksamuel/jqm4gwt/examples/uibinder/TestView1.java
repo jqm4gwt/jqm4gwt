@@ -497,11 +497,26 @@ public class TestView1 {
     @UiField
     ButtonElement btnUserOpinions;
 
+    @UiField
+    JQMForm popupFlipTest;
+
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
             @Override
             public void onShow(JQMPageEvent event) {
                 //Window.alert(event.toDebugString());
+
+                JQMFlip f = new JQMFlip();
+                f.setLabel1("On");
+                f.setLabel2("Off");
+                f.setValue1("ON");
+                f.setValue2("OFF");
+                f.setValue("ON");
+                f.setMini(true);
+                f.setTextHidden(true);
+                f.setText("Dynamic flip:");
+                popupFlipTest.add(f);
+                JQMContext.render(popupFlipTest.getElement());
             }
         });
     }
