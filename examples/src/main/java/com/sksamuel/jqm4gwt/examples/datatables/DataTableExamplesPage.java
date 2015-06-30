@@ -15,7 +15,6 @@ import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable;
 import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable.RowSelectMode;
-import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer;
 
@@ -58,9 +57,9 @@ public class DataTableExamplesPage {
                 String s = dataTable2.getCellData(rowIndex, "name");
                 Window.alert(s);
                 if (RowSelectMode.SINGLE.equals(dataTable2.getRowSelectMode())) {
-                    JsDataTable.selectOneRowOnly(elt);
+                    dataTable2.selectOneRowOnly(elt);
                 } else if (RowSelectMode.MULTI.equals(dataTable2.getRowSelectMode())) {
-                    JsDataTable.changeRow(elt, true);
+                    dataTable2.changeRow(elt, true);
                 }
                 return true;
             }
@@ -71,12 +70,12 @@ public class DataTableExamplesPage {
                 InputElement cb = elt.cast();
                 if (cb.isChecked()) {
                     if (RowSelectMode.SINGLE.equals(dataTable2.getRowSelectMode())) {
-                        JsDataTable.selectOneRowOnly(cb);
+                        dataTable2.selectOneRowOnly(cb);
                     } else if (RowSelectMode.MULTI.equals(dataTable2.getRowSelectMode())) {
-                        JsDataTable.changeRow(cb, true);
+                        dataTable2.changeRow(cb, true);
                     }
                 } else if (dataTable2.getRowSelectMode() != null) {
-                    JsDataTable.changeRow(cb, false);
+                    dataTable2.changeRow(cb, false);
                 }
                 return true;
             }
@@ -91,14 +90,14 @@ public class DataTableExamplesPage {
             @Override
             public void onClick(ClickEvent event) {
                 if (dataTable2.getRowSelectMode() != null) {
-                    JsDataTable.unselectAllRows(dataTable2.getElement());
+                    dataTable2.unselectAllRows();
                 }
             }
         });
         btnGetSelected.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                JsArrayInteger sel = JsDataTable.getSelRowIndexes(dataTable2.getElement());
+                JsArrayInteger sel = dataTable2.getSelRowIndexes();
                 if (sel.length() == 0) Window.alert("No rows selected");
                 else {
                     String msg = "";

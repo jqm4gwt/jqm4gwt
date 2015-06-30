@@ -685,11 +685,11 @@ public class JsDataTable {
         });
     }-*/;
 
-    public static native void changeRow(Element cellElt, boolean selected) /*-{
+    static native void changeRow(Element cellElt, boolean selected) /*-{
         $wnd.dataTableChangeRows($wnd.$(cellElt).closest('tr'), selected);
     }-*/;
 
-    public static native void selectOneRowOnly(Element cellElt) /*-{
+    static native void selectOneRowOnly(Element cellElt) /*-{
         var rows = $wnd.$(cellElt).closest('tr');
         if (rows.length) {
             var row = rows.first();
@@ -698,16 +698,16 @@ public class JsDataTable {
         }
     }-*/;
 
-    public static native void unselectAllRows(Element tableElt) /*-{
+    static native void unselectAllRows(Element tableElt) /*-{
         var t = $wnd.$(tableElt);
         $wnd.dataTableChangeRows(t.DataTable().$('tr.selected'), false);
     }-*/;
 
-    public static native JsArrayInteger getSelRowIndexes(Element tableElt) /*-{
+    static native JsArrayInteger getSelRowIndexes(Element tableElt) /*-{
         return $wnd.$(tableElt).DataTable().rows('tr.selected').indexes().toArray();
     }-*/;
 
-    public static native JsArray<JavaScriptObject> getSelRowDatas(Element tableElt) /*-{
+    static native JsArray<JavaScriptObject> getSelRowDatas(Element tableElt) /*-{
         return $wnd.$(tableElt).DataTable().rows('tr.selected').data().toArray();
     }-*/;
 

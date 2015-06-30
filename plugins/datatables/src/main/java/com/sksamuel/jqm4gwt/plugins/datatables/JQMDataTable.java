@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.ButtonElement;
@@ -775,6 +776,26 @@ public class JQMDataTable extends JQMTableGrid {
     public void addRowDetailsRenderer(RowDetailsRenderer renderer) {
         if (renderer == null) return;
         JsDataTable.addRowDetailsRenderer(getElement(), renderer);
+    }
+
+    public JsArrayInteger getSelRowIndexes() {
+        return JsDataTable.getSelRowIndexes(getElement());
+    }
+
+    public JsArray<JavaScriptObject> getSelRowDatas() {
+        return JsDataTable.getSelRowDatas(getElement());
+    }
+
+    public void unselectAllRows() {
+        JsDataTable.unselectAllRows(getElement());
+    }
+
+    public void changeRow(Element cellElt, boolean selected) {
+        JsDataTable.changeRow(cellElt, selected);
+    }
+
+    public void selectOneRowOnly(Element cellElt) {
+        JsDataTable.selectOneRowOnly(cellElt);
     }
 
     public JavaScriptObject getData() {
