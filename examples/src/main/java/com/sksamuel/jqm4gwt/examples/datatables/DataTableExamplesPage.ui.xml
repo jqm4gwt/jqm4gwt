@@ -43,10 +43,15 @@
         <g:FlowPanel addStyleNames="{style.separator}" />
         
         <!-- See https://www.datatables.net/examples/ajax/deep.html -->
-        <da:JQMDataTable ui:field="dataTable2" searching="true" pagingType="FULL_NUMBERS"
-          rowSelectMode="MULTI"
+        <da:JQMDataTable ui:field="dataTable2" searching="true" 
+          pagingType="FULL_NUMBERS" lengthMenu="10, 20, -1=All"
+          rowSelectMode="MULTI" 
           stateSave="true" stateDuration="60"
           colSorts="2" ajax="data/nested-objects.json">
+          
+          <!-- da:language>
+            <da:LanguageImpl url="//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json" />
+          </da:language-->
           
           <da:column>
             <da:ColumnDefEx defaultContentType="CHECKBOX_ROWSELECT" />

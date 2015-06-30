@@ -2,8 +2,12 @@ package com.sksamuel.jqm4gwt.plugins.datatables;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayInteger;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
@@ -14,10 +18,12 @@ import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.StrUtils;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsAjax;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsCallback;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsColumn;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsColumns;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsEnhanceParams;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsLanguage;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsLengthMenu;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItem;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItems;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer;
@@ -134,6 +140,7 @@ public class JQMDataTable extends JQMTableGrid {
     }
 
     private PagingType pagingType;
+    private String lengthMenu;
 
     private String ajax;
     private String dataSrc;
@@ -173,6 +180,38 @@ public class JQMDataTable extends JQMTableGrid {
         JsEnhanceParams p = JsEnhanceParams.create();
         if (!paging) p.setPaging(false);
         if (!lengthChange) p.setLengthChange(false);
+        if (!Empty.is(lengthMenu)) {
+            List<String> lst = StrUtils.commaSplit(lengthMenu);
+            Map<String, String> keyVal = StrUtils.splitKeyValue(lst);
+            if (!Empty.is(keyVal)) {
+                boolean allNulls = true;
+                for (String v : keyVal.values()) {
+                    if (v != null) {
+                        allNulls = false;
+                        break;
+                    }
+                }
+                if (allNulls) {
+                    JsArrayInteger values = JavaScriptObject.createArray(keyVal.size()).cast();
+                    int j = 0;
+                    for (Entry<String, String> i : keyVal.entrySet()) {
+                        values.set(j, Integer.parseInt(i.getKey()));
+                        j++;
+                    }
+                    p.setLengtMenu(JsLengthMenu.create(values));
+                } else {
+                    JsArrayInteger values = JavaScriptObject.createArray(keyVal.size()).cast();
+                    JsArrayString names = JavaScriptObject.createArray(keyVal.size()).cast();
+                    int j = 0;
+                    for (Entry<String, String> i : keyVal.entrySet()) {
+                        values.set(j, Integer.parseInt(i.getKey()));
+                        names.set(j, i.getValue() != null ? i.getValue() : i.getKey());
+                        j++;
+                    }
+                    p.setLengtMenu(JsLengthMenu.create(values, names));
+                }
+            }
+        }
         if (pagingType != null) p.setPagingType(pagingType.getJsName());
         if (!info) p.setInfo(false);
         if (!ordering) p.setOrdering(false);
@@ -287,24 +326,35 @@ public class JQMDataTable extends JQMTableGrid {
         elt.setAttribute("width", "100%");
         elt.setAttribute("cellspacing", "0"); // obsolete in HTML5, but used in DataTables examples
 
-        JsDataTable.enhance(elt, prepareJsEnhanceParams());
-        String wrapId = elt.getId() + "_wrapper";
-        Element p = elt.getParentElement();
-        while (p != null) {
-            if (wrapId.equals(p.getId())) {
-                /*  slow! working only when mobileinit sets $.mobile.ignoreContentEnabled = true
-                    p.setAttribute("data-enhance", "false");
-                 */
-                JsDataTable.setDataRoleNone(p); // we don't need jQuery Mobile enhancement for DataTable parts!
-                break;
+        JsEnhanceParams jsParams = prepareJsEnhanceParams();
+        jsParams.setInitComplete(new JsCallback() {
+            @Override
+            public void onSuccess() {
+                String wrapId = elt.getId() + "_wrapper";
+                Element p = elt.getParentElement();
+                while (p != null) {
+                    if (wrapId.equals(p.getId())) {
+                        /*  slow! working only when mobileinit sets $.mobile.ignoreContentEnabled = true
+                            p.setAttribute("data-enhance", "false");
+                         */
+                        JsDataTable.setDataRoleNone(p); // we don't need jQuery Mobile enhancement for DataTable parts!
+                        break;
+                    }
+                    p = p.getParentElement();
+                }
+                afterEnhance();
+                onInitComplete();
             }
-            p = p.getParentElement();
-        }
-        afterEnhance();
+        });
+        JsDataTable.enhance(elt, jsParams);
     }
 
     private void afterEnhance() {
         initRowSelectMode();
+    }
+
+    /** Called when DataTable's asynchronous initialization is complete/finished. */
+    protected void onInitComplete() {
     }
 
     public boolean isPaging() {
@@ -612,6 +662,15 @@ public class JQMDataTable extends JQMTableGrid {
     /** Feature control the end user's ability to change the paging display length of the table. */
     public void setLengthChange(boolean lengthChange) {
         this.lengthChange = lengthChange;
+    }
+
+    public String getLengthMenu() {
+        return lengthMenu;
+    }
+
+    /** Customizes the options shown in the length menu. Example: 10, 25, 50, -1=All */
+    public void setLengthMenu(String lengthMenu) {
+        this.lengthMenu = lengthMenu;
     }
 
     public boolean isProcessing() {

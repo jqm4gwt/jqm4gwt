@@ -1,7 +1,9 @@
 package com.sksamuel.jqm4gwt;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StrUtils {
 
@@ -88,6 +90,30 @@ public class StrUtils {
 
     public static boolean isEmpty(String s) {
         return s == null || s.length() == 0; // optimize like Guava: s.isEmpty() -> s.length() == 0
+    }
+
+    /** Splits list of a=b pairs, if line doesn't have = then it just goes to keys.
+     *  <br> trim() is called for all result keys and values.
+     **/
+    public static Map<String, String> splitKeyValue(List<String> lst) {
+        if (lst == null || lst.isEmpty()) return null;
+        Map<String, String> rslt = null;
+        for (String s : lst) {
+            s = s.trim();
+            if (s.isEmpty() || s.equals("=")) continue;
+            int j = s.indexOf('=');
+            if (j >= 0) {
+                String k = s.substring(0, j).trim();
+                String v = s.substring(j + 1).trim();
+                if (k.isEmpty() && v.isEmpty()) continue;
+                if (rslt == null) rslt = new LinkedHashMap<>();
+                rslt.put(k, v);
+            } else {
+                if (rslt == null) rslt = new LinkedHashMap<>();
+                rslt.put(s, null);
+            }
+        }
+        return rslt;
     }
 
 }

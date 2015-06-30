@@ -6,6 +6,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.core.client.JsArrayMixed;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
 import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.StrUtils;
@@ -372,6 +373,19 @@ public class JsDataTable {
         }-*/;
     }
 
+    static class JsLengthMenu extends JsArrayMixed {
+
+        protected JsLengthMenu() {}
+
+        public static native JsLengthMenu create(JsArrayInteger values, JsArrayString names) /*-{
+            return [values, names];
+        }-*/;
+
+        public static native JsLengthMenu create(JsArrayInteger values) /*-{
+            return values;
+        }-*/;
+    }
+
     static class JsEnhanceParams extends JavaScriptObject {
 
         protected JsEnhanceParams() {}
@@ -394,6 +408,14 @@ public class JsDataTable {
 
         public final native void setLengthChange(boolean value) /*-{
             this.lengthChange = value;
+        }-*/;
+
+        public final native JsLengthMenu getLengthMenu() /*-{
+            return this.lengthMenu;
+        }-*/;
+
+        public final native void setLengtMenu(JsLengthMenu value) /*-{
+            this.lengthMenu = value;
         }-*/;
 
         public final native boolean getInfo() /*-{
@@ -541,6 +563,16 @@ public class JsDataTable {
             this.autoWidth = value;
         }-*/;
 
+        public final native void setInitComplete(final JsCallback done) /*-{
+            this.initComplete = function(settings, json) {
+                done.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsCallback::onSuccess()();
+            };
+        }-*/;
+
+    }
+
+    static interface JsCallback {
+        void onSuccess();
     }
 
     static native void enhance(Element elt, JsEnhanceParams params) /*-{
