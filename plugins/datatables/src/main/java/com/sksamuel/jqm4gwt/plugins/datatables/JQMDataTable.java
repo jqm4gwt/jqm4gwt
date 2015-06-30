@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.plugins.datatables;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -774,6 +775,38 @@ public class JQMDataTable extends JQMTableGrid {
     public void addRowDetailsRenderer(RowDetailsRenderer renderer) {
         if (renderer == null) return;
         JsDataTable.addRowDetailsRenderer(getElement(), renderer);
+    }
+
+    public JavaScriptObject getData() {
+        return JsDataTable.getData(getElement());
+    }
+
+    public void clearData() {
+        JsDataTable.clearData(getElement());
+    }
+
+    public void addRow(JavaScriptObject newRow) {
+        JsDataTable.addRow(getElement(), newRow);
+    }
+
+    public void removeRow(int rowIndex) {
+        JsDataTable.removeRow(getElement(), rowIndex);
+    }
+
+    public void removeSelRows() {
+        JsArrayInteger sel = JsDataTable.getSelRowIndexes(getElement());
+        if (sel.length() == 0) return;
+        int[] idxs = new int[sel.length()];
+        for (int i = 0; i < idxs.length; i++) idxs[i] = sel.get(i);
+        Arrays.sort(idxs);
+        for (int i = idxs.length - 1; i >= 0; i--) {
+            removeRow(idxs[i]);
+        }
+        rowsInvalidate(true);
+    }
+
+    public void rowsInvalidate(boolean resetPaging) {
+        JsDataTable.rowsInvalidate(getElement(), resetPaging);
     }
 
 }

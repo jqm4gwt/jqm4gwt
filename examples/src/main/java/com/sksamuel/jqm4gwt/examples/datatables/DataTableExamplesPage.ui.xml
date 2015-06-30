@@ -87,6 +87,17 @@
           <b:JQMButton ui:field="btnGetSelected" text="Get Selected Rows" inline="true" mini="true" />
         </g:FlowPanel>
         
+        <g:FlowPanel addStyleNames="{style.separator}" />
+        
+        <da:JQMDataTable ui:field="dataTable3" searching="true" pagingType="FULL_NUMBERS"
+          colSorts="0" colNames="Name, Position, Office, Extn., Start date, Salary"
+          rowSelectMode="MULTI">
+        </da:JQMDataTable>
+        <g:FlowPanel>
+          <b:JQMButton ui:field="btnReplaceData" text="Replace Data" inline="true" mini="true" />
+          <b:JQMButton ui:field="btnDeleteSelRow" text="Delete Selected Row(s)" inline="true" mini="true" />
+        </g:FlowPanel>
+        
       </g:FlowPanel>
     </g:FlowPanel>
   </jqm:JQMPage>  

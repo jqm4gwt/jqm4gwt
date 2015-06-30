@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt.examples.datatables;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayInteger;
+import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -29,13 +30,25 @@ public class DataTableExamplesPage {
     private JQMPage page;
 
     @UiField
+    JQMDataTable dataTable1;
+
+    @UiField
     JQMDataTable dataTable2;
+
+    @UiField
+    JQMDataTable dataTable3;
 
     @UiField
     JQMButton btnUnselectAll;
 
     @UiField
     JQMButton btnGetSelected;
+
+    @UiField
+    JQMButton btnReplaceData;
+
+    @UiField
+    JQMButton btnDeleteSelRow;
 
     public DataTableExamplesPage() {
         page = uiBinder.createAndBindUi(this);
@@ -95,6 +108,38 @@ public class DataTableExamplesPage {
                     }
                     Window.alert(msg);
                 }
+            }
+        });
+        btnReplaceData.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                JsArrayMixed d = dataTable3.getData().cast();
+                int len = d.length();
+                /*if (len > 0) {
+                    JsArrayMixed r0 = d.getObject(0);
+                    Window.alert("Total: " + String.valueOf(len) + " rows.\n" + r0.getString(0));
+                } else {
+                    Window.alert("Empty table.");
+                }*/
+
+                dataTable3.clearData();
+                for (int i = 0; i <= len; i++) {
+                    JsArrayMixed r = JavaScriptObject.createArray().cast();
+                    r.push("Tiger Nixon");
+                    r.push("System Architect");
+                    r.push("Edinburgh");
+                    r.push(String.valueOf(i));
+                    r.push("2011/04/25");
+                    r.push("$123,456");
+                    dataTable3.addRow(r);
+                }
+                dataTable3.rowsInvalidate(true);
+            }
+        });
+        btnDeleteSelRow.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                dataTable3.removeSelRows();
             }
         });
     }

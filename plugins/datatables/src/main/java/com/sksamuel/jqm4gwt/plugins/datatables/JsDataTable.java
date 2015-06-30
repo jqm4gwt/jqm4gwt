@@ -587,7 +587,28 @@ public class JsDataTable {
     }-*/;
 
     static native void ajaxReload(Element elt, boolean resetPaging) /*-{
-        $wnd.$(elt).ajax.reload( null, resetPaging );
+        $wnd.$(elt).DataTable().ajax.reload( null, resetPaging );
+    }-*/;
+
+    /** Invalidate all rows and redraw, useful after data changes, see addRow() */
+    static native void rowsInvalidate(Element elt, boolean resetPaging) /*-{
+        $wnd.$(elt).DataTable().rows().invalidate().draw(resetPaging);
+    }-*/;
+
+    static native JavaScriptObject getData(Element elt) /*-{
+        return $wnd.$(elt).DataTable().data();
+    }-*/;
+
+    static native void clearData(Element elt) /*-{
+        $wnd.$(elt).DataTable().clear();
+    }-*/;
+
+    static native void addRow(Element elt, JavaScriptObject newRow) /*-{
+        $wnd.$(elt).DataTable().row.add(newRow);
+    }-*/;
+
+    static native void removeRow(Element elt, int rowIndex) /*-{
+        $wnd.$(elt).DataTable().row(rowIndex).remove();
     }-*/;
 
     public static interface CellClickHandler {
