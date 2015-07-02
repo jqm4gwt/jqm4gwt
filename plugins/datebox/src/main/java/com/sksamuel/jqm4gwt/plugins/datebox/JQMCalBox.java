@@ -17,6 +17,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContext;
+import com.sksamuel.jqm4gwt.JsUtils;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBoxEvent.DisplayChangeData;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBoxEvent.OffsetData;
@@ -1129,14 +1130,14 @@ public class JQMCalBox extends JQMText {
     private void formatGridDateEx(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible,
             JavaScriptObject result) {
         if (!(gridDateFormatter instanceof GridDateFormatterEx)) {
-            JQMContext.setJsObjValue(result, "text", String.valueOf(dd));
-            JQMContext.setJsObjValue(result, "class", "");
+            JsUtils.setObjValue(result, "text", String.valueOf(dd));
+            JsUtils.setObjValue(result, "class", "");
         } else {
             String text = gridDateFormatter.format(yyyy, mm, dd, iso8601, selectedDateVisible);
             String cls  = ((GridDateFormatterEx) gridDateFormatter).getStyleNames(
                     yyyy, mm, dd, iso8601, selectedDateVisible);
-            JQMContext.setJsObjValue(result, "text", text);
-            JQMContext.setJsObjValue(result, "class", cls);
+            JsUtils.setObjValue(result, "text", text);
+            JsUtils.setObjValue(result, "class", cls);
         }
     }
 

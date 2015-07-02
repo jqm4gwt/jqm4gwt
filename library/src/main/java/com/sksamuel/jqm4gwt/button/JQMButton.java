@@ -34,6 +34,7 @@ import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContainer;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.JsUtils;
 import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.Transition;
 import com.sksamuel.jqm4gwt.events.HasTapHandlers;
@@ -678,11 +679,11 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         Style st = getElement().getStyle();
         if (hoverStyleApplied == null) {
             hoverStyleApplied = new ArrayList<StyleItem>();
-            JsArrayString keys = JQMContext.getJsObjKeys(hoverStyle);
+            JsArrayString keys = JsUtils.getObjKeys(hoverStyle);
             if (keys == null) return;
             for (int i = 0; i < keys.length(); i++) {
                 String key = keys.get(i);
-                String val = JQMContext.getJsObjValue(hoverStyle, key);
+                String val = JsUtils.getObjValue(hoverStyle, key);
                 if (val == null) continue;
                 String prop = keys.get(i);
                 for (int j = 0; j < HOVER_REPLACE.length - 1; j = j + 2) {

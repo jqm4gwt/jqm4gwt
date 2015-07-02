@@ -2,9 +2,11 @@ package com.sksamuel.jqm4gwt.plugins.datatables;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -17,6 +19,7 @@ import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.Empty;
+import com.sksamuel.jqm4gwt.JsUtils;
 import com.sksamuel.jqm4gwt.StrUtils;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsAjax;
@@ -26,6 +29,8 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsColumns;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsEnhanceParams;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsLanguage;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsLengthMenu;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsRowCallback;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsRowSelect;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItem;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItems;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer;
@@ -39,6 +44,12 @@ import com.sksamuel.jqm4gwt.table.JQMTableGrid;
  *
  */
 public class JQMDataTable extends JQMTableGrid {
+
+    /** Add an ID to the TR element, see <a href="https://datatables.net/examples/server_side/ids.html">
+     *  Row ID attributes</a>
+     **/
+    public static final String DT_ROWID = "DT_RowId";
+    public static final String SELECTED_ROW = "selected";
 
     /** Space separated classes for adding to head groups panel. */
     public static String headGroupsClasses;
@@ -144,9 +155,18 @@ public class JQMDataTable extends JQMTableGrid {
     private PagingType pagingType;
     private String lengthMenu;
 
+    private boolean serverSide;
     private String ajax;
     private String dataSrc;
-    private boolean serverSide;
+
+    /**
+     * Defines how to make ajax call to server side processing.
+     * <br> GET - pass as query params, POST and PUT - pass as form params.
+     **/
+    public static enum HttpMethod { GET, POST, PUT }
+
+    private HttpMethod httpMethod;
+
     private boolean deferRender;
     private boolean processing;
     private boolean stateSave;
@@ -156,6 +176,8 @@ public class JQMDataTable extends JQMTableGrid {
     public static enum RowSelectMode { SINGLE, MULTI }
 
     private RowSelectMode rowSelectMode;
+
+    private Set<String> serverSelected;
 
     public JQMDataTable() {
     }
@@ -234,15 +256,40 @@ public class JQMDataTable extends JQMTableGrid {
             p.setLanguage(l);
         }
         if (!Empty.is(ajax)) {
-            if (dataSrc == null) p.setAjax(ajax);
+            if (dataSrc == null && httpMethod == null) p.setAjax(ajax);
             else {
                 JsAjax aj = JsAjax.create();
                 aj.setUrl(ajax);
-                aj.setDataSrc(dataSrc);
+                if (dataSrc != null) aj.setDataSrc(dataSrc);
+                if (httpMethod != null) aj.setMethod(httpMethod.name());
                 p.setAjaxObj(aj);
             }
         }
-        if (serverSide) p.setServerSide(true);
+        if (serverSide) {
+            p.setServerSide(true);
+            p.setRowCallback(new JsRowCallback() {
+                @Override
+                public void onRow(Element row, JavaScriptObject data) {
+                    if (Empty.is(serverSelected)) return;
+                    String rowId = JsUtils.getObjValue(data, DT_ROWID);
+                    if (Empty.is(rowId)) return;
+                    if (serverSelected.contains(rowId)) row.addClassName(SELECTED_ROW);
+                }
+            });
+            JsDataTable.setRowSelChanged(getElement(), new JsRowSelect() {
+                @Override
+                public void onRowSelChanged(Element row, boolean selected, JavaScriptObject rowData) {
+                    String rowId = JsUtils.getObjValue(rowData, DT_ROWID);
+                    if (Empty.is(rowId)) return;
+                    if (selected) {
+                        if (serverSelected == null) serverSelected = new HashSet<>();
+                        serverSelected.add(rowId);
+                    } else {
+                        if (!Empty.is(serverSelected)) serverSelected.remove(rowId);
+                    }
+                }
+            });
+        }
         if (deferRender) p.setDeferRender(true);
         if (processing) p.setProcessing(true);
         if (stateSave) {
@@ -628,6 +675,7 @@ public class JQMDataTable extends JQMTableGrid {
     }
 
     public void ajaxReload(boolean resetPaging) {
+        if (!Empty.is(serverSelected)) serverSelected.clear();
         JsDataTable.ajaxReload(getElement(), resetPaging);
     }
 
@@ -642,6 +690,14 @@ public class JQMDataTable extends JQMTableGrid {
      **/
     public void setDataSrc(String dataSrc) {
         this.dataSrc = dataSrc;
+    }
+
+    public HttpMethod getHttpMethod() {
+        return httpMethod;
+    }
+
+    public void setHttpMethod(HttpMethod httpMethod) {
+        this.httpMethod = httpMethod;
     }
 
     public boolean isDeferRender() {
@@ -692,7 +748,10 @@ public class JQMDataTable extends JQMTableGrid {
         return serverSide;
     }
 
-    /** Server-side processing - where filtering, paging and sorting calculations are all performed by a server. */
+    /** Server-side processing - where filtering, paging and sorting calculations are all performed
+     *  by a server. Parameters are passed to server as query params (GET) or form params (POST, PUT).
+     *  <br> See <a href="https://datatables.net/manual/server-side">Parameters</a>
+     **/
     public void setServerSide(boolean serverSide) {
         this.serverSide = serverSide;
     }

@@ -312,9 +312,9 @@ public class JQMPopup extends JQMContainer {
      * @param openOptions = { x: 123, y: 456, positionTo: #xxx }
      */
     protected void doBeforePosition(JavaScriptObject openOptions) {
-        String p = JQMContext.getJsObjValue(openOptions, "positionTo");
-        Double x = JQMContext.getJsObjDoubleValue(openOptions, "x");
-        Double y = JQMContext.getJsObjDoubleValue(openOptions, "y");
+        String p = JsUtils.getObjValue(openOptions, "positionTo");
+        Double x = JsUtils.getObjDoubleValue(openOptions, "x");
+        Double y = JsUtils.getObjDoubleValue(openOptions, "y");
 
         PopupOptions opts = new PopupOptions();
         opts.setPositionTo(p);
@@ -326,21 +326,21 @@ public class JQMPopup extends JQMContainer {
 
         String newP = opts.getPositionTo();
         if (newP == null) {
-            if (p != null && !p.isEmpty()) JQMContext.deleteJsObjProperty(openOptions, "positionTo");
+            if (p != null && !p.isEmpty()) JsUtils.deleteObjProperty(openOptions, "positionTo");
         } else {
-            JQMContext.setJsObjValue(openOptions, "positionTo", newP);
+            JsUtils.setObjValue(openOptions, "positionTo", newP);
         }
         Double newX = opts.getX();
         if (newX == null) {
-            if (x != null) JQMContext.deleteJsObjProperty(openOptions, "x");
+            if (x != null) JsUtils.deleteObjProperty(openOptions, "x");
         } else {
-            JQMContext.setJsObjDoubleValue(openOptions, "x", newX);
+            JsUtils.setObjDoubleValue(openOptions, "x", newX);
         }
         Double newY = opts.getY();
         if (newY == null) {
-            if (y != null) JQMContext.deleteJsObjProperty(openOptions, "y");
+            if (y != null) JsUtils.deleteObjProperty(openOptions, "y");
         } else {
-            JQMContext.setJsObjDoubleValue(openOptions, "y", newY);
+            JsUtils.setObjDoubleValue(openOptions, "y", newY);
         }
     }
 
@@ -451,10 +451,10 @@ public class JQMPopup extends JQMContainer {
     public static EltCoords calcEltCoords(String positionTo) {
        JavaScriptObject o = jsCalcEltCoords(positionTo);
        if (o == null) return null;
-       Double left = JQMContext.getJsObjDoubleValue(o, "left");
-       Double top = JQMContext.getJsObjDoubleValue(o, "top");
-       Double width = JQMContext.getJsObjDoubleValue(o, "width");
-       Double height = JQMContext.getJsObjDoubleValue(o, "height");
+       Double left = JsUtils.getObjDoubleValue(o, "left");
+       Double top = JsUtils.getObjDoubleValue(o, "top");
+       Double width = JsUtils.getObjDoubleValue(o, "width");
+       Double height = JsUtils.getObjDoubleValue(o, "height");
        return new EltCoords(left, top, width, height);
     }
 

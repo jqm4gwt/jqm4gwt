@@ -371,6 +371,14 @@ public class JsDataTable {
         public final native void setDataSrc(String value) /*-{
             this.dataSrc = value;
         }-*/;
+
+        public final native String getMethod() /*-{
+            return this.method;
+        }-*/;
+
+        public final native void setMethod(String value) /*-{
+            this.method = value;
+        }-*/;
     }
 
     static class JsLengthMenu extends JsArrayMixed {
@@ -569,10 +577,22 @@ public class JsDataTable {
             };
         }-*/;
 
+        public final native void setRowCallback(final JsRowCallback callback) /*-{
+            this.rowCallback = function( row, data ) {
+                callback.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsRowCallback::onRow(
+                    Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/core/client/JavaScriptObject;)
+                    (row, data);
+            };
+        }-*/;
+
     }
 
     static interface JsCallback {
         void onSuccess();
+    }
+
+    static interface JsRowCallback {
+        void onRow(Element row, JavaScriptObject data);
     }
 
     static native void enhance(Element elt, JsEnhanceParams params) /*-{
@@ -637,7 +657,7 @@ public class JsDataTable {
 
     private static native void defineChangeRowsFunc() /*-{
         if ($wnd.dataTableChangeRows) return;
-        $wnd.dataTableChangeRows = function(rows, selected) {
+        $wnd.dataTableChangeRows = function(rows, selected, elt) {
             if (rows) {
                 if (selected) {
                     rows.addClass('selected');
@@ -646,8 +666,27 @@ public class JsDataTable {
                     rows.removeClass('selected');
                     rows.find('.checkbox-rowsel').prop('checked', false);
                 }
+                var rowSelChanged = $wnd.$(elt).closest('table').data('rowSelChanged');
+                if (rowSelChanged) {
+                    rows.each(function(index) {
+                        rowSelChanged(this, selected);
+                    });
+                }
             }
         };
+    }-*/;
+
+    static interface JsRowSelect {
+        void onRowSelChanged(Element row, boolean selected, JavaScriptObject rowData);
+    }
+
+    static native void setRowSelChanged(final Element tableElt, JsRowSelect handler) /*-{
+        $wnd.$(tableElt).data('rowSelChanged', function(row, selected) {
+            var rowData = $wnd.$(tableElt).DataTable().row(row).data();
+            handler.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsRowSelect::onRowSelChanged(
+              Lcom/google/gwt/dom/client/Element;ZLcom/google/gwt/core/client/JavaScriptObject;)
+              (row, selected, rowData);
+        });
     }-*/;
 
     static native void switchOffSingleRowSelect(Element elt) /*-{
@@ -660,10 +699,10 @@ public class JsDataTable {
         t.children('tbody').on('click.singlerowsel', 'tr', function() {
             var $this = $wnd.$(this);
             if ($this.hasClass('selected')) {
-                $wnd.dataTableChangeRows($this, false);
+                $wnd.dataTableChangeRows($this, false, elt);
             } else {
-                $wnd.dataTableChangeRows(t.DataTable().$('tr.selected'), false);
-                $wnd.dataTableChangeRows($this, true);
+                $wnd.dataTableChangeRows(t.DataTable().$('tr.selected'), false, elt);
+                $wnd.dataTableChangeRows($this, true, elt);
             }
         });
     }-*/;
@@ -678,29 +717,29 @@ public class JsDataTable {
         t.children('tbody').on('click.multirowsel', 'tr', function() {
             var $this = $wnd.$(this);
             if ($this.hasClass('selected')) {
-                $wnd.dataTableChangeRows($this, false);
+                $wnd.dataTableChangeRows($this, false, elt);
             } else {
-                $wnd.dataTableChangeRows($this, true);
+                $wnd.dataTableChangeRows($this, true, elt);
             }
         });
     }-*/;
 
     static native void changeRow(Element cellElt, boolean selected) /*-{
-        $wnd.dataTableChangeRows($wnd.$(cellElt).closest('tr'), selected);
+        $wnd.dataTableChangeRows($wnd.$(cellElt).closest('tr'), selected, cellElt);
     }-*/;
 
     static native void selectOneRowOnly(Element cellElt) /*-{
         var rows = $wnd.$(cellElt).closest('tr');
         if (rows.length) {
             var row = rows.first();
-            $wnd.dataTableChangeRows(row.closest('tbody').children('tr.selected'), false);
-            $wnd.dataTableChangeRows(row, true);
+            $wnd.dataTableChangeRows(row.closest('tbody').children('tr.selected'), false, cellElt);
+            $wnd.dataTableChangeRows(row, true, cellElt);
         }
     }-*/;
 
     static native void unselectAllRows(Element tableElt) /*-{
         var t = $wnd.$(tableElt);
-        $wnd.dataTableChangeRows(t.DataTable().$('tr.selected'), false);
+        $wnd.dataTableChangeRows(t.DataTable().$('tr.selected'), false, tableElt);
     }-*/;
 
     static native JsArrayInteger getSelRowIndexes(Element tableElt) /*-{

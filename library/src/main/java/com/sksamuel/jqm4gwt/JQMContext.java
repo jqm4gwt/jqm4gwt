@@ -341,62 +341,6 @@ public class JQMContext {
         return null;
     }-*/;
 
-    /**
-     * Example: jsObjToString(css, ":", ";") returns <b> color:red;background-color:yellow; </b>
-     *
-     * @param jsObj - property/value javascript object
-     * @param propValueSeparator - will be used to separate property and value, i.e. aaa:33
-     * @param propsSeparator - will be used to separate property/value pairs, i.e. aaa:33;bbb:44;
-     * @return - string representation of property/value javascript object, i.e. aaa:33;bbb:44;
-     */
-    public static native String jsObjToString(JavaScriptObject jsObj, String propValueSeparator,
-                                              String propsSeparator) /*-{
-        var rslt = '';
-        for (var prop in jsObj) {
-            rslt += prop + propValueSeparator + jsObj[prop] + propsSeparator;
-        }
-        return rslt;
-    }-*/;
-
-    public static native JsArrayString getJsObjKeys(JavaScriptObject jsObj) /*-{
-        var keys = [];
-        for (var key in jsObj) {
-            keys.push(key);
-        }
-        return keys;
-    }-*/;
-
-    public static native String getJsObjValue(JavaScriptObject jsObj, String key) /*-{
-        var v = jsObj[key];
-        return '' + v; // prevents: JS value of type number cannot be converted to String
-    }-*/;
-
-    public static native void setJsObjValue(JavaScriptObject jsObj, String key, String value) /*-{
-        jsObj[key] = value;
-    }-*/;
-
-    public static native void deleteJsObjProperty(JavaScriptObject jsObj, String key) /*-{
-        delete jsObj[key];
-    }-*/;
-
-    public static native Integer getJsObjIntValue(JavaScriptObject jsObj, String key) /*-{
-        var v = jsObj[key];
-        return v === undefined || v === null ? null : @java.lang.Integer::valueOf(I)(v);
-    }-*/;
-
-    public static native Double getJsObjDoubleValue(JavaScriptObject jsObj, String key) /*-{
-        var v = jsObj[key];
-        return v === undefined || v === null ? null : @java.lang.Double::valueOf(D)(v);
-    }-*/;
-
-    public static native void setJsObjIntValue(JavaScriptObject jsObj, String key, int value) /*-{
-        jsObj[key] = value;
-    }-*/;
-
-    public static native void setJsObjDoubleValue(JavaScriptObject jsObj, String key, double value) /*-{
-        jsObj[key] = value;
-    }-*/;
-
     public static double round(double valueToRound, int numberOfDecimalPlaces) {
         double multipicationFactor = Math.pow(10, numberOfDecimalPlaces);
         double interestedInZeroDPs = valueToRound * multipicationFactor;

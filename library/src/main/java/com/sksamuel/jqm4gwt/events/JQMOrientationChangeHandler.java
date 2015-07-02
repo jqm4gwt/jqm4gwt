@@ -1,7 +1,7 @@
 package com.sksamuel.jqm4gwt.events;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.sksamuel.jqm4gwt.JQMContext;
+import com.sksamuel.jqm4gwt.JsUtils;
 
 public interface JQMOrientationChangeHandler extends JQMEventHandler {
 
@@ -12,7 +12,7 @@ public interface JQMOrientationChangeHandler extends JQMEventHandler {
         public static String getOrientation(JQMEvent<?> event) {
             if (event == null) return null;
             JavaScriptObject nativeEvent = event.getJQueryEvent().getNative();
-            String s = JQMContext.getJsObjValue(nativeEvent, "orientation");
+            String s = JsUtils.getObjValue(nativeEvent, "orientation");
             return s;
         }
     }
