@@ -98,6 +98,14 @@
           <b:JQMButton ui:field="btnDeleteSelRow" text="Delete Selected Row(s)" inline="true" mini="true" />
         </g:FlowPanel>
         
+        <g:FlowPanel addStyleNames="{style.separator}" />
+        
+        <da:JQMDataTable ui:field="dataTable4" serverSide="true" manualEnhance="true"
+          searching="true" pagingType="FULL_NUMBERS"
+          colSorts="0" colNames="Name, Position, Office, Extn., Start date, Salary"
+          rowSelectMode="MULTI">
+        </da:JQMDataTable>
+        
       </g:FlowPanel>
     </g:FlowPanel>
   </jqm:JQMPage>  

@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.JsUtils;
 import com.sksamuel.jqm4gwt.StrUtils;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.AjaxHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsAjax;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsCallback;
@@ -54,7 +55,16 @@ public class JQMDataTable extends JQMTableGrid {
     /** Space separated classes for adding to head groups panel. */
     public static String headGroupsClasses;
 
+    public static interface AjaxPrepare {
+        /** Raised right before ajax call to the server. */
+        void prepare(JsAjax ajax);
+    }
+
+    private AjaxPrepare ajaxPrepare;
+    private AjaxHandler ajaxHandler;
+
     private boolean enhanced;
+    private boolean manualEnhance;
 
     private boolean paging = true;
     private boolean lengthChange = true;
@@ -191,7 +201,8 @@ public class JQMDataTable extends JQMTableGrid {
     protected void onLoad() {
         super.onLoad();
         populateAll();
-        enhance();
+        if (!manualEnhance) enhance();
+        else JsDataTable.setDataRoleNone(getElement()); // we don't need jQuery Mobile enhancement for DataTable parts!
     }
 
     @Override
@@ -255,13 +266,17 @@ public class JQMDataTable extends JQMTableGrid {
             Language.Builder.copy(language, l, true/*nonEmpty*/);
             p.setLanguage(l);
         }
-        if (!Empty.is(ajax)) {
-            if (dataSrc == null && httpMethod == null) p.setAjax(ajax);
-            else {
+        if (ajaxHandler != null) {
+            p.setAjaxHandler(ajaxHandler);
+        } else if (!Empty.is(ajax)) {
+            if (dataSrc == null && httpMethod == null && ajaxPrepare == null) {
+                p.setAjax(ajax);
+            } else {
                 JsAjax aj = JsAjax.create();
                 aj.setUrl(ajax);
                 if (dataSrc != null) aj.setDataSrc(dataSrc);
                 if (httpMethod != null) aj.setMethod(httpMethod.name());
+                if (ajaxPrepare != null) ajaxPrepare.prepare(aj);
                 p.setAjaxObj(aj);
             }
         }
@@ -298,6 +313,31 @@ public class JQMDataTable extends JQMTableGrid {
         }
         if (!autoWidth) p.setAutoWidth(false);
         return p;
+    }
+
+    public AjaxPrepare getAjaxPrepare() {
+        return ajaxPrepare;
+    }
+
+    /**
+     *  Additional options could be specified before making ajax call to the server.
+     *  <br> See <a href="http://api.jquery.com/jQuery.ajax/">jQuery.ajax()</a>
+     **/
+    public void setAjaxPrepare(AjaxPrepare value) {
+        ajaxPrepare = value;
+    }
+
+
+    public AjaxHandler getAjaxHandler() {
+        return ajaxHandler;
+    }
+
+    /**
+     * Custom handler for getting data from the server, could be useful in case of client side
+     * caching, specific data exchange protocol, ...
+     **/
+    public void setAjaxHandler(AjaxHandler handler) {
+        ajaxHandler = handler;
     }
 
     private JsSortItems prepareJsOrder() {
@@ -367,7 +407,15 @@ public class JQMDataTable extends JQMTableGrid {
         return rslt;
     }
 
-    private void enhance() {
+    public boolean isManualEnhance() {
+        return manualEnhance;
+    }
+
+    public void setManualEnhance(boolean manualEnhance) {
+        this.manualEnhance = manualEnhance;
+    }
+
+    public void enhance() {
         if (enhanced) return;
         enhanced = true;
         final Element elt = getElement();
@@ -837,12 +885,19 @@ public class JQMDataTable extends JQMTableGrid {
         JsDataTable.addRowDetailsRenderer(getElement(), renderer);
     }
 
+    /** Makes no much sense when serverSide is true, use getSelRowIds() in that case. */
     public JsArrayInteger getSelRowIndexes() {
         return JsDataTable.getSelRowIndexes(getElement());
     }
 
+    /** Makes no much sense when serverSide is true, use getSelRowIds() in that case. */
     public JsArray<JavaScriptObject> getSelRowDatas() {
         return JsDataTable.getSelRowDatas(getElement());
+    }
+
+    /** Works when serverSide is true. */
+    public Set<String> getSelRowIds() {
+        return serverSelected;
     }
 
     public void unselectAllRows() {

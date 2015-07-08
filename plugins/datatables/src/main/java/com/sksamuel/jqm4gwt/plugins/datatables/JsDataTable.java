@@ -80,7 +80,7 @@ public class JsDataTable {
             this.name = value;
         }-*/;
 
-        public final native boolean getVisible() /*-{
+        public final native boolean isVisible() /*-{
             return this.visible;
         }-*/;
 
@@ -88,7 +88,7 @@ public class JsDataTable {
             this.visible = value;
         }-*/;
 
-        public final native boolean getOrderable() /*-{
+        public final native boolean isOrderable() /*-{
             return this.orderable;
         }-*/;
 
@@ -96,7 +96,7 @@ public class JsDataTable {
             this.orderable = value;
         }-*/;
 
-        public final native boolean getSearchable() /*-{
+        public final native boolean isSearchable() /*-{
             return this.searchable;
         }-*/;
 
@@ -137,7 +137,8 @@ public class JsDataTable {
         }-*/;
 
         public final native String getData() /*-{
-            return this.data;
+            if (typeof this.data === 'string') return this.data;
+            else return '' + this.data;
         }-*/;
 
         public final native void setData(String value) /*-{
@@ -348,7 +349,197 @@ public class JsDataTable {
         }-*/;
     }
 
-    static class JsAjax extends JavaScriptObject {
+    /** See <a href="https://datatables.net/examples/server_side/pipeline.html">Pipelining data to reduce Ajax calls</a> */
+    public static interface AjaxHandler {
+        /**
+         * @param drawCallback - must be called back when data is ready with JsAjaxRequest as input parameter.
+         * @param request - actually it's JsAjaxRequest, so you can cast it safely.
+         **/
+        void getData(JavaScriptObject/*JsAjaxRequest*/ request, JavaScriptObject drawCallback);
+    }
+
+    /** See <a href="https://datatables.net/manual/server-side">Server-side processing</a> */
+    /* Example:
+       { "draw": 1,
+         "columns": [
+           {"data":0,"name":"","searchable":true,"orderable":true,"search":{"value":"","regex":false}},
+           {"data":1,"name":"","searchable":true,"orderable":true,"search":{"value":"","regex":false}}
+         ],
+         "order": [ {"column":0,"dir":"asc"} ],
+         "start": 0,
+         "length": 10,
+         "search": {"value":"","regex":false}
+       }
+    */
+    public static class JsAjaxRequest extends JavaScriptObject {
+
+        protected JsAjaxRequest() {}
+
+        public static native JsAjaxRequest create() /*-{
+            return {};
+        }-*/;
+
+        public final native int getDraw() /*-{
+            return this.draw;
+        }-*/;
+
+        public final native void setDraw(int value) /*-{
+            this.draw = value;
+        }-*/;
+
+        public final native int getStart() /*-{
+            return this.start;
+        }-*/;
+
+        public final native void setStart(int value) /*-{
+            this.start = value;
+        }-*/;
+
+        public final native int getLength() /*-{
+            return this.length;
+        }-*/;
+
+        public final native void setLength(int value) /*-{
+            this.length = value;
+        }-*/;
+
+        public final native String getSearchValue() /*-{
+            return this.search.value;
+        }-*/;
+
+        public final native void setSearchValue(String v) /*-{
+            this.search.value = v;
+        }-*/;
+
+        public final native boolean isSearchRegex() /*-{
+            return this.search.regex;
+        }-*/;
+
+        public final native void setSearchRegex(boolean value) /*-{
+            this.search.regex = value;
+        }-*/;
+
+        public final native JsOrderItems getOrder() /*-{
+            return this.order;
+        }-*/;
+
+        public final native void setOrder(JsOrderItems value) /*-{
+            this.order = value;
+        }-*/;
+
+        public final native JsColItems getColumns() /*-{
+            return this.columns;
+        }-*/;
+
+        public final native void setColumns(JsColItems value) /*-{
+            this.columns = value;
+        }-*/;
+
+    }
+
+    public static class JsOrderItem extends JavaScriptObject {
+
+        protected JsOrderItem() {}
+
+        public final native int getCol() /*-{
+            return this.column;
+        }-*/;
+
+        public final native String getDir() /*-{
+            return this.dir;
+        }-*/;
+    }
+
+    public static class JsOrderItems extends JsArray<JsOrderItem> {
+        protected JsOrderItems() {}
+    }
+
+    public static class JsColItem extends JavaScriptObject {
+
+        protected JsColItem() {}
+
+        public final native String getData() /*-{
+            if (typeof this.data === 'string') return this.data;
+            else return '' + this.data;
+        }-*/;
+
+        public final native String getName() /*-{
+            return this.name;
+        }-*/;
+
+        public final native boolean isOrderable() /*-{
+            return this.orderable;
+        }-*/;
+
+        public final native boolean isSearchable() /*-{
+            return this.searchable;
+        }-*/;
+
+        public final native String getSearchValue() /*-{
+            return this.search.value;
+        }-*/;
+
+        public final native boolean isSearchRegex() /*-{
+            return this.search.regex;
+        }-*/;
+    }
+
+    public static class JsColItems extends JsArray<JsColItem> {
+        protected JsColItems() {}
+    }
+
+    /** See <a href="https://datatables.net/manual/server-side">Server-side processing</a> */
+    public static class JsAjaxResponse extends JavaScriptObject {
+
+        protected JsAjaxResponse() {}
+
+        public static native JsAjaxResponse create() /*-{
+            return {};
+        }-*/;
+
+        public final native int getDraw() /*-{
+            return this.draw;
+        }-*/;
+
+        public final native void setDraw(int value) /*-{
+            this.draw = value;
+        }-*/;
+
+        public final native int getRecordsTotal() /*-{
+            return this.recordsTotal;
+        }-*/;
+
+        public final native void setRecordsTotal(int value) /*-{
+            this.recordsTotal = value;
+        }-*/;
+
+        public final native int getRecordsFiltered() /*-{
+            return this.recordsFiltered;
+        }-*/;
+
+        public final native void setRecordsFiltered(int value) /*-{
+            this.recordsFiltered = value;
+        }-*/;
+
+        public final native JavaScriptObject getData() /*-{
+            return this.data;
+        }-*/;
+
+        public final native void setData(JavaScriptObject value) /*-{
+            this.data = value;
+        }-*/;
+
+        public final native String getError() /*-{
+            return this.error;
+        }-*/;
+
+        public final native void setError(String value) /*-{
+            this.error = value;
+        }-*/;
+
+    }
+
+    public static class JsAjax extends JavaScriptObject {
 
         protected JsAjax() {}
 
@@ -379,6 +570,7 @@ public class JsDataTable {
         public final native void setMethod(String value) /*-{
             this.method = value;
         }-*/;
+
     }
 
     static class JsLengthMenu extends JsArrayMixed {
@@ -402,7 +594,7 @@ public class JsDataTable {
             return {};
         }-*/;
 
-        public final native boolean getPaging() /*-{
+        public final native boolean isPaging() /*-{
             return this.paging;
         }-*/;
 
@@ -410,7 +602,7 @@ public class JsDataTable {
             this.paging = value;
         }-*/;
 
-        public final native boolean getLengthChange() /*-{
+        public final native boolean isLengthChange() /*-{
             return this.lengthChange;
         }-*/;
 
@@ -426,7 +618,7 @@ public class JsDataTable {
             this.lengthMenu = value;
         }-*/;
 
-        public final native boolean getInfo() /*-{
+        public final native boolean isInfo() /*-{
             return this.info;
         }-*/;
 
@@ -434,7 +626,7 @@ public class JsDataTable {
             this.info = value;
         }-*/;
 
-        public final native boolean getOrdering() /*-{
+        public final native boolean isOrdering() /*-{
             return this.ordering;
         }-*/;
 
@@ -442,7 +634,7 @@ public class JsDataTable {
             this.ordering = value;
         }-*/;
 
-        public final native boolean getSearching() /*-{
+        public final native boolean isSearching() /*-{
             return this.searching;
         }-*/;
 
@@ -466,7 +658,7 @@ public class JsDataTable {
             this.columns = value;
         }-*/;
 
-        public final native boolean getScrollX() /*-{
+        public final native boolean isScrollX() /*-{
             return this.scrollX;
         }-*/;
 
@@ -482,7 +674,7 @@ public class JsDataTable {
             this.scrollY = value;
         }-*/;
 
-        public final native boolean getScrollCollapse() /*-{
+        public final native boolean isScrollCollapse() /*-{
             return this.scrollCollapse;
         }-*/;
 
@@ -507,7 +699,8 @@ public class JsDataTable {
         }-*/;
 
         public final native String getAjax() /*-{
-            return this.ajax;
+            if (typeof this.ajax === 'string') return this.ajax;
+            else return null;
         }-*/;
 
         public final native void setAjax(String value) /*-{
@@ -515,7 +708,8 @@ public class JsDataTable {
         }-*/;
 
         public final native JsAjax getAjaxObj() /*-{
-            if (typeof this.ajax === 'string') return { url: this.ajax }
+            if (typeof this.ajax === 'string') return { url: this.ajax };
+            else if (typeof this.ajax === 'function') return null;
             else return this.ajax;
         }-*/;
 
@@ -523,7 +717,15 @@ public class JsDataTable {
             this.ajax = value;
         }-*/;
 
-        public final native boolean getServerSide() /*-{
+        public final native void setAjaxHandler(final AjaxHandler handler) /*-{
+            this.ajax = function ( request, drawCallback, settings ) {
+                handler.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.AjaxHandler::getData(
+                    Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)
+                    (request, drawCallback);
+            };
+        }-*/;
+
+        public final native boolean isServerSide() /*-{
             return this.serverSide;
         }-*/;
 
@@ -531,7 +733,7 @@ public class JsDataTable {
             this.serverSide = value;
         }-*/;
 
-        public final native boolean getDeferRender() /*-{
+        public final native boolean isDeferRender() /*-{
             return this.deferRender;
         }-*/;
 
@@ -539,7 +741,7 @@ public class JsDataTable {
             this.deferRender = value;
         }-*/;
 
-        public final native boolean getProcessing() /*-{
+        public final native boolean isProcessing() /*-{
             return this.processing;
         }-*/;
 
@@ -547,7 +749,7 @@ public class JsDataTable {
             this.processing = value;
         }-*/;
 
-        public final native boolean getStateSave() /*-{
+        public final native boolean isStateSave() /*-{
             return this.stateSave;
         }-*/;
 
@@ -563,7 +765,7 @@ public class JsDataTable {
             this.stateDuration = value;
         }-*/;
 
-        public final native boolean getAutoWidth() /*-{
+        public final native boolean isAutoWidth() /*-{
             return this.autoWidth;
         }-*/;
 

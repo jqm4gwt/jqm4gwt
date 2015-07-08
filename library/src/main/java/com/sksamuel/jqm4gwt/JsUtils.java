@@ -24,6 +24,14 @@ public class JsUtils {
         return rslt;
     }-*/;
 
+    public static native String stringify(JavaScriptObject jsObj) /*-{
+        return JSON.stringify(jsObj);
+    }-*/;
+
+    public static native JavaScriptObject jsonParse(String json) /*-{
+        return JSON.parse(json);
+    }-*/;
+
     public static native JsArrayString getObjKeys(JavaScriptObject jsObj) /*-{
         var keys = [];
         for (var key in jsObj) {
@@ -38,6 +46,16 @@ public class JsUtils {
     }-*/;
 
     public static native void setObjValue(JavaScriptObject jsObj, String key, String value) /*-{
+        jsObj[key] = value;
+    }-*/;
+
+    public static native JavaScriptObject getObjNestedValue(JavaScriptObject jsObj, String key) /*-{
+        var v = jsObj[key];
+        return v;
+    }-*/;
+
+    public static native void setObjNestedValue(JavaScriptObject jsObj, String key,
+                                                JavaScriptObject value) /*-{
         jsObj[key] = value;
     }-*/;
 
@@ -63,5 +81,8 @@ public class JsUtils {
         jsObj[key] = value;
     }-*/;
 
+    public static native void callFunc(JavaScriptObject jsFunc, JavaScriptObject arg0) /*-{
+        jsFunc(arg0);
+    }-*/;
 
 }
