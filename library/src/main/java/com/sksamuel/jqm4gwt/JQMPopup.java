@@ -127,6 +127,18 @@ public class JQMPopup extends JQMContainer {
         return "popup";
     }
 
+    @Override
+    public String getTheme() {
+        String rslt = JQMCommon.getThemeEx(this, JQMCommon.STYLE_UI_BODY);
+        if (rslt == null || rslt.isEmpty()) rslt = super.getTheme();
+        return rslt;
+    }
+
+    @Override
+    public void setTheme(String theme) {
+        JQMCommon.setThemeEx(this, theme, JQMCommon.STYLE_UI_BODY);
+    }
+
     public String getOverlayTheme() {
         return getAttribute("data-overlay-theme");
     }
