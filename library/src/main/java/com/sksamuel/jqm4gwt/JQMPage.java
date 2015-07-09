@@ -31,9 +31,11 @@ import com.sksamuel.jqm4gwt.toolbar.JQMPanel;
  */
 public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
-    public static final String UI_DIALOG_BACKGROUND = "ui-dialog-background";
     public static final String DATA_DOM_CACHE = "data-dom-cache";
+    public static final String UI_DIALOG_BACKGROUND = "ui-dialog-background";
     public static final String JQM4GWT_DLG_TRANSPARENT = "jqm4gwt-dialog-transparent";
+    public static final String DLG_TRANSPARENT_ZINDEX_MINUS1 = "zindex-1";
+    public static final String DLG_TRANSPARENT_TOPMOST = "topmost";
 
     private static final String STYLE_UI_DIALOG = "ui-dialog";
     private static final String UI_DIALOG_CONTAIN = "ui-dialog-contain";
