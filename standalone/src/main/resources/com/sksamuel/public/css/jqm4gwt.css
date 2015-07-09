@@ -12,6 +12,7 @@
   height: auto\9; /*ie8*/
 }
 
+/* See http://stackoverflow.com/a/11798480 */
 .ui-loader-background {
   width: 100%;
   height: 100%;
@@ -27,7 +28,12 @@
   display: block;
 }
 
-.ui-dialog-background {
+.ui-dialog-background.ui-dialog {
+  opacity: 1;
+  display: block !important;
+}
+
+.ui-dialog-background:not(.ui-dialog) {
   opacity: 0.5;
   display: block !important;
   -webkit-transition: opacity 0.5s ease-in;
@@ -36,7 +42,7 @@
           transition: opacity 0.5s ease-in;
 }
 
-.ui-dialog-background.pop.in {
+.ui-dialog-background.pop.in:not(.ui-dialog) {
   opacity: 1;
   -webkit-transition: opacity 0.5s ease-in;
      -moz-transition: opacity 0.5s ease-in;
@@ -44,6 +50,7 @@
           transition: opacity 0.5s ease-in;
 }
 
+/* See http://stackoverflow.com/a/10449504 */
 .jqm4gwt-dialog-transparent.ui-dialog {
   min-height: 100% !important;
   background: rgba(0, 0, 0, 0.1) !important; /* cannot be transparent because of IE9 */
@@ -54,7 +61,13 @@
   top: 0;
   margin: 0;
   position: fixed;
-  z-index: 1099; /* must be less than ui-loader and jqm-datebox(1100) */
+  z-index: 1098; /* must be less than ui-loader and jqm-datebox(1100) */
+}
+.jqm4gwt-dialog-transparent.ui-dialog.zindex-1 {
+  z-index: 1097; /* other dialogs can be called from this one */
+}
+.jqm4gwt-dialog-transparent.ui-dialog.topmost {
+  z-index: 1099; /* this dialog must be over other dialogs */
 }
 
 .jqm4gwt-non-editable input {
