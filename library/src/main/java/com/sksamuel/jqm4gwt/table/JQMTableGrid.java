@@ -59,6 +59,8 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
     protected String colNames;
     protected String colGroups;
 
+    protected String footColTitles;
+
     private String cells;
 
     private Collection<String> dataStr;
@@ -91,7 +93,9 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
     protected void checkFooterCreated() {
         if (tFoot != null) return;
         tFoot = new CustomFlowPanel(Document.get().createTFootElement());
-        add(tFoot);
+        int i = getWidgetIndex(tBody);
+        if (i >= 0) insert(tFoot, i);
+        else add(tFoot);
     }
 
     public String getColNames() {
@@ -112,7 +116,7 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         this.colNames = colNames;
         colTitleWidgets.clear();
 
-        if (this.colNames == null || this.colNames.isEmpty()) {
+        if (Empty.is(this.colNames)) {
             populateColumns(null);
             return;
         }
@@ -123,6 +127,44 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
             cols.add(ColumnDef.create(s, false/*headGroup*/));
         }
         populateColumns(cols);
+    }
+
+    public String getFootColTitles() {
+        return footColTitles;
+    }
+
+    /**
+     * @param footColTitles - comma separated footer column titles.
+     * <br> If you need comma in title use \, to preserve it.
+     * <br> Column title can be valid HTML, i.e. &lt;abbr title="Rotten Tomato Rating">Rating&lt;/abbr&gt;
+     * <br> Example: Rank,Movie Title,Year,Reviews
+     */
+    public void setFootColTitles(String footColTitles) {
+        if (this.footColTitles == footColTitles
+                || this.footColTitles != null && this.footColTitles.equals(footColTitles)) return;
+        this.footColTitles = footColTitles;
+        if (Empty.is(this.footColTitles)) {
+            if (tFoot != null) {
+                tFoot.clear();
+                tFoot.getElement().setInnerText(null);
+            }
+            return;
+        }
+        if (tFoot != null) {
+            tFoot.clear();
+            tFoot.getElement().setInnerText(null);
+        } else {
+            checkFooterCreated();
+        }
+        TableRowElement tr = Document.get().createTRElement();
+        List<String> lst = StrUtils.commaSplit(this.footColTitles);
+        for (String i : lst) {
+            String s = StrUtils.replaceAllBackslashCommas(i.trim());
+            TableCellElement th = Document.get().createTHElement();
+            th.setInnerHTML(s);
+            tr.appendChild(th);
+        }
+        tFoot.getElement().insertFirst(tr);
     }
 
     public String getColGroups() {

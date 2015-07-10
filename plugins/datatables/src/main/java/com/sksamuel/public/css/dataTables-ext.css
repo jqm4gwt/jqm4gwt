@@ -1,0 +1,14 @@
+table.dataTable.footerOnTop tfoot {
+  display: table-header-group;
+}
+table.dataTable.footerOnTop tfoot th {
+  border-top-width: 0;
+}
+table.dataTable.footerOnTop thead th {
+  border-bottom-width: 0;
+}
+table.dataTable.footerOnTop, table.dataTable.footerOnTop tfoot th {
+  border-bottom-color: rgb(17, 17, 17);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}

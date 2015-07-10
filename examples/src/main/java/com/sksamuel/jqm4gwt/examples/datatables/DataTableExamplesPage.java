@@ -1,5 +1,10 @@
 package com.sksamuel.jqm4gwt.examples.datatables;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -13,11 +18,13 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
+import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.HttpUtils;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JsUtils;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable;
+import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable.RowIdHelper;
 import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable.RowSelectMode;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.AjaxHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler;
@@ -150,6 +157,17 @@ public class DataTableExamplesPage {
             }
         });
 
+        dataTable4.setRowIdHelper(new RowIdHelper() {
+            @Override
+            public String calcRowId(JavaScriptObject rowData) {
+                JsArrayMixed r = rowData.cast();
+                String s = "";
+                for (int i = 0; i < r.length(); i++) {
+                    s += r.getString(i);
+                }
+                return s;
+            }
+        });
         dataTable4.setAjaxHandler(new AjaxHandler() {
             @Override
             public void getData(final JavaScriptObject request, final JavaScriptObject drawCallback) {
@@ -160,7 +178,7 @@ public class DataTableExamplesPage {
                         public void onSuccess(String result) {
                             JavaScriptObject obj = JsUtils.jsonParse(result);
                             dataArray = JsUtils.getObjNestedValue(obj, "data").cast();
-                            getServerData(request, drawCallback);
+                            getArrayServerData((JsAjaxRequest) request, drawCallback);
                         }
 
                         @Override
@@ -169,16 +187,15 @@ public class DataTableExamplesPage {
                         }
                     });
                 } else {
-                    getServerData(request, drawCallback);
+                    getArrayServerData((JsAjaxRequest) request, drawCallback);
                 }
             }
         });
         dataTable4.enhance();
     }
 
-    private static void getServerData(JavaScriptObject request, JavaScriptObject drawCallback) {
-        JsAjaxRequest req = request.cast();
-        JsOrderItems order = req.getOrder();
+    private static void getArrayServerData(JsAjaxRequest req, JavaScriptObject drawCallback) {
+        final JsOrderItems order = req.getOrder();
         String s = "";
         if (order.length() > 0) {
             for (int i = 0; i < order.length(); i++) {
@@ -198,21 +215,73 @@ public class DataTableExamplesPage {
         }
         if (!colStr.isEmpty()) colStr = "columns: " + colStr + "\n\n";
 
-        Window.alert(s + colStr + JsUtils.stringify(req));
+        //Window.alert(s + colStr + JsUtils.stringify(req));
+
+        String search = req.getSearchValue();
+        search = search != null ? search.trim() : null;
+
+        int total = dataArray.length();
+        int filtered = total;
+        JsArrayMixed[] arr;
+        if (Empty.is(search)) {
+            arr = new JsArrayMixed[total];
+            for (int i = 0; i < total; i++) {
+                arr[i] = dataArray.get(i);
+            }
+        } else {
+            @SuppressWarnings("null")
+            String searchLo = search.toLowerCase();
+            List<JsArrayMixed> lst = new ArrayList<>();
+            for (int i = 0; i < total; i++) {
+                JsArrayMixed row = dataArray.get(i);
+                for (int j = 0; j < req.getColumns().length(); j++) {
+                    String v = row.getString(j);
+                    if (Empty.is(v)) continue;
+                    if (v.contains(search)) {
+                        lst.add(row);
+                        break;
+                    }
+                    String vLo = v.toLowerCase();
+                    if (vLo.contains(searchLo)) {
+                        lst.add(row);
+                        break;
+                    }
+                }
+            }
+            arr = lst.toArray(new JsArrayMixed[0]);
+            filtered = arr.length;
+        }
+        if (order.length() > 0) {
+            Arrays.sort(arr, new Comparator<JsArrayMixed>() {
+                @Override
+                public int compare(JsArrayMixed o1, JsArrayMixed o2) {
+                    for (int i = 0; i < order.length(); i++) {
+                        int colIdx = order.get(i).getCol();
+                        String v1 = o1.getString(colIdx);
+                        String v2 = o2.getString(colIdx);
+                        int cmp = v1.compareTo(v2);
+                        if (cmp != 0) {
+                            String dir = order.get(i).getDir();
+                            if ("asc".equals(dir)) return cmp;
+                            else return -cmp;
+                        }
+                    }
+                    return 0;
+                }});
+        }
 
         JsAjaxResponse resp = JsAjaxResponse.create();
         resp.setDraw(req.getDraw());
-        int total = dataArray.length();
         resp.setRecordsTotal(total);
-        resp.setRecordsFiltered(total);
-        int cnt = Math.min(total - req.getStart(), req.getLength());
+        resp.setRecordsFiltered(filtered);
+        int cnt = Math.min(filtered - req.getStart(), req.getLength());
         JsArray<JsArrayMixed> d = JavaScriptObject.createArray(cnt).cast();
         for (int i = 0; i < cnt; i++) {
-            d.set(i, dataArray.get(req.getStart() + i));
+            d.set(i, arr[req.getStart() + i]);
         }
         resp.setData(d);
-        s = JsUtils.stringify(resp);
-        Window.alert(s);
+        //s = JsUtils.stringify(resp);
+        //Window.alert(s);
         JsUtils.callFunc(drawCallback, resp);
     }
 

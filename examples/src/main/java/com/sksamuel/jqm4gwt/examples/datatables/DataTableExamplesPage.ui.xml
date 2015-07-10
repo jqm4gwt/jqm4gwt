@@ -99,11 +99,14 @@
         </g:FlowPanel>
         
         <g:FlowPanel addStyleNames="{style.separator}" />
+        <h:Heading.H3>Server side (custom ajax handler) examples:</h:Heading.H3>
         
         <da:JQMDataTable ui:field="dataTable4" serverSide="true" manualEnhance="true"
-          searching="true" pagingType="FULL_NUMBERS"
-          colSorts="0" colNames="Name, Position, Office, Extn., Start date, Salary"
-          rowSelectMode="MULTI">
+          searching="true" pagingType="FULL_NUMBERS" colSorts="0" 
+          colNames="Name, Position, Office, Extn., Start date, Salary"
+          footColTitles="Name, Position, Office, Extn., Start date, Salary"
+          rowSelectMode="MULTI"
+          addStyleNames="footerOnTop">
         </da:JQMDataTable>
         
       </g:FlowPanel>

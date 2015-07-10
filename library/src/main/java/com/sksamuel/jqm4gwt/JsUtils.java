@@ -42,7 +42,8 @@ public class JsUtils {
 
     public static native String getObjValue(JavaScriptObject jsObj, String key) /*-{
         var v = jsObj[key];
-        return '' + v; // prevents: JS value of type number cannot be converted to String
+        return v === undefined || v === null
+               ? null : '' + v; // prevents: JS value of type number cannot be converted to String
     }-*/;
 
     public static native void setObjValue(JavaScriptObject jsObj, String key, String value) /*-{
@@ -51,7 +52,7 @@ public class JsUtils {
 
     public static native JavaScriptObject getObjNestedValue(JavaScriptObject jsObj, String key) /*-{
         var v = jsObj[key];
-        return v;
+        return v === undefined || v === null ? null : v;
     }-*/;
 
     public static native void setObjNestedValue(JavaScriptObject jsObj, String key,

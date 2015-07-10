@@ -794,7 +794,7 @@ public class JsDataTable {
     }
 
     static interface JsRowCallback {
-        void onRow(Element row, JavaScriptObject data);
+        void onRow(Element row, JavaScriptObject rowData);
     }
 
     static native void enhance(Element elt, JsEnhanceParams params) /*-{

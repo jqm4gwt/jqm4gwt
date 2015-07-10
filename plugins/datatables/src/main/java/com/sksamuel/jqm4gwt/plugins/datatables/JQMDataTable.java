@@ -189,6 +189,12 @@ public class JQMDataTable extends JQMTableGrid {
 
     private Set<String> serverSelected;
 
+    public static interface RowIdHelper {
+        String calcRowId(JavaScriptObject rowData);
+    }
+
+    private RowIdHelper rowIdHelper;
+
     public JQMDataTable() {
     }
 
@@ -284,9 +290,9 @@ public class JQMDataTable extends JQMTableGrid {
             p.setServerSide(true);
             p.setRowCallback(new JsRowCallback() {
                 @Override
-                public void onRow(Element row, JavaScriptObject data) {
+                public void onRow(Element row, JavaScriptObject rowData) {
                     if (Empty.is(serverSelected)) return;
-                    String rowId = JsUtils.getObjValue(data, DT_ROWID);
+                    String rowId = getRowId(rowData);
                     if (Empty.is(rowId)) return;
                     if (serverSelected.contains(rowId)) row.addClassName(SELECTED_ROW);
                 }
@@ -294,7 +300,7 @@ public class JQMDataTable extends JQMTableGrid {
             JsDataTable.setRowSelChanged(getElement(), new JsRowSelect() {
                 @Override
                 public void onRowSelChanged(Element row, boolean selected, JavaScriptObject rowData) {
-                    String rowId = JsUtils.getObjValue(rowData, DT_ROWID);
+                    String rowId = getRowId(rowData);
                     if (Empty.is(rowId)) return;
                     if (selected) {
                         if (serverSelected == null) serverSelected = new HashSet<>();
@@ -313,6 +319,14 @@ public class JQMDataTable extends JQMTableGrid {
         }
         if (!autoWidth) p.setAutoWidth(false);
         return p;
+    }
+
+    private String getRowId(JavaScriptObject rowData) {
+        String rowId = JsUtils.getObjValue(rowData, DT_ROWID);
+        if (Empty.is(rowId) && rowIdHelper != null) {
+            rowId = rowIdHelper.calcRowId(rowData);
+        }
+        return rowId;
     }
 
     public AjaxPrepare getAjaxPrepare() {
@@ -942,6 +956,17 @@ public class JQMDataTable extends JQMTableGrid {
 
     public void rowsInvalidate(boolean resetPaging) {
         JsDataTable.rowsInvalidate(getElement(), resetPaging);
+    }
+
+    public RowIdHelper getRowIdHelper() {
+        return rowIdHelper;
+    }
+
+    /** Could be useful when we need selection support for server side mode, but server doesn't
+     *  provide DT_RowId in data for some reason.
+     **/
+    public void setRowIdHelper(RowIdHelper rowIdHelper) {
+        this.rowIdHelper = rowIdHelper;
     }
 
 }
