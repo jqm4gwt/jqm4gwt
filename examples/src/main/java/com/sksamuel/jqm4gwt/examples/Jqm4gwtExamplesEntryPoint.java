@@ -28,6 +28,7 @@ public class Jqm4gwtExamplesEntryPoint implements EntryPoint {
 
     static {
         com.sksamuel.jqm4gwt.plugins.datatables.Resources.Loader.loadCssRowDetails = true;
+        com.sksamuel.jqm4gwt.plugins.datatables.Resources.Loader.loadFooterOnTop = true;
     }
 
 	/**

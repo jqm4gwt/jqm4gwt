@@ -55,6 +55,12 @@ public class JQMDataTable extends JQMTableGrid {
     /** Space separated classes for adding to head groups panel. */
     public static String headGroupsClasses;
 
+    /**
+     * For constructing individual column search input placeholders.
+     * <br> null - language.search will be used, empty - means no prefix, just footer column title as placeholder.
+     **/
+    public static String individualColSearchPrefix = null;
+
     public static interface AjaxPrepare {
         /** Raised right before ajax call to the server. */
         void prepare(JsAjax ajax);
@@ -194,6 +200,8 @@ public class JQMDataTable extends JQMTableGrid {
     }
 
     private RowIdHelper rowIdHelper;
+
+    private boolean individualColSearches;
 
     public JQMDataTable() {
     }
@@ -462,6 +470,7 @@ public class JQMDataTable extends JQMTableGrid {
 
     private void afterEnhance() {
         initRowSelectMode();
+        initIndividualColSearches();
     }
 
     /** Called when DataTable's asynchronous initialization is complete/finished. */
@@ -967,6 +976,22 @@ public class JQMDataTable extends JQMTableGrid {
      **/
     public void setRowIdHelper(RowIdHelper rowIdHelper) {
         this.rowIdHelper = rowIdHelper;
+    }
+
+    public boolean isIndividualColSearches() {
+        return individualColSearches;
+    }
+
+    /** You must define footer column titles to get this property working, i.e. for each non-empty
+     *  title search input widget will be auto-generated.
+     **/
+    public void setIndividualColSearches(boolean individualColSearches) {
+        this.individualColSearches = individualColSearches;
+    }
+
+    protected void initIndividualColSearches() {
+        if (!enhanced || !individualColSearches) return;
+        JsDataTable.createFooterIndividualColumnSearches(getElement(), individualColSearchPrefix);
     }
 
 }

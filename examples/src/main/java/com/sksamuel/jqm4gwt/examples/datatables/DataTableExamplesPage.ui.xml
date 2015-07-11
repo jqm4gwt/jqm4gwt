@@ -104,8 +104,8 @@
         <da:JQMDataTable ui:field="dataTable4" serverSide="true" manualEnhance="true"
           searching="true" pagingType="FULL_NUMBERS" colSorts="0" 
           colNames="Name, Position, Office, Extn., Start date, Salary"
-          footColTitles="Name, Position, Office, Extn., Start date, Salary"
-          rowSelectMode="MULTI"
+          footColTitles="Name, Position, Office, Extension, Start date, Salary"
+          rowSelectMode="MULTI" individualColSearches="true"
           addStyleNames="footerOnTop">
         </da:JQMDataTable>
         

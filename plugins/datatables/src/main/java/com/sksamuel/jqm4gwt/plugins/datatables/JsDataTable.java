@@ -989,4 +989,34 @@ public class JsDataTable {
         return v.toArray();
     }-*/;
 
+    static native void createFooterIndividualColumnSearches(Element tableElt, String i18nSearchPrefix) /*-{
+        // Setup - add a text input to each footer cell
+        var t = $wnd.$(tableElt);
+
+        var prefix;
+        if (i18nSearchPrefix === null) {
+            prefix = t.DataTable().settings()[0].oLanguage.sSearch;
+            prefix = prefix.match(/_INPUT_/) ? prefix.replace('_INPUT_', '') : prefix;
+            prefix += ' ';
+        } else {
+            prefix = i18nSearchPrefix ? i18nSearchPrefix + ' ' : '';
+        }
+
+        $wnd.$('tfoot th', t).each(function () {
+            var $this = $wnd.$(this);
+            var s = $this.text();
+            if (s) {
+                $this.html('<input type="text" data-role="none" placeholder="' + prefix + s
+                    + '" style="width:100%;" />');
+            }
+        });
+        // Apply the search
+        t.DataTable().columns().every(function () {
+            var that = this;
+            $wnd.$('input', this.footer()).on('keyup change', function () {
+                that.search(this.value).draw();
+            });
+        });
+    }-*/;
+
 }

@@ -30,6 +30,7 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.AjaxHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsAjaxRequest;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsAjaxResponse;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsColItem;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsColItems;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsOrderItems;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer;
@@ -218,39 +219,54 @@ public class DataTableExamplesPage {
         //Window.alert(s + colStr + JsUtils.stringify(req));
 
         String search = req.getSearchValue();
-        search = search != null ? search.trim() : null;
-
-        int total = dataArray.length();
-        int filtered = total;
+        search = search != null ? search.trim() : "";
+        final int total = dataArray.length();
         JsArrayMixed[] arr;
-        if (Empty.is(search)) {
-            arr = new JsArrayMixed[total];
-            for (int i = 0; i < total; i++) {
-                arr[i] = dataArray.get(i);
-            }
-        } else {
-            @SuppressWarnings("null")
-            String searchLo = search.toLowerCase();
-            List<JsArrayMixed> lst = new ArrayList<>();
-            for (int i = 0; i < total; i++) {
-                JsArrayMixed row = dataArray.get(i);
-                for (int j = 0; j < req.getColumns().length(); j++) {
+        String searchLo = search.toLowerCase();
+        List<JsArrayMixed> lst = new ArrayList<>();
+        cols = req.getColumns();
+        for (int i = 0; i < total; i++) {
+            JsArrayMixed row = dataArray.get(i);
+            boolean okRow = search.isEmpty();
+            if (!search.isEmpty()) {
+                for (int j = 0; j < cols.length(); j++) {
                     String v = row.getString(j);
                     if (Empty.is(v)) continue;
                     if (v.contains(search)) {
-                        lst.add(row);
+                        okRow = true;
                         break;
                     }
                     String vLo = v.toLowerCase();
                     if (vLo.contains(searchLo)) {
-                        lst.add(row);
+                        okRow = true;
                         break;
                     }
                 }
             }
-            arr = lst.toArray(new JsArrayMixed[0]);
-            filtered = arr.length;
+            if (!okRow) continue;
+            for (int j = 0; j < cols.length(); j++) {
+                JsColItem col = cols.get(j);
+                if (!Empty.is(col.getSearchValue())) {
+                    String colSearch = col.getSearchValue().trim();
+                    String colSearchLo = colSearch.toLowerCase();
+                    if (!colSearch.isEmpty()) {
+                        String v = row.getString(j);
+                        if (Empty.is(v)) {
+                            okRow = false;
+                            break;
+                        }
+                        if (!v.contains(colSearch) && !v.toLowerCase().contains(colSearchLo)) {
+                            okRow = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (okRow) lst.add(row);
         }
+        arr = lst.toArray(new JsArrayMixed[0]);
+        final int filtered = arr.length;
+
         if (order.length() > 0) {
             Arrays.sort(arr, new Comparator<JsArrayMixed>() {
                 @Override
