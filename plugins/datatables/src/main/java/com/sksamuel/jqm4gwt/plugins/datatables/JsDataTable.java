@@ -137,7 +137,8 @@ public class JsDataTable {
         }-*/;
 
         public final native String getData() /*-{
-            if (typeof this.data === 'string') return this.data;
+            if (this.data === null) return null;
+            else if (typeof this.data === 'string') return this.data;
             else return '' + this.data;
         }-*/;
 
@@ -459,7 +460,8 @@ public class JsDataTable {
         protected JsColItem() {}
 
         public final native String getData() /*-{
-            if (typeof this.data === 'string') return this.data;
+            if (this.data === null) return null;
+            else if (typeof this.data === 'string') return this.data;
             else return '' + this.data;
         }-*/;
 
@@ -525,6 +527,9 @@ public class JsDataTable {
             return this.data;
         }-*/;
 
+        /**
+         * @param value - usually it's JsArray&lt;JsArrayMixed&gt; or JsArray&lt;JavaScriptObject&gt;
+         */
         public final native void setData(JavaScriptObject value) /*-{
             this.data = value;
         }-*/;
@@ -876,6 +881,20 @@ public class JsDataTable {
                 }
             }
         };
+    }-*/;
+
+    /** JsRowSelect.onRowSelChanged() will not be called, this method is needed for initial
+     *  rows initialization after draw changed.
+     **/
+    static native void initRow(Element cellElt, boolean selected) /*-{
+        var row = $wnd.$(cellElt);
+        if (selected) {
+            row.addClass('selected');
+            row.find('.checkbox-rowsel').prop('checked', true);
+        } else {
+            row.removeClass('selected');
+            row.find('.checkbox-rowsel').prop('checked', false);
+        }
     }-*/;
 
     static interface JsRowSelect {

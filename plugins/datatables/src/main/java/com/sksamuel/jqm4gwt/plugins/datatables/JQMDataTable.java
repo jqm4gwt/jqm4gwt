@@ -302,7 +302,9 @@ public class JQMDataTable extends JQMTableGrid {
                     if (Empty.is(serverSelected)) return;
                     String rowId = getRowId(rowData);
                     if (Empty.is(rowId)) return;
-                    if (serverSelected.contains(rowId)) row.addClassName(SELECTED_ROW);
+                    if (serverSelected.contains(rowId)) {
+                        JsDataTable.initRow(row, true);
+                    }
                 }
             });
             JsDataTable.setRowSelChanged(getElement(), new JsRowSelect() {
@@ -990,7 +992,7 @@ public class JQMDataTable extends JQMTableGrid {
     }
 
     protected void initIndividualColSearches() {
-        if (!enhanced || !individualColSearches) return;
+        if (!enhanced || !individualColSearches || tFoot == null) return;
         JsDataTable.createFooterIndividualColumnSearches(getElement(), individualColSearchPrefix);
     }
 

@@ -11,8 +11,6 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMPageEvent.PageState;
@@ -88,9 +86,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      **/
     public static JQMPage findPage(Element elt) {
         if (elt == null) return null;
-        EventListener listener = DOM.getEventListener(elt);
-        if (listener == null || !(listener instanceof JQMPage)) return null;
-        return (JQMPage) listener;
+        Widget w = JQMCommon.findWidget(elt);
+        return w instanceof JQMPage ? (JQMPage) w : null;
     }
 
     /** Could be overridden by descendants */

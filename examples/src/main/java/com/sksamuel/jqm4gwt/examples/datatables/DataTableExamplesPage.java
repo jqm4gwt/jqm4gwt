@@ -58,6 +58,9 @@ public class DataTableExamplesPage {
     JQMDataTable dataTable4;
 
     @UiField
+    JQMDataTable dataTable5;
+
+    @UiField
     JQMButton btnUnselectAll;
 
     @UiField
@@ -70,6 +73,7 @@ public class DataTableExamplesPage {
     JQMButton btnDeleteSelRow;
 
     private static JsArray<JsArrayMixed> dataArray = null;
+    private static JsArray<JavaScriptObject> dataObjs = null;
 
     public DataTableExamplesPage() {
         page = uiBinder.createAndBindUi(this);
@@ -178,7 +182,7 @@ public class DataTableExamplesPage {
                         @Override
                         public void onSuccess(String result) {
                             JavaScriptObject obj = JsUtils.jsonParse(result);
-                            dataArray = JsUtils.getObjNestedValue(obj, "data").cast();
+                            dataArray = JsUtils.getNestedObjValue(obj, "data").cast();
                             getArrayServerData((JsAjaxRequest) request, drawCallback);
                         }
 
@@ -193,6 +197,68 @@ public class DataTableExamplesPage {
             }
         });
         dataTable4.enhance();
+
+        dataTable5.addCellBtnClickHandler(new CellClickHandler() {
+            @Override
+            public boolean onClick(Element elt, JavaScriptObject rowData, int rowIndex) {
+                String s = dataTable5.getCellData(rowIndex, "name");
+                Window.alert(s);
+                if (RowSelectMode.SINGLE.equals(dataTable5.getRowSelectMode())) {
+                    dataTable5.selectOneRowOnly(elt);
+                } else if (RowSelectMode.MULTI.equals(dataTable5.getRowSelectMode())) {
+                    dataTable5.changeRow(elt, true);
+                }
+                return true;
+            }
+        });
+        dataTable5.addCellCheckboxClickHandler(new CellClickHandler() {
+            @Override
+            public boolean onClick(Element elt, JavaScriptObject rowData, int rowIndex) {
+                InputElement cb = elt.cast();
+                if (cb.isChecked()) {
+                    if (RowSelectMode.SINGLE.equals(dataTable5.getRowSelectMode())) {
+                        dataTable5.selectOneRowOnly(cb);
+                    } else if (RowSelectMode.MULTI.equals(dataTable5.getRowSelectMode())) {
+                        dataTable5.changeRow(cb, true);
+                    }
+                } else if (dataTable5.getRowSelectMode() != null) {
+                    dataTable5.changeRow(cb, false);
+                }
+                return true;
+            }
+        });
+        dataTable5.addRowDetailsRenderer(new RowDetailsRenderer() {
+            @Override
+            public String getHtml(JavaScriptObject rowData, int rowIndex) {
+                return dataTable5.getColumnsAsTableHtml(rowIndex, "border='0' style='padding-left:50px;'");
+            }
+        });
+        dataTable5.setAjaxHandler(new AjaxHandler() {
+            @Override
+            public void getData(final JavaScriptObject request, final JavaScriptObject drawCallback) {
+                if (dataObjs == null) {
+                    HttpUtils.httpGet("data/nested-objects.json", new Callback<String, String>() {
+
+                        @Override
+                        public void onSuccess(String result) {
+                            JavaScriptObject obj = JsUtils.jsonParse(result);
+                            dataObjs = JsUtils.getNestedObjValue(obj, "data").cast();
+                            JsAjaxRequest req = (JsAjaxRequest) request;
+                            generateRowIds(req.getColumns());
+                            getObjsServerData(req, drawCallback);
+                        }
+
+                        @Override
+                        public void onFailure(String reason) {
+                            Window.alert(reason);
+                        }
+                    });
+                } else {
+                    getObjsServerData((JsAjaxRequest) request, drawCallback);
+                }
+            }
+        });
+        dataTable5.enhance();
     }
 
     private static void getArrayServerData(JsAjaxRequest req, JavaScriptObject drawCallback) {
@@ -220,9 +286,8 @@ public class DataTableExamplesPage {
 
         String search = req.getSearchValue();
         search = search != null ? search.trim() : "";
-        final int total = dataArray.length();
-        JsArrayMixed[] arr;
         String searchLo = search.toLowerCase();
+        final int total = dataArray.length();
         List<JsArrayMixed> lst = new ArrayList<>();
         cols = req.getColumns();
         for (int i = 0; i < total; i++) {
@@ -264,7 +329,7 @@ public class DataTableExamplesPage {
             }
             if (okRow) lst.add(row);
         }
-        arr = lst.toArray(new JsArrayMixed[0]);
+        JsArrayMixed[] arr = lst.toArray(new JsArrayMixed[0]);
         final int filtered = arr.length;
 
         if (order.length() > 0) {
@@ -299,6 +364,109 @@ public class DataTableExamplesPage {
         //s = JsUtils.stringify(resp);
         //Window.alert(s);
         JsUtils.callFunc(drawCallback, resp);
+    }
+
+    private static void getObjsServerData(JsAjaxRequest req, JavaScriptObject drawCallback) {
+        String search = req.getSearchValue();
+        search = search != null ? search.trim() : "";
+        String searchLo = search.toLowerCase();
+        final int total = dataObjs.length();
+
+        List<JavaScriptObject> lst = new ArrayList<>();
+        final JsColItems cols = req.getColumns();
+        for (int i = 0; i < total; i++) {
+            JavaScriptObject row = dataObjs.get(i);
+            boolean okRow = search.isEmpty();
+            if (!search.isEmpty()) {
+                for (int j = 0; j < cols.length(); j++) {
+                    JsColItem col = cols.get(j);
+                    if (Empty.is(col.getData())) continue;
+                    String v = JsUtils.getChainValStr(row, col.getData());
+                    if (Empty.is(v)) continue;
+                    if (v.contains(search)) {
+                        okRow = true;
+                        break;
+                    }
+                    String vLo = v.toLowerCase();
+                    if (vLo.contains(searchLo)) {
+                        okRow = true;
+                        break;
+                    }
+                }
+            }
+            if (!okRow) continue;
+            for (int j = 0; j < cols.length(); j++) {
+                JsColItem col = cols.get(j);
+                if (!Empty.is(col.getData()) && !Empty.is(col.getSearchValue())) {
+                    String colSearch = col.getSearchValue().trim();
+                    String colSearchLo = colSearch.toLowerCase();
+                    if (!colSearch.isEmpty()) {
+                        String v = JsUtils.getChainValStr(row, col.getData());
+                        if (Empty.is(v)) {
+                            okRow = false;
+                            break;
+                        }
+                        if (!v.contains(colSearch) && !v.toLowerCase().contains(colSearchLo)) {
+                            okRow = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (okRow) lst.add(row);
+        }
+        JavaScriptObject[] arr = lst.toArray(new JavaScriptObject[0]);
+        final int filtered = arr.length;
+
+        final JsOrderItems order = req.getOrder();
+        if (order.length() > 0) {
+            Arrays.sort(arr, new Comparator<JavaScriptObject>() {
+                @Override
+                public int compare(JavaScriptObject o1, JavaScriptObject o2) {
+                    for (int i = 0; i < order.length(); i++) {
+                        int colIdx = order.get(i).getCol();
+                        JsColItem col = cols.get(colIdx);
+                        String v1 = JsUtils.getChainValStr(o1, col.getData());
+                        String v2 = JsUtils.getChainValStr(o2, col.getData());
+                        int cmp = v1.compareTo(v2);
+                        if (cmp != 0) {
+                            String dir = order.get(i).getDir();
+                            if ("asc".equals(dir)) return cmp;
+                            else return -cmp;
+                        }
+                    }
+                    return 0;
+                }});
+        }
+
+        JsAjaxResponse resp = JsAjaxResponse.create();
+        resp.setDraw(req.getDraw());
+        resp.setRecordsTotal(total);
+        resp.setRecordsFiltered(filtered);
+        int cnt = Math.min(filtered - req.getStart(), req.getLength());
+        JsArray<JavaScriptObject> d = JavaScriptObject.createArray(cnt).cast();
+        for (int i = 0; i < cnt; i++) {
+            d.set(i, arr[req.getStart() + i]);
+        }
+        resp.setData(d);
+        //s = JsUtils.stringify(resp);
+        //Window.alert(s);
+        JsUtils.callFunc(drawCallback, resp);
+    }
+
+    private static void generateRowIds(JsColItems cols) {
+        for (int i = 0; i < dataObjs.length(); i++) {
+            JavaScriptObject row = dataObjs.get(i);
+            String s = "";
+            for (int j = 0; j < cols.length(); j++) {
+                JsColItem col = cols.get(j);
+                String d = col.getData();
+                if (Empty.is(d)) continue;
+                String v = JsUtils.getChainValStr(row, d);
+                s += v;
+            }
+            JsUtils.setObjValue(row, JQMDataTable.DT_ROWID, s);
+        }
     }
 
     private static JsArrayMixed createDataRow(int rowIdx) {

@@ -7,6 +7,8 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -1074,5 +1076,16 @@ public class JQMCommon {
         if ($wnd.$ === undefined || $wnd.$ === null) return null; // jQuery is not loaded
         $wnd.$("#" + id).val(value);
     }-*/;
+
+    /**
+     * Needed to find out jqm widget by its Element received usually from JavaScript.
+     * <br> Only loaded (attached to DOM) widgets can be found.
+     **/
+    public static Widget findWidget(Element elt) {
+        if (elt == null) return null;
+        EventListener listener = DOM.getEventListener(elt);
+        if (listener == null || !(listener instanceof Widget)) return null;
+        return (Widget) listener;
+    }
 
 }

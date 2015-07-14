@@ -108,6 +108,44 @@
           rowSelectMode="MULTI" individualColSearches="true"
           addStyleNames="footerOnTop">
         </da:JQMDataTable>
+        <g:FlowPanel addStyleNames="{style.separator}" />
+        
+        <da:JQMDataTable ui:field="dataTable5" serverSide="true" manualEnhance="true" 
+          searching="true" pagingType="FULL_NUMBERS" colSorts="2"
+          footColTitles=",, Name, Position, Office, Extension, Start date, Salary"
+          rowSelectMode="MULTI" individualColSearches="true"
+          addStyleNames="footerOnTop">
+          
+          <da:column>
+            <da:ColumnDefEx defaultContentType="CHECKBOX_ROWSELECT" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx defaultContentType="ROW_DETAILS" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="Name" data="name" name="name" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="Position" data="hr.position" />
+          </da:column> 
+          <da:column>
+            <da:ColumnDefEx title="Office" data="contact.0" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="Extn." data="contact.1" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="Start date" data="hr.start_date" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="Salary" data="hr.salary" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx defaultContent="Edit" defaultContentType="BUTTON" />
+          </da:column>
+
+        </da:JQMDataTable>
+        
         
       </g:FlowPanel>
     </g:FlowPanel>

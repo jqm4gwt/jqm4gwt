@@ -50,12 +50,12 @@ public class JsUtils {
         jsObj[key] = value;
     }-*/;
 
-    public static native JavaScriptObject getObjNestedValue(JavaScriptObject jsObj, String key) /*-{
+    public static native JavaScriptObject getNestedObjValue(JavaScriptObject jsObj, String key) /*-{
         var v = jsObj[key];
         return v === undefined || v === null ? null : v;
     }-*/;
 
-    public static native void setObjNestedValue(JavaScriptObject jsObj, String key,
+    public static native void setNestedObjValue(JavaScriptObject jsObj, String key,
                                                 JavaScriptObject value) /*-{
         jsObj[key] = value;
     }-*/;
@@ -84,6 +84,31 @@ public class JsUtils {
 
     public static native void callFunc(JavaScriptObject jsFunc, JavaScriptObject arg0) /*-{
         jsFunc(arg0);
+    }-*/;
+
+    /**
+     * See <a href="http://stackoverflow.com/a/22129960">Accessing nested JavaScript objects with string key</a>
+     * <p>
+     * <b> resolveChain('document.body.style.width') </b>
+     * <br> or <b> resolveChain('style.width', document.body) </b>
+     * <br> or even use array indexes (someObject has been defined in the question):
+     * <br> <b> resolveChain('part3.0.size', someObject) </b>
+     * <br> a safe flag makes Object.resolve return undefined when intermediate
+     *      properties are undefined, rather than throwing a TypeError:
+     * <br> <b> resolveChain('properties.that.do.not.exist', {hello:'world'}, true) </b>
+     * </p>
+     */
+    public static native String getChainValStr(JavaScriptObject jsObj, String chainPath) /*-{
+        if (!$wnd.resolveChain) {
+            $wnd.resolveChain = function (path, obj, safe) {
+                return path.split('.').reduce(function(prev, curr) {
+                    return !safe ? prev[curr] : (prev ? prev[curr] : undefined)
+                }, obj || self)
+            }
+        }
+        var v = $wnd.resolveChain(chainPath, jsObj, true);
+        return v === undefined || v === null
+               ? null : '' + v; // prevents: JS value of type number cannot be converted to String
     }-*/;
 
 }
