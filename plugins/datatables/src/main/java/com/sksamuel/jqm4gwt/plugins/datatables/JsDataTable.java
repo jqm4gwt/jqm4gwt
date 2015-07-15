@@ -154,6 +154,17 @@ public class JsDataTable {
         public final native void setDataIdx(int value) /*-{
             this.data = value;
         }-*/;
+
+        public final native void setDataFunc(final Element tableElt, final RowData rowData) /*-{
+            this.data = function ( row, type, val, meta ) {
+                var opType = type ? type : null;
+                var setVal = val ? val : null;
+                var rslt = rowData.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowData::onData(
+                    Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)
+                    (tableElt, row, opType, setVal, meta);
+                return rslt[0];
+            };
+        }-*/;
     }
 
     static class JsColumns extends JsArray<JsColumn> {
@@ -356,7 +367,8 @@ public class JsDataTable {
          * @param drawCallback - must be called back when data is ready with JsAjaxRequest as input parameter.
          * @param request - actually it's JsAjaxRequest, so you can cast it safely.
          **/
-        void getData(JavaScriptObject/*JsAjaxRequest*/ request, JavaScriptObject drawCallback);
+        void getData(Element tableElt, JavaScriptObject/*JsAjaxRequest*/ request,
+                     JavaScriptObject drawCallback);
     }
 
     /** See <a href="https://datatables.net/manual/server-side">Server-side processing</a> */
@@ -722,11 +734,11 @@ public class JsDataTable {
             this.ajax = value;
         }-*/;
 
-        public final native void setAjaxHandler(final AjaxHandler handler) /*-{
+        public final native void setAjaxHandler(final Element tableElt, final AjaxHandler handler) /*-{
             this.ajax = function ( request, drawCallback, settings ) {
                 handler.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.AjaxHandler::getData(
-                    Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)
-                    (request, drawCallback);
+                    Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/core/client/JavaScriptObject;Lcom/google/gwt/core/client/JavaScriptObject;)
+                    (tableElt, request, drawCallback);
             };
         }-*/;
 
@@ -838,11 +850,17 @@ public class JsDataTable {
         $wnd.$(elt).DataTable().row(rowIndex).remove();
     }-*/;
 
+    public static native Element findTableElt(Element tableChildElt) /*-{
+        var t = $wnd.$(tableChildElt).closest('table');
+        return t ? t[0] : null;
+    }-*/;
+
     public static interface CellClickHandler {
         /**
+         * @param cellElt - could be ButtonElement, InputElement, ..., i.e. content of this cell.
          * @return - if true then event.stopPropagation() will be called.
          */
-        boolean onClick(Element elt, JavaScriptObject rowData, int rowIndex);
+        boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex);
     }
 
     /**
@@ -912,12 +930,12 @@ public class JsDataTable {
 
     static native void switchOffSingleRowSelect(Element elt) /*-{
         var t = $wnd.$(elt);
-        t.children('tbody').off('click.singlerowsel', 'tr');
+        t.children('tbody').off('click.singlerowsel', 'tr[role=row]');
     }-*/;
 
     static native void switchOnSingleRowSelect(Element elt) /*-{
         var t = $wnd.$(elt);
-        t.children('tbody').on('click.singlerowsel', 'tr', function() {
+        t.children('tbody').on('click.singlerowsel', 'tr[role=row]', function() {
             var $this = $wnd.$(this);
             if ($this.hasClass('selected')) {
                 $wnd.dataTableChangeRows($this, false, elt);
@@ -930,12 +948,12 @@ public class JsDataTable {
 
     static native void switchOffMultiRowSelect(Element elt) /*-{
         var t = $wnd.$(elt);
-        t.children('tbody').off('click.multirowsel', 'tr');
+        t.children('tbody').off('click.multirowsel', 'tr[role=row]');
     }-*/;
 
     static native void switchOnMultiRowSelect(Element elt) /*-{
         var t = $wnd.$(elt);
-        t.children('tbody').on('click.multirowsel', 'tr', function() {
+        t.children('tbody').on('click.multirowsel', 'tr[role=row]', function() {
             var $this = $wnd.$(this);
             if ($this.hasClass('selected')) {
                 $wnd.dataTableChangeRows($this, false, elt);
@@ -973,12 +991,12 @@ public class JsDataTable {
 
     public static interface RowDetailsRenderer {
 
-        String getHtml(JavaScriptObject rowData, int rowIndex);
+        String getHtml(Element tableElt, JavaScriptObject rowData, int rowIndex);
     }
 
-    static native void addRowDetailsRenderer(Element elt, RowDetailsRenderer renderer) /*-{
+    static native void addRowDetailsRenderer(Element tableElt, RowDetailsRenderer renderer) /*-{
         // Add event listener for opening and closing details
-        var t = $wnd.$(elt);
+        var t = $wnd.$(tableElt);
         t.children('tbody').first().on('click', 'td.details-control', function(event) {
             var tr = $wnd.$(this).closest('tr');
             var row = t.DataTable().row(tr);
@@ -990,7 +1008,8 @@ public class JsDataTable {
             } else {
                 // Open this row
                 var html = renderer.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer::getHtml(
-                    Lcom/google/gwt/core/client/JavaScriptObject;I)(row.data(), row.index());
+                    Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/core/client/JavaScriptObject;I)
+                    (t[0], row.data(), row.index());
                 row.child(html).show();
                 tr.addClass('shown');
             }
@@ -1037,5 +1056,37 @@ public class JsDataTable {
             });
         });
     }-*/;
+
+    /** See topic <b>Function</b> in <a href="https://datatables.net/reference/option/columns.data">columns.data</a> */
+    public static interface RowData {
+        /**
+         * @param rowData - the data for the whole row, usually JsArray or JavaScriptObject.
+         * @param opType - possible values: "set", "display", "filter", "sort", "type", null.
+         * @param setVal - should be used only when opType is "set".
+         * @param metaInfo - an object that contains additional information about the cell being requested.
+         * @return - array of length 1, it's not used by itself, only the first element is important/needed,
+         *           so array can be reused for performance optimization.
+         */
+        JsArrayMixed onData(Element tableElt, JavaScriptObject rowData, String opType,
+                            JavaScriptObject setVal, JavaScriptObject/*JsRowDataMetaInfo*/ metaInfo);
+    }
+
+    public static class JsRowDataMetaInfo extends JavaScriptObject {
+
+        protected JsRowDataMetaInfo() {}
+
+        public final native int getRow() /*-{
+            return this.row;
+        }-*/;
+
+        public final native int getCol() /*-{
+            return this.col;
+        }-*/;
+
+        /** Actually it's private object, can be used to obtain an API instance if required. */
+        public final native JavaScriptObject getSettings() /*-{
+            return this.settings;
+        }-*/;
+    }
 
 }

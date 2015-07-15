@@ -18,14 +18,18 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.HttpUtils;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JsUtils;
 import com.sksamuel.jqm4gwt.button.JQMButton;
+import com.sksamuel.jqm4gwt.plugins.datatables.ColumnDefEx;
 import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable;
 import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable.RowIdHelper;
 import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable.RowSelectMode;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.AjaxHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsAjaxRequest;
@@ -33,6 +37,8 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsAjaxResponse;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsColItem;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsColItems;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsOrderItems;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsRowDataMetaInfo;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowData;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer;
 
 public class DataTableExamplesPage {
@@ -61,6 +67,9 @@ public class DataTableExamplesPage {
     JQMDataTable dataTable5;
 
     @UiField
+    JQMDataTable dataTable6;
+
+    @UiField
     JQMButton btnUnselectAll;
 
     @UiField
@@ -75,25 +84,69 @@ public class DataTableExamplesPage {
     private static JsArray<JsArrayMixed> dataArray = null;
     private static JsArray<JavaScriptObject> dataObjs = null;
 
+    private static class TestDataItem {
+        public final int id;
+        public final String code;
+        public final String name;
+
+        public TestDataItem(int id, String code, String name) {
+            this.id = id;
+            this.code = code;
+            this.name = name;
+        }
+    }
+
+    private static final List<TestDataItem> testDataItems = new ArrayList<>();
+
+    static {
+        testDataItems.add(new TestDataItem( 1, "aaa", "Alpha"));
+        testDataItems.add(new TestDataItem( 2, "bbb", "Beta"));
+        testDataItems.add(new TestDataItem( 3, "ccc", "Claw"));
+        testDataItems.add(new TestDataItem( 4, "ddd", "Draw"));
+        testDataItems.add(new TestDataItem( 5, "eee", "Effel"));
+        testDataItems.add(new TestDataItem( 6, "fff", "Fork"));
+        testDataItems.add(new TestDataItem( 7, "ggg", "Glow"));
+        testDataItems.add(new TestDataItem( 8, "hhh", "Halo"));
+        testDataItems.add(new TestDataItem( 9, "iii", "Irish"));
+        testDataItems.add(new TestDataItem(10, "jjj", "Jerk"));
+        testDataItems.add(new TestDataItem(11, "kkk", "Key"));
+        testDataItems.add(new TestDataItem(12, "lll", "Load"));
+        testDataItems.add(new TestDataItem(13, "mmm", "Mars"));
+        testDataItems.add(new TestDataItem(14, "nnn", "Night"));
+        testDataItems.add(new TestDataItem(15, "ooo", "Ork"));
+        testDataItems.add(new TestDataItem(16, "ppp", "Park"));
+        testDataItems.add(new TestDataItem(17, "qqq", "Quick"));
+        testDataItems.add(new TestDataItem(18, "rrr", "Road"));
+        testDataItems.add(new TestDataItem(19, "sss", "Salt"));
+        testDataItems.add(new TestDataItem(20, "ttt", "Toad"));
+        testDataItems.add(new TestDataItem(21, "uuu", "Uranus"));
+        testDataItems.add(new TestDataItem(22, "vvv", "Vortex"));
+        testDataItems.add(new TestDataItem(23, "www", "Work"));
+        testDataItems.add(new TestDataItem(24, "xxx", "Xonix"));
+        testDataItems.add(new TestDataItem(25, "yyy", "York"));
+        testDataItems.add(new TestDataItem(26, "zzz", "Zerg"));
+    }
+
     public DataTableExamplesPage() {
         page = uiBinder.createAndBindUi(this);
         dataTable2.addCellBtnClickHandler(new CellClickHandler() {
             @Override
-            public boolean onClick(Element elt, JavaScriptObject rowData, int rowIndex) {
+            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex) {
                 String s = dataTable2.getCellData(rowIndex, "name");
-                Window.alert(s);
+                Element tableElt = JsDataTable.findTableElt(cellElt);
+                Window.alert(s + "\n\n" + tableElt.getInnerHTML());
                 if (RowSelectMode.SINGLE.equals(dataTable2.getRowSelectMode())) {
-                    dataTable2.selectOneRowOnly(elt);
+                    dataTable2.selectOneRowOnly(cellElt);
                 } else if (RowSelectMode.MULTI.equals(dataTable2.getRowSelectMode())) {
-                    dataTable2.changeRow(elt, true);
+                    dataTable2.changeRow(cellElt, true);
                 }
                 return true;
             }
         });
         dataTable2.addCellCheckboxClickHandler(new CellClickHandler() {
             @Override
-            public boolean onClick(Element elt, JavaScriptObject rowData, int rowIndex) {
-                InputElement cb = elt.cast();
+            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex) {
+                InputElement cb = cellElt.cast();
                 if (cb.isChecked()) {
                     if (RowSelectMode.SINGLE.equals(dataTable2.getRowSelectMode())) {
                         dataTable2.selectOneRowOnly(cb);
@@ -108,7 +161,7 @@ public class DataTableExamplesPage {
         });
         dataTable2.addRowDetailsRenderer(new RowDetailsRenderer() {
             @Override
-            public String getHtml(JavaScriptObject rowData, int rowIndex) {
+            public String getHtml(Element tableElt, JavaScriptObject rowData, int rowIndex) {
                 return dataTable2.getColumnsAsTableHtml(rowIndex, "border='0' style='padding-left:50px;'");
             }
         });
@@ -164,7 +217,7 @@ public class DataTableExamplesPage {
 
         dataTable4.setRowIdHelper(new RowIdHelper() {
             @Override
-            public String calcRowId(JavaScriptObject rowData) {
+            public String calcRowId(JQMDataTable table, JavaScriptObject rowData) {
                 JsArrayMixed r = rowData.cast();
                 String s = "";
                 for (int i = 0; i < r.length(); i++) {
@@ -175,7 +228,8 @@ public class DataTableExamplesPage {
         });
         dataTable4.setAjaxHandler(new AjaxHandler() {
             @Override
-            public void getData(final JavaScriptObject request, final JavaScriptObject drawCallback) {
+            public void getData(final Element tableElt, final JavaScriptObject request,
+                                final JavaScriptObject drawCallback) {
                 if (dataArray == null) {
                     HttpUtils.httpGet("data/array.json", new Callback<String, String>() {
 
@@ -200,21 +254,21 @@ public class DataTableExamplesPage {
 
         dataTable5.addCellBtnClickHandler(new CellClickHandler() {
             @Override
-            public boolean onClick(Element elt, JavaScriptObject rowData, int rowIndex) {
+            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex) {
                 String s = dataTable5.getCellData(rowIndex, "name");
                 Window.alert(s);
                 if (RowSelectMode.SINGLE.equals(dataTable5.getRowSelectMode())) {
-                    dataTable5.selectOneRowOnly(elt);
+                    dataTable5.selectOneRowOnly(cellElt);
                 } else if (RowSelectMode.MULTI.equals(dataTable5.getRowSelectMode())) {
-                    dataTable5.changeRow(elt, true);
+                    dataTable5.changeRow(cellElt, true);
                 }
                 return true;
             }
         });
         dataTable5.addCellCheckboxClickHandler(new CellClickHandler() {
             @Override
-            public boolean onClick(Element elt, JavaScriptObject rowData, int rowIndex) {
-                InputElement cb = elt.cast();
+            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex) {
+                InputElement cb = cellElt.cast();
                 if (cb.isChecked()) {
                     if (RowSelectMode.SINGLE.equals(dataTable5.getRowSelectMode())) {
                         dataTable5.selectOneRowOnly(cb);
@@ -229,13 +283,14 @@ public class DataTableExamplesPage {
         });
         dataTable5.addRowDetailsRenderer(new RowDetailsRenderer() {
             @Override
-            public String getHtml(JavaScriptObject rowData, int rowIndex) {
+            public String getHtml(Element tableElt, JavaScriptObject rowData, int rowIndex) {
                 return dataTable5.getColumnsAsTableHtml(rowIndex, "border='0' style='padding-left:50px;'");
             }
         });
         dataTable5.setAjaxHandler(new AjaxHandler() {
             @Override
-            public void getData(final JavaScriptObject request, final JavaScriptObject drawCallback) {
+            public void getData(final Element tableElt, final JavaScriptObject request,
+                                final JavaScriptObject drawCallback) {
                 if (dataObjs == null) {
                     HttpUtils.httpGet("data/nested-objects.json", new Callback<String, String>() {
 
@@ -259,6 +314,68 @@ public class DataTableExamplesPage {
             }
         });
         dataTable5.enhance();
+
+        dataTable6.addCellCheckboxClickHandler(new CellClickHandler() {
+            @Override
+            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex) {
+                InputElement cb = cellElt.cast();
+                if (cb.isChecked()) {
+                    if (RowSelectMode.SINGLE.equals(dataTable6.getRowSelectMode())) {
+                        dataTable6.selectOneRowOnly(cb);
+                    } else if (RowSelectMode.MULTI.equals(dataTable6.getRowSelectMode())) {
+                        dataTable6.changeRow(cb, true);
+                    }
+                } else if (dataTable6.getRowSelectMode() != null) {
+                    dataTable6.changeRow(cb, false);
+                }
+                return true;
+            }
+        });
+        dataTable6.addRowDetailsRenderer(new RowDetailsRenderer() {
+            @Override
+            public String getHtml(Element tableElt, JavaScriptObject rowData, int rowIndex) {
+                return dataTable6.getColumnsAsTableHtml(rowIndex, "border='0' style='padding-left:50px;'");
+            }
+        });
+        dataTable6.setAjaxHandler(new AjaxHandler() {
+            @Override
+            public void getData(final Element tableElt, final JavaScriptObject request,
+                                final JavaScriptObject drawCallback) {
+                getJavaServerData((JsAjaxRequest) request, drawCallback);
+            }
+        });
+        dataTable6.setRowData(new RowData() {
+            private final JsArrayMixed holder = JavaScriptObject.createArray(1).cast();
+
+            @Override
+            public JsArrayMixed onData(Element tableElt, JavaScriptObject rowData, String opType,
+                                       JavaScriptObject setVal, JavaScriptObject metaInfo) {
+                JsRowDataMetaInfo meta = metaInfo.cast();
+                TestDataItem item = testDataItems.get(meta.getRow());
+                Widget w = JQMCommon.findWidget(tableElt);
+                ColumnDefEx col = ((JQMDataTable) w).getColumn(meta.getCol());
+                if (Empty.is(col.getData())) {
+                    holder.set(0, (JavaScriptObject) null);
+                    return holder;
+                }
+                switch (col.getData()) {
+                case "id":
+                    holder.set(0, item.id);
+                    break;
+                case "code":
+                    holder.set(0, item.code);
+                    break;
+                case "name":
+                    holder.set(0, item.name);
+                    break;
+                default:
+                    holder.set(0, (JavaScriptObject) null);
+                    break;
+                }
+                return holder;
+            }
+        });
+        dataTable6.enhance();
     }
 
     private static void getArrayServerData(JsAjaxRequest req, JavaScriptObject drawCallback) {
@@ -447,6 +564,23 @@ public class DataTableExamplesPage {
         JsArray<JavaScriptObject> d = JavaScriptObject.createArray(cnt).cast();
         for (int i = 0; i < cnt; i++) {
             d.set(i, arr[req.getStart() + i]);
+        }
+        resp.setData(d);
+        //s = JsUtils.stringify(resp);
+        //Window.alert(s);
+        JsUtils.callFunc(drawCallback, resp);
+    }
+
+    private static void getJavaServerData(JsAjaxRequest req, JavaScriptObject drawCallback) {
+        JsAjaxResponse resp = JsAjaxResponse.create();
+        resp.setDraw(req.getDraw());
+        resp.setRecordsTotal(testDataItems.size());
+        int filtered = testDataItems.size();
+        resp.setRecordsFiltered(filtered);
+        int cnt = Math.min(filtered - req.getStart(), req.getLength());
+        JsArray<JavaScriptObject> d = JavaScriptObject.createArray(cnt).cast();
+        for (int i = 0; i < cnt; i++) {
+            d.set(i, JavaScriptObject.createObject());
         }
         resp.setData(d);
         //s = JsUtils.stringify(resp);

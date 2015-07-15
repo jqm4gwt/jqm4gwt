@@ -146,6 +146,32 @@
 
         </da:JQMDataTable>
         
+        <g:FlowPanel addStyleNames="{style.separator}" />
+        
+        <da:JQMDataTable ui:field="dataTable6" serverSide="true" manualEnhance="true" 
+          searching="true" pagingType="FULL_NUMBERS" colSorts="2"
+          footColTitles=",, ID, Code, Name"
+          rowSelectMode="MULTI" individualColSearches="true"
+          addStyleNames="footerOnTop">
+          
+          <da:column>
+            <da:ColumnDefEx defaultContentType="CHECKBOX_ROWSELECT" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx defaultContentType="ROW_DETAILS" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="ID" data="id" />
+          </da:column>
+          <da:column>
+            <da:ColumnDefEx title="Code" data="code" />
+          </da:column> 
+          <da:column>
+            <da:ColumnDefEx title="Name" data="name" />
+          </da:column>
+
+        </da:JQMDataTable>
+        
         
       </g:FlowPanel>
     </g:FlowPanel>
