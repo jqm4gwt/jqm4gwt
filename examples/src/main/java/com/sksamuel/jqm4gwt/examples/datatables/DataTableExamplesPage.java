@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt.examples.datatables;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -94,6 +95,20 @@ public class DataTableExamplesPage {
             this.code = code;
             this.name = name;
         }
+
+        public String getValStr(String fieldName) {
+            if (Empty.is(fieldName)) return null;
+            switch (fieldName) {
+            case "id":
+                return String.valueOf(id);
+            case "code":
+                return code;
+            case "name":
+                return name;
+            default:
+                return null;
+            }
+        }
     }
 
     private static final List<TestDataItem> testDataItems = new ArrayList<>();
@@ -133,8 +148,9 @@ public class DataTableExamplesPage {
             @Override
             public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex) {
                 String s = dataTable2.getCellData(rowIndex, "name");
-                Element tableElt = JsDataTable.findTableElt(cellElt);
-                Window.alert(s + "\n\n" + tableElt.getInnerHTML());
+                //Element tableElt = JsDataTable.findTableElt(cellElt);
+                //s += "\n\n" + tableElt.getInnerHTML();
+                Window.alert(s);
                 if (RowSelectMode.SINGLE.equals(dataTable2.getRowSelectMode())) {
                     dataTable2.selectOneRowOnly(cellElt);
                 } else if (RowSelectMode.MULTI.equals(dataTable2.getRowSelectMode())) {
@@ -143,22 +159,25 @@ public class DataTableExamplesPage {
                 return true;
             }
         });
-        dataTable2.addCellCheckboxClickHandler(new CellClickHandler() {
+        final CellClickHandler checkBoxClickHandler = new CellClickHandler() {
             @Override
             public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex) {
+                Element tableElt = JsDataTable.findTableElt(cellElt);
+                JQMDataTable dataTable = (JQMDataTable) JQMCommon.findWidget(tableElt);
                 InputElement cb = cellElt.cast();
                 if (cb.isChecked()) {
-                    if (RowSelectMode.SINGLE.equals(dataTable2.getRowSelectMode())) {
-                        dataTable2.selectOneRowOnly(cb);
-                    } else if (RowSelectMode.MULTI.equals(dataTable2.getRowSelectMode())) {
-                        dataTable2.changeRow(cb, true);
+                    if (RowSelectMode.SINGLE.equals(dataTable.getRowSelectMode())) {
+                        dataTable.selectOneRowOnly(cb);
+                    } else if (RowSelectMode.MULTI.equals(dataTable.getRowSelectMode())) {
+                        dataTable.changeRow(cb, true);
                     }
-                } else if (dataTable2.getRowSelectMode() != null) {
-                    dataTable2.changeRow(cb, false);
+                } else if (dataTable.getRowSelectMode() != null) {
+                    dataTable.changeRow(cb, false);
                 }
                 return true;
             }
-        });
+        };
+        dataTable2.addCellCheckboxClickHandler(checkBoxClickHandler);
         dataTable2.addRowDetailsRenderer(new RowDetailsRenderer() {
             @Override
             public String getHtml(Element tableElt, JavaScriptObject rowData, int rowIndex) {
@@ -265,22 +284,7 @@ public class DataTableExamplesPage {
                 return true;
             }
         });
-        dataTable5.addCellCheckboxClickHandler(new CellClickHandler() {
-            @Override
-            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex) {
-                InputElement cb = cellElt.cast();
-                if (cb.isChecked()) {
-                    if (RowSelectMode.SINGLE.equals(dataTable5.getRowSelectMode())) {
-                        dataTable5.selectOneRowOnly(cb);
-                    } else if (RowSelectMode.MULTI.equals(dataTable5.getRowSelectMode())) {
-                        dataTable5.changeRow(cb, true);
-                    }
-                } else if (dataTable5.getRowSelectMode() != null) {
-                    dataTable5.changeRow(cb, false);
-                }
-                return true;
-            }
-        });
+        dataTable5.addCellCheckboxClickHandler(checkBoxClickHandler);
         dataTable5.addRowDetailsRenderer(new RowDetailsRenderer() {
             @Override
             public String getHtml(Element tableElt, JavaScriptObject rowData, int rowIndex) {
@@ -315,22 +319,7 @@ public class DataTableExamplesPage {
         });
         dataTable5.enhance();
 
-        dataTable6.addCellCheckboxClickHandler(new CellClickHandler() {
-            @Override
-            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex) {
-                InputElement cb = cellElt.cast();
-                if (cb.isChecked()) {
-                    if (RowSelectMode.SINGLE.equals(dataTable6.getRowSelectMode())) {
-                        dataTable6.selectOneRowOnly(cb);
-                    } else if (RowSelectMode.MULTI.equals(dataTable6.getRowSelectMode())) {
-                        dataTable6.changeRow(cb, true);
-                    }
-                } else if (dataTable6.getRowSelectMode() != null) {
-                    dataTable6.changeRow(cb, false);
-                }
-                return true;
-            }
-        });
+        dataTable6.addCellCheckboxClickHandler(checkBoxClickHandler);
         dataTable6.addRowDetailsRenderer(new RowDetailsRenderer() {
             @Override
             public String getHtml(Element tableElt, JavaScriptObject rowData, int rowIndex) {
@@ -341,7 +330,8 @@ public class DataTableExamplesPage {
             @Override
             public void getData(final Element tableElt, final JavaScriptObject request,
                                 final JavaScriptObject drawCallback) {
-                getJavaServerData((JsAjaxRequest) request, drawCallback);
+                getJavaServerData((JQMDataTable) JQMCommon.findWidget(tableElt),
+                        (JsAjaxRequest) request, drawCallback);
             }
         });
         dataTable6.setRowData(new RowData() {
@@ -351,13 +341,13 @@ public class DataTableExamplesPage {
             public JsArrayMixed onData(Element tableElt, JavaScriptObject rowData, String opType,
                                        JavaScriptObject setVal, JavaScriptObject metaInfo) {
                 JsRowDataMetaInfo meta = metaInfo.cast();
-                TestDataItem item = testDataItems.get(meta.getRow());
                 Widget w = JQMCommon.findWidget(tableElt);
                 ColumnDefEx col = ((JQMDataTable) w).getColumn(meta.getCol());
                 if (Empty.is(col.getData())) {
                     holder.set(0, (JavaScriptObject) null);
                     return holder;
                 }
+                TestDataItem item = (TestDataItem) JsUtils.getNestedObjJavaValue(rowData, "dataItem");
                 switch (col.getData()) {
                 case "id":
                     holder.set(0, item.id);
@@ -543,8 +533,10 @@ public class DataTableExamplesPage {
                     for (int i = 0; i < order.length(); i++) {
                         int colIdx = order.get(i).getCol();
                         JsColItem col = cols.get(colIdx);
-                        String v1 = JsUtils.getChainValStr(o1, col.getData());
-                        String v2 = JsUtils.getChainValStr(o2, col.getData());
+                        String dat = col.getData();
+                        if (Empty.is(dat)) continue;
+                        String v1 = JsUtils.getChainValStr(o1, dat);
+                        String v2 = JsUtils.getChainValStr(o2, dat);
                         int cmp = v1.compareTo(v2);
                         if (cmp != 0) {
                             String dir = order.get(i).getDir();
@@ -571,16 +563,100 @@ public class DataTableExamplesPage {
         JsUtils.callFunc(drawCallback, resp);
     }
 
-    private static void getJavaServerData(JsAjaxRequest req, JavaScriptObject drawCallback) {
+    private static void getJavaServerData(final JQMDataTable dataTable, JsAjaxRequest req,
+                                          JavaScriptObject drawCallback) {
+        // We have to work with dataTable.getColumn(), because jsColItems have getData() empty
+        // as result of custom RowData assigned.
+
+        String search = req.getSearchValue();
+        search = search != null ? search.trim() : "";
+        String searchLo = search.toLowerCase();
+        final int total = testDataItems.size();
+
+        List<TestDataItem> lst = new ArrayList<>();
+        final JsColItems cols = req.getColumns();
+        for (int i = 0; i < total; i++) {
+            TestDataItem row = testDataItems.get(i);
+            boolean okRow = search.isEmpty();
+            if (!search.isEmpty()) {
+                for (int j = 0; j < cols.length(); j++) {
+                    ColumnDefEx col = dataTable.getColumn(j);
+                    if (Empty.is(col.getData())) continue;
+                    String v = row.getValStr(col.getData());
+                    if (Empty.is(v)) continue;
+                    if (v.contains(search)) {
+                        okRow = true;
+                        break;
+                    }
+                    String vLo = v.toLowerCase();
+                    if (vLo.contains(searchLo)) {
+                        okRow = true;
+                        break;
+                    }
+                }
+            }
+            if (!okRow) continue;
+            for (int j = 0; j < cols.length(); j++) {
+                JsColItem jsCol = cols.get(j);
+                ColumnDefEx col = dataTable.getColumn(j);
+                if (!Empty.is(col.getData()) && !Empty.is(jsCol.getSearchValue())) {
+                    String colSearch = jsCol.getSearchValue().trim();
+                    String colSearchLo = colSearch.toLowerCase();
+                    if (!colSearch.isEmpty()) {
+                        String v = row.getValStr(col.getData());
+                        if (Empty.is(v)) {
+                            okRow = false;
+                            break;
+                        }
+                        if (!v.contains(colSearch) && !v.toLowerCase().contains(colSearchLo)) {
+                            okRow = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (okRow) lst.add(row);
+        }
+
+        final JsOrderItems order = req.getOrder();
+        if (order.length() > 0) {
+            Collections.sort(lst, new Comparator<TestDataItem>() {
+                @Override
+                public int compare(TestDataItem o1, TestDataItem o2) {
+                    for (int i = 0; i < order.length(); i++) {
+                        int colIdx = order.get(i).getCol();
+                        ColumnDefEx col = dataTable.getColumn(colIdx);
+                        final int cmp;
+                        if ("id".equals(col.getData())) {
+                            cmp = o1.id - o2.id;
+                        } else {
+                            String v1 = o1.getValStr(col.getData());
+                            String v2 = o2.getValStr(col.getData());
+                            cmp = v1.compareTo(v2);
+                        }
+                        if (cmp != 0) {
+                            String dir = order.get(i).getDir();
+                            if ("asc".equals(dir)) return cmp;
+                            else return -cmp;
+                        }
+                    }
+                    return 0;
+                }});
+        }
+
+        final int filtered = lst.size();
         JsAjaxResponse resp = JsAjaxResponse.create();
         resp.setDraw(req.getDraw());
-        resp.setRecordsTotal(testDataItems.size());
-        int filtered = testDataItems.size();
+        resp.setRecordsTotal(total);
         resp.setRecordsFiltered(filtered);
         int cnt = Math.min(filtered - req.getStart(), req.getLength());
         JsArray<JavaScriptObject> d = JavaScriptObject.createArray(cnt).cast();
         for (int i = 0; i < cnt; i++) {
-            d.set(i, JavaScriptObject.createObject());
+            TestDataItem item = lst.get(req.getStart() + i);
+            JavaScriptObject jsObj = JavaScriptObject.createObject();
+            JsUtils.setObjValue(jsObj, JQMDataTable.DT_ROWID, String.valueOf(item.id));
+            JsUtils.setNestedObjJavaValue(jsObj, "dataItem", item);
+            d.set(i, jsObj);
         }
         resp.setData(d);
         //s = JsUtils.stringify(resp);
@@ -599,7 +675,7 @@ public class DataTableExamplesPage {
                 String v = JsUtils.getChainValStr(row, d);
                 s += v;
             }
-            JsUtils.setObjValue(row, JQMDataTable.DT_ROWID, s);
+            JsUtils.setObjValue(row, JQMDataTable.DT_ROWID, JsUtils.hashFnv32a(s));
         }
     }
 

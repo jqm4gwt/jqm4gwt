@@ -23,6 +23,7 @@ import com.sksamuel.jqm4gwt.JsUtils;
 import com.sksamuel.jqm4gwt.StrUtils;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.AjaxHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.DrawHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsAjax;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsCallback;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsColumn;
@@ -31,6 +32,7 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsEnhanceParams;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsLanguage;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsLengthMenu;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsRowCallback;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsRowDetails;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsRowSelect;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItem;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItems;
@@ -195,7 +197,8 @@ public class JQMDataTable extends JQMTableGrid {
 
     private RowSelectMode rowSelectMode;
 
-    private Set<String> serverSelected;
+    private Set<String> serverRowSelected;
+    private Set<String> serverRowDetails;
 
     public static interface RowIdHelper {
         String calcRowId(JQMDataTable table, JavaScriptObject rowData);
@@ -301,11 +304,11 @@ public class JQMDataTable extends JQMTableGrid {
             p.setRowCallback(new JsRowCallback() {
                 @Override
                 public void onRow(Element row, JavaScriptObject rowData) {
-                    if (Empty.is(serverSelected)) return;
-                    String rowId = getRowId(rowData);
-                    if (Empty.is(rowId)) return;
-                    if (serverSelected.contains(rowId)) {
-                        JsDataTable.initRow(row, true);
+                    if (!Empty.is(serverRowSelected)) {
+                        String rowId = getRowId(rowData);
+                        if (!Empty.is(rowId) && serverRowSelected.contains(rowId)) {
+                            JsDataTable.initRow(row, true);
+                        }
                     }
                 }
             });
@@ -315,13 +318,14 @@ public class JQMDataTable extends JQMTableGrid {
                     String rowId = getRowId(rowData);
                     if (Empty.is(rowId)) return;
                     if (selected) {
-                        if (serverSelected == null) serverSelected = new HashSet<>();
-                        serverSelected.add(rowId);
+                        if (serverRowSelected == null) serverRowSelected = new HashSet<>();
+                        serverRowSelected.add(rowId);
                     } else {
-                        if (!Empty.is(serverSelected)) serverSelected.remove(rowId);
+                        if (!Empty.is(serverRowSelected)) serverRowSelected.remove(rowId);
                     }
                 }
             });
+
         }
         if (deferRender) p.setDeferRender(true);
         if (processing) p.setProcessing(true);
@@ -754,7 +758,8 @@ public class JQMDataTable extends JQMTableGrid {
     }
 
     public void ajaxReload(boolean resetPaging) {
-        if (!Empty.is(serverSelected)) serverSelected.clear();
+        if (!Empty.is(serverRowSelected)) serverRowSelected.clear();
+        if (!Empty.is(serverRowDetails)) serverRowDetails.clear();
         JsDataTable.ajaxReload(getElement(), resetPaging);
     }
 
@@ -914,6 +919,41 @@ public class JQMDataTable extends JQMTableGrid {
     public void addRowDetailsRenderer(RowDetailsRenderer renderer) {
         if (renderer == null) return;
         JsDataTable.addRowDetailsRenderer(getElement(), renderer);
+        if (serverSide) {
+            JsDataTable.setRowDetailsChanged(getElement(), new JsRowDetails() {
+                @Override
+                public void onChanged(Element row, boolean opened, JavaScriptObject rowData) {
+                    String rowId = getRowId(rowData);
+                    if (Empty.is(rowId)) return;
+                    if (opened) {
+                        if (serverRowDetails == null) serverRowDetails = new HashSet<>();
+                        serverRowDetails.add(rowId);
+                    } else {
+                        if (!Empty.is(serverRowDetails)) serverRowDetails.remove(rowId);
+                    }
+                }
+            });
+            JsDataTable.addDrawHandler(getElement(), new DrawHandler() {
+                @Override
+                public void afterDraw(Element tableElt, JavaScriptObject settings) {
+                    if (!Empty.is(serverRowDetails)) {
+                        JsArrayString rowIds = JavaScriptObject.createArray(serverRowDetails.size()).cast();
+                        int i = 0;
+                        for (String s : serverRowDetails) {
+                            rowIds.set(i, s);
+                            i++;
+                        }
+                        JsDataTable.openRowDetails(tableElt, rowIds);
+                    }
+                }
+            });
+        }
+    }
+
+    /** See <a href="https://datatables.net/reference/event/draw">Draw event</a> */
+    public void addDrawHandler(DrawHandler handler) {
+        if (handler == null) return;
+        JsDataTable.addDrawHandler(getElement(), handler);
     }
 
     /** Makes no much sense when serverSide is true, use getSelRowIds() in that case. */
@@ -928,7 +968,7 @@ public class JQMDataTable extends JQMTableGrid {
 
     /** Works when serverSide is true. */
     public Set<String> getSelRowIds() {
-        return serverSelected;
+        return serverRowSelected;
     }
 
     public void unselectAllRows() {

@@ -139,6 +139,7 @@ public class JsDataTable {
         public final native String getData() /*-{
             if (this.data === null) return null;
             else if (typeof this.data === 'string') return this.data;
+            else if (typeof this.data === 'function') return null;
             else return '' + this.data;
         }-*/;
 
@@ -474,6 +475,7 @@ public class JsDataTable {
         public final native String getData() /*-{
             if (this.data === null) return null;
             else if (typeof this.data === 'string') return this.data;
+            else if (typeof this.data === 'function') return null;
             else return '' + this.data;
         }-*/;
 
@@ -989,8 +991,20 @@ public class JsDataTable {
         return $wnd.$(tableElt).DataTable().rows('tr.selected').data().toArray();
     }-*/;
 
-    public static interface RowDetailsRenderer {
+    static interface JsRowDetails {
+        void onChanged(Element row, boolean opened, JavaScriptObject rowData);
+    }
 
+    static native void setRowDetailsChanged(final Element tableElt, JsRowDetails handler) /*-{
+        $wnd.$(tableElt).data('rowDetailsChanged', function(row, opened) {
+            var rowData = $wnd.$(tableElt).DataTable().row(row).data();
+            handler.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsRowDetails::onChanged(
+              Lcom/google/gwt/dom/client/Element;ZLcom/google/gwt/core/client/JavaScriptObject;)
+              (row, opened, rowData);
+        });
+    }-*/;
+
+    public static interface RowDetailsRenderer {
         String getHtml(Element tableElt, JavaScriptObject rowData, int rowIndex);
     }
 
@@ -1001,10 +1015,12 @@ public class JsDataTable {
             var tr = $wnd.$(this).closest('tr');
             var row = t.DataTable().row(tr);
 
+            var rowDetailsChanged = $wnd.$(tableElt).data('rowDetailsChanged');
             if (row.child.isShown()) {
                 // This row is already open - close it
                 row.child.hide();
                 tr.removeClass('shown');
+                if (rowDetailsChanged) rowDetailsChanged(tr[0], false);
             } else {
                 // Open this row
                 var html = renderer.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer::getHtml(
@@ -1012,8 +1028,30 @@ public class JsDataTable {
                     (t[0], row.data(), row.index());
                 row.child(html).show();
                 tr.addClass('shown');
+                if (rowDetailsChanged) rowDetailsChanged(tr[0], true);
             }
             event.stopPropagation(); // no row selection is needed
+        });
+    }-*/;
+
+    static native void openRowDetails(Element tableElt, JsArrayString rowIds) /*-{
+        $wnd.$.each(rowIds, function ( i, id ) {
+            $wnd.$('#' + id + ' td.details-control', $wnd.$(tableElt)).trigger('click');
+        });
+    }-*/;
+
+    public static interface DrawHandler {
+        /**
+         * @param settings - actually it's private object, can be used to obtain an API instance if required.
+         */
+        void afterDraw(Element tableElt, JavaScriptObject settings);
+    }
+
+    static native void addDrawHandler(final Element tableElt, final DrawHandler handler) /*-{
+        $wnd.$(tableElt).on('draw.dt', function (event, settings) {
+            handler.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.DrawHandler::afterDraw(
+                Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/core/client/JavaScriptObject;)
+                (tableElt, settings);
         });
     }-*/;
 

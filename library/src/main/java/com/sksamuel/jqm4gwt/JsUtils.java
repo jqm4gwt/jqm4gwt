@@ -60,6 +60,17 @@ public class JsUtils {
         jsObj[key] = value;
     }-*/;
 
+    public static native Object getNestedObjJavaValue(JavaScriptObject jsObj, String key) /*-{
+        var v = jsObj[key];
+        return v === undefined || v === null ? null : v;
+    }-*/;
+
+    /** JavaScriptObject can hold reference to real Java object and even call its methods and fields. */
+    public static native void setNestedObjJavaValue(JavaScriptObject jsObj, String key,
+                                                    Object value) /*-{
+        jsObj[key] = value;
+    }-*/;
+
     public static native void deleteObjProperty(JavaScriptObject jsObj, String key) /*-{
         delete jsObj[key];
     }-*/;
@@ -109,6 +120,31 @@ public class JsUtils {
         var v = $wnd.resolveChain(chainPath, jsObj, true);
         return v === undefined || v === null
                ? null : '' + v; // prevents: JS value of type number cannot be converted to String
+    }-*/;
+
+    /**
+     * See <a href="http://stackoverflow.com/a/22429679">Generate a Hash from string in JavaScript</a>
+     * <br>
+     * <br> Calculate a 32 bit FNV-1a hash
+     * <br> Found here: https://gist.github.com/vaiorabbit/5657561
+     * <br> Ref.: http://isthe.com/chongo/tech/comp/fnv/
+     *
+     * @param seed - actually must be in range of uint32.
+     */
+    public static native String hashFnv32a(String str, double seed) /*-{
+        var i, l, hval = seed;
+
+        for (i = 0, l = str.length; i < l; i++) {
+            hval ^= str.charCodeAt(i);
+            hval += (hval << 1) + (hval << 4) + (hval << 7) + (hval << 8) + (hval << 24);
+        }
+
+        // Convert to 8 digit hex string, if uint32 is needed you can use: return hval >>> 0;
+        return ("0000000" + (hval >>> 0).toString(16)).substr(-8);
+    }-*/;
+
+    public static native String hashFnv32a(String str) /*-{
+        return @com.sksamuel.jqm4gwt.JsUtils::hashFnv32a(Ljava/lang/String;D)(str, 0x811c9dc5);
     }-*/;
 
 }
