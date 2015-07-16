@@ -14,6 +14,7 @@ import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -33,6 +34,7 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable.RowSelectMode;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.AjaxHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.DrawHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsAjaxRequest;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsAjaxResponse;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsColItem;
@@ -314,6 +316,16 @@ public class DataTableExamplesPage {
                     });
                 } else {
                     getObjsServerData((JsAjaxRequest) request, drawCallback);
+                }
+            }
+        });
+        dataTable5.addDrawHandler(new DrawHandler() {
+            @Override
+            public void afterDraw(Element tableElt, JavaScriptObject settings) {
+                JsArray<Element> rows = JsDataTable.doGrouping(settings, 4);
+                for (int i = 0; i < rows.length(); i++) {
+                    Element r = rows.get(i);
+                    r.getStyle().setFontWeight(FontWeight.BOLD);
                 }
             }
         });

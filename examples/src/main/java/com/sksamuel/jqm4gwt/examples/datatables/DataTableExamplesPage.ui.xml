@@ -18,6 +18,11 @@
     }
     
     .separator { height: 30px; }
+    
+    @external dataTable, group;
+    .dataTable tr.group, .dataTable tr.group:hover {
+      background-color: #ddd !important;
+    }
   
   </ui:style>
   
@@ -112,7 +117,7 @@
         
         <da:JQMDataTable ui:field="dataTable5" serverSide="true" manualEnhance="true" 
           searching="true" pagingType="FULL_NUMBERS" colSorts="2"
-          footColTitles=",, Name, Position, Office, Extension, Start date, Salary"
+          footColTitles=",, Name, Position, Office, Extension, Start date, Salary,"
           rowSelectMode="MULTI" individualColSearches="true"
           addStyleNames="footerOnTop">
           

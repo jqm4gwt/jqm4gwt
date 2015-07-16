@@ -1127,4 +1127,42 @@ public class JsDataTable {
         }-*/;
     }
 
+    /**
+     * Creates groups bands by specified column. Could be called from draw event handler.
+     * <br> You should define group styling in CSS like this:
+     * <br> .dataTable tr.group, .dataTable tr.group:hover { background-color: #ddd !important; }
+     * <br> OR you can directly process group row elements, which are returned by this method.
+     *
+     * @return - array of group rows, can be used for additional adjustments.
+     **/
+    public static native JsArray<Element> doGrouping(JavaScriptObject settings, int colIdx) /*-{
+        var api = new $wnd.$.fn.dataTable.Api(settings);
+        var rows = api.rows({page:'current'}).nodes();
+        var cnt = 0;
+        api.columns().visible().each(function (v) { if (v) cnt++; });
+        var last = null;
+        var grpRows = [];
+        api.column(colIdx, {page:'current'}).data().each(function (group, i) {
+            if (last !== group) {
+                var firstGrpRow = $wnd.$(rows).eq(i).before(
+                    '<tr class="group"><td colspan="' + cnt + '">' + group + '</td></tr>'
+                );
+                grpRows.push(firstGrpRow.prev()[0]);
+                last = group;
+            }
+        });
+
+        // Order by the grouping on group band click
+        $wnd.$(api.table().body()).off('click.group');
+        $wnd.$(api.table().body()).on('click.group', 'tr.group', function (event) {
+            var currentOrder = api.order()[0];
+            if (currentOrder[0] === colIdx && currentOrder[1] === 'asc') {
+                api.order([colIdx, 'desc']).draw();
+            } else if (currentOrder[0] !== colIdx || currentOrder[1] !== 'asc') {
+                api.order([colIdx, 'asc']).draw();
+            }
+        });
+        return grpRows;
+    }-*/;
+
 }
