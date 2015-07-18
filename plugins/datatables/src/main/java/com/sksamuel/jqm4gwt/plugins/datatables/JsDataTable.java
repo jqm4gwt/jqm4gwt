@@ -374,10 +374,10 @@ public class JsDataTable {
 
     /** See <a href="https://datatables.net/manual/server-side">Server-side processing</a> */
     /* Example:
-       { "draw": 1,
+       { "draw": 987,
          "columns": [
-           {"data":0,"name":"","searchable":true,"orderable":true,"search":{"value":"","regex":false}},
-           {"data":1,"name":"","searchable":true,"orderable":true,"search":{"value":"","regex":false}}
+           {"data":"code", "name":"col1", "searchable":true, "orderable":true, "search":{"value":"","regex":false}},
+           {"data":"name", "name":"col2", "searchable":true, "orderable":true, "search":{"value":"","regex":false}}
          ],
          "order": [ {"column":0,"dir":"asc"} ],
          "start": 0,
