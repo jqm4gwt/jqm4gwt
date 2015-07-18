@@ -1150,11 +1150,24 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     public void closeDialog() {
         if (isDialog()) {
-            Mobile.back();
+            safeCloseDialog();
         } else if (Mobile.DATA_ROLE_DIALOG.equals(JQMCommon.getDataRole(this))) {
             internCloseDialog(getElement());
         }
     }
+
+    /** Based on mobile.dialog.close method. */
+    public static native void safeCloseDialog() /*-{
+        var hist = $wnd.$.mobile.navigate.history;
+        // If the hash listening is enabled and there is at least one preceding history
+        // entry it's ok to go back. Initial pages with the dialog hash state are an example
+        // where the stack check is necessary
+        if ($wnd.$.mobile.hashListeningEnabled && hist.activeIndex > 0) {
+            $wnd.$.mobile.back();
+        } else {
+            $wnd.$.mobile.pageContainer.pagecontainer("back");
+        }
+    }-*/;
 
     private static native void internCloseDialog(Element elt) /*-{
         $wnd.$(elt).dialog("close");
