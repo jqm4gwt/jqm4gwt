@@ -757,10 +757,33 @@ public class JQMDataTable extends JQMTableGrid {
         this.ajax = ajax;
     }
 
-    public void ajaxReload(boolean resetPaging) {
+    private void clearServerRowStructs() {
         if (!Empty.is(serverRowSelected)) serverRowSelected.clear();
         if (!Empty.is(serverRowDetails)) serverRowDetails.clear();
+    }
+
+    /**
+     * Reload the table data from the ajax data source.
+     * <br> It makes sense when we are receiving all data at once from the server side,
+     * so calling draw() is not enough in such case, because it will just reuse previously
+     * loaded client side data.
+     **/
+    public void ajaxReload(boolean resetPaging) {
+        clearServerRowStructs();
         JsDataTable.ajaxReload(getElement(), resetPaging);
+    }
+
+    public void ajaxReload(String newUrl, boolean resetPaging) {
+        clearServerRowStructs();
+        JsDataTable.ajaxReload(getElement(), newUrl, resetPaging);
+    }
+
+    /**
+     * Softer than {@link JQMDataTable#ajaxReload(boolean) }, uses already loaded client side data.
+     * <br> In case of (serverSide == true) it's practically the same as ajaxReload().
+     **/
+    public void refreshDraw(boolean resetPaging) {
+        JsDataTable.draw(getElement(), resetPaging);
     }
 
     public String getDataSrc() {

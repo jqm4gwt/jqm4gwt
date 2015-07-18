@@ -828,7 +828,17 @@ public class JsDataTable {
     }-*/;
 
     static native void ajaxReload(Element elt, boolean resetPaging) /*-{
-        $wnd.$(elt).DataTable().ajax.reload( null, resetPaging );
+        $wnd.$(elt).DataTable().ajax.reload(
+            null, // no callback
+            resetPaging);
+    }-*/;
+
+    static native void ajaxReload(Element elt, String newUrl, boolean resetPaging) /*-{
+        $wnd.$(elt).DataTable().ajax.url(newUrl).load();
+    }-*/;
+
+    static native void draw(Element elt, boolean resetPaging) /*-{
+        $wnd.$(elt).DataTable().draw(resetPaging);
     }-*/;
 
     /** Invalidate all rows and redraw, useful after data changes, see addRow() */
