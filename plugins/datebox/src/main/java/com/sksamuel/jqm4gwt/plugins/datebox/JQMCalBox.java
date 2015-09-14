@@ -172,6 +172,44 @@ public class JQMCalBox extends JQMText {
 
     private GridDateFormatter gridDateFormatter;
 
+    public static class JsDateBoxData extends JavaScriptObject {
+
+        protected JsDateBoxData() {}
+
+        /** Numeric Date */
+        public final native int getDate() /*-{
+            return this.date;
+        }-*/;
+
+        /** Numeric Month, zero based */
+        public final native int getMonth() /*-{
+            return this.month;
+        }-*/;
+
+        /** Date can be selected */
+        public final native boolean getEnabled() /*-{
+            return this.enabled;
+        }-*/;
+
+        /** You can disable any date button right in GridDateBox.beforeAppend() handler.
+         *  <br> Example:
+         *  <pre>
+         *    data.setEnabled(false);
+         *    JQMCommon.setEnabled(box, false);
+         *    box.getStyle().setColor("red");
+         *  </pre>
+         **/
+        public final native void setEnabled(boolean value) /*-{
+            this.enabled = value;
+        }-*/;
+    }
+
+    public static interface GridDateBox {
+        void beforeAppend(Element box, JsDateBoxData data);
+    }
+
+    private GridDateBox gridDateBox;
+
     private boolean calBoxHandlerAdded;
     private boolean blurHandlerAdded;
     private boolean isInternalBlur;
@@ -889,6 +927,7 @@ public class JQMCalBox extends JQMText {
         created = true;
         setDate(delayedSetDate);
         initGridDateFormatter();
+        initGridDateBoxBeforeAppend();
         initDisplayChange();
         initOffset();
     }
@@ -1148,7 +1187,7 @@ public class JQMCalBox extends JQMText {
     }
 
     private static native void initGridDateFormatter(Element elt, JQMCalBox ctrl) /*-{
-        if (ctrl == null) {
+        if (ctrl === null) {
             var v = $wnd.$(elt).datebox( 'getOption', 'calFormatter' );
             if (v !== false) $wnd.$(elt).datebox( { 'calFormatter': false } );
         } else {
@@ -1156,13 +1195,40 @@ public class JQMCalBox extends JQMText {
                 var t = ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::getGridDateFormatterType()();
                 if (t === 0) return date.Date;
                 else if (t === 1) {
-                    var s = ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDate(IIILjava/lang/String;Z)(date.Year, date.Month, date.Date, date.ISO, date.dateVisible);
+                    var s = ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDate(
+                        IIILjava/lang/String;Z)
+                        (date.Year, date.Month, date.Date, date.ISO, date.dateVisible);
                     return s;
                 } else {
                     var rslt = {};
-                    ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDateEx(IIILjava/lang/String;ZLcom/google/gwt/core/client/JavaScriptObject;)(date.Year, date.Month, date.Date, date.ISO, date.dateVisible, rslt);
+                    ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDateEx(
+                        IIILjava/lang/String;ZLcom/google/gwt/core/client/JavaScriptObject;)
+                        (date.Year, date.Month, date.Date, date.ISO, date.dateVisible, rslt);
                     return rslt;
                 }
+            }});
+        }
+    }-*/;
+
+    private void gridDateBoxBeforeAppend(Element box, JavaScriptObject data) {
+        if (gridDateBox != null) {
+            JsDateBoxData d = data.cast();
+            gridDateBox.beforeAppend(box, d);
+        }
+    }
+
+    // See http://dev.jtsage.com/jQM-DateBox/api/calBeforeAppendFunc/
+    private static native void initGridDateBoxBeforeAppend(Element elt, JQMCalBox ctrl) /*-{
+        if (ctrl === null) {
+            $wnd.$(elt).datebox({ 'calBeforeAppendFunc': function(t) { return t; } });
+        } else {
+            $wnd.$(elt).datebox({ 'calBeforeAppendFunc': function(t) {
+                if (t) {
+                    ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::gridDateBoxBeforeAppend(
+                        Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/core/client/JavaScriptObject;)
+                        (t[0], t.data());
+                }
+                return t;
             }});
         }
     }-*/;
@@ -1170,6 +1236,11 @@ public class JQMCalBox extends JQMText {
     private void initGridDateFormatter() {
         if (!isReady()) return;
         initGridDateFormatter(input.getElement(), gridDateFormatter != null ? this : null);
+    }
+
+    private void initGridDateBoxBeforeAppend() {
+        if (!isReady()) return;
+        initGridDateBoxBeforeAppend(input.getElement(), gridDateBox != null ? this : null);
     }
 
     public GridDateFormatter getGridDateFormatter() {
@@ -1180,6 +1251,19 @@ public class JQMCalBox extends JQMText {
     public void setGridDateFormatter(GridDateFormatter gridDateFormatter) {
         this.gridDateFormatter = gridDateFormatter;
         initGridDateFormatter();
+    }
+
+    public GridDateBox getGridDateBoxBeforeAppend() {
+        return gridDateBox;
+    }
+
+    /** This option allows you to define a custom function that is called on the generated
+     *  calbox grid box of each date.
+     *  <br> See <a href="http://dev.jtsage.com/jQM-DateBox/api/calBeforeAppendFunc/">calBeforeAppendFunc</a>
+     **/
+    public void setGridDateBoxBeforeAppend(GridDateBox value) {
+        this.gridDateBox = value;
+        initGridDateBoxBeforeAppend();
     }
 
     public boolean isIconNoDisc() {
@@ -1219,7 +1303,9 @@ public class JQMCalBox extends JQMText {
             $wnd.$(elt).on('datebox.displayChange', function (e, p) {
                 if ( p.method === 'displayChange' ) {
                     var changeAmount = p.thisChangeAmount == null ? 0 : p.thisChangeAmount;
-                    ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::fireDisplayChange(Lcom/google/gwt/core/client/JsDate;Lcom/google/gwt/core/client/JsDate;Ljava/lang/String;I)(p.shownDate, p.selectedDate, p.thisChange, changeAmount);
+                    ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::fireDisplayChange(
+                        Lcom/google/gwt/core/client/JsDate;Lcom/google/gwt/core/client/JsDate;Ljava/lang/String;I)
+                        (p.shownDate, p.selectedDate, p.thisChange, changeAmount);
                 }
             });
         }
@@ -1232,7 +1318,9 @@ public class JQMCalBox extends JQMText {
             $wnd.$(elt).on('datebox.offset', function (e, p) {
                 if ( p.method === 'offset' ) {
                     var changeAmount = p.amount == null ? 0 : p.amount;
-                    ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::fireOffset(Lcom/google/gwt/core/client/JsDate;Ljava/lang/String;I)(p.newDate, p.type, changeAmount);
+                    ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::fireOffset(
+                        Lcom/google/gwt/core/client/JsDate;Ljava/lang/String;I)
+                        (p.newDate, p.type, changeAmount);
                 }
             });
         }

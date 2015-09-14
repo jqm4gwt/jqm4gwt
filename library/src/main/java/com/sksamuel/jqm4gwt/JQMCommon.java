@@ -310,6 +310,10 @@ public class JQMCommon {
         }
     }
 
+    public static boolean isEnabled(Element elt) {
+        return !hasStyle(elt, STYLE_UI_DISABLED);
+    }
+
     public static boolean isEnabled(Widget widget) {
         return !hasStyle(widget, STYLE_UI_DISABLED);
     }
@@ -317,6 +321,11 @@ public class JQMCommon {
     public static void setEnabled(Widget widget, boolean value) {
         if (value) widget.removeStyleName(STYLE_UI_DISABLED);
         else widget.addStyleName(STYLE_UI_DISABLED);
+    }
+
+    public static void setEnabled(Element elt, boolean value) {
+        if (value) elt.removeClassName(STYLE_UI_DISABLED);
+        else elt.addClassName(STYLE_UI_DISABLED);
     }
 
     public static boolean isLabelHidden(Widget widget) {

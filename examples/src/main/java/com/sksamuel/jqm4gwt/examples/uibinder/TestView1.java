@@ -1285,6 +1285,16 @@ public class TestView1 {
                 Window.alert(event.getData().toString());
             }
         });*/
+        /*datePicker.setGridDateBoxBeforeAppend(new GridDateBox() {
+            @Override
+            public void beforeAppend(Element box, JsDateBoxData data) {
+                if (data.getDate() == 13) {
+                    data.setEnabled(false);
+                    JQMCommon.setEnabled(box, false);
+                    box.getStyle().setColor("red");
+                }
+            }
+        });*/
 
         selectFilterable.addFilterableHandler(new JQMFilterableEvent.DefaultHandler() {
             @Override
