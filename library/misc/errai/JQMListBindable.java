@@ -223,7 +223,8 @@ public class JQMListBindable<M> extends JQMList
                 M oldItem, List<? extends ComplexPanel> oldUiItems, boolean oldItemDeleted,
                 M newItem, List<? extends ComplexPanel> newUiItems) {
 
-            final int oldPos = unstableUiIndex ? -1 : list.getUiIndex(oldItem);
+            // in case of sort() oldItem can be already processed as newItem on previous step!
+            final int oldPos = (unstableUiIndex || !oldItemDeleted) ? -1 : list.getUiIndex(oldItem);
             if (oldItemDeleted) removeItem(list, oldItem, oldUiItems);
             if (newUiItems != null) removeItem(list, newItem, newUiItems);
             return addItemIntern(list, newItem, oldPos);
@@ -384,27 +385,18 @@ public class JQMListBindable<M> extends JQMList
 
     private void dataItemChanged(final int index, final M oldItem, final M newItem) {
         // in case of sort() item can appear as newItem first, then later as oldItem
-        // Example: 0: 8>1, 1: 6>2, 2: 4>3, 3: 1>4, 4: 7>5, 5: 3>6, 6: 2>7, 7: 5>8
+        // Example: 0: 7>0, 1: 5>1, 2: 3>2, 3: 0>3, 4: 6>4, 5: 2>5, 6: 1>6, 7: 4>7
+        // Simple example (size equals 2):
+        //   0: 1>0 (at this step dataItems has two identical elements), 1: 0>1
 
         List<? extends ComplexPanel> oldUi = dataToUI.get(oldItem);
         List<? extends ComplexPanel> newUi = dataToUI.get(newItem);
-        boolean oldInData = dataItemsContains(oldItem);
+        boolean oldInData = dataItems.contains(oldItem);
 
         newUi = renderer.itemChanged(this, index, oldItem, oldUi, !oldInData, newItem, newUi);
 
         if (oldItem != newItem && !oldInData) dataToUI.remove(oldItem);
         dataToUI.put(newItem, newUi);
-    }
-
-    // XXX: needed because of https://issues.jboss.org/browse/ERRAI-848
-    private boolean dataItemsContains(M oldItem) {
-        if (oldItem == null) return false;
-        Iterator<M> iter = dataItems.iterator();
-        while (iter.hasNext()) {
-            M i = iter.next();
-            if (i.equals(oldItem)) return true;
-        }
-        return false;
     }
 
     private void doRefresh() {
