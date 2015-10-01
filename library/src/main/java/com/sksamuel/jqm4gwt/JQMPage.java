@@ -535,14 +535,21 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         }
     }
 
+    /** Header, Footer, Content positions will be adjusted according to page properties:
+     *  <br> contentCentered, contentHeightPercent, pseudoFixedToolbars, ...
+     **/
+    public void refreshPartsPositioning() {
+        processFixedToolbars();
+        recalcContentHeightPercent();
+        centerContent();
+    }
+
     private void initWindowResize() {
         if (windowResizeInitialized != null) return;
         windowResizeInitialized = Window.addResizeHandler(new ResizeHandler() {
             @Override
             public void onResize(ResizeEvent event) {
-                processFixedToolbars();
-                recalcContentHeightPercent();
-                centerContent();
+                refreshPartsPositioning();
             }
         });
     }
@@ -564,9 +571,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
                         }
                         //Window.alert(s + ", height: " + initialWindowHeight);
                         if (hideFixedToolbarsIfVirtualKeyboard > 0) {
-                            processFixedToolbars();
-                            recalcContentHeightPercent();
-                            centerContent();
+                            refreshPartsPositioning();
                         }
                     }
                 });
