@@ -1,6 +1,8 @@
 package com.sksamuel.jqm4gwt.layout;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.dom.client.Document;
@@ -11,6 +13,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMWidget;
@@ -483,6 +486,18 @@ public class JQMTable extends JQMWidget {
             return w;
         }
         return null;
+    }
+
+    public List<Widget> getAllVisibleCells() {
+        List<Widget> rslt = null;
+        for (int i = 0; i < flow.getWidgetCount(); i++) {
+            Widget w = flow.getWidget(i);
+            String disp = w.getElement().getStyle().getDisplay();
+            if (!Empty.is(disp) && Display.NONE.getCssName().equals(disp)) continue;
+            if (rslt == null) rslt = new ArrayList<>();
+            rslt.add(w);
+        }
+        return rslt;
     }
 
     public Widget getLastVisibleCell() {
