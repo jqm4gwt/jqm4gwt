@@ -141,7 +141,7 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
     }
 
     public String getLabel2() {
-        return select.getItemText(0);
+        return select.getItemText(1);
     }
 
     public void setLabel2(String label2) {
@@ -153,6 +153,8 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
 
     @Override
     public HandlerRegistration addChangeHandler(ChangeHandler handler) {
+        // May be it makes sense to create wrapper over passed handler to make ChangeEvent and
+        // ValueChangeEvent to work the same way (currently inSetValue doesn't affect ChangeEvent).
         return select.addChangeHandler(handler);
     }
 
@@ -180,7 +182,9 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
             addChangeHandler(new ChangeHandler() {
                 @Override
                 public void onChange(ChangeEvent event) {
-                    ValueChangeEvent.fire(JQMFlip.this, getValue());
+                    if (!inSetValue) {
+                        ValueChangeEvent.fire(JQMFlip.this, getValue());
+                    }
                 }
             });
         }
@@ -237,11 +241,28 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
     }-*/;
 
     /**
-     * Sets the currently selected index.
+     * Sets the currently selected index, fires change events (if attached).
      */
     public void setSelectedIndex(int i) {
         select.setSelectedIndex(i);
         refresh(); // updates UI and always resets invalid index to 0
+    }
+
+    /**
+     * @param fireEvents - if false then ValueChangeEvent won't be raised (though ChangeEvent will be raised anyway).
+     * @param i - possible values 0 and 1.
+     */
+    public void setSelectedIndex(int i, boolean fireEvents) {
+        if (fireEvents) {
+            setSelectedIndex(i);
+            return;
+        }
+        inSetValue = true;
+        try {
+            setSelectedIndex(i);
+        } finally {
+            inSetValue = false;
+        }
     }
 
     /**
@@ -263,7 +284,7 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
     }
 
     /**
-     * Sets the currently selected value
+     * Sets the currently selected value, ValueChangeEvent won't be raised (though ChangeEvent will be raised anyway).
      */
     @Override
     public void setValue(String value) {
@@ -272,6 +293,8 @@ public class JQMFlip extends JQMFieldContainer implements HasText<JQMFlip>, HasV
 
     /**
      * Sets the currently selected value.
+     *
+     * @param fireEvents - if false then ValueChangeEvent won't be raised (though ChangeEvent will be raised anyway).
      */
     @Override
     public void setValue(String value, boolean fireEvents) {
