@@ -123,6 +123,7 @@
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
                     <webappDirectory>${webapp.directory}</webappDirectory>
                     <webResources>
                         <resource>
@@ -130,6 +131,9 @@
                             <filtering>true</filtering>
                             <includes>
                                 <include>**/appengine-web.xml</include>
+                                <include>css/*.*</include>
+                                <include>data/*.*</include>
+                                <include>*.html</include>
                             </includes>
                         </resource>
                     </webResources>
