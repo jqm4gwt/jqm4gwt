@@ -236,8 +236,8 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>test-gwt</id>
                         <goals>
-                            <goal>compile</goal>
                             <goal>test</goal>
                         </goals>
                         <configuration>
@@ -252,6 +252,7 @@
                         <configuration>
                             <style>${gwt.style}</style>
                             <optimizationLevel>${gwt.optimizationLevel}</optimizationLevel>
+                            <logLevel>INFO</logLevel>
                         </configuration>
                     </execution>
                 </executions>
