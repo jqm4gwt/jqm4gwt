@@ -23,6 +23,7 @@ import com.sksamuel.jqm4gwt.JsUtils;
 import com.sksamuel.jqm4gwt.StrUtils;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.AjaxHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellRender;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.DrawHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsAjax;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsCallback;
@@ -72,6 +73,7 @@ public class JQMDataTable extends JQMTableGrid {
     private AjaxPrepare ajaxPrepare;
     private AjaxHandler ajaxHandler;
     private RowData rowData;
+    private CellRender cellRender;
 
     private boolean enhanced;
     private boolean manualEnhance;
@@ -381,7 +383,6 @@ public class JQMDataTable extends JQMTableGrid {
         return rslt;
     }
 
-    @SuppressWarnings("null")
     private JsColumns prepareJsColumns() {
         if (Empty.is(datacols)) return null;
         boolean nothing = true;
@@ -424,14 +425,17 @@ public class JQMDataTable extends JQMTableGrid {
             if (rowData != null) {
                 if (jsCol == null) jsCol = JsColumn.create();
                 jsCol.setDataFunc(getElement(), rowData);
-            }
-            else if (col.getDataIdx() != null) {
+            } else if (col.getDataIdx() != null) {
                 if (jsCol == null) jsCol = JsColumn.create();
                 jsCol.setDataIdx(col.getDataIdx());
             } else if (col.getData() != null) { // empty is valid value and means that data is null
                 if (jsCol == null) jsCol = JsColumn.create();
                 String s = col.getData();
                 jsCol.setData(s.isEmpty() || "null".equals(s) ? null : s);
+            }
+            if (col.isCustomCellRender() && cellRender != null) {
+                if (jsCol == null) jsCol = JsColumn.create();
+                jsCol.setRenderFunc(getElement(), col, cellRender);
             }
 
             if (jsCol != null) nothing = false;
@@ -969,6 +973,11 @@ public class JQMDataTable extends JQMTableGrid {
                         JsDataTable.openRowDetails(tableElt, rowIds);
                     }
                 }
+
+                @Override
+                public boolean beforeDraw(Element tableElt, JavaScriptObject settings) {
+                    return true;
+                }
             });
         }
     }
@@ -1072,6 +1081,17 @@ public class JQMDataTable extends JQMTableGrid {
     /** Custom data accessor, useful in case non-JavaScriptObject data structure, i.e. DTO/POJO. */
     public void setRowData(RowData rowData) {
         this.rowData = rowData;
+    }
+
+    public CellRender getCellRender() {
+        return cellRender;
+    }
+
+    /**
+     * Custom widget can be inserted into any cell.
+     */
+    public void setCellRender(CellRender cellRender) {
+        this.cellRender = cellRender;
     }
 
 }

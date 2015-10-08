@@ -1086,6 +1086,14 @@ public class JQMCommon {
         $wnd.$("#" + id).val(value);
     }-*/;
 
+    public static native String getVal(Element elt) /*-{
+        return $wnd.$(elt).val();
+    }-*/;
+
+    public static native void setVal(Element elt, String value) /*-{
+        $wnd.$(elt).val(value);
+    }-*/;
+
     /**
      * Needed to find out jqm widget by its Element received usually from JavaScript.
      * <br> Only loaded (attached to DOM) widgets can be found.

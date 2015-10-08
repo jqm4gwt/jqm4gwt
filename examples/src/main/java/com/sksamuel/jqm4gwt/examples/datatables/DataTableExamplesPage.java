@@ -34,6 +34,7 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable.RowSelectMode;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.AjaxHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellRender;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.DrawHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsAjaxRequest;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsAjaxResponse;
@@ -328,6 +329,11 @@ public class DataTableExamplesPage {
                     r.getStyle().setFontWeight(FontWeight.BOLD);
                 }
             }
+
+            @Override
+            public boolean beforeDraw(Element tableElt, JavaScriptObject settings) {
+                return true;
+            }
         });
         dataTable5.enhance();
 
@@ -377,8 +383,52 @@ public class DataTableExamplesPage {
                 return holder;
             }
         });
+        dataTable6.setCellRender(new CellRender() {
+            @Override
+            public String onRender(Element tableElt, ColumnDefEx col, JsArrayMixed cellData,
+                    JavaScriptObject rowData, String opType, JavaScriptObject metaInfo) {
+                if ("code".equals(col.getData())) {
+                    TestDataItem item = (TestDataItem) JsUtils.getNestedObjJavaValue(rowData, "dataItem");
+                    String s = "<input type='text' value='" + cellData.getString(0)
+                        + "' data-rowid='" + item.id
+                        + "' data-column='" + col.getData()
+                        + "' data-initval='" + item.code + "'>";
+                    return s;
+                }
+                return null;
+            }});
+        dataTable6.addDrawHandler(new DrawHandler() {
+            @Override
+            public void afterDraw(Element tableElt, JavaScriptObject settings) {
+            }
+
+            @Override
+            public boolean beforeDraw(Element tableElt, JavaScriptObject settings) {
+                JsArray<Element> arr = getTableElts(tableElt, "input[type=text]");
+                String s = "";
+                for (int i = 0; i < arr.length(); i++) {
+                    Element elt = arr.get(i);
+                    String oldVal = elt.getAttribute("data-initval");
+                    String newVal = JQMCommon.getVal(elt);
+                    if (oldVal == newVal || oldVal != null && oldVal.equals(newVal)) {
+                        // not changed
+                    } else {
+                        s += "rowId: " + elt.getAttribute("data-rowid") + "; ";
+                        s += "column: " + elt.getAttribute("data-column") + "\n";
+                        s += oldVal + " -> " + newVal + "\n\n";
+                    }
+                }
+                if (!s.isEmpty()) Window.alert(s);
+                return true;
+            }
+        });
         dataTable6.enhance();
     }
+
+    private static native JsArray<Element> getTableElts(Element tableElt, String selector) /*-{
+        var rslt = $wnd.$(tableElt).DataTable().$(selector);
+        return $wnd.$.makeArray(rslt);
+    }-*/;
 
     private static void getArrayServerData(JsAjaxRequest req, JavaScriptObject drawCallback) {
         final JsOrderItems order = req.getOrder();

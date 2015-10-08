@@ -166,6 +166,34 @@ public class JsDataTable {
                 return rslt[0];
             };
         }-*/;
+
+        public final native void setRenderFunc(final Element tableElt, final ColumnDefEx column,
+                                               final CellRender render) /*-{
+            this.render = function ( data, type, row, meta ) {
+                var cellData = [data];
+                var rslt = render.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellRender::onRender(
+                    Lcom/google/gwt/dom/client/Element;Lcom/sksamuel/jqm4gwt/plugins/datatables/ColumnDefEx;Lcom/google/gwt/core/client/JsArrayMixed;Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)
+                    (tableElt, column, cellData, row, type, meta);
+                if (rslt) return rslt;
+                else return data;
+            };
+        }-*/;
+    }
+
+    public static interface CellRender {
+        /**
+         * See <a href="https://datatables.net/reference/option/columns.render">Description of function render()</a>
+         *
+         * @param cellData - the data for the cell, always array of length 1.
+         * @param rowData - the data for the whole row, usually JsArray or JavaScriptObject.
+         * @param opType - possible values: "display", "filter", "sort", "type".
+         * @param metaInfo - an object that contains additional information about the cell being requested.
+         * @return - valid html for the cell, for example: &lt;a href="..."&gt;Download&lt;/a&gt;
+         *           <br> In case you return null, then default cell rendering will be used.
+         */
+        String onRender(Element tableElt, ColumnDefEx col, JsArrayMixed cellData,
+                        JavaScriptObject rowData, String opType,
+                        JavaScriptObject/*JsRowDataMetaInfo*/ metaInfo);
     }
 
     static class JsColumns extends JsArray<JsColumn> {
@@ -1055,11 +1083,22 @@ public class JsDataTable {
          * @param settings - actually it's private object, can be used to obtain an API instance if required.
          */
         void afterDraw(Element tableElt, JavaScriptObject settings);
+
+        /**
+         * @return - false means cancel the draw.
+         */
+        boolean beforeDraw(Element tableElt, JavaScriptObject settings);
     }
 
     static native void addDrawHandler(final Element tableElt, final DrawHandler handler) /*-{
-        $wnd.$(tableElt).on('draw.dt', function (event, settings) {
+        var t = $wnd.$(tableElt);
+        t.on('draw.dt', function (event, settings) {
             handler.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.DrawHandler::afterDraw(
+                Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/core/client/JavaScriptObject;)
+                (tableElt, settings);
+        });
+        t.on('preDraw.dt', function (event, settings) {
+            return handler.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.DrawHandler::beforeDraw(
                 Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/core/client/JavaScriptObject;)
                 (tableElt, settings);
         });

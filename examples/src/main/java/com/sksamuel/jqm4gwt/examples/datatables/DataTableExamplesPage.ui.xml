@@ -169,7 +169,7 @@
             <da:ColumnDefEx title="ID" data="id" />
           </da:column>
           <da:column>
-            <da:ColumnDefEx title="Code" data="code" />
+            <da:ColumnDefEx title="Code" data="code" customCellRender="true" />
           </da:column> 
           <da:column>
             <da:ColumnDefEx title="Name" data="name" />

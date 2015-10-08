@@ -27,6 +27,8 @@ public class ColumnDefEx extends ColumnDef {
     private boolean cellTypeTh;
     private String width;
 
+    private boolean customCellRender;
+
     // must be in sync with dataTables-row-details.css
     private static final String ROW_DETAILS_CLASS = "details-control";
 
@@ -192,6 +194,17 @@ public class ColumnDefEx extends ColumnDef {
     public void setDataIdx(Integer dataIdx) {
         this.data = null;
         this.dataIdx = dataIdx;
+    }
+
+    public boolean isCustomCellRender() {
+        return customCellRender;
+    }
+
+    /**
+     * @param customCellRender - true means that JQMDataTable.cellRender should be called for this column.
+     */
+    public void setCustomCellRender(boolean customCellRender) {
+        this.customCellRender = customCellRender;
     }
 
 }
