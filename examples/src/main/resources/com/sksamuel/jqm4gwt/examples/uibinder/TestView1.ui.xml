@@ -201,6 +201,8 @@
             inline="true" mini="true" />
           <b:JQMButton ui:field="datePickerSetNullBtn" text="Set Date Picker value to Null"
             inline="true" mini="true" addStyleNames="{style.marginRight20}" />
+          <b:JQMButton ui:field="datePickerInfoBtn" text="Get Info"
+            inline="true" mini="true" addStyleNames="{style.marginRight20}" />  
           <h:Span text="Last onValueChange:" addStyleNames="{style.marginRight10}" />
           <h:Span ui:field="datePickerValueChanged" />  
 

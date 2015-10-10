@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt.plugins.datebox;
 import java.util.Date;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -449,8 +450,23 @@ public class JQMCalBox extends JQMText {
     public String getActiveDateFormat() {
         if (dateFormat != null) return dateFormat;
         if (input == null) return null;
-        String fmt = internGetOption(input.getElement(), "dateFormat");
-        return fmt;
+        // see __fmt() in jqm-datebox.comp.calbox.js
+        JavaScriptObject fmt = internGetOption(input.getElement(), "dateFormat");
+        return fmt.toString();
+    }
+
+    public JsArrayString getMonthNames() {
+        if (input == null) return null;
+        // see __fmt() in jqm-datebox.comp.calbox.js
+        JavaScriptObject months = internGetOption(input.getElement(), "monthsOfYear");
+        return months.cast();
+    }
+
+    public JsArrayString getMonthShortNames() {
+        if (input == null) return null;
+        // see __fmt() in jqm-datebox.comp.calbox.js
+        JavaScriptObject months = internGetOption(input.getElement(), "monthsOfYearShort");
+        return months.cast();
     }
 
     public Boolean getUsePickers() {
@@ -1138,18 +1154,25 @@ public class JQMCalBox extends JQMText {
         }
     }
 
-    // partial copy of __fmt() and __() functions from jqm-datebox.comp.calbox.js
-    // datebox('option') is not in official documentation, see also:
-    // http://stackoverflow.com/a/8217857
-    // http://dev.jtsage.com/jQM-DateBox2/demos/api/events.html
-    private static native String internGetOption(Element elt, String val) /*-{
+    // Partial copy of __() function from jqm-datebox.comp.calbox.js
+    // datebox('option') gives a full options list, it's inherited from the jquery-ui widget library
+    // and working because jquery.ui.widget.js has the following declaration:
+    // option: function( key, value ) { ... }, see https://github.com/jquery/jquery-mobile/blob/master/external/jquery-ui/jquery.ui.widget.js#L298
+    // If you need to retrieve a single option, you can also do this:
+    // var myOption = $wnd.$(elt).datebox('getOption', 'calFormatter');
+    //
+    // See also: http://stackoverflow.com/a/8217857
+    //       and http://dev.jtsage.com/jQM-DateBox2/demos/api/events.html
+    //
+    private static native JavaScriptObject internGetOption(Element elt, String val) /*-{
         var o = $wnd.$(elt).datebox('option');
-        if (typeof o.lang[o.useLang][val] !== 'undefined') {
-            return o.lang[o.useLang][val];
+        var lang = o.lang[o.useLang];
+        if (typeof lang !== 'undefined' && typeof lang[val] !== 'undefined') {
+            return lang[val];
         }
-        if (typeof o[o.mode+'lang'] !== 'undefined'
-                && typeof o[o.mode+'lang'][val] !== 'undefined') {
-            return o[o.mode+'lang'][val];
+        var mode = o[o.mode + 'lang'];
+        if ((typeof mode !== 'undefined') && (typeof mode[val] !== 'undefined')) {
+            return mode[val];
         }
         return o.lang['default'][val];
     }-*/;

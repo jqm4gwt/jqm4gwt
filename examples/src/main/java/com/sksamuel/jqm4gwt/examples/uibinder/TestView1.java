@@ -48,6 +48,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMCheckset;
 import com.sksamuel.jqm4gwt.form.elements.JQMFilterable;
 import com.sksamuel.jqm4gwt.form.elements.JQMFilterableEvent;
 import com.sksamuel.jqm4gwt.form.elements.JQMFlip;
+import com.sksamuel.jqm4gwt.form.elements.JQMMonth;
 import com.sksamuel.jqm4gwt.form.elements.JQMNumber;
 import com.sksamuel.jqm4gwt.form.elements.JQMPassword;
 import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
@@ -244,6 +245,9 @@ public class TestView1 {
 
     @UiField
     JQMButton datePickerSetNullBtn;
+
+    @UiField
+    JQMButton datePickerInfoBtn;
 
     @UiField
     Span datePickerValueChanged;
@@ -500,6 +504,9 @@ public class TestView1 {
     @UiField
     JQMForm popupFlipTest;
 
+    @UiField
+    JQMMonth monthEd;
+
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
             @Override
@@ -517,6 +524,11 @@ public class TestView1 {
                 f.setText("Dynamic flip:");
                 popupFlipTest.add(f);
                 JQMContext.render(popupFlipTest.getElement());
+
+                JsArrayString months = datePicker.getMonthNames();
+                String[] m = new String[months.length()];
+                for (int i = 0; i < months.length(); i++) m[i] = months.get(i);
+                monthEd.setMonthNames(m);
             }
         });
     }
@@ -673,6 +685,15 @@ public class TestView1 {
     void datePickerSetNullBtnClick(ClickEvent e) {
         datePicker.setValue(null);
         datePicker.refresh();
+    }
+
+    @UiHandler("datePickerInfoBtn")
+    void datePickerInfoBtnClick(ClickEvent e) {
+        String fmt = datePicker.getActiveDateFormat();
+        JsArrayString months = datePicker.getMonthNames();
+        JsArrayString shortMonths = datePicker.getMonthShortNames();
+        Window.alert("Format: " + fmt + "\n" + "Months: " + months.join() + "\n"
+            + "Short Months: " + shortMonths.join());
     }
 
     @UiHandler("headerTestBtn1")
