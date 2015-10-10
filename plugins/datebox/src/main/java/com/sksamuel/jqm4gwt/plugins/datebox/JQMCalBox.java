@@ -1154,28 +1154,22 @@ public class JQMCalBox extends JQMText {
         }
     }
 
-    // Partial copy of __() function from jqm-datebox.comp.calbox.js
     // datebox('option') gives a full options list, it's inherited from the jquery-ui widget library
     // and working because jquery.ui.widget.js has the following declaration:
     // option: function( key, value ) { ... }, see https://github.com/jquery/jquery-mobile/blob/master/external/jquery-ui/jquery.ui.widget.js#L298
-    // If you need to retrieve a single option, you can also do this:
-    // var myOption = $wnd.$(elt).datebox('getOption', 'calFormatter');
+    //
+    // If you need to retrieve a single option, you can also do this (see https://github.com/jtsage/jquery-mobile-datebox/issues/340#issuecomment-61712507):
+    // var myOption = $wnd.$(elt).datebox('getOption', 'dateFormat');
+    // 'getOption' is jqm-datebox function with i18n knowledge, 'option' is jquery-ui function without i18n knowledge.
     //
     // See also: http://stackoverflow.com/a/8217857
     //       and http://dev.jtsage.com/jQM-DateBox2/demos/api/events.html
     //
     private static native JavaScriptObject internGetOption(Element elt, String val) /*-{
-        var o = $wnd.$(elt).datebox('option');
-        var lang = o.lang[o.useLang];
-        if (typeof lang !== 'undefined' && typeof lang[val] !== 'undefined') {
-            return lang[val];
-        }
-        var mode = o[o.mode + 'lang'];
-        if ((typeof mode !== 'undefined') && (typeof mode[val] !== 'undefined')) {
-            return mode[val];
-        }
-        return o.lang['default'][val];
+        // var o = $wnd.$(elt).datebox('option');
+        return $wnd.$(elt).datebox('getOption', val);
     }-*/;
+
 
     /**
      * @param mm - month 0-11, Jan = 0 .. Dec = 11
