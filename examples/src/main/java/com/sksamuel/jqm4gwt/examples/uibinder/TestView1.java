@@ -525,7 +525,7 @@ public class TestView1 {
                 popupFlipTest.add(f);
                 JQMContext.render(popupFlipTest.getElement());
 
-                JsArrayString months = datePicker.getMonthNames();
+                JsArrayString months = JQMCalBox.getClazzMonthNames();
                 String[] m = new String[months.length()];
                 for (int i = 0; i < months.length(); i++) m[i] = months.get(i);
                 monthEd.setMonthNames(m);

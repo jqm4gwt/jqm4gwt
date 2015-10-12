@@ -451,21 +451,29 @@ public class JQMCalBox extends JQMText {
         if (dateFormat != null) return dateFormat;
         if (input == null) return null;
         // see __fmt() in jqm-datebox.comp.calbox.js
-        JavaScriptObject fmt = internGetOption(input.getElement(), "dateFormat");
+        JavaScriptObject fmt = internGetLangOption(input.getElement(), "dateFormat");
         return fmt.toString();
     }
 
     public JsArrayString getMonthNames() {
         if (input == null) return null;
-        // see __fmt() in jqm-datebox.comp.calbox.js
-        JavaScriptObject months = internGetOption(input.getElement(), "monthsOfYear");
+        JavaScriptObject months = internGetLangOption(input.getElement(), "monthsOfYear");
         return months.cast();
     }
 
     public JsArrayString getMonthShortNames() {
         if (input == null) return null;
-        // see __fmt() in jqm-datebox.comp.calbox.js
-        JavaScriptObject months = internGetOption(input.getElement(), "monthsOfYearShort");
+        JavaScriptObject months = internGetLangOption(input.getElement(), "monthsOfYearShort");
+        return months.cast();
+    }
+
+    public static JsArrayString getClazzMonthNames() {
+        JavaScriptObject months = internGetProtoLangOption("monthsOfYear");
+        return months.cast();
+    }
+
+    public static JsArrayString getClazzMonthShortNames() {
+        JavaScriptObject months = internGetProtoLangOption("monthsOfYearShort");
         return months.cast();
     }
 
@@ -1165,9 +1173,22 @@ public class JQMCalBox extends JQMText {
     // See also: http://stackoverflow.com/a/8217857
     //       and http://dev.jtsage.com/jQM-DateBox2/demos/api/events.html
     //
-    private static native JavaScriptObject internGetOption(Element elt, String val) /*-{
+    private static native JavaScriptObject internGetLangOption(Element elt, String val) /*-{
         // var o = $wnd.$(elt).datebox('option');
         return $wnd.$(elt).datebox('getOption', val);
+    }-*/;
+
+    /** Gives "Global"/JsPrototype language option.
+     *  <br> Partial copy of __() function from jqm-datebox.js
+     *  <br> See for example: jquery.mobile.datebox.i18n.ru.utf8.js
+     **/
+    private static native JavaScriptObject internGetProtoLangOption(String val) /*-{
+        var o = $wnd.jQuery.mobile.datebox.prototype.options;
+        var lang = o.lang[o.useLang];
+        if (typeof lang !== 'undefined' && typeof lang[val] !== 'undefined') {
+            return lang[val];
+        }
+        return o.lang['default'][val];
     }-*/;
 
 
