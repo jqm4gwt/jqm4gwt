@@ -134,6 +134,10 @@
   top: 0; left: 0; bottom: 0; right: 0;
 }
 
+.jqm4gwt-li-band > .jqm4gwt-li-controls.ui-controlgroup-vertical .ui-controlgroup-controls .ui-btn {
+  border-bottom-width: 1px;
+}
+
 .jqm4gwt-listitem-icon {
   max-height: 16px !important;
   max-width: 16px !important;

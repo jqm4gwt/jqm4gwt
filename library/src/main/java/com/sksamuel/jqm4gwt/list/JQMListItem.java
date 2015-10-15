@@ -85,6 +85,8 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
 
         protected LiControlGroup(Element element, String styleName) {
             super(element, styleName);
+            // ui-controlgroup-horizontal is TOO intrusive, so we leave this group as vertical
+            // and correct ui-controlgroup-vertical unwanted intrusions in jqm4gwt.css
         }
     }
 

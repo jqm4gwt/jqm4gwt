@@ -211,18 +211,27 @@ public class ListViewDemoPage extends JQMPage {
 
         {
             FlowPanel p = new FlowPanel();
-            JQMTable t = new JQMTable(3);
+            JQMTable t = new JQMTable(4);
             t.add(new Label("AAA"));
-            t.add(new Label("BBB"));
-            JQMButton btn = new JQMButton("CCC");
+            JQMButton btn = new JQMButton("CCC1");
             btn.setInline(true);
             btn.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    Window.alert("CCC clicked");
+                    Window.alert("CCC1 clicked");
                 }
             });
             t.add(btn);
+            btn = new JQMButton("CCC2");
+            btn.setInline(true);
+            btn.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    Window.alert("CCC2 clicked");
+                }
+            });
+            t.add(btn);
+            t.add(new Label("BBB"));
             p.add(t);
             item = new JQMListItem();
             item.setControlGroup(true);
@@ -232,18 +241,27 @@ public class ListViewDemoPage extends JQMPage {
 
         {
             FlowPanel p = new FlowPanel();
-            JQMTable t = new JQMTable(3);
+            JQMTable t = new JQMTable(4);
             t.add(new Label("DDD"));
-            t.add(new Label("EEE"));
-            JQMButton btn = new JQMButton("FFF");
+            JQMButton btn = new JQMButton("FFF1");
             btn.setInline(true);
             btn.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    Window.alert("FFF clicked");
+                    Window.alert("FFF1 clicked");
                 }
             });
             t.add(btn);
+            btn = new JQMButton("FFF2");
+            btn.setInline(true);
+            btn.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    Window.alert("FFF2 clicked");
+                }
+            });
+            t.add(btn);
+            t.add(new Label("EEE"));
             p.add(t);
             item = new JQMListItem();
             item.setControlGroup(true, false/*linkable*/);
