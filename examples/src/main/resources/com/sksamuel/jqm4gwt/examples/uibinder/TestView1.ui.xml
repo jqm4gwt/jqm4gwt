@@ -152,6 +152,13 @@
           <e:JQMCheckbox ui:field="cb4" name="cb4" text="Right Icon and No corners"
             corners="false" iconPos="RIGHT" />
           <b:JQMButton ui:field="checkboxInfoBtn" text="Show Checkboxes Info" />
+          <g:FlowPanel>
+            <h:Span text="Checkboxes no text (mini and regular):" />
+            <e:JQMCheckbox ui:field="cbNoTextMini" name="cbNoTextMini" text="" 
+              mini="true" value="true" inline="true" />
+            <e:JQMCheckbox ui:field="cbNoText" name="cbNoText" text="" 
+              mini="false" value="true" inline="true" />  
+          </g:FlowPanel>
           <e:JQMCheckset ui:field="checkset1" text="Mini Horizontal Checkset" 
             orientation="HORIZONTAL" mini="true">
             <e:check><e:JQMCheckbox widgetId="cb_10" name="cb10" text="Check1" /></e:check>
