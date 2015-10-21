@@ -313,7 +313,6 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     public void setOptionValues(String values) {
         if (values == null || values.isEmpty()) {
             clear();
-            refresh();
         } else {
             String[] arr = values.split(",");
             for (int i = 0; i < arr.length; i++) {
