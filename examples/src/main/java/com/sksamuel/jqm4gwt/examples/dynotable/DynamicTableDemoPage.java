@@ -1,9 +1,9 @@
 package com.sksamuel.jqm4gwt.examples.dynotable;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.button.JQMButton;
@@ -18,68 +18,62 @@ import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
  */
 public class DynamicTableDemoPage extends JQMPage {
 
-	private JQMTable	table;
+    private JQMTable table;
 
-	public DynamicTableDemoPage() {
-		JQMHeader h = new JQMHeader("Dynamic Table");
-		h.setBackButton(true);
-	    add(h);
-		add(new Paragraph(
-				"This example shows how a JQMTable can be combined with event handlers to dynamically adjust the table and cells."));
-		add(new Paragraph("Click 'add new cell' and a new cell will be added to the end of the table. "
-				+ "Click the button inside a cell and that cell will be removed. "
-				+ "Choose the table size and the table will be dynamically resized"));
+    public DynamicTableDemoPage() {
+        JQMHeader h = new JQMHeader("Dynamic Table");
+        h.setBackButton(true);
+        add(h);
+        add(new Paragraph(
+                "This example shows how a JQMTable can be combined with event handlers to "
+                + "dynamically adjust the table and cells."));
 
-		table = new JQMTable(2);
+        Paragraph p = new Paragraph();
+        p.setHTML("Click 'Add new cell' and a new cell will be added to the end of the table. "
+                + "<br> Click the button inside a cell and that cell will be removed. "
+                + "<br> Choose the table size and the table will be dynamically resized.");
+        add(p);
 
-		final JQMSelect select = new JQMSelect();
-		select.setText("Choose table size");
-		select.addOption("1");
-		select.addOption("2");
-		select.addOption("3");
-		select.addOption("4");
-		select.addOption("5");
-		select.setValue("2");
-		select.addChangeHandler(new ChangeHandler() {
+        table = new JQMTable(2);
 
-			@Override
-			public void onChange(ChangeEvent event) {
-				int size = Integer.parseInt(select.getValue());
-				table.setColumns(size);
-			}
-		});
-		add(select);
+        final JQMSelect select = new JQMSelect();
+        select.withText("Choose table size").addOptions("1", "2", "3", "4", "5");
+        select.setValue("2");
+        select.setSelectInline(true);
+        select.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                int size = Integer.parseInt(select.getValue());
+                table.setColumns(size);
+            }});
 
-		JQMButton add = new JQMButton("Add new cell");
-		add.addClickHandler(new ClickHandler() {
+        JQMButton addBtn = new JQMButton("Add new cell");
+        addBtn.setInline(true);
+        addBtn.getElement().getStyle().setColor("blue");
+        addBtn.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                addCell();
+            }});
+        JQMTable t = new JQMTable(2);
+        t.add(select);
+        t.add(addBtn);
+        add(t);
+        add(table);
 
-			@Override
-			public void onClick(ClickEvent event) {
-				addCell();
-			}
+        // add three buttons to start with
+        addCell();
+        addCell();
+        addCell();
+    }
 
-		});
-		add(add);
-
-		add(table);
-
-		// add three buttons to start with
-		addCell();
-		addCell();
-		addCell();
-	}
-
-	protected void addCell() {
-		final JQMButton b = new JQMButton("Remove me");
-		final Widget container = table.add(b);
-		b.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				table.remove(container);
-			}
-
-		});
-
-	}
+    protected void addCell() {
+        JQMButton btn = new JQMButton("Remove me");
+        final Widget cell = table.add(btn);
+        btn.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                table.remove(cell);
+            }});
+    }
 }

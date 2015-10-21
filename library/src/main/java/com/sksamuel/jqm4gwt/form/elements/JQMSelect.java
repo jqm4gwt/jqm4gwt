@@ -301,6 +301,27 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         addOption(text, text);
     }
 
+    public void addOptions(String... texts) {
+        if (texts != null) {
+            for (String s : texts) addOption(s, s);
+        }
+    }
+
+    /**
+     * @param values - comma separated list of option values, i.e. dropdown values. Useful for UiBinder.
+     */
+    public void setOptionValues(String values) {
+        if (values == null || values.isEmpty()) {
+            clear();
+            refresh();
+        } else {
+            String[] arr = values.split(",");
+            for (int i = 0; i < arr.length; i++) {
+                addOption(arr[i], arr[i]);
+            }
+        }
+    }
+
     private static void prepareOption(OptionElement opt, String value, String filterText,
                            boolean placeholder, boolean selected, boolean disabled,
                            DataIcon icon, String customIcon) {
@@ -441,6 +462,11 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      */
     public void addOption(String value, String text) {
         addOption(value, text, null/*filterText*/);
+    }
+
+    public JQMSelect withOption(String value, String text) {
+        addOption(value, text);
+        return this;
     }
 
     public int getOptionCount() {

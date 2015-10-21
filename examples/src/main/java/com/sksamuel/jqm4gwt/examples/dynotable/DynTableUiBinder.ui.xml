@@ -1,0 +1,42 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder 
+  xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+  xmlns:g="urn:import:com.google.gwt.user.client.ui"
+  xmlns:jqm="urn:import:com.sksamuel.jqm4gwt"
+  xmlns:b="urn:import:com.sksamuel.jqm4gwt.button"
+  xmlns:t="urn:import:com.sksamuel.jqm4gwt.table" 
+  xmlns:tb="urn:import:com.sksamuel.jqm4gwt.toolbar" 
+  xmlns:h="urn:import:com.sksamuel.jqm4gwt.html" 
+  xmlns:l="urn:import:com.sksamuel.jqm4gwt.layout" 
+  xmlns:e="urn:import:com.sksamuel.jqm4gwt.form.elements">
+  
+  <ui:style>
+    .addBtn { color: blue !important; }
+  </ui:style>
+  
+  <jqm:JQMPage containerId="dynTablePage++" backButton="true">
+    <tb:JQMHeader text="Dynamic Table with UiBinder" />
+    <h:Paragraph text="This example shows how a JQMTable can be combined with event handlers to 
+                       dynamically adjust the table and cells.">
+    </h:Paragraph>
+    <h:Paragraph HTML="Click 'Add new cell' and a new cell will be added to the end of the table.
+                       &lt;br> Click the button inside a cell and that cell will be removed.
+                       &lt;br> Choose the table size and the table will be dynamically resized.">
+    </h:Paragraph>
+    <l:JQMTable columns="2">
+      <l:cell>
+        <e:JQMSelect ui:field="select" text="Choose table size" 
+          optionValues="1,2,3,4,5" value="2" selectInline="true" />  
+      </l:cell>
+      <l:cell>
+        <b:JQMButton ui:field="addBtn" text="Add new cell" inline="true"
+          addStyleNames="{style.addBtn}" />  
+      </l:cell>
+    </l:JQMTable>
+    <l:JQMTable ui:field="table" columns="2">
+      <l:cell> <b:JQMButton ui:field="cellBtn1" text="Remove me" /> </l:cell>
+      <l:cell> <b:JQMButton ui:field="cellBtn2" text="Remove me" /> </l:cell>
+      <l:cell> <b:JQMButton ui:field="cellBtn3" text="Remove me" /> </l:cell>
+    </l:JQMTable>
+  </jqm:JQMPage>
+</ui:UiBinder> 

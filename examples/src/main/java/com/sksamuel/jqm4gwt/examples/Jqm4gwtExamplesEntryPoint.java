@@ -9,6 +9,7 @@ import com.sksamuel.jqm4gwt.ScriptUtils;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.examples.collapsible.DynamicCollapsibleDemoPage;
 import com.sksamuel.jqm4gwt.examples.datatables.DataTableExamplesPage;
+import com.sksamuel.jqm4gwt.examples.dynotable.DynTableUiBinder;
 import com.sksamuel.jqm4gwt.examples.dynotable.DynamicTableDemoPage;
 import com.sksamuel.jqm4gwt.examples.events.EventsDemoPage;
 import com.sksamuel.jqm4gwt.examples.helloworld.HelloWorldPage;
@@ -76,6 +77,7 @@ public class Jqm4gwtExamplesEntryPoint implements EntryPoint {
         page.add(new JQMButton("Events", new EventsDemoPage()));
         page.add(new JQMButton("Advanced Lists", new ListViewDemoPage()));
         page.add(new JQMButton("Dynamic Table", new DynamicTableDemoPage()));
+        page.add(new JQMButton("Dynamic Table with UiBinder", (new DynTableUiBinder()).getPage()));
         page.add(new JQMButton("Dynamic Collapsible", new DynamicCollapsibleDemoPage()));
         page.add(new JQMButton("Popups", new PopupExamplePage()));
         page.add(new JQMButton("DataTables", (new DataTableExamplesPage()).getPage()));
