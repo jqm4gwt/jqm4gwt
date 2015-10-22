@@ -721,9 +721,9 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     /**
-     * Sets this select to allow mulitple selections.
+     * Sets this select to allow multiple selections.
      */
-    public void setMulitple(boolean value) {
+    public void setMultiple(boolean value) {
         JQMCommon.setAttribute(select, "multiple", value ? "multiple" : null);
     }
 

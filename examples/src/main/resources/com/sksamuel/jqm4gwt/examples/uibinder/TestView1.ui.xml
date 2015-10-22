@@ -303,7 +303,7 @@
             <b:JQMButton ui:field="ddIconsNull" text="IconPos Null (Default: Right)" inline="true" mini="true" />
           </g:FlowPanel>
           <h:Paragraph />
-          <e:JQMSelect ui:field="multiSel" text="Dropdown with multiple select" mulitple="true" native="false"
+          <e:JQMSelect ui:field="multiSel" text="Dropdown with multiple select" multiple="true" native="false"
             closeText="Discard" selectInline="true">
             <e:option><e:JQMSelect.Option text="One" value="1" /></e:option>
             <e:option><e:JQMSelect.Option text="Two" value="2" /></e:option>
