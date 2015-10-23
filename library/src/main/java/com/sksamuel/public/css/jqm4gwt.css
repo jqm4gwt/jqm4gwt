@@ -107,11 +107,13 @@
 .jqm4gwt-form-label-top .ui-field-contain > .ui-rangeslider > label {
   width: auto !important;
   float: none !important;
+  margin-top: 0 !important;
 }
 .jqm4gwt-form-label-top .ui-field-contain > label ~ [class*="ui-"],
 .jqm4gwt-form-label-top .ui-field-contain .ui-controlgroup-controls {
   width: auto !important;
   float: none !important;
+  margin-top: 0 !important;
 }
 
 .jqm4gwt-errorcontain input, .jqm4gwt-errorcontain .ui-select, .jqm4gwt-errorcontain .ui-controlgroup-controls {
