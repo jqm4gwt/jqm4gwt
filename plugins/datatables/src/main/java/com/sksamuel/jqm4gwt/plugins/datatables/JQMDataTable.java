@@ -39,6 +39,7 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItem;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItems;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowData;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer;
+import com.sksamuel.jqm4gwt.table.ColumnDef;
 import com.sksamuel.jqm4gwt.table.JQMTableGrid;
 
 /**
@@ -384,7 +385,31 @@ public class JQMDataTable extends JQMTableGrid {
     }
 
     private JsColumns prepareJsColumns() {
-        if (Empty.is(datacols)) return null;
+        if (Empty.is(datacols)) {
+            if (Empty.is(columns)) return null;
+            boolean nothing = true;
+            JsColumns rslt = JsColumns.create(null);
+            for (ColumnDef col : columns) {
+                if (col.isGroup()) continue;
+                JsColumn jsCol = null;
+                if (!Empty.is(col.getName())) {
+                    if (jsCol == null) jsCol = JsColumn.create();
+                    jsCol.setName(col.getName());
+                }
+                if (rowData != null) {
+                    if (jsCol == null) jsCol = JsColumn.create();
+                    jsCol.setDataFunc(getElement(), rowData);
+                }
+                if (cellRender != null) {
+                    if (jsCol == null) jsCol = JsColumn.create();
+                    jsCol.setRenderFunc(getElement(), col, cellRender);
+                }
+                if (jsCol != null) nothing = false;
+                rslt.push(jsCol);
+            }
+            if (nothing) return null;
+            return rslt;
+        }
         boolean nothing = true;
         JsColumns rslt = JsColumns.create(null);
         for (ColumnDefEx col : datacols) {

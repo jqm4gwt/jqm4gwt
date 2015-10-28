@@ -10,6 +10,7 @@ import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
 import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.StrUtils;
+import com.sksamuel.jqm4gwt.table.ColumnDef;
 
 public class JsDataTable {
 
@@ -167,12 +168,12 @@ public class JsDataTable {
             };
         }-*/;
 
-        public final native void setRenderFunc(final Element tableElt, final ColumnDefEx column,
+        public final native void setRenderFunc(final Element tableElt, final ColumnDef column,
                                                final CellRender render) /*-{
             this.render = function ( data, type, row, meta ) {
                 var cellData = [data];
                 var rslt = render.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellRender::onRender(
-                    Lcom/google/gwt/dom/client/Element;Lcom/sksamuel/jqm4gwt/plugins/datatables/ColumnDefEx;Lcom/google/gwt/core/client/JsArrayMixed;Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)
+                    Lcom/google/gwt/dom/client/Element;Lcom/sksamuel/jqm4gwt/table/ColumnDef;Lcom/google/gwt/core/client/JsArrayMixed;Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)
                     (tableElt, column, cellData, row, type, meta);
                 if (rslt) return rslt;
                 else return data;
@@ -191,7 +192,7 @@ public class JsDataTable {
          * @return - valid html for the cell, for example: &lt;a href="..."&gt;Download&lt;/a&gt;
          *           <br> In case you return null, then default cell rendering will be used.
          */
-        String onRender(Element tableElt, ColumnDefEx col, JsArrayMixed cellData,
+        String onRender(Element tableElt, ColumnDef col, JsArrayMixed cellData,
                         JavaScriptObject rowData, String opType,
                         JavaScriptObject/*JsRowDataMetaInfo*/ metaInfo);
     }
@@ -393,7 +394,7 @@ public class JsDataTable {
     /** See <a href="https://datatables.net/examples/server_side/pipeline.html">Pipelining data to reduce Ajax calls</a> */
     public static interface AjaxHandler {
         /**
-         * @param drawCallback - must be called back when data is ready with JsAjaxRequest as input parameter.
+         * @param drawCallback - must be called back when data is ready with JsAjaxResponse as input parameter.
          * @param request - actually it's JsAjaxRequest, so you can cast it safely.
          **/
         void getData(Element tableElt, JavaScriptObject/*JsAjaxRequest*/ request,
@@ -422,7 +423,8 @@ public class JsDataTable {
         }-*/;
 
         public final native int getDraw() /*-{
-            return this.draw;
+            if (this.draw) return this.draw;
+            else return 0;
         }-*/;
 
         public final native void setDraw(int value) /*-{

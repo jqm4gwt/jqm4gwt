@@ -44,6 +44,7 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsOrderItems;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsRowDataMetaInfo;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowData;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer;
+import com.sksamuel.jqm4gwt.table.ColumnDef;
 
 public class DataTableExamplesPage {
 
@@ -385,13 +386,15 @@ public class DataTableExamplesPage {
         });
         dataTable6.setCellRender(new CellRender() {
             @Override
-            public String onRender(Element tableElt, ColumnDefEx col, JsArrayMixed cellData,
+            public String onRender(Element tableElt, ColumnDef col, JsArrayMixed cellData,
                     JavaScriptObject rowData, String opType, JavaScriptObject metaInfo) {
-                if ("code".equals(col.getData())) {
+                if (!(col instanceof ColumnDefEx)) return null;
+                ColumnDefEx colEx = (ColumnDefEx) col;
+                if ("code".equals(colEx.getData())) {
                     TestDataItem item = (TestDataItem) JsUtils.getNestedObjJavaValue(rowData, "dataItem");
                     String s = "<input type='text' value='" + cellData.getString(0)
                         + "' data-rowid='" + item.id
-                        + "' data-column='" + col.getData()
+                        + "' data-column='" + colEx.getData()
                         + "' data-initval='" + item.code + "'>";
                     return s;
                 }
