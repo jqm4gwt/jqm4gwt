@@ -23,6 +23,8 @@
     .dataTable tr.group, .dataTable tr.group:hover {
       background-color: #ddd !important;
     }
+    
+    .marginLeft { margin-left: 10px; }
   
   </ui:style>
   
@@ -90,6 +92,8 @@
         <g:FlowPanel>
           <b:JQMButton ui:field="btnUnselectAll" text="Unselect All Rows" inline="true" mini="true" />
           <b:JQMButton ui:field="btnGetSelected" text="Get Selected Rows" inline="true" mini="true" />
+          <b:JQMButton ui:field="btnClearSearch" text="Clear Search" inline="true" mini="true" />
+          <h:Span ui:field="selRowsInfo" addStyleNames="{style.marginLeft}" />
         </g:FlowPanel>
         
         <g:FlowPanel addStyleNames="{style.separator}" />

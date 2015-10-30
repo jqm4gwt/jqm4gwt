@@ -1216,4 +1216,9 @@ public class JsDataTable {
         return grpRows;
     }-*/;
 
+    static native void clearSearch(Element tableElt) /*-{
+        var t = $wnd.$(tableElt).DataTable();
+        t.search( '' ).columns().search( '' ).draw();
+    }-*/;
+
 }

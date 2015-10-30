@@ -15,6 +15,7 @@ import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -39,6 +40,8 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItem;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItems;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowData;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer;
+import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableRowSelChangedEvent;
+import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableRowSelChangedEvent.RowSelChangedData;
 import com.sksamuel.jqm4gwt.table.ColumnDef;
 import com.sksamuel.jqm4gwt.table.JQMTableGrid;
 
@@ -313,22 +316,27 @@ public class JQMDataTable extends JQMTableGrid {
                             JsDataTable.initRow(row, true);
                         }
                     }
-                }
-            });
+                }});
             JsDataTable.setRowSelChanged(getElement(), new JsRowSelect() {
                 @Override
                 public void onRowSelChanged(Element row, boolean selected, JavaScriptObject rowData) {
                     String rowId = getRowId(rowData);
-                    if (Empty.is(rowId)) return;
-                    if (selected) {
-                        if (serverRowSelected == null) serverRowSelected = new HashSet<>();
-                        serverRowSelected.add(rowId);
-                    } else {
-                        if (!Empty.is(serverRowSelected)) serverRowSelected.remove(rowId);
+                    if (!Empty.is(rowId)) {
+                        if (selected) {
+                            if (serverRowSelected == null) serverRowSelected = new HashSet<>();
+                            serverRowSelected.add(rowId);
+                        } else {
+                            if (!Empty.is(serverRowSelected)) serverRowSelected.remove(rowId);
+                        }
                     }
-                }
-            });
-
+                    fireRowSelChanged(row, selected, rowData);
+                }});
+        } else {
+            JsDataTable.setRowSelChanged(getElement(), new JsRowSelect() {
+                @Override
+                public void onRowSelChanged(Element row, boolean selected, JavaScriptObject rowData) {
+                    fireRowSelChanged(row, selected, rowData);
+                }});
         }
         if (deferRender) p.setDeferRender(true);
         if (processing) p.setProcessing(true);
@@ -338,6 +346,17 @@ public class JQMDataTable extends JQMTableGrid {
         }
         if (!autoWidth) p.setAutoWidth(false);
         return p;
+    }
+
+    public HandlerRegistration addRowSelChangedHandler(JQMDataTableRowSelChangedEvent.Handler handler) {
+        if (handler == null) return null;
+        return addHandler(handler, JQMDataTableRowSelChangedEvent.getType());
+    }
+
+    private void fireRowSelChanged(Element row, boolean selected, JavaScriptObject rowData) {
+        int cnt = getHandlerCount(JQMDataTableRowSelChangedEvent.getType());
+        if (cnt == 0) return;
+        JQMDataTableRowSelChangedEvent.fire(this, new RowSelChangedData(row, selected, rowData));
     }
 
     private String getRowId(JavaScriptObject rowData) {
@@ -1032,12 +1051,14 @@ public class JQMDataTable extends JQMTableGrid {
         JsDataTable.unselectAllRows(getElement());
     }
 
-    public void changeRow(Element cellElt, boolean selected) {
-        JsDataTable.changeRow(cellElt, selected);
+    /** @param cellOrRowElt - could be cellElt or rowElt */
+    public void changeRow(Element cellOrRowElt, boolean selected) {
+        JsDataTable.changeRow(cellOrRowElt, selected);
     }
 
-    public void selectOneRowOnly(Element cellElt) {
-        JsDataTable.selectOneRowOnly(cellElt);
+    /** @param cellOrRowElt - could be cellElt or rowElt */
+    public void selectOneRowOnly(Element cellOrRowElt) {
+        JsDataTable.selectOneRowOnly(cellOrRowElt);
     }
 
     public JavaScriptObject getData() {
@@ -1117,6 +1138,10 @@ public class JQMDataTable extends JQMTableGrid {
      */
     public void setCellRender(CellRender cellRender) {
         this.cellRender = cellRender;
+    }
+
+    public void clearSearch() {
+        JsDataTable.clearSearch(getElement());
     }
 
 }

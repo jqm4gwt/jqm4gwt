@@ -27,6 +27,7 @@ import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JsUtils;
 import com.sksamuel.jqm4gwt.button.JQMButton;
+import com.sksamuel.jqm4gwt.html.Span;
 import com.sksamuel.jqm4gwt.plugins.datatables.ColumnDefEx;
 import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable;
 import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable.RowIdHelper;
@@ -44,6 +45,7 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsOrderItems;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsRowDataMetaInfo;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowData;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer;
+import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableRowSelChangedEvent;
 import com.sksamuel.jqm4gwt.table.ColumnDef;
 
 public class DataTableExamplesPage {
@@ -85,6 +87,12 @@ public class DataTableExamplesPage {
 
     @UiField
     JQMButton btnDeleteSelRow;
+
+    @UiField
+    JQMButton btnClearSearch;
+
+    @UiField
+    Span selRowsInfo;
 
     private static JsArray<JsArrayMixed> dataArray = null;
     private static JsArray<JavaScriptObject> dataObjs = null;
@@ -188,6 +196,22 @@ public class DataTableExamplesPage {
                 return dataTable2.getColumnsAsTableHtml(rowIndex, "border='0' style='padding-left:50px;'");
             }
         });
+        dataTable2.addRowSelChangedHandler(new JQMDataTableRowSelChangedEvent.Handler() {
+            @Override
+            public void onRowSelChanged(JQMDataTableRowSelChangedEvent event) {
+                JsArrayInteger sel = dataTable2.getSelRowIndexes();
+                if (sel.length() == 0) selRowsInfo.setText("No rows selected");
+                else {
+                    if (sel.length() > 7) {
+                        dataTable2.changeRow(event.getData().row, false/*selected*/);
+                        sel = dataTable2.getSelRowIndexes();
+                        String s = JsUtils.getObjValue(event.getData().rowData, "name");
+                        Window.alert("Cannot select more than 7 records. Ignoring selection of: " + s);
+                    }
+                    selRowsInfo.setText("Selected: " + sel.length() + " rows");
+                }
+            }
+        });
         btnUnselectAll.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -209,6 +233,12 @@ public class DataTableExamplesPage {
                     }
                     Window.alert(msg);
                 }
+            }
+        });
+        btnClearSearch.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                dataTable2.clearSearch();
             }
         });
         btnReplaceData.addClickHandler(new ClickHandler() {
