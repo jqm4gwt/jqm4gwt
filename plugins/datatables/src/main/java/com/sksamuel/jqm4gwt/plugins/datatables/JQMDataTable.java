@@ -953,9 +953,29 @@ public class JQMDataTable extends JQMTableGrid {
         JsDataTable.addCellClickHandler(getElement(), ButtonElement.TAG, handler);
     }
 
+    public void removeCellBtnClickHandlers() {
+        JsDataTable.removeCellClickHandler(getElement(), ButtonElement.TAG);
+    }
+
+    /**
+     * @param eltSelector - some selector to specific widgets, for example: a.ui-btn.special-btn
+     */
+    public void addCellCustomClickHandler(CellClickHandler handler, String eltSelector) {
+        if (handler == null || Empty.is(eltSelector)) return;
+        JsDataTable.addCellClickHandler(getElement(), eltSelector, handler);
+    }
+
+    public void removeCellCustomClickHandlers(String eltSelector) {
+        JsDataTable.removeCellClickHandler(getElement(), eltSelector);
+    }
+
     public void addCellCheckboxClickHandler(CellClickHandler handler) {
         if (handler == null) return;
         JsDataTable.addCellClickHandler(getElement(), InputElement.TAG + "[type='checkbox']", handler);
+    }
+
+    public void removeCellCheckboxClickHandlers() {
+        JsDataTable.removeCellClickHandler(getElement(), InputElement.TAG + "[type='checkbox']");
     }
 
     public RowSelectMode getRowSelectMode() {

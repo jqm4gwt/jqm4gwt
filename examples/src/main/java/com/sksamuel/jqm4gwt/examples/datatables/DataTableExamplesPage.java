@@ -158,7 +158,8 @@ public class DataTableExamplesPage {
         page = uiBinder.createAndBindUi(this);
         dataTable2.addCellBtnClickHandler(new CellClickHandler() {
             @Override
-            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex) {
+            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex,
+                                   int colIndex, int colVisibleIdx) {
                 String s = dataTable2.getCellData(rowIndex, "name");
                 //Element tableElt = JsDataTable.findTableElt(cellElt);
                 //s += "\n\n" + tableElt.getInnerHTML();
@@ -173,7 +174,8 @@ public class DataTableExamplesPage {
         });
         final CellClickHandler checkBoxClickHandler = new CellClickHandler() {
             @Override
-            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex) {
+            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex,
+                                   int colIndex, int colVisibleIdx) {
                 Element tableElt = JsDataTable.findTableElt(cellElt);
                 JQMDataTable dataTable = (JQMDataTable) JQMCommon.findWidget(tableElt);
                 InputElement cb = cellElt.cast();
@@ -307,7 +309,8 @@ public class DataTableExamplesPage {
 
         dataTable5.addCellBtnClickHandler(new CellClickHandler() {
             @Override
-            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex) {
+            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex,
+                                   int colIndex, int colVisibleIdx) {
                 String s = dataTable5.getCellData(rowIndex, "name");
                 Window.alert(s);
                 if (RowSelectMode.SINGLE.equals(dataTable5.getRowSelectMode())) {

@@ -902,7 +902,8 @@ public class JsDataTable {
          * @param cellElt - could be ButtonElement, InputElement, ..., i.e. content of this cell.
          * @return - if true then event.stopPropagation() will be called.
          */
-        boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex);
+        boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex,
+                        int colIndex, int colVisibleIdx);
     }
 
     /**
@@ -910,13 +911,24 @@ public class JsDataTable {
      */
     static native void addCellClickHandler(Element elt, String cellWidget, CellClickHandler handler) /*-{
         var t = $wnd.$(elt);
-        t.children('tbody').first().on('click', cellWidget, function(event) {
-            var row = t.DataTable().row($wnd.$(this).closest('tr'));
-            var rslt = handler.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler::onClick(
-              Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/core/client/JavaScriptObject;I)
-              (this, row.data(), row.index());
-            if (rslt) event.stopPropagation();
+        t.children('tbody').first().on('click.cell', cellWidget, function(event) {
+            var that = $wnd.$(this);
+            var cellSel = that.closest('td');
+            if (cellSel.length === 0) cellSel = that.closest('th');
+            if (cellSel.length !== 0) {
+                var cell = t.DataTable().cell(cellSel);
+                var row = t.DataTable().row(that.closest('tr'));
+                var rslt = handler.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler::onClick(
+                    Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/core/client/JavaScriptObject;III)
+                    (this, row.data(), row.index(), cell.index().column, cell.index().columnVisible);
+                if (rslt) event.stopPropagation();
+            }
         });
+    }-*/;
+
+    static native void removeCellClickHandler(Element elt, String cellWidget) /*-{
+        var t = $wnd.$(elt);
+        t.children('tbody').first().off('click.cell', cellWidget);
     }-*/;
 
     /** Predefined class for cell checkboxes, which are going to select/unselect rows. */
