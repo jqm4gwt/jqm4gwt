@@ -12,16 +12,31 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.Empty;
+import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JsUtils;
 import com.sksamuel.jqm4gwt.StrUtils;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMEvent;
+import com.sksamuel.jqm4gwt.events.JQMEventFactory;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
+import com.sksamuel.jqm4gwt.events.JQMOrientationChangeHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.AjaxHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellRender;
@@ -146,6 +161,11 @@ public class JQMDataTable extends JQMTableGrid {
     private String scrollY;
     private boolean scrollCollapse;
 
+    private boolean useParentHeight;
+    private DrawHandler useParentHeightDrawHandler;
+    private HandlerRegistration windowResizeInitialized;
+    private HandlerRegistration orientationChangeInitialized;
+
     private Language language;
 
     public static enum PagingType {
@@ -228,11 +248,26 @@ public class JQMDataTable extends JQMTableGrid {
         populateAll();
         if (!manualEnhance) enhance();
         else JsDataTable.setDataRoleNone(getElement()); // we don't need jQuery Mobile enhancement for DataTable parts!
+
+        if (useParentHeight) {
+            initWindowResize();
+            initOrientationChange();
+        }
     }
 
     @Override
     protected void onUnload() {
         enhanced = false;
+
+        if (windowResizeInitialized != null) {
+            windowResizeInitialized.removeHandler();
+            windowResizeInitialized = null;
+        }
+        if (orientationChangeInitialized != null) {
+            orientationChangeInitialized.removeHandler();
+            orientationChangeInitialized = null;
+        }
+
         super.onUnload();
     }
 
@@ -609,6 +644,116 @@ public class JQMDataTable extends JQMTableGrid {
      */
     public void setScrollCollapse(boolean scrollCollapse) {
         this.scrollCollapse = scrollCollapse;
+    }
+
+    public boolean isUseParentHeight() {
+        return useParentHeight;
+    }
+
+    /** Takes all parent height. Only works when scrollY is set to some value, for example: 1px */
+    public void setUseParentHeight(boolean useParentHeight) {
+        this.useParentHeight = useParentHeight;
+        if (this.useParentHeight) {
+            if (useParentHeightDrawHandler == null) {
+                useParentHeightDrawHandler = new DrawHandler() {
+
+                    @Override
+                    public void afterDraw(Element tableElt, JavaScriptObject settings) {
+                        if (JQMDataTable.this.useParentHeight) adjustToParentHeight();
+                    }
+
+                    @Override
+                    public boolean beforeDraw(Element tableElt, JavaScriptObject settings) {
+                        return true;
+                    }};
+                JsDataTable.addDrawHandler(getElement(), useParentHeightDrawHandler);
+            }
+            if (loaded) {
+                initWindowResize();
+                initOrientationChange();
+            }
+        }
+    }
+
+    private void initWindowResize() {
+        if (windowResizeInitialized != null) return;
+        windowResizeInitialized = Window.addResizeHandler(new ResizeHandler() {
+            @Override
+            public void onResize(ResizeEvent event) {
+                if (JQMDataTable.this.useParentHeight) {
+                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            adjustToParentHeight();
+                        }});
+                }
+            }});
+    }
+
+    private void initOrientationChange() {
+        if (orientationChangeInitialized != null) return;
+        orientationChangeInitialized = addJQMEventHandler(JQMComponentEvents.ORIENTATIONCHANGE,
+                new JQMOrientationChangeHandler() {
+                    @Override
+                    public void onEvent(JQMEvent<?> event) {
+                        if (JQMDataTable.this.useParentHeight) {
+                            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                                @Override
+                                public void execute() {
+                                    adjustToParentHeight();
+                                }});
+                        }
+                    }});
+    }
+
+    private HandlerRegistration addJQMEventHandler(String jqmEventName, EventHandler handler) {
+
+        Type<EventHandler> t = JQMEventFactory.getType(jqmEventName, EventHandler.class);
+
+        return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
+            @Override
+            public int getHandlerCountForWidget(Type<?> type) {
+                return getHandlerCount(type);
+            }
+        }, this, handler, jqmEventName, t);
+    }
+
+    private static final String SCROLL_BODY = "dataTables_scrollBody";
+    private static final String WRAPPER = "dataTables_wrapper";
+
+    private void adjustToParentHeight() {
+        Element tableElt = getElement();
+        Element wrapper = null;
+        Element scrollBody = null;
+        Element elt = tableElt.getParentElement();
+        while (elt != null) {
+            if (scrollBody == null) {
+                if (JQMCommon.hasStyle(elt, SCROLL_BODY)) {
+                    scrollBody = elt;
+                }
+            } else if (wrapper == null) {
+                if (JQMCommon.hasStyle(elt, WRAPPER)) {
+                    wrapper = elt;
+                    break;
+                }
+            }
+            elt = elt.getParentElement();
+        }
+        if (wrapper != null && scrollBody != null) {
+            Element wrapParent = wrapper.getParentElement();
+            if (wrapParent != null) {
+                int h = wrapParent.getClientHeight();
+                int wrapH = wrapper.getOffsetHeight();
+                String s = scrollBody.getStyle().getHeight();
+                s = StrUtils.getDigitsOnly(s);
+                if (!Empty.is(s)) {
+                    int scrollBodyH = Integer.parseInt(s);
+                    int newH = (h - wrapH) + scrollBodyH - 1;
+                    if (newH < 0) newH = 0;
+                    scrollBody.getStyle().setHeight(newH, Unit.PX);
+                }
+            }
+        }
     }
 
     public String getColSorts() {

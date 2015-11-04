@@ -116,4 +116,17 @@ public class StrUtils {
         return rslt;
     }
 
+    /** Returns only digits from specified string */
+    public static String getDigitsOnly(String s) {
+        if (isEmpty(s)) return s;
+        String rslt = s.trim();
+        if (isEmpty(rslt)) return rslt;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < rslt.length(); i++) {
+            char ch = rslt.charAt(i);
+            if (Character.isDigit(ch)) sb.append(ch);
+        }
+        return sb.toString();
+    }
+
 }
