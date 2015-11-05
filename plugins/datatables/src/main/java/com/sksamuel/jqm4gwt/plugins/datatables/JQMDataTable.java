@@ -721,7 +721,12 @@ public class JQMDataTable extends JQMTableGrid {
     private static final String SCROLL_BODY = "dataTables_scrollBody";
     private static final String WRAPPER = "dataTables_wrapper";
 
-    private void adjustToParentHeight() {
+    /**
+     * Adjusts height to parent's height.
+     * <br> It's one time action, and works regardless of useParentHeight current value.
+     * <br> Only works when scrollY is set to some value, for example: 1px
+     **/
+    public void adjustToParentHeight() {
         Element tableElt = getElement();
         Element wrapper = null;
         Element scrollBody = null;
