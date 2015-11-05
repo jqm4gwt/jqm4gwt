@@ -685,6 +685,7 @@ public class JQMDataTable extends JQMTableGrid {
                         @Override
                         public void execute() {
                             adjustToParentHeight();
+                            adjustColumnSizing();
                         }});
                 }
             }});
@@ -701,6 +702,7 @@ public class JQMDataTable extends JQMTableGrid {
                                 @Override
                                 public void execute() {
                                     adjustToParentHeight();
+                                    adjustColumnSizing();
                                 }});
                         }
                     }});
@@ -759,6 +761,10 @@ public class JQMDataTable extends JQMTableGrid {
                 }
             }
         }
+    }
+
+    public void adjustColumnSizing() {
+        JsDataTable.adjustColumnSizing(getElement());
     }
 
     public String getColSorts() {

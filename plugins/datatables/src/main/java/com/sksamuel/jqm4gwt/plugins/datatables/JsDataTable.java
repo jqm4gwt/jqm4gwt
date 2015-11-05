@@ -1233,4 +1233,9 @@ public class JsDataTable {
         t.search( '' ).columns().search( '' ).draw();
     }-*/;
 
+    static native void adjustColumnSizing(Element tableElt) /*-{
+        var t = $wnd.$(tableElt).dataTable();
+        t.fnAdjustColumnSizing(false); // no redraw
+    }-*/;
+
 }
