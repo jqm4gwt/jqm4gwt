@@ -708,11 +708,23 @@ public class JsDataTable {
         }-*/;
 
         public final native boolean isScrollX() /*-{
-            return this.scrollX;
+            if (typeof this.scrollX === 'boolean') return this.scrollX;
+            else if (typeof this.scrollX === 'string' && this.scrollX !== '') return true;
+            else return false;
         }-*/;
 
         public final native void setScrollX(boolean value) /*-{
             this.scrollX = value;
+        }-*/;
+
+        public final native String getScrollXcss() /*-{
+            if (typeof this.scrollX === 'string') return this.scrollX;
+            else return null;
+        }-*/;
+
+        public final native void setScrollXcss(String value) /*-{
+            this.scrollX = value;
+            this.scrollXInner = value; // even in 1.10.10 nothing is working without this line!
         }-*/;
 
         public final native String getScrollY() /*-{

@@ -25,6 +25,9 @@
     }
     
     .marginLeft { margin-left: 10px; }
+    .marginLeft0 { margin-left: 0 !important; }
+    
+    .tableNoWrap th, .tableNoWrap td { white-space: nowrap; }
   
   </ui:style>
   
@@ -123,7 +126,7 @@
           searching="true" pagingType="FULL_NUMBERS" colSorts="2"
           footColTitles=",, Name, Position, Office, Extension, Start date, Salary,"
           rowSelectMode="MULTI" individualColSearches="true"
-          addStyleNames="footerOnTop">
+          addStyleNames="footerOnTop {style.marginLeft0}" scrollXcss="1300px">
           
           <da:column>
             <da:ColumnDefEx defaultContentType="CHECKBOX_ROWSELECT" />

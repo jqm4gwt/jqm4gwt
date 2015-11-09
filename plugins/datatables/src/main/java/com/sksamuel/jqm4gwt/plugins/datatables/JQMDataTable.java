@@ -158,6 +158,7 @@ public class JQMDataTable extends JQMTableGrid {
     private List<ColSort> sorts;
 
     private boolean scrollX;
+    private String scrollXcss;
     private String scrollY;
     private boolean scrollCollapse;
 
@@ -249,7 +250,7 @@ public class JQMDataTable extends JQMTableGrid {
         if (!manualEnhance) enhance();
         else JsDataTable.setDataRoleNone(getElement()); // we don't need jQuery Mobile enhancement for DataTable parts!
 
-        if (useParentHeight) {
+        if (isAdjustSizesNeeded()) {
             initWindowResize();
             initOrientationChange();
         }
@@ -318,7 +319,8 @@ public class JQMDataTable extends JQMTableGrid {
         p.setOrder(order);
         JsColumns cols = prepareJsColumns();
         if (cols != null) p.setColumns(cols);
-        if (scrollX) p.setScrollX(true);
+        if (!Empty.is(scrollXcss)) p.setScrollXcss(scrollXcss);
+        else if (scrollX) p.setScrollX(true);
         if (!Empty.is(scrollY)) p.setScrollY(scrollY);
         if (scrollCollapse) p.setScrollCollapse(true);
         if (language != null) {
@@ -622,6 +624,17 @@ public class JQMDataTable extends JQMTableGrid {
         this.scrollX = scrollX;
     }
 
+    public String getScrollXcss() {
+        return scrollXcss;
+    }
+
+    /** Value in CSS units.
+     * <br> See <a href="https://datatables.net/reference/option/scrollX">scrollX</a>
+     **/
+    public void setScrollXcss(String scrollXcss) {
+        this.scrollXcss = scrollXcss;
+    }
+
     public String getScrollY() {
         return scrollY;
     }
@@ -680,12 +693,11 @@ public class JQMDataTable extends JQMTableGrid {
         windowResizeInitialized = Window.addResizeHandler(new ResizeHandler() {
             @Override
             public void onResize(ResizeEvent event) {
-                if (JQMDataTable.this.useParentHeight) {
+                if (isAdjustSizesNeeded()) {
                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                         @Override
                         public void execute() {
-                            adjustToParentHeight();
-                            adjustColumnSizing();
+                            adjustAllSizes();
                         }});
                 }
             }});
@@ -697,15 +709,28 @@ public class JQMDataTable extends JQMTableGrid {
                 new JQMOrientationChangeHandler() {
                     @Override
                     public void onEvent(JQMEvent<?> event) {
-                        if (JQMDataTable.this.useParentHeight) {
+                        if (isAdjustSizesNeeded()) {
                             Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                                 @Override
                                 public void execute() {
-                                    adjustToParentHeight();
-                                    adjustColumnSizing();
+                                    adjustAllSizes();
                                 }});
                         }
                     }});
+    }
+
+    /** Some properties (for example: scrollX, useParentHeight) may require to call final adjustments
+     *  when page is completely shown, i.e. it cannot be done automatically by JQMDataTable and
+     *  should be resolved manually. */
+    public boolean isAdjustSizesNeeded() {
+        return isUseParentHeight() || isScrollX() || !Empty.is(scrollXcss);
+    }
+
+    public void adjustAllSizes() {
+        boolean isScrollX = isScrollX() || !Empty.is(scrollXcss);
+        boolean isParentHeight = isUseParentHeight();
+        if (isParentHeight) adjustToParentHeight();
+        if (isParentHeight || isScrollX) adjustColumnSizing();
     }
 
     private HandlerRegistration addJQMEventHandler(String jqmEventName, EventHandler handler) {
@@ -763,6 +788,7 @@ public class JQMDataTable extends JQMTableGrid {
         }
     }
 
+    /** Aligns header to match the columns, useful after resize or orientation changes. */
     public void adjustColumnSizing() {
         JsDataTable.adjustColumnSizing(getElement());
     }

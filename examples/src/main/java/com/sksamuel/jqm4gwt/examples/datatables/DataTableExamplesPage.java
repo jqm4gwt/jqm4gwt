@@ -25,6 +25,7 @@ import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.HttpUtils;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMPage;
+import com.sksamuel.jqm4gwt.JQMPageEvent;
 import com.sksamuel.jqm4gwt.JsUtils;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.html.Span;
@@ -156,6 +157,13 @@ public class DataTableExamplesPage {
 
     public DataTableExamplesPage() {
         page = uiBinder.createAndBindUi(this);
+        page.addPageHandler(new JQMPageEvent.DefaultHandler() {
+            @Override
+            public void onShow(JQMPageEvent event) {
+                dataTable5.adjustAllSizes();
+            }
+        });
+
         dataTable2.addCellBtnClickHandler(new CellClickHandler() {
             @Override
             public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex,
