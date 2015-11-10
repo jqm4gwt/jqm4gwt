@@ -83,6 +83,8 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
      */
     private final List<JQMListItem> items = new ArrayList<JQMListItem>();
 
+    private boolean noLiThumbOrIcon;
+
     /**
      * Create a new unordered {@link JQMList}
      */
@@ -104,6 +106,34 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
         setDataRole("listview");
 
         setId();
+    }
+
+    private static native void bindCreated(Element elt, JQMList list) /*-{
+        $wnd.$(elt).on( 'listviewcreate', function( event, ui ) {
+            list.@com.sksamuel.jqm4gwt.list.JQMList::created()();
+        });
+    }-*/;
+
+    private static native void unbindCreated(Element elt) /*-{
+        $wnd.$(elt).off( 'listviewcreate' );
+    }-*/;
+
+    private void created() {
+        removeLiClassThumbIcon();
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        if (noLiThumbOrIcon) {
+            bindCreated(getElement(), this);
+        }
+    }
+
+    @Override
+    protected void onUnload() {
+        unbindCreated(getElement());
+        super.onUnload();
     }
 
     /**
@@ -471,6 +501,19 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
      */
     public void refresh() {
         refresh(getElement());
+        removeLiClassThumbIcon();
+    }
+
+    protected void removeLiClassThumbIcon() {
+        if (noLiThumbOrIcon) {
+            List<JQMListItem> lis = getItems();
+            for (JQMListItem li : lis) {
+                if (li == null) continue;
+                Element elt = li.getElement();
+                elt.removeClassName(JQMListItem.STYLE_UI_LI_HAS_THUMB);
+                elt.removeClassName(JQMListItem.STYLE_UI_LI_HAS_ICON);
+            }
+        }
     }
 
     protected static native void refresh(Element elt) /*-{
@@ -819,6 +862,17 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
      */
     public void setIconAlt(boolean value) {
         JQMCommon.setIconAlt(this, value);
+    }
+
+    public boolean isNoLiThumbOrIcon() {
+        return noLiThumbOrIcon;
+    }
+
+    /** Needed in case of complex bands with images used as list items,
+     *  see {@link JQMListItem#setControlGroup(boolean,boolean)}
+     **/
+    public void setNoLiThumbOrIcon(boolean noLiThumbOrIcon) {
+        this.noLiThumbOrIcon = noLiThumbOrIcon;
     }
 
 }

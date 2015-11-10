@@ -48,6 +48,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         HasTapHandlers, HasRel<JQMListItem>, HasTransition<JQMListItem> {
 
     public static final String STYLE_UI_LI_HAS_THUMB = "ui-li-has-thumb";
+    public static final String STYLE_UI_LI_HAS_ICON = "ui-li-has-icon";
 
     /**
      * Element to hold the count bubble
