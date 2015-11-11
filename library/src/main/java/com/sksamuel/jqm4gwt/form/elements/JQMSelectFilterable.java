@@ -13,11 +13,15 @@ import com.sksamuel.jqm4gwt.JQMCommon;
  */
 public class JQMSelectFilterable extends JQMSelect {
 
+    public static String CLEAR_BUTTON_TEXT = "-----";
+
     private static final String SELECT_FILTERABLE_STYLENAME = "jqm4gwt-select-filterable";
 
     private String menuStyleNames;
 
     private Element listView;
+
+    private boolean showClearButton;
 
     public JQMSelectFilterable() {
         super();
@@ -108,6 +112,17 @@ public class JQMSelectFilterable extends JQMSelect {
                     input.textinput();
                     listview.before( form ).jqmData( "filter-form", form ) ;
                     form.jqmData( "listview", listview );
+
+                    var isClear = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::isShowClearButton()();
+                    if (isClear === true) {
+                        var clearText = @com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::CLEAR_BUTTON_TEXT;
+                        var clearBtn = $wnd.$("<button class='ui-btn ui-mini' style='margin:0'>"
+                                              + clearText + "</button>");
+                        clearBtn.on('click', function() {
+                             combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::closeAndClearValue()();
+                        });
+                        listview.before( clearBtn ).jqmData( "clear-button", clearBtn );
+                    }
                 } else {
                     input = form.find( "input" );
                 }
@@ -124,7 +139,8 @@ public class JQMSelectFilterable extends JQMSelect {
             .on( "pagebeforeshow", "#" + id + "-dialog", function( e ) {
                 var dialog = $wnd.$( e.target ),
                     listview = dialog.find( "ul" ),
-                    form = listview.jqmData( "filter-form" );
+                    form = listview.jqmData( "filter-form" ),
+                    clearBtn = listview.jqmData( "clear-button" );
 
                 dialog.addClass( "ui-select-filterable" ); // for CSS styling
                 var addnl = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::getMenuStyleNames()();
@@ -137,15 +153,25 @@ public class JQMSelectFilterable extends JQMSelect {
 
                 // Place the form before the listview in the dialog.
                 listview.before( form );
+                if (clearBtn) {
+                    // 110% is a hack, we should just add 32px
+                    clearBtn.css("margin", "0 -16px 0 -16px").css("width", "110%");
+                    listview.before( clearBtn );
+                }
             })
 
             // After the dialog is closed, the form containing the filter input is returned to the popup.
             .on( "pagehide", "#" + id + "-dialog", function( e ) {
                 var listview = $wnd.$( e.target ).jqmData( "listview" ),
-                    form = listview.jqmData( "filter-form" );
+                    form = listview.jqmData( "filter-form" ),
+                    clearBtn = listview.jqmData( "clear-button" );
 
                 // Put the form back in the popup. It goes ahead of the listview.
                 listview.before( form );
+                if (clearBtn) {
+                    clearBtn.css("margin", "0").css("width", "100%");
+                    listview.before( clearBtn );
+                }
             });
     }-*/;
 
@@ -155,5 +181,19 @@ public class JQMSelectFilterable extends JQMSelect {
             .off( "listviewcreate", "#" + id + "-menu" )
             .off( "pagebeforeshow pagehide", "#" + id + "-dialog" );
     }-*/;
+
+    public boolean isShowClearButton() {
+        return showClearButton;
+    }
+
+    /** Clear button will be shown on filtering dialog with text defined by CLEAR_BUTTON_TEXT field. */
+    public void setShowClearButton(boolean showClearButton) {
+        this.showClearButton = showClearButton;
+    }
+
+    protected void closeAndClearValue() {
+        this.close();
+        this.setValue(null, true/*fireEvents*/);
+    }
 
 }
