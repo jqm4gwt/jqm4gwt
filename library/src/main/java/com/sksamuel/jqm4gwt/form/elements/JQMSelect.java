@@ -186,6 +186,10 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     protected final FormLabel label;
 
+    private String menuStyleNames;
+
+    private static boolean jsServed;
+
     private boolean valueChangeHandlerInitialized;
     private boolean blurHandlerAdded;
     private boolean created;
@@ -262,16 +266,16 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         return select.addClickHandler(handler);
     }
 
-	@Override
-	public HandlerRegistration addTapHandler(TapHandler handler) {
+    @Override
+    public HandlerRegistration addTapHandler(TapHandler handler) {
         // this is not a native browser event so we will have to manage it via JS
         return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
-			@Override
-			public int getHandlerCountForWidget(Type<?> type) {
-				return getHandlerCount(type);
-			}
+            @Override
+            public int getHandlerCountForWidget(Type<?> type) {
+                return getHandlerCount(type);
+            }
         }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
-	}
+    }
 
     @Override
     public Label addErrorLabel() {
@@ -860,7 +864,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     @Override
     public void setTheme(String themeName) {
-    	JQMCommon.applyTheme(select, themeName);
+        JQMCommon.applyTheme(select, themeName);
     }
 
     @Override
@@ -1245,7 +1249,10 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         super.onLoad();
         Element elt = select.getElement();
         bindCreated(elt, this);
-        bindLifecycleEvents(elt.getId(), this);
+        if (!jsServed) {
+            jsServed = true;
+            serveSelects();
+        }
     }
 
     @Override
@@ -1253,28 +1260,88 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         created = false;
         Element elt = select.getElement();
         unbindCreated(elt);
-        unbindLifecycleEvents(elt.getId());
         super.onUnload();
     }
 
-    private static native void bindLifecycleEvents(String id, JQMSelect selectCtrl) /*-{
-        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
-        $wnd.$.mobile.document
-            // The custom select list may show up as either a popup or a dialog, depending how much
-            // vertical room there is on the screen. If it shows up as a dialog, then we have to
-            // process transparent property.
-            .on( "pagebeforeshow", "#" + id + "-dialog", function( e, ui ) {
-                selectCtrl.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::doDlgBeforeShow(Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/dom/client/Element;)(e.target, ui.prevPage.get(0));
-            })
-            // After the dialog is closed, we have to process transparent property as well.
-            .on( "pagehide", "#" + id + "-dialog", function( e, ui ) {
-                selectCtrl.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::doDlgHide(Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/dom/client/Element;)(e.target, ui.nextPage.get(0));
-            });
+    private static native boolean isPageSelectDialog(String pageId) /*-{
+        var isDialog = false;
+        var SEL = "." + @com.sksamuel.jqm4gwt.form.elements.JQMSelect::SELECT_STYLENAME
+                      + " .ui-select > select";
+        $wnd.$(SEL).each(function() {
+            var id = $wnd.$(this).attr("id");
+            if (id) {
+                var s = id + "-dialog";
+                if (s === pageId) {
+                    isDialog = true;
+                    return false;
+                }
+            }
+        });
+        return isDialog;
     }-*/;
 
-    private static native void unbindLifecycleEvents(String id) /*-{
+    protected static JQMSelect findCombo(Element elt) {
+        Widget w = JQMCommon.findWidget(elt);
+        while (w != null) {
+            if (w instanceof JQMSelect) return (JQMSelect) w;
+            w = w.getParent();
+        }
+        return null;
+    }
+
+    private static native void serveSelects() /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
-        $wnd.$.mobile.document.off( "pagebeforeshow pagehide", "#" + id + "-dialog" );
+        var SEL = "." + @com.sksamuel.jqm4gwt.form.elements.JQMSelect::SELECT_STYLENAME
+                      + " .ui-select > select";
+        $wnd.$.mobile.document
+            // Upon creation of the select menu, we want to make use of the fact that the ID of the
+            // listview it generates starts with the ID of the select menu itself, plus the suffix "-menu".
+            .on( "selectmenucreate", SEL, function( event ) {
+                // process additional CSS styling classes
+                var combo = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::findCombo(Lcom/google/gwt/dom/client/Element;)
+                                (event.target);
+                var addnl = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::getMenuStyleNames()();
+                if (addnl) {
+                    var selectmenu = $wnd.$( event.target ),
+                        id = selectmenu.attr( "id" ),
+                        lb = $wnd.$( "#" + id + "-listbox" );
+                    lb.addClass( addnl );
+                }
+            })
+            // The custom select list may show up as either a popup or a dialog, depending on how much
+            // vertical room there is on the screen. If it shows up as a dialog, then we have to
+            // process transparent property.
+            .on( "pagecontainerbeforeshow", function( event, data ) {
+                var pageId = data.toPage && data.toPage.attr("id");
+                // We only handle the appearance of a dialog generated by a selectmenu
+                var isDlg = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::isPageSelectDialog(Ljava/lang/String;)
+                                (pageId);
+                if (!isDlg) return;
+                var dialog = data.toPage;
+                var comboId = pageId.replace("-dialog", "");
+                var combo = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::findCombo(Lcom/google/gwt/dom/client/Element;)
+                                ($wnd.$("#" + comboId)[0]);
+
+                var addnl = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::getMenuStyleNames()();
+                if (addnl) dialog.addClass( addnl );
+
+                combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::doDlgBeforeShow(Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/dom/client/Element;)
+                    (dialog[0], data.prevPage.get(0));
+            })
+            // After the dialog is closed, we have to process transparent property as well.
+            .on( "pagecontainerhide", function( event, data ) {
+                var pageId = data.prevPage && data.prevPage.attr("id");
+                // We only handle the disappearance of a dialog generated by a filterable selectmenu
+                var isDlg = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::isPageSelectDialog(Ljava/lang/String;)
+                                (pageId);
+                if (!isDlg) return;
+                var dialog = data.prevPage;
+                var comboId = pageId.replace("-dialog", "");
+                var combo = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::findCombo(Lcom/google/gwt/dom/client/Element;)
+                                ($wnd.$("#" + comboId)[0]);
+                combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::doDlgHide(Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/dom/client/Element;)
+                    (dialog[0], data.toPage.get(0));
+            });
     }-*/;
 
     /**
@@ -1369,5 +1436,20 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     public void setMultiValueSeparator(String multiValueSeparator) {
         this.multiValueSeparator = multiValueSeparator;
     }
+
+    public String getMenuStyleNames() {
+        return menuStyleNames;
+    }
+
+    /**
+     * For non-native mode (popup or dialog with listview), you can style listview by defining rule:
+     * <br> .ui-selectmenu .ui-selectmenu-list { ... }
+     * <br> For additional flexibility you can specify custom classes to be added together with ui-selectmenu
+     * @param menuStyleNames - space separated custom classes
+     */
+    public void setMenuStyleNames(String menuStyleNames) {
+        this.menuStyleNames = menuStyleNames;
+    }
+
 
 }

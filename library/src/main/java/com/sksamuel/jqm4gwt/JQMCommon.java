@@ -1038,7 +1038,8 @@ public class JQMCommon {
         $wnd.$(fltrElt).filterable("option", "filterCallback",
             function(index, searchValue) {
                 var idx = @java.lang.Integer::valueOf(I)(index);
-                var rslt = fltr.@com.sksamuel.jqm4gwt.HasFilterable::doFiltering(Lcom/google/gwt/dom/client/Element;Ljava/lang/Integer;Ljava/lang/String;)(this, idx, searchValue);
+                var rslt = fltr.@com.sksamuel.jqm4gwt.HasFilterable::doFiltering(Lcom/google/gwt/dom/client/Element;Ljava/lang/Integer;Ljava/lang/String;)
+                               (this, idx, searchValue);
                 if (rslt === undefined || rslt === null) {
                     if (origFilter === undefined || origFilter === null) {
                         return false;

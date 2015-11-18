@@ -2,7 +2,7 @@ package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.OptionElement;
+import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.JQMCommon;
 
 /**
@@ -17,33 +17,42 @@ public class JQMSelectFilterable extends JQMSelect {
 
     private static final String SELECT_FILTERABLE_STYLENAME = "jqm4gwt-select-filterable";
 
-    private String menuStyleNames;
+    private static final String FILTERABLE_SELECT = "filterable-select";
 
-    private Element listView;
+    private static boolean jsServed;
+
+    private Element filterable;
 
     private boolean showClearButton;
 
     public JQMSelectFilterable() {
         super();
         addStyleName(SELECT_FILTERABLE_STYLENAME);
+        select.addStyleName(FILTERABLE_SELECT);
         setNative(false);
     }
 
+    @Override
     public String getMenuStyleNames() {
-        return menuStyleNames;
+        String s = super.getMenuStyleNames();
+        // for CSS styling
+        String rslt = "ui-select-filterable";
+        if (!Empty.is(s)) rslt += " " + s;
+        return rslt;
     }
 
     /**
-     * There is predefined ui-select-filterable CSS class added to menu dialog/popup.
+     * There is a predefined ui-select-filterable CSS class, which is always added to menu dialog/popup.
      * <br> You can style listview by defining rule .ui-selectmenu.ui-select-filterable .ui-selectmenu-list { ... }
      * <br> For additional flexibility you can specify custom classes to be added together with ui-select-filterable
-     * @param dialogStyleNames - space separated custom classes
+     * @param menuStyleNames - space separated custom classes
      */
-    public void setMenuStyleNames(String dialogStyleNames) {
-        this.menuStyleNames = dialogStyleNames;
+    @Override
+    public void setMenuStyleNames(String menuStyleNames) {
+        super.setMenuStyleNames(menuStyleNames);
     }
 
-    @Override
+    /* @Override
     public Boolean doFiltering(Element elt, Integer index, String searchValue) {
         // TODO: remove when this bug is fixed: https://github.com/jquery/jquery-mobile/issues/7677
         String s = JQMCommon.getFilterText(elt);
@@ -65,121 +74,144 @@ public class JQMSelectFilterable extends JQMSelect {
             }
         }
         return super.doFiltering(elt, index, searchValue);
-    }
+    } */
 
-    private void setListView(Element listViewElt) {
-        listView = listViewElt;
-        if (listView != null && JQMCommon.isFilterableReady(listView)) {
-            JavaScriptObject origFilter = JQMCommon.getFilterCallback(listView);
-            JQMCommon.bindFilterCallback(this, listView, origFilter);
+    private void setFilterableElt(Element filterableElt) {
+        filterable = filterableElt;
+        if (filterable != null && JQMCommon.isFilterableReady(filterable)) {
+            JavaScriptObject origFilter = JQMCommon.getFilterCallback(filterable);
+            JQMCommon.bindFilterCallback(this, filterable, origFilter);
         }
     }
 
     @Override
     protected void onLoad() {
         super.onLoad();
-        bindLifecycleEvents(select.getElement().getId(), this);
+        if (!jsServed) {
+            jsServed = true;
+            serveSelectsFilterable();
+        }
     }
 
     @Override
     protected void onUnload() {
-        unbindLifecycleEvents(select.getElement().getId());
         super.onUnload();
     }
 
-    private static native void bindLifecycleEvents(String id, JQMSelectFilterable combo) /*-{
-        if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
-        $wnd.$.mobile.document
-            // The custom selectmenu plugin generates an ID for the listview by suffixing the ID of the
-            // native widget with "-menu". Upon creation of the listview widget we want to place an
-            // input field before the list to be used for a filter.
-            .on( "listviewcreate", "#" + id + "-menu", function( e ) {
-                var input,
-                    listview = $wnd.$( e.target ),
-                    form = listview.jqmData( "filter-form" );
-
-                var lb = $wnd.$( "#" + id + "-listbox" );
-                lb.addClass( "ui-select-filterable" ); // for CSS styling
-                var addnl = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::getMenuStyleNames()();
-                if (addnl) { lb.addClass( addnl ); }
-
-                // We store the generated form in a variable attached to the popup so we avoid creating a
-                // second form/input field when the listview is destroyed/rebuilt during a refresh.
-                if ( !form ) {
-                    input = $wnd.$( "<input data-type='search'></input>" );
-                    form = $wnd.$( "<form></form>" ).append( input );
-                    form.submit( function () { return false; } ); // fix for ENTER key press
-                    input.textinput();
-                    listview.before( form ).jqmData( "filter-form", form ) ;
-                    form.jqmData( "listview", listview );
-
-                    var isClear = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::isShowClearButton()();
-                    if (isClear === true) {
-                        var clearText = @com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::CLEAR_BUTTON_TEXT;
-                        var clearBtn = $wnd.$("<button class='ui-btn ui-mini' style='margin:0'>"
-                                              + clearText + "</button>");
-                        clearBtn.on('click', function() {
-                             combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::closeAndClearValue()();
-                        });
-                        listview.before( clearBtn ).jqmData( "clear-button", clearBtn );
-                    }
-                } else {
-                    input = form.find( "input" );
+    private static native boolean isPageSelectFilterableDialog(String pageId) /*-{
+        var isDialog = false;
+        var SEL = "." + @com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::FILTERABLE_SELECT;
+        $wnd.$(SEL).each(function() {
+            var id = $wnd.$(this).attr("id");
+            if (id) {
+                var s = id + "-dialog";
+                if (s === pageId) {
+                    isDialog = true;
+                    return false;
                 }
-                // Instantiate a filterable widget on the newly created listview and
-                // indicate that the generated input is to be used for the filtering.
-                listview.filterable({ input: input, children: "> li:not(:jqmData(placeholder='true'))" });
-                combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::setListView(Lcom/google/gwt/dom/client/Element;)(listview[0]);
-            })
-
-            // The custom select list may show up as either a popup or a dialog, depending how much
-            // vertical room there is on the screen. If it shows up as a dialog, then the form containing
-            // the filter input field must be transferred to the dialog so that the user can continue to
-            // use it for filtering list items.
-            .on( "pagebeforeshow", "#" + id + "-dialog", function( e ) {
-                var dialog = $wnd.$( e.target ),
-                    listview = dialog.find( "ul" ),
-                    form = listview.jqmData( "filter-form" ),
-                    clearBtn = listview.jqmData( "clear-button" );
-
-                dialog.addClass( "ui-select-filterable" ); // for CSS styling
-                var addnl = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::getMenuStyleNames()();
-                if (addnl) { dialog.addClass( addnl ); }
-
-                // Attach a reference to the listview as a data item to the dialog, because during the
-                // pagehide handler below the selectmenu widget will already have returned the listview
-                // to the popup, so we won't be able to find it inside the dialog with a selector.
-                dialog.jqmData( "listview", listview );
-
-                // Place the form before the listview in the dialog.
-                listview.before( form );
-                if (clearBtn) {
-                    // 110% is a hack, we should just add 32px
-                    clearBtn.css("margin", "0 -16px 0 -16px").css("width", "110%");
-                    listview.before( clearBtn );
-                }
-            })
-
-            // After the dialog is closed, the form containing the filter input is returned to the popup.
-            .on( "pagehide", "#" + id + "-dialog", function( e ) {
-                var listview = $wnd.$( e.target ).jqmData( "listview" ),
-                    form = listview.jqmData( "filter-form" ),
-                    clearBtn = listview.jqmData( "clear-button" );
-
-                // Put the form back in the popup. It goes ahead of the listview.
-                listview.before( form );
-                if (clearBtn) {
-                    clearBtn.css("margin", "0").css("width", "100%");
-                    listview.before( clearBtn );
-                }
-            });
+            }
+        });
+        return isDialog;
     }-*/;
 
-    private static native void unbindLifecycleEvents(String id) /*-{
+    private static native void serveSelectsFilterable() /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
+        var SEL = "." + @com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::FILTERABLE_SELECT;
         $wnd.$.mobile.document
-            .off( "listviewcreate", "#" + id + "-menu" )
-            .off( "pagebeforeshow pagehide", "#" + id + "-dialog" );
+        // Upon creation of the select menu, we want to make use of the fact that the ID of the
+        // listview it generates starts with the ID of the select menu itself, plus the suffix "-menu".
+        // We retrieve the listview and insert a search input before it.
+        .on( "selectmenucreate", SEL, function( event ) {
+            var input,
+                selectmenu = $wnd.$( event.target ),
+                id = selectmenu.attr( "id" ),
+                listview = $wnd.$( "#" + id + "-menu" ),
+                form = listview.jqmData( "filter-form" );
+
+            var combo = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::findCombo(Lcom/google/gwt/dom/client/Element;)
+                            (event.target);
+
+            // We store the generated form in a variable attached to the popup so we avoid creating a
+            // second form/input field when the listview is destroyed/rebuilt during a refresh.
+            if ( !form ) {
+                input = $wnd.$( "<input data-type='search'></input>" );
+                form = $wnd.$( "<form style='padding-top: 1px;'></form>" ).append( input );
+                form.submit( function () { return false; } ); // fix for ENTER key press
+                input.textinput();
+                listview.before( form ).jqmData( "filter-form", form ) ;
+                form.jqmData( "listview", listview );
+
+                var isClear = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::isShowClearButton()();
+                if (isClear === true) {
+                    var clearText = @com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::CLEAR_BUTTON_TEXT;
+                    var clearBtn = $wnd.$("<button class='ui-btn ui-mini' style='margin:0'>"
+                                          + clearText + "</button>");
+                    clearBtn.on('click', function() {
+                         combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::closeAndClearValue()();
+                    });
+                    listview.before( clearBtn ).jqmData( "clear-button", clearBtn );
+                }
+            } else {
+                input = form.find( "input" );
+            }
+            // Instantiate a filterable widget on the newly created selectmenu widget and indicate that
+            // the generated input form element is to be used for the filtering.
+            selectmenu.filterable({
+                input: input,
+                children: "> option[data-placeholder != 'true'][value]"
+            })
+            // Rebuild the custom select menu's list items to reflect the results of the filtering
+            // done on the select menu.
+            .on( "filterablefilter", function() {
+                selectmenu.selectmenu( "refresh" );
+            });
+            combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::setFilterableElt(Lcom/google/gwt/dom/client/Element;)
+                (selectmenu[0]); // listview[0]
+        })
+        // The custom select list may show up as either a popup or a dialog, depending on how much
+        // vertical room there is on the screen. If it shows up as a dialog, then the form containing
+        // the filter input field must be transferred to the dialog so that the user can continue to
+        // use it for filtering list items.
+        .on( "pagecontainerbeforeshow", function( event, data ) {
+            var pageId = data.toPage && data.toPage.attr("id");
+            // We only handle the appearance of a dialog generated by a filterable selectmenu
+            var isDlg = @com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::isPageSelectFilterableDialog(Ljava/lang/String;)
+                            (pageId);
+            if (!isDlg) return;
+            var dialog = data.toPage;
+            var listview = dialog.find( "ul" );
+            var form = listview.jqmData( "filter-form" );
+            var clearBtn = listview.jqmData( "clear-button" );
+
+            // Attach a reference to the listview as a data item to the dialog, because during the
+            // pagecontainerhide handler below the selectmenu widget will already have returned the
+            // listview to the popup, so we won't be able to find it inside the dialog with a selector.
+            dialog.jqmData( "listview", listview );
+            // Place the form before the listview in the dialog.
+            listview.before( form );
+            if (clearBtn) {
+                // 110% is a hack, we should just add 32px
+                clearBtn.css("margin", "0 -16px 0 -16px").css("width", "110%");
+                listview.before( clearBtn );
+            }
+        })
+        // After the dialog is closed, the form containing the filter input is returned to the popup.
+        .on( "pagecontainerhide", function( event, data ) {
+            var pageId = data.prevPage && data.prevPage.attr("id");
+            // We only handle the disappearance of a dialog generated by a filterable selectmenu
+            var isDlg = @com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::isPageSelectFilterableDialog(Ljava/lang/String;)
+                            (pageId);
+            if (!isDlg) return;
+            var listview = data.prevPage.jqmData( "listview" );
+            var form = listview.jqmData( "filter-form" );
+            var clearBtn = listview.jqmData( "clear-button" );
+            // Put the form back in the popup. It goes ahead of the listview.
+            listview.before( form );
+            if (clearBtn) {
+                clearBtn.css("margin", "0").css("width", "100%");
+                listview.before( clearBtn );
+            }
+        });
     }-*/;
 
     public boolean isShowClearButton() {

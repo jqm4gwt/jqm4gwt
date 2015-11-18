@@ -347,13 +347,13 @@
           <h:Paragraph />
           <e:JQMSelectFilterable ui:field="selectFilterable" text="Select Filterable (startWith)"
             showClearButton="true" menuStyleNames="aaa bbb ccc">
-            <e:option><e:JQMSelect.Option text="San Francisco" value="SFO" /></e:option>
-            <e:option><e:JQMSelect.Option text="Los Angeles" value="LAX" /></e:option>
+            <e:option><e:JQMSelect.Option text="San Francisco" value="SFO" filterText="San Francisco, SFO" /></e:option>
+            <e:option><e:JQMSelect.Option text="Los Angeles" value="LAX" filterText="Los Angeles, LAX" /></e:option>
             <e:option><e:JQMSelect.Option text="Vancouver" value="YVR" /></e:option>
             <e:option><e:JQMSelect.Option text="Toronto" value="YYZ" /></e:option>
-            <e:option><e:JQMSelect.Option text="Dnepropetrovsk" value="DNK" /></e:option>
+            <e:option><e:JQMSelect.Option text="Dnepropetrovsk" value="DNK" filterText="Dnepropetrovsk, DNK" /></e:option>
             <e:option><e:JQMSelect.Option text="San Jose" value="SJC" filterText="San Jose, SJC" /></e:option>
-            <e:option><e:JQMSelect.Option text="Dublin" value="DUB" /></e:option>
+            <e:option><e:JQMSelect.Option text="Dublin" value="DUB" filterText="" /></e:option>
           </e:JQMSelectFilterable>
           <h:Paragraph />
           <h:Heading.H4 text="Filter Select/Dropdown Reveal"
