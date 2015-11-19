@@ -160,6 +160,7 @@ public class JQMDataTable extends JQMTableGrid {
     private boolean scrollX;
     private String scrollXcss;
     private String scrollY;
+    private int scrollYnum;
     private boolean scrollCollapse;
 
     private boolean useParentHeight;
@@ -640,11 +641,18 @@ public class JQMDataTable extends JQMTableGrid {
     }
 
     /**
-     * Max table's vertical height.
+     * Max table's scrolling area vertical height, so actual table's height will be higher:
+     * header + scrolling area + footer.
      * <br> Any CSS measurement is acceptable, or just a number which is treated as pixels.
      **/
     public void setScrollY(String scrollY) {
         this.scrollY = scrollY;
+        if (Empty.is(this.scrollY)) this.scrollYnum = 0;
+        else {
+            String s = StrUtils.getDigitsOnly(this.scrollY);
+            if (!Empty.is(s)) this.scrollYnum = Integer.parseInt(s);
+            else this.scrollYnum = 0;
+        }
     }
 
     public boolean isScrollCollapse() {
@@ -663,7 +671,9 @@ public class JQMDataTable extends JQMTableGrid {
         return useParentHeight;
     }
 
-    /** Takes all parent height. Only works when scrollY is set to some value, for example: 1px */
+    /** Takes all parent height. Only works when scrollY is set to some value, for example: 1px
+     *  <br> And scrollY value will be used as min-height for scrolling area.
+     **/
     public void setUseParentHeight(boolean useParentHeight) {
         this.useParentHeight = useParentHeight;
         if (this.useParentHeight) {
@@ -752,6 +762,7 @@ public class JQMDataTable extends JQMTableGrid {
      * Adjusts height to parent's height.
      * <br> It's one time action, and works regardless of useParentHeight current value.
      * <br> Only works when scrollY is set to some value, for example: 1px
+     * <br> And scrollY value will be used as min-height for scrolling area.
      **/
     public void adjustToParentHeight() {
         Element tableElt = getElement();
@@ -782,6 +793,7 @@ public class JQMDataTable extends JQMTableGrid {
                     int scrollBodyH = Integer.parseInt(s);
                     int newH = (h - wrapH) + scrollBodyH - 1;
                     if (newH < 0) newH = 0;
+                    if (scrollYnum > 0 && newH < scrollYnum) newH = scrollYnum;
                     scrollBody.getStyle().setHeight(newH, Unit.PX);
                 }
             }
