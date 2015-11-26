@@ -16,8 +16,7 @@ div.ui-slider-switch.ui-mini {
   right: 2.6em;
 }
 
-.ui-checkbox .ui-btn:empty { /* https://github.com/jquery/jquery-mobile/issues/8314 */
+.ui-checkbox .ui-btn:empty, .ui-radio .ui-btn:empty { /* https://github.com/jquery/jquery-mobile/issues/8314 */
   min-height: 1em;
   padding-right: 0;  
 }
-

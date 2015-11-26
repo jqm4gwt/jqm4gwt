@@ -21,6 +21,7 @@ import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.button.JQMButton;
+import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
@@ -48,10 +49,17 @@ public class JQMCheckbox extends JQMWidget implements HasText<JQMCheckbox>, HasV
     }
 
     protected void init(TextBox input, FormLabel label, String id) {
+        //CustomFlowPanel flow = new CustomFlowPanel(Document.get().createFormElement());
         FlowPanel flow = new FlowPanel();
         initWidget(flow);
-        flow.add(label);
-        flow.add(input);
+        CustomFlowPanel la = new CustomFlowPanel(label.getElement());
+        flow.add(la);
+        la.add(input);
+
+        // OLD code: worked OK, except of nested JQMList case.
+        // FlowPanel flow = new FlowPanel();
+        // flow.add(input);
+        // flow.add(label);
 
         setInput(input);
         setLabel(label);
@@ -64,7 +72,7 @@ public class JQMCheckbox extends JQMWidget implements HasText<JQMCheckbox>, HasV
         String id = Document.get().createUniqueId();
         TextBox input = new TextBox();
         input.getElement().setId(id);
-        input.getElement().setAttribute("type", "checkbox");
+        input.getElement().setAttribute("type", getInputType());
         input.setName(name);
 
         FormLabel label = new FormLabel();
@@ -72,6 +80,10 @@ public class JQMCheckbox extends JQMWidget implements HasText<JQMCheckbox>, HasV
         label.setText(text);
 
         init(input, label, null/* id for flow is not needed */);
+    }
+
+    protected String getInputType() {
+        return "checkbox";
     }
 
     public FormLabel getLabel() {

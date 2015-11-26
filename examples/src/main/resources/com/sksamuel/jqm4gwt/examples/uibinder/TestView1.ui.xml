@@ -141,10 +141,12 @@
           </b:JQMButtonGroup>
           <e:JQMCheckbox ui:field="cbSetPageTheme" name="cbSetPageTheme" text="Set Page Theme on A-F button click"/>
           <h:Paragraph />
+          <h:Span text="Button group" />
           <b:JQMButtonGroup orientation="HORIZONTAL" mini="true" corners="false">
             <b:JQMButton theme="a" text="A"/>
             <b:JQMButton theme="b" text="B"/>
           </b:JQMButtonGroup>
+          <h:Paragraph />
           <e:JQMCheckbox ui:field="cb1" name="cb1" text="Checkbox"/>
           <e:JQMCheckbox ui:field="cb2" name="cb2" text="Mini-Checkbox" mini="true" value="true"/>
           <e:JQMCheckbox ui:field="cb3" name="cb3" text="Themed Checkbox, no corners, inline" 
@@ -226,6 +228,18 @@
           <e:JQMTextArea text="textAreaText"/>
           <e:JQMUrl ui:field="urlEd" text="urlText"/>
 
+          <e:JQMRadiobox ui:field="rb1" name="radiotest1" text="Radiobox1" mini="true" inline="true" />
+          <e:JQMRadiobox ui:field="rb2" name="radiotest1" text="Radiobox2" mini="true" inline="true" />
+          <b:JQMButton ui:field="radioboxBtn" text="Get Values" mini="true" inline="true" />
+          <b:JQMButton ui:field="radioboxNullBtn" text="Set Null" mini="true" inline="true" />
+          <b:JQMButton ui:field="radioboxFalseBtn" text="Set False" mini="true" inline="true" />
+          
+          <g:FlowPanel>
+            <h:Span text="Radioboxes no text (mini and regular):" />
+            <e:JQMRadiobox name="" text="" mini="true" value="true" inline="true" />
+            <e:JQMRadiobox name="" text="" mini="false" value="true" inline="true" />  
+          </g:FlowPanel>
+          
           <e:JQMRadioset ui:field="radio1" text="radiosetText" selectedValue="b">
             <!-- orientation="HORIZONTAL" mini="true" iconPos="RIGHT" theme="a" -->
             <e:radio>

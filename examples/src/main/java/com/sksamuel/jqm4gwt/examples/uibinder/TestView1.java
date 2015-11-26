@@ -51,6 +51,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMFlip;
 import com.sksamuel.jqm4gwt.form.elements.JQMMonth;
 import com.sksamuel.jqm4gwt.form.elements.JQMNumber;
 import com.sksamuel.jqm4gwt.form.elements.JQMPassword;
+import com.sksamuel.jqm4gwt.form.elements.JQMRadiobox;
 import com.sksamuel.jqm4gwt.form.elements.JQMRadioset;
 import com.sksamuel.jqm4gwt.form.elements.JQMRangeSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMSearch;
@@ -506,6 +507,12 @@ public class TestView1 {
 
     @UiField
     JQMMonth monthEd;
+
+    @UiField JQMRadiobox rb1;
+    @UiField JQMRadiobox rb2;
+    @UiField JQMButton radioboxBtn;
+    @UiField JQMButton radioboxNullBtn;
+    @UiField JQMButton radioboxFalseBtn;
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -1037,6 +1044,24 @@ public class TestView1 {
     @UiHandler("btnDataTableSort")
     void btnDataTableSortClick(ClickEvent e) {
         dataTable1.setColSorts(edDataTableSort.getValue());
+    }
+
+    @UiHandler("radioboxBtn")
+    void handleRadioboxBtnClick(ClickEvent e) {
+        Window.alert(rb1.getText() + ": " + rb1.getValue() + "\n"
+                + rb2.getText() + ": " + rb2.getValue());
+    }
+
+    @UiHandler("radioboxNullBtn")
+    void handleRadioboxNullBtnClick(ClickEvent e) {
+        rb1.setValue(null);
+        rb2.setValue(null);
+    }
+
+    @UiHandler("radioboxFalseBtn")
+    void handleRadioboxFalseBtnClick(ClickEvent e) {
+        rb1.setValue(false);
+        rb2.setValue(false);
     }
 
 

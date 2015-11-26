@@ -12,6 +12,9 @@ import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
 /**
+ * Not supposed to be used as standalone widget, but only as part/child of JQMRadioset.
+ * <br> If you need standalone widget, please use JQMRadiobox instead.
+ *
  * @author Stephen K Samuel samspade79@gmail.com 24 Jul 2011 12:46:07
  */
 public class JQMRadio extends Widget implements HasText<JQMRadio>, HasMini<JQMRadio>, HasTheme<JQMRadio> {
