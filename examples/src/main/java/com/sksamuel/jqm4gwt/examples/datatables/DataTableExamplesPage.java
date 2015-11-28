@@ -203,9 +203,21 @@ public class DataTableExamplesPage {
         dataTable2.addRowDetailsRenderer(new RowDetailsRenderer() {
             @Override
             public String getHtml(Element tableElt, JavaScriptObject rowData, int rowIndex) {
-                return dataTable2.getColumnsAsTableHtml(rowIndex, "border='0' style='padding-left:50px;'");
+                String s = dataTable2.getColumnsAsTableHtml(rowIndex, "border='0' style='padding-left:50px;'");
+                s += "<button class='more-info-btn' style='margin-left:50px;' data-row-idx='"
+                        + String.valueOf(rowIndex) + "'>More Info...</button>";
+                return s;
             }
         });
+        dataTable2.addCellCustomClickHandler(new CellClickHandler() {
+            @Override
+            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex,
+                                   int colIndex, int colVisibleIdx) {
+                String s = cellElt.getAttribute("data-row-idx");
+                s = dataTable2.getCellData(Integer.parseInt(s), "name");
+                Window.alert(s);
+                return true;
+            }}, "td .more-info-btn");
         dataTable2.addRowSelChangedHandler(new JQMDataTableRowSelChangedEvent.Handler() {
             @Override
             public void onRowSelChanged(JQMDataTableRowSelChangedEvent event) {

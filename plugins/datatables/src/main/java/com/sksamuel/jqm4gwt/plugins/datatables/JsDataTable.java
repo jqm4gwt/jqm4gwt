@@ -920,8 +920,11 @@ public class JsDataTable {
 
     /**
      * @param cellWidget - for example "button", "input[type='checkbox']"
+     * @param rowColRequired - true means that handler will be called back only
+     *                         if both row and column are known during click processing.
      */
-    static native void addCellClickHandler(Element elt, String cellWidget, CellClickHandler handler) /*-{
+    static native void addCellClickHandler(Element elt, String cellWidget,
+                                           CellClickHandler handler, boolean rowColRequired) /*-{
         var t = $wnd.$(elt);
         t.children('tbody').first().on('click.cell', cellWidget, function(event) {
             var that = $wnd.$(this);
@@ -929,11 +932,28 @@ public class JsDataTable {
             if (cellSel.length === 0) cellSel = that.closest('th');
             if (cellSel.length !== 0) {
                 var cell = t.DataTable().cell(cellSel);
+                var colIdx = -1, colVisibleIdx = -1;
+                if (cell) {
+                    var cellIdx = cell.index();
+                    if (cellIdx) {
+                        colIdx = cellIdx.column;
+                        colVisibleIdx = cellIdx.columnVisible;
+                    }
+                }
                 var row = t.DataTable().row(that.closest('tr'));
-                var rslt = handler.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler::onClick(
-                    Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/core/client/JavaScriptObject;III)
-                    (this, row.data(), row.index(), cell.index().column, cell.index().columnVisible);
-                if (rslt) event.stopPropagation();
+                var rowData = null, rowIdx = -1;
+                if (row) {
+                    if (row.data()) rowData = row.data();
+                    if (row.index()) rowIdx = row.index();
+                }
+                if (rowColRequired && (rowIdx === -1 || colIdx === -1)) {
+                    // probably row details widget was clicked
+                } else {
+                    var rslt = handler.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.CellClickHandler::onClick(
+                        Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/core/client/JavaScriptObject;III)
+                        (this, rowData, rowIdx, colIdx, colVisibleIdx);
+                    if (rslt) event.stopPropagation();
+                }
             }
         });
     }-*/;

@@ -1144,7 +1144,7 @@ public class JQMDataTable extends JQMTableGrid {
 
     public void addCellBtnClickHandler(CellClickHandler handler) {
         if (handler == null) return;
-        JsDataTable.addCellClickHandler(getElement(), ButtonElement.TAG, handler);
+        JsDataTable.addCellClickHandler(getElement(), ButtonElement.TAG, handler, true);
     }
 
     public void removeCellBtnClickHandlers() {
@@ -1153,10 +1153,12 @@ public class JQMDataTable extends JQMTableGrid {
 
     /**
      * @param eltSelector - some selector to specific widgets, for example: a.ui-btn.special-btn
+     * @param handler - in custom case callback of handler.onClick() may occur
+     *                  with undefined rowIndex and colIndex, i.e. -1 values.
      */
     public void addCellCustomClickHandler(CellClickHandler handler, String eltSelector) {
         if (handler == null || Empty.is(eltSelector)) return;
-        JsDataTable.addCellClickHandler(getElement(), eltSelector, handler);
+        JsDataTable.addCellClickHandler(getElement(), eltSelector, handler, false);
     }
 
     public void removeCellCustomClickHandlers(String eltSelector) {
@@ -1165,7 +1167,8 @@ public class JQMDataTable extends JQMTableGrid {
 
     public void addCellCheckboxClickHandler(CellClickHandler handler) {
         if (handler == null) return;
-        JsDataTable.addCellClickHandler(getElement(), InputElement.TAG + "[type='checkbox']", handler);
+        JsDataTable.addCellClickHandler(getElement(), InputElement.TAG + "[type='checkbox']",
+                                        handler, true);
     }
 
     public void removeCellCheckboxClickHandlers() {
