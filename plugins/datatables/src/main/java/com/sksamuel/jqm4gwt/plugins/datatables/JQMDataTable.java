@@ -1243,6 +1243,10 @@ public class JQMDataTable extends JQMTableGrid {
         }
     }
 
+    public void closeRowDetails(Element rowDetailElt) {
+        JsDataTable.closeRowDetails(getElement(), rowDetailElt);
+    }
+
     /** See <a href="https://datatables.net/reference/event/draw">Draw event</a> */
     public void addDrawHandler(DrawHandler handler) {
         if (handler == null) return;

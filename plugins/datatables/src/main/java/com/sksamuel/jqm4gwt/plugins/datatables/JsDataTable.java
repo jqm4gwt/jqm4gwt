@@ -1124,6 +1124,24 @@ public class JsDataTable {
         });
     }-*/;
 
+    static native void closeRowDetails(Element tableElt, Element rowDetailElt) /*-{
+        var t = $wnd.$(tableElt);
+        var detailsTr = $wnd.$(rowDetailElt).closest('tr');
+        if (detailsTr[0]) {
+            var tr = detailsTr.prev('tr');
+            if (tr[0]) {
+                var row = t.DataTable().row(tr);
+                var rowDetailsChanged = t.data('rowDetailsChanged');
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                    if (rowDetailsChanged) rowDetailsChanged(tr[0], false);
+                }
+            }
+        }
+    }-*/;
+
     public static interface DrawHandler {
         /**
          * @param settings - actually it's private object, can be used to obtain an API instance if required.

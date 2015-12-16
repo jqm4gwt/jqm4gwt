@@ -206,9 +206,18 @@ public class DataTableExamplesPage {
                 String s = dataTable2.getColumnsAsTableHtml(rowIndex, "border='0' style='padding-left:50px;'");
                 s += "<button class='more-info-btn' style='margin-left:50px;' data-row-idx='"
                         + String.valueOf(rowIndex) + "'>More Info...</button>";
+                s += "<button class='collapse-details-btn' style='margin-left:20px;' data-row-idx='"
+                        + String.valueOf(rowIndex) + "'>Collapse Details</button>";
                 return s;
             }
         });
+        dataTable2.addCellCustomClickHandler(new CellClickHandler() {
+            @Override
+            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex,
+                                   int colIndex, int colVisibleIdx) {
+                dataTable2.closeRowDetails(cellElt);
+                return true;
+            }}, "td .collapse-details-btn");
         dataTable2.addCellCustomClickHandler(new CellClickHandler() {
             @Override
             public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex,
