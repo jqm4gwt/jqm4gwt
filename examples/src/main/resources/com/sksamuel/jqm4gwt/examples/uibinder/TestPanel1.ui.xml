@@ -10,6 +10,9 @@
       <jqm:html.Heading.H3 text="Some global content could be placed here..." />
     </t:widget>
     <t:widget>
+      <b:JQMButton text="Info" builtInIcon="INFO" ui:field="infoBtn" />
+    </t:widget>
+    <t:widget>
       <b:JQMButton text="Close" builtInIcon="DELETE" rel="close" />
     </t:widget>
   </t:JQMPanel>

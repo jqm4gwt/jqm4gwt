@@ -10,6 +10,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMCommon;
@@ -265,6 +266,9 @@ public class JQMPanel extends JQMWidget {
 
     protected void doPanelOpen() {
         open = true;
+        if (getParent() == null) {
+            RootPanel.get().add(this); // probably global panel, needed to make GWT events working
+        }
         onPanelOpen();
         JQMPanelEvent.fire(this, PanelState.OPEN);
     }
