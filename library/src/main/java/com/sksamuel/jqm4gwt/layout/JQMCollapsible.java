@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.layout;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -15,6 +16,7 @@ import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMWidget;
 import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
 import com.sksamuel.jqm4gwt.html.Heading;
+import com.sksamuel.jqm4gwt.layout.JQMCollapsibleEvent.CollapsibleState;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 10 May 2011 00:04:18
@@ -84,6 +86,54 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
         setDataRole("collapsible");
         setCollapsed(collapsed);
         setText(text);
+    }
+
+    public HandlerRegistration addCollapsibleHandler(JQMCollapsibleEvent.Handler handler) {
+        return addHandler(handler, JQMCollapsibleEvent.getType());
+    }
+
+    protected void onExpanded() {
+    }
+
+    protected void onCollapsed() {
+    }
+
+    protected void doExpanded() {
+        onExpanded();
+        JQMCollapsibleEvent.fire(this, CollapsibleState.EXPANDED);
+    }
+
+    protected void doCollapsed() {
+        onCollapsed();
+        JQMCollapsibleEvent.fire(this, CollapsibleState.COLLAPSED);
+    }
+
+    private static native void bindLifecycleEvents(JQMCollapsible collap, Element collapElt) /*-{
+        var p = $wnd.$(collapElt);
+        p.on("collapsibleexpand", function(event, ui) {
+            collap.@com.sksamuel.jqm4gwt.layout.JQMCollapsible::doExpanded()();
+        });
+        p.on("collapsiblecollapse", function(event, ui) {
+            collap.@com.sksamuel.jqm4gwt.layout.JQMCollapsible::doCollapsed()();
+        });
+    }-*/;
+
+    private static native void unbindLifecycleEvents(Element collapElt) /*-{
+        var p = $wnd.$(collapElt);
+        p.off("collapsiblecollapse");
+        p.off("collapsibleexpand");
+    }-*/;
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        bindLifecycleEvents(this, getElement());
+    }
+
+    @Override
+    protected void onUnload() {
+        unbindLifecycleEvents(getElement());
+        super.onUnload();
     }
 
     /**
