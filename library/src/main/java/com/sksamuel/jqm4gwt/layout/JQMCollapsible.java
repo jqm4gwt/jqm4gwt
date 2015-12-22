@@ -4,7 +4,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.DisclosurePanel;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasIconPos;
@@ -13,7 +12,7 @@ import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
-import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.JQMContainer;
 import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
 import com.sksamuel.jqm4gwt.html.Heading;
 import com.sksamuel.jqm4gwt.layout.JQMCollapsibleEvent.CollapsibleState;
@@ -26,13 +25,8 @@ import com.sksamuel.jqm4gwt.layout.JQMCollapsibleEvent.CollapsibleState;
  *
  * <br> See <a href="http://demos.jquerymobile.com/1.4.5/collapsible/">Collapsible</a>
  */
-public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>,
+public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsible>,
         HasIconPos<JQMCollapsible>, HasMini<JQMCollapsible>, HasInset<JQMCollapsible> {
-
-    /**
-     * The container for the elements of the collapsible.
-     */
-    private final FlowPanel flow;
 
     private final Heading header;
 
@@ -77,13 +71,11 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
      * change the &lt;hN&gt; tag used for the header.
      */
     public JQMCollapsible(String text, int headerN, boolean collapsed) {
-        flow = new FlowPanel();
-        initWidget(flow);
 
         header = new Heading(headerN);
-        flow.add(header);
+        add(header);
 
-        setDataRole("collapsible");
+        setRole("collapsible");
         setCollapsed(collapsed);
         setText(text);
     }
@@ -139,9 +131,10 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
     /**
      * Add a widget to the content part of this {@link JQMCollapsible} instance.
      */
+    @Override
     @UiChild(tagname="widget")
     public void add(Widget widget) {
-        flow.add(widget);
+        super.add(widget);
     }
 
     @UiChild(tagname="headerWidget")
@@ -150,7 +143,7 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
         if (headerPanel == null) {
             header.getElement().setInnerHTML(null);
             headerPanel = new CustomFlowPanel(header.getElement());
-            flow.add(headerPanel);
+            add(headerPanel);
         }
         headerPanel.add(w);
     }
@@ -158,8 +151,9 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
     /**
      * Removes all Widgets from the content part of this {@link JQMCollapsible} instance.
      */
+    @Override
     public void clear() {
-        flow.clear();
+        super.clear();
     }
 
     public DataIcon getCollapsedIcon() {
@@ -244,8 +238,9 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
      *
      * @return true if the widget was removed
      */
+    @Override
     public boolean remove(Widget widget) {
-        return flow.remove(widget);
+        return super.remove(widget);
     }
 
     public JQMCollapsible setContentTheme(String theme) {
@@ -306,7 +301,7 @@ public class JQMCollapsible extends JQMWidget implements HasText<JQMCollapsible>
     @Override
     public void setText(String text) {
         if (headerPanel != null) {
-            flow.remove(headerPanel);
+            super.remove(headerPanel);
             headerPanel = null;
         }
         header.setText(text);

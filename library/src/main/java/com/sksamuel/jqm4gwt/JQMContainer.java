@@ -130,7 +130,11 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
      * Returns the value of the attribute with the given name
      */
     protected String getAttribute(String name) {
-        return getElement().getAttribute(name);
+        return JQMCommon.getAttribute(this, name);
+    }
+
+    protected boolean getAttributeBoolean(String name) {
+        return "true".equalsIgnoreCase(getAttribute(name));
     }
 
     public String getDataUrl() {

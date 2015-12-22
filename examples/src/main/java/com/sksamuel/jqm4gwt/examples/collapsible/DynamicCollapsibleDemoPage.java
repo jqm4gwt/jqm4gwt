@@ -66,12 +66,12 @@ public class DynamicCollapsibleDemoPage extends JQMPage {
 
 	protected void addCollapsible() {
 		JQMCollapsible c = new JQMCollapsible("Expand me!");
-        c.setId(String.valueOf(count++));
+        c.setContainerId(String.valueOf(count++));
 		c.add(new Paragraph("some content in the collapsible"));
 
 		JQMCollapsible nested = new JQMCollapsible("A nested collapsible");
 		nested.add(new Paragraph("some content in the nested collapsible"));
-        c.setId(String.valueOf(count++));
+        c.setContainerId(String.valueOf(count++));
 		c.add(nested);
 
 		set.add(c);
