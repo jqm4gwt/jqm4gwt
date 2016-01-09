@@ -175,6 +175,11 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         public void setOptionText(OptionElement option, String text, Direction dir) {
             super.setOptionText(option, text, dir);
         }
+
+        @Override
+        public String getOptionText(OptionElement option) {
+            return super.getOptionText(option);
+        }
     }
 
     protected final ListBoxEx select;
@@ -634,6 +639,39 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                 OptionElement opt = opts.getItem(i);
                 if (opt.isSelected()) {
                     String v = opt.getValue();
+                    if (sb == null) {
+                        sb = new StringBuilder();
+                        sb.append(v);
+                    } else {
+                        sb.append(multiValueSeparator);
+                        sb.append(v);
+                    }
+                }
+            }
+            if (sb == null) return null;
+            else {
+                String rslt = sb.toString();
+                if (rslt.isEmpty()) rslt = null;
+                return rslt;
+            }
+        }
+    }
+
+    /**
+     * Returns the currently selected text (makes sense if options are populated by pairs: value & text.
+     */
+    public String getSelectedText() {
+        if (!isMultiple()) {
+            int idx = getSelectedIndex();
+            return idx == -1 ? null : getOptionText(idx);
+        } else {
+            SelectElement selElt = select.getElement().cast();
+            NodeList<OptionElement> opts = selElt.getOptions();
+            StringBuilder sb = null;
+            for (int i = 0; i < opts.getLength(); i++) {
+                OptionElement opt = opts.getItem(i);
+                if (opt.isSelected()) {
+                    String v = select.getOptionText(opt);
                     if (sb == null) {
                         sb = new StringBuilder();
                         sb.append(v);
