@@ -129,4 +129,16 @@ public class StrUtils {
         return sb.toString();
     }
 
+    /** Returns true if specified string contains only digits */
+    public static boolean isDigitsOnly(String s) {
+        if (isEmpty(s)) return false;
+        String rslt = s.trim();
+        if (isEmpty(rslt)) return false;
+        for (int i = 0; i < rslt.length(); i++) {
+            char ch = rslt.charAt(i);
+            if (!Character.isDigit(ch)) return false;
+        }
+        return true;
+    }
+
 }

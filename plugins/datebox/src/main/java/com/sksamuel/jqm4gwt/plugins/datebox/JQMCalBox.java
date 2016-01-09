@@ -19,6 +19,7 @@ import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JsUtils;
+import com.sksamuel.jqm4gwt.StrUtils;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBoxEvent.DisplayChangeData;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBoxEvent.OffsetData;
@@ -1031,6 +1032,29 @@ public class JQMCalBox extends JQMText {
 
     private void updateInputText() {
         Element elt = input.getElement();
+        String v = input.getValue();
+        if (v != null && !v.isEmpty()) {
+            v = v.trim();
+            // supports mmddyy or mmddyyyy input without any separators
+            if (!v.isEmpty() && StrUtils.isDigitsOnly(v) && (v.length() == 6 || v.length() == 8)) {
+                int mm = Integer.parseInt(v.substring(0, 2));
+                int dd = Integer.parseInt(v.substring(2, 4));
+                int yy = Integer.parseInt(v.substring(4));
+                Date d = new Date();
+                @SuppressWarnings("deprecation")
+                int currentYear = d.getYear() + 1900;
+                if (yy < 100) {
+                    if (yy + 2000 <= currentYear + 20) yy += 2000;
+                    else yy += 1900;
+                }
+                if (dd >= 1 && dd <= 31 && mm >= 1 && mm <= 12 && yy >= 1900 && yy <= currentYear + 100) {
+                    JsDate jsd = JsDate.create(yy, mm - 1, dd);
+                    String fs = internFormat(elt, getActiveDateFormat(), jsd);
+                    input.setText(fs);
+                    return;
+                }
+            }
+        }
         JsDate jsd = internGetDate(elt);
         String fs = internFormat(elt, getActiveDateFormat(), jsd);
         input.setText(fs);
