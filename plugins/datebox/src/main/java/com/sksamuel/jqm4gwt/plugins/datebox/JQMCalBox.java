@@ -246,7 +246,7 @@ public class JQMCalBox extends JQMText {
                         ValueChangeEvent.fire(input, getValue());
                         return;
                     }
-                    updateInputText();
+                    if (!smartConvertInputText()) updateInputText();
                     String newText = input.getText();
                     if (!oldText.equals(newText)) ValueChangeEvent.fire(input, getValue());
                 }
@@ -1032,6 +1032,14 @@ public class JQMCalBox extends JQMText {
 
     private void updateInputText() {
         Element elt = input.getElement();
+        JsDate jsd = internGetDate(elt);
+        String fs = internFormat(elt, getActiveDateFormat(), jsd);
+        input.setText(fs);
+    }
+
+    /** @return - true in case input text was successfully processed by "smart" converter. */
+    private boolean smartConvertInputText() {
+        Element elt = input.getElement();
         String v = input.getValue();
         if (v != null && !v.isEmpty()) {
             v = v.trim();
@@ -1048,16 +1056,21 @@ public class JQMCalBox extends JQMText {
                     else yy += 1900;
                 }
                 if (dd >= 1 && dd <= 31 && mm >= 1 && mm <= 12 && yy >= 1900 && yy <= currentYear + 100) {
-                    JsDate jsd = JsDate.create(yy, mm - 1, dd);
-                    String fs = internFormat(elt, getActiveDateFormat(), jsd);
-                    input.setText(fs);
-                    return;
+                    @SuppressWarnings("deprecation")
+                    Date newd = new Date(yy - 1900, mm - 1, dd);
+                    isInternSetDate = true;
+                    internDateToSet = newd;
+                    try {
+                        // ValueChange may occur!
+                        internalSetDate(elt, yy, mm - 1, dd);
+                    } finally {
+                        isInternSetDate = false;
+                    }
+                    return true;
                 }
             }
         }
-        JsDate jsd = internGetDate(elt);
-        String fs = internFormat(elt, getActiveDateFormat(), jsd);
-        input.setText(fs);
+        return false;
     }
 
     public Date getDate() {
@@ -1166,6 +1179,10 @@ public class JQMCalBox extends JQMText {
 
     private static native void internalSetDate(Element elt, double d) /*-{
         $wnd.$(elt).datebox('setTheDate', new $wnd.Date(d));
+    }-*/;
+
+    private static native void internalSetDate(Element elt, int year, int month, int dayOfMonth) /*-{
+        $wnd.$(elt).datebox('setTheDate', new $wnd.Date(year, month, dayOfMonth));
     }-*/;
 
     private void internSetDate(Date d) {
