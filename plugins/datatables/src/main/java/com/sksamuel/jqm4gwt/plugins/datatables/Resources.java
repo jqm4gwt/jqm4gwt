@@ -9,6 +9,12 @@ public interface Resources {
     class Loader {
 
         /**
+         * Must be set to true explicitly in static constructor of your application
+         * in case you are going to manage JS and CSS loading manually, e.g. combined files.
+         **/
+        public static boolean manualLoading;
+
+        /**
          * Must be set to true explicitly in static constructor of your application if you need
          * default visual support for <a href="https://www.datatables.net/examples/api/row_details.html">
          * Show extra/detailed row information</a>
@@ -29,6 +35,10 @@ public interface Resources {
 
                 @Override
                 public void onSuccess(Void result) {
+                    if (manualLoading) {
+                        if (done != null) done.onSuccess(null);
+                        return;
+                    }
                     ScriptUtils.injectCss(DATATABLES_CSS, DATATABLES_CSS_ADJUST);
                     if (loadCssRowDetails) ScriptUtils.injectCss(DATATABLES_CSS_ROW_DETAILS);
                     if (loadFooterOnTop) ScriptUtils.injectCss(DATATABLES_CSS_FOOTER_ON_TOP);
