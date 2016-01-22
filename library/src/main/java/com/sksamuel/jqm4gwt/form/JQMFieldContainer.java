@@ -1,5 +1,6 @@
 package com.sksamuel.jqm4gwt.form;
 
+import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMCommon;
@@ -36,6 +37,12 @@ public class JQMFieldContainer extends JQMWidget {
 
     protected void add(Widget widget) {
         flow.add(widget);
+    }
+
+    @UiChild(tagname = "widget")
+    public void addWidget(Widget widget) {
+        if (widget == null) return;
+        add(widget);
     }
 
     protected void remove(Widget widget) {
