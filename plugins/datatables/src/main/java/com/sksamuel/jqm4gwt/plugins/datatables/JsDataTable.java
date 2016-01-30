@@ -1288,4 +1288,12 @@ public class JsDataTable {
         t.fnAdjustColumnSizing(false); // no redraw
     }-*/;
 
+    static native void setColVisible(Element tableElt, String colName, boolean visible) /*-{
+        if (colName) {
+            var t = $wnd.$(tableElt).DataTable();
+            var col = t.column(colName + ':name');
+            if (col) col.visible(visible);
+        }
+    }-*/;
+
 }

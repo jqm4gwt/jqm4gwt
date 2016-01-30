@@ -55,6 +55,7 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItem;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItems;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowData;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer;
+import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableEnhancedEvent;
 import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableRowSelChangedEvent;
 import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableRowSelChangedEvent.RowSelChangedData;
 import com.sksamuel.jqm4gwt.table.ColumnDef;
@@ -397,6 +398,17 @@ public class JQMDataTable extends JQMTableGrid {
         JQMDataTableRowSelChangedEvent.fire(this, new RowSelChangedData(row, selected, rowData));
     }
 
+    public HandlerRegistration addEnhancedHandler(JQMDataTableEnhancedEvent.Handler handler) {
+        if (handler == null) return null;
+        return addHandler(handler, JQMDataTableEnhancedEvent.getType());
+    }
+
+    private void fireEnhanced() {
+        int cnt = getHandlerCount(JQMDataTableEnhancedEvent.getType());
+        if (cnt == 0) return;
+        JQMDataTableEnhancedEvent.fire(this);
+    }
+
     private String getRowId(JavaScriptObject rowData) {
         String rowId = JsUtils.getObjValue(rowData, DT_ROWID);
         if (Empty.is(rowId) && rowIdHelper != null) {
@@ -561,6 +573,7 @@ public class JQMDataTable extends JQMTableGrid {
                 }
                 afterEnhance();
                 onInitComplete();
+                fireEnhanced();
             }
         });
         JsDataTable.enhance(elt, jsParams);
@@ -876,6 +889,14 @@ public class JQMDataTable extends JQMTableGrid {
             }
         }
         return null;
+    }
+
+    /** Works dynamically after dataTable is initialized */
+    public void setColumnVisible(String colName, boolean visible) {
+        ColumnDefEx col = findColumn(colName);
+        if (col == null) return;
+        col.setVisible(visible);
+        JsDataTable.setColVisible(getElement(), colName, visible);
     }
 
     public ColumnDefEx getColumn(int index) {

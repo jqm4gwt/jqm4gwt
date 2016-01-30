@@ -95,6 +95,9 @@ public class DataTableExamplesPage {
     @UiField
     Span selRowsInfo;
 
+    @UiField
+    JQMButton hideShowSalaryBtn;
+
     private static JsArray<JsArrayMixed> dataArray = null;
     private static JsArray<JavaScriptObject> dataObjs = null;
 
@@ -161,6 +164,15 @@ public class DataTableExamplesPage {
             @Override
             public void onShow(JQMPageEvent event) {
                 dataTable5.adjustAllSizes();
+            }
+        });
+
+        hideShowSalaryBtn.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                ColumnDefEx col = dataTable2.findColumn("salary");
+                if (col == null) return;
+                dataTable2.setColumnVisible(col.getName(), !col.isVisible());
             }
         });
 

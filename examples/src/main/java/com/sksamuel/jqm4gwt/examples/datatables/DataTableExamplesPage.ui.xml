@@ -43,7 +43,7 @@
 
     <g:FlowPanel addStyleNames="jqm4gwt-scrollable-main-stage">
       <g:FlowPanel addStyleNames="{style.pageContent}">
-        
+      
         <!-- See https://www.datatables.net/examples/ajax/simple.html --> 
         <da:JQMDataTable ui:field="dataTable1" searching="true" pagingType="FULL_NUMBERS"
           colSorts="0" colNames="Name, Position, Office, Extn., Start date, Salary"
@@ -51,6 +51,8 @@
         </da:JQMDataTable>
         
         <g:FlowPanel addStyleNames="{style.separator}" />
+        
+        <b:JQMButton ui:field="hideShowSalaryBtn" text="Hide/Show Salary Column" inline="true" mini="true" />
         
         <!-- See https://www.datatables.net/examples/ajax/deep.html -->
         <da:JQMDataTable ui:field="dataTable2" searching="true" 
@@ -85,7 +87,7 @@
             <da:ColumnDefEx title="Start date" data="hr.start_date" />
           </da:column>
           <da:column>
-            <da:ColumnDefEx title="Salary" data="hr.salary" />
+            <da:ColumnDefEx title="Salary" data="hr.salary" name="salary" />
           </da:column>
           <da:column>
             <da:ColumnDefEx defaultContent="Edit" defaultContentType="BUTTON" />
