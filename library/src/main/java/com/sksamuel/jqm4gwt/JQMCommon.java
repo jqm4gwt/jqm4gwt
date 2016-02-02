@@ -1106,4 +1106,19 @@ public class JQMCommon {
         return (Widget) listener;
     }
 
+    /** @return - number of children (counted only Elements).
+     * <br> See <a href="http://stackoverflow.com/a/2161646">Check if element has any children</a>
+     **/
+    public static native int childrenCount(Element parent) /*-{
+        return parent.children.length;
+    }-*/;
+
+    /** IE9+ only!
+     * @return first child Element
+     * <br> See <a href="http://stackoverflow.com/a/2161646">Check if element has any children</a>
+     **/
+    public static native Element firstChildElt(Element parent) /*-{
+        return parent.firstElementChild;
+    }-*/;
+
 }

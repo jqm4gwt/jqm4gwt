@@ -254,15 +254,6 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         return this;
     }
 
-    @Override
-    public String getText() {
-        Element e = getElement();
-        while (e.getFirstChildElement() != null) {
-            e = e.getFirstChildElement();
-        }
-        return e.getInnerText();
-    }
-
     /**
      * Returns true if this button is set to load the linked page as a dialog page
      *
@@ -531,10 +522,31 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         // it's not a case in 1.4.x anymore, because buttons have clean/simple mark-up now,
         // but could be useful for complex buttons (see setHtml() method).
         Element e = getElement();
-        while (e.getFirstChildElement() != null) {
-            e = e.getFirstChildElement();
+        if (JQMCommon.childrenCount(e) == 0) {
+            e.setInnerText(text);
+        } else {
+            Element child = JQMCommon.firstChildElt(e);
+            while (child != null) {
+                e = child;
+                child = JQMCommon.firstChildElt(e);
+            }
+            e.setInnerText(text);
         }
-        e.setInnerText(text);
+    }
+
+    @Override
+    public String getText() {
+        Element e = getElement();
+        if (JQMCommon.childrenCount(e) == 0) {
+            return e.getInnerText();
+        } else {
+            Element child = JQMCommon.firstChildElt(e);
+            while (child != null) {
+                e = child;
+                child = JQMCommon.firstChildElt(e);
+            }
+            return e.getInnerText();
+        }
     }
 
     /**
