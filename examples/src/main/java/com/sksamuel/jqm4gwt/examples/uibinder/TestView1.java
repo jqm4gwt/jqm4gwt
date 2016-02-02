@@ -200,6 +200,9 @@ public class TestView1 {
     JQMRadioset radio1;
 
     @UiField
+    JQMButton btnRadio1ItemB;
+
+    @UiField
     JQMRadioset gender;
 
     @UiField
@@ -661,6 +664,11 @@ public class TestView1 {
     @UiHandler("setRadioNullBtn")
     void setRadioNullBtnClick(ClickEvent e) {
         radio1.setValue(null);
+    }
+
+    @UiHandler("btnRadio1ItemB")
+    void btnRadio1ItemBClick(ClickEvent e) {
+        radio1.setRadioVisible(1, !radio1.isRadioVisible(1));
     }
 
     @UiHandler("flipInfoBtn")

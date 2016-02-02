@@ -20,6 +20,7 @@ import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasOrientation;
@@ -511,6 +512,32 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
      */
     public int size() {
         return radios.size();
+    }
+
+    public void setRadioVisible(int index, boolean visible) {
+        if (index < 0 || index >= radios.size()) return;
+        JQMRadio r = radios.get(index);
+        Element p = r.getElement().getParentElement();
+        while (p != null) {
+            if (JQMCommon.hasStyle(p, "ui-radio")) {
+                UIObject.setVisible(p, visible);
+                break;
+            }
+            p = p.getParentElement();
+        }
+    }
+
+    public boolean isRadioVisible(int index) {
+        if (index < 0 || index >= radios.size()) return false;
+        JQMRadio r = radios.get(index);
+        Element p = r.getElement().getParentElement();
+        while (p != null) {
+            if (JQMCommon.hasStyle(p, "ui-radio")) {
+                return UIObject.isVisible(p);
+            }
+            p = p.getParentElement();
+        }
+        return false;
     }
 
     @Override

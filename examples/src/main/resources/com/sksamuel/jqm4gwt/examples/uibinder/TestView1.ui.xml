@@ -255,16 +255,19 @@
               <e:JQMRadio text="radio_D_Text" value="d"/>
             </e:radio>
           </e:JQMRadioset>
-          <ly:JQMTable columns="3">
+          <ly:JQMTable columns="4">
             <ly:cell>
-              <b:JQMButton ui:field="radioInfoBtn" text="Show Radioset Info" />
+              <b:JQMButton ui:field="radioInfoBtn" text="Show Radioset Info" mini="true" />
             </ly:cell>
             <ly:cell>
-              <b:JQMButton ui:field="setRadioValBtn" text="Set Value to 'c'" />
+              <b:JQMButton ui:field="setRadioValBtn" text="Set Value to 'c'" mini="true" />
             </ly:cell>
             <ly:cell>
-              <b:JQMButton ui:field="setRadioNullBtn" text="Set Value to 'null'" />
+              <b:JQMButton ui:field="setRadioNullBtn" text="Set Value to 'null'" mini="true" />
             </ly:cell>
+            <ly:cell>
+              <b:JQMButton ui:field="btnRadio1ItemB" text="Switch item B visibility" mini="true" />
+            </ly:cell>  
           </ly:JQMTable>
           <e:JQMRadioset ui:field="gender" text="Gender"
             orientation="HORIZONTAL" labelHidden="true">
