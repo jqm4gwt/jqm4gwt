@@ -16,6 +16,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JsUtils;
@@ -1043,10 +1044,26 @@ public class JQMCalBox extends JQMText {
         String v = input.getValue();
         if (v != null && !v.isEmpty()) {
             v = v.trim();
-            // supports mmddyy or mmddyyyy input without any separators
+            // supports (mmddyy or mmddyyyy) or (ddmmyy or ddmmyyyy) input without any separators
             if (!v.isEmpty() && StrUtils.isDigitsOnly(v) && (v.length() == 6 || v.length() == 8)) {
-                int mm = Integer.parseInt(v.substring(0, 2));
-                int dd = Integer.parseInt(v.substring(2, 4));
+                boolean mmFirst = true;
+                String fmt = getDateFormat();
+                if (!Empty.is(fmt)) {
+                    int ddPos = fmt.indexOf("%d");
+                    int mmPos = fmt.indexOf("%m");
+                    if (ddPos >= 0 && mmPos >= 0) {
+                        mmFirst = mmPos < ddPos;
+                    }
+                }
+                final int mm;
+                final int dd;
+                if (mmFirst) {
+                    mm = Integer.parseInt(v.substring(0, 2));
+                    dd = Integer.parseInt(v.substring(2, 4));
+                } else {
+                    dd = Integer.parseInt(v.substring(0, 2));
+                    mm = Integer.parseInt(v.substring(2, 4));
+                }
                 int yy = Integer.parseInt(v.substring(4));
                 Date d = new Date();
                 @SuppressWarnings("deprecation")
