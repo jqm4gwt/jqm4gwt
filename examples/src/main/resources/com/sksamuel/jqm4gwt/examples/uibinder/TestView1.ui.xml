@@ -675,7 +675,7 @@
         </h:ListWidget.Unordered>
         <h:Paragraph text="paragraphText"/>
         <h:Span text="spanText"/>
-        <ly:JQMCollapsible collapsed="false">
+        <ly:JQMCollapsible ui:field="collapsibleWithBtns" collapsed="false">
           <ly:headerWidget>
             <b:JQMButton ui:field="btnCollaps1" text="Button1" builtInIcon="GEAR" mini="true" inline="true" />
           </ly:headerWidget>

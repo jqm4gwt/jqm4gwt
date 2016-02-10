@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.layout;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.DisclosurePanel;
@@ -327,5 +328,23 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
 
     private static native void execCollapse(Element elt) /*-{
         $wnd.$(elt).collapsible("collapse");
+    }-*/;
+
+    /** Needed for header widgets to prevent expand/collapse on their clicks. */
+    public void discardHeaderClick(ClickEvent event) {
+        if (event == null) return;
+
+        // Example: we use radioset on collapsible header, so stopPropagation() is needed
+        // to suppress collapsible open/close behavior.
+        // But preventDefault() is not needed, otherwise radios won't switch.
+        // event.preventDefault(); // For example, clicked anchors will not take the browser to a new URL
+
+        event.stopPropagation();
+        makeHeaderInactive(header.getElement());
+    }
+
+    /** On iOS if placed on header button is pressed then header remains in "pressed" state. */
+    private static native void makeHeaderInactive(Element header) /*-{
+        $wnd.$(header).find("a.ui-btn").first().removeClass($wnd.$.mobile.activeBtnClass);
     }-*/;
 }

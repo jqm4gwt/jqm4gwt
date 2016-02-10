@@ -66,6 +66,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMUrl;
 import com.sksamuel.jqm4gwt.html.Heading;
 import com.sksamuel.jqm4gwt.html.Paragraph;
 import com.sksamuel.jqm4gwt.html.Span;
+import com.sksamuel.jqm4gwt.layout.JQMCollapsible;
 import com.sksamuel.jqm4gwt.layout.JQMTable;
 import com.sksamuel.jqm4gwt.list.JQMList;
 import com.sksamuel.jqm4gwt.list.JQMListDivider;
@@ -471,6 +472,9 @@ public class TestView1 {
 
     @UiField
     JQMButton btnMultiSelClear;
+
+    @UiField
+    JQMCollapsible collapsibleWithBtns;
 
     @UiField
     JQMButton btnCollaps1;
@@ -1005,8 +1009,7 @@ public class TestView1 {
     @UiHandler("btnCollaps1")
     void btnbtnCollaps1Click(ClickEvent e) {
         Window.alert("Button1 clicked!");
-        e.preventDefault();
-        e.stopPropagation();
+        collapsibleWithBtns.discardHeaderClick(e);
     }
 
     @UiHandler("btnToggleThemeTestView1Panel")
