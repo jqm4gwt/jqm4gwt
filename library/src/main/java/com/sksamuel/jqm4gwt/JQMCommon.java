@@ -1121,4 +1121,9 @@ public class JQMCommon {
         return parent.firstElementChild;
     }-*/;
 
+    public static native Element findFirst(Element parent, String descendantSelector) /*-{
+        var d = $wnd.$(parent).find(descendantSelector).first();
+        return d ? d[0] : null;
+    }-*/;
+
 }

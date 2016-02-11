@@ -1,5 +1,8 @@
 package com.sksamuel.jqm4gwt.layout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -7,6 +10,7 @@ import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.DataIcon;
+import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.HasIconPos;
 import com.sksamuel.jqm4gwt.HasInset;
 import com.sksamuel.jqm4gwt.HasMini;
@@ -14,6 +18,7 @@ import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMContainer;
+import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
 import com.sksamuel.jqm4gwt.html.Heading;
 import com.sksamuel.jqm4gwt.layout.JQMCollapsibleEvent.CollapsibleState;
@@ -32,6 +37,11 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     private final Heading header;
 
     private CustomFlowPanel headerPanel;
+
+    private boolean created;
+
+    private Element headingToggle;
+    private Element collapsibleContent;
 
     /**
      * Creates a new {@link JQMCollapsible} with the no header text and
@@ -117,16 +127,68 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
         p.off("collapsibleexpand");
     }-*/;
 
+    private static native void bindCreated(Element elt, JQMCollapsible co) /*-{
+        $wnd.$(elt).on( 'collapsiblecreate', function( event, ui ) {
+            co.@com.sksamuel.jqm4gwt.layout.JQMCollapsible::created()();
+        });
+    }-*/;
+
+    private static native void unbindCreated(Element elt) /*-{
+        $wnd.$(elt).off( 'collapsiblecreate' );
+    }-*/;
+
+    private void doUnbindCreated(Element elt) {
+        created = false;
+        headingToggle = null;
+        collapsibleContent = null;
+        unbindCreated(elt);
+    }
+
+    private void created() {
+        created = true;
+        headingToggle = JQMCommon.findFirst(header.getElement(), ".ui-collapsible-heading-toggle.ui-btn");
+        collapsibleContent = JQMCommon.findFirst(getElement(), ".ui-collapsible-content");
+    }
+
     @Override
     protected void onLoad() {
         super.onLoad();
-        bindLifecycleEvents(this, getElement());
+        Element elt = getElement();
+        bindCreated(elt, this);
+        bindLifecycleEvents(this, elt);
     }
 
     @Override
     protected void onUnload() {
-        unbindLifecycleEvents(getElement());
+        Element elt = getElement();
+        unbindLifecycleEvents(elt);
+        doUnbindCreated(elt);
         super.onUnload();
+    }
+
+    @Override
+    public void setTheme(String themeName) {
+        super.setTheme(themeName);
+        if (headingToggle != null) {
+            JQMButton.setTheme(headingToggle, themeName);
+        }
+    }
+
+    public String getContentTheme() {
+        return getAttribute("data-content-theme");
+    }
+
+    public void setContentTheme(String themeName) {
+        setAttribute("data-content-theme", themeName);
+        if (collapsibleContent != null) {
+            String s = Empty.is(themeName) ? JQMCommon.THEME_INHERIT : themeName;
+            JQMCommon.setThemeEx(collapsibleContent, s, JQMCommon.STYLE_UI_BODY);
+        }
+    }
+
+    public JQMCollapsible withContentTheme(String themeName) {
+        setContentTheme(themeName);
+        return this;
     }
 
     /**
@@ -181,10 +243,6 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     public JQMCollapsible removeExpandedIcon() {
         removeAttribute("data-expanded-icon");
         return this;
-    }
-
-    public String getContentTheme() {
-        return getAttribute("data-content-theme");
     }
 
     @Override
@@ -242,11 +300,6 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     @Override
     public boolean remove(Widget widget) {
         return super.remove(widget);
-    }
-
-    public JQMCollapsible setContentTheme(String theme) {
-        setAttribute("data-content-theme", theme);
-        return this;
     }
 
     /**
@@ -329,6 +382,39 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     private static native void execCollapse(Element elt) /*-{
         $wnd.$(elt).collapsible("collapse");
     }-*/;
+
+    public boolean isHeaderChild(Widget w) {
+        if (w == null || headerPanel == null) return false;
+        w = w.getParent();
+        while (w != null) {
+            if (headerPanel == w) return true;
+            w = w.getParent();
+        }
+        return false;
+    }
+
+    /**
+     * @return - if widget is child of some collapsible's header then returns that collapsible, otherwise null
+     */
+    public static JQMCollapsible isCollapsibleHeaderChild(Widget w) {
+        if (w == null) return null;
+        List<Widget> parentChain = null;
+        w = w.getParent();
+        while (w != null) {
+            if (w instanceof JQMCollapsible) {
+                JQMCollapsible co = (JQMCollapsible) w;
+                if (co.headerPanel != null && parentChain != null && parentChain.contains(co.headerPanel)) {
+                    return co;
+                } else {
+                    return null;
+                }
+            }
+            if (parentChain == null) parentChain = new ArrayList<>();
+            parentChain.add(w);
+            w = w.getParent();
+        }
+        return null;
+    }
 
     /** Needed for header widgets to prevent expand/collapse on their clicks. */
     public void discardHeaderClick(ClickEvent event) {

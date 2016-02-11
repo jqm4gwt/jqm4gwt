@@ -480,6 +480,12 @@ public class TestView1 {
     JQMButton btnCollaps1;
 
     @UiField
+    JQMButton collapChangeThemeBtn;
+
+    @UiField
+    JQMButton collapChangeContentThemeBtn;
+
+    @UiField
     JQMButton btnToggleThemeTestView1Panel;
 
     @UiField
@@ -1007,9 +1013,23 @@ public class TestView1 {
     }
 
     @UiHandler("btnCollaps1")
-    void btnbtnCollaps1Click(ClickEvent e) {
+    void btnCollaps1Click(ClickEvent e) {
         Window.alert("Button1 clicked!");
         collapsibleWithBtns.discardHeaderClick(e);
+    }
+
+    @UiHandler("collapChangeThemeBtn")
+    void collapChangeThemeBtnClick(ClickEvent e) {
+        String s = collapsibleWithBtns.getTheme();
+        if ("b".equals(s)) collapsibleWithBtns.setTheme(null);
+        else collapsibleWithBtns.setTheme("b");
+    }
+
+    @UiHandler("collapChangeContentThemeBtn")
+    void collapChangeContentThemeBtnClick(ClickEvent e) {
+        String s = collapsibleWithBtns.getContentTheme();
+        if ("b".equals(s)) collapsibleWithBtns.setContentTheme(null);
+        else collapsibleWithBtns.setContentTheme("b");
     }
 
     @UiHandler("btnToggleThemeTestView1Panel")

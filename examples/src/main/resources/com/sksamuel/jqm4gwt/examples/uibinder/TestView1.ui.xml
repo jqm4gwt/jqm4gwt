@@ -675,7 +675,7 @@
         </h:ListWidget.Unordered>
         <h:Paragraph text="paragraphText"/>
         <h:Span text="spanText"/>
-        <ly:JQMCollapsible ui:field="collapsibleWithBtns" collapsed="false">
+        <ly:JQMCollapsible ui:field="collapsibleWithBtns" collapsed="false" theme="b" contentTheme="b">
           <ly:headerWidget>
             <b:JQMButton ui:field="btnCollaps1" text="Button1" builtInIcon="GEAR" mini="true" inline="true" />
           </ly:headerWidget>
@@ -695,6 +695,12 @@
             <b:JQMButton text="Button in Collapsible" builtInIcon="CLOCK" mini="true" inline="true" />
           </ly:widget>
         </ly:JQMCollapsible>
+        <g:FlowPanel>
+          <b:JQMButton ui:field="collapChangeThemeBtn" text="Switch theme: null - b"
+            mini="true" inline="true" />
+          <b:JQMButton ui:field="collapChangeContentThemeBtn" text="Switch content theme: null - b"
+            mini="true" inline="true" />   
+        </g:FlowPanel>
         <ly:JQMCollapsibleSet>
           <ly:collapsible>
             <ly:JQMCollapsible text="collapsible1Text">
