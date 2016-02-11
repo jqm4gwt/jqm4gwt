@@ -17,6 +17,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.Orientation;
@@ -45,6 +46,8 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
     protected AnchorElement a;
     protected SpanElement txt;
 
+    private Boolean external;
+
     public ImageLink() {
         a = Document.get().createAnchorElement();
         setElement(a);
@@ -56,8 +59,9 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
 
     protected void initA() {
         JQMCommon.setDataRole(a, "none");
-        a.setAttribute("rel", "external");
-        a.setAttribute("data-rel", "external");
+        // Let's set proper initial default href value.
+        // If no real href is defined later, then something is expected in onClick handler.
+        a.setAttribute("href", "javascript:;");
         setStyleName(a, JQM4GWT_IMAGE_LINK_A);
     }
 
@@ -117,6 +121,25 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
      */
     public void setHref(String href) {
         a.setAttribute("href", href);
+        if (external == null /*only if not explicitly set*/ && !Empty.is(href)
+                && (href.startsWith("http:") || href.startsWith("https:"))) {
+            setExternal(true);
+        }
+    }
+
+    public boolean isExternal() {
+        return external != null ? external : false;
+    }
+
+    public void setExternal(boolean value) {
+        this.external = value;
+        if (value) {
+            a.setAttribute("rel", "external");
+            a.setAttribute("data-rel", "external");
+        } else {
+            a.removeAttribute("rel");
+            a.removeAttribute("data-rel");
+        }
     }
 
     /**
