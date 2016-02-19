@@ -228,4 +228,30 @@ public class JQMSelectFilterable extends JQMSelect {
         this.setValue(null, true/*fireEvents*/);
     }
 
+    @Override
+    public void setValue(String value, boolean fireEvents) {
+        if (value == null) clearSearchInput();
+        super.setValue(value, fireEvents);
+    }
+
+    /** Clears entered text in search input on popup form. */
+    public void clearSearchInput() {
+        if (filterable != null && JQMCommon.isFilterableReady(filterable)) {
+            clearInput(filterable);
+        }
+    }
+
+    private static native void clearInput(Element filterable) /*-{
+        var fltr = $wnd.$(filterable);
+        var input = fltr.filterable("option", "input");
+        if (input) {
+            var t = $wnd.$(input);
+            if (t.val()) {
+                t.val("");
+                t.next(".ui-input-clear").addClass("ui-input-clear-hidden");
+                fltr.filterable("refresh");
+            }
+        }
+    }-*/;
+
 }
