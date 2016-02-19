@@ -271,10 +271,22 @@ public class JQMContext {
         silentScroll(widget.getElement());
     }
 
+    public static final double MSEC_IN_MINUTE = 60d * 1000d;
+
     public static Date jsDateToDate(JsDate jsDate) {
         if (jsDate == null) return null;
         double msec = jsDate.getTime();
-        return new Date((long) msec);
+        Date d = new Date((long) msec);
+        int o1 = jsDate.getTimezoneOffset();
+        @SuppressWarnings("deprecation")
+        int o2 = d.getTimezoneOffset();
+        // For 1951 PST -> PDT was changed on Sun, Apr 29, 2:00 AM
+        // But 04/04/1951 is PDT in JsDate (which is wrong) and PST in Java Date (which is right)
+        if (o1 != o2) {
+            msec += MSEC_IN_MINUTE * (o2 - o1);
+            d = new Date((long) msec);
+        }
+        return d;
     }
 
     public static JsArrayString getJsArrayString(String... strings) {
