@@ -685,6 +685,10 @@
           <ly:headerWidget>  
             <b:JQMButton text="Button3" builtInIcon="INFO" mini="true" inline="true" />
           </ly:headerWidget>
+          <ly:headerWidget>  
+            <e:JQMCheckbox ui:field="cbHeaderWidget" name="cbHeaderWidget" 
+              text="Checkbox on collapsible header" mini="true" inline="true" />
+          </ly:headerWidget>
           <ly:widget>
             <h:Span text="spanText in Collapsible"/>
           </ly:widget>

@@ -527,6 +527,8 @@ public class TestView1 {
     @UiField JQMButton radioboxNullBtn;
     @UiField JQMButton radioboxFalseBtn;
 
+    @UiField JQMCheckbox cbHeaderWidget;
+
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
             @Override
@@ -1403,6 +1405,24 @@ public class TestView1 {
                     ButtonElement btn = t.cast();
                     Window.alert(btn.getInnerHTML() + " - who cares?");
                 }
+            }
+        });
+
+        cbHeaderWidget.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                Boolean v = event.getValue();
+                Window.alert(v != null ? v.toString() : "null");
+                cbHeaderWidget.refresh();
+            }
+        });
+        cbHeaderWidget.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Boolean v = cbHeaderWidget.getValue();
+                Window.alert(v != null ? v.toString() : "null");
+                JQMCollapsible co = JQMCollapsible.isCollapsibleHeaderChild(cbHeaderWidget);
+                if (co != null) co.discardHeaderClick(event);
             }
         });
     }

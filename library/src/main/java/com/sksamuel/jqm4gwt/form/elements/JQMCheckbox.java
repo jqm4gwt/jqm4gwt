@@ -114,6 +114,15 @@ public class JQMCheckbox extends JQMWidget implements HasText<JQMCheckbox>, HasV
         return addHandler(handler, ValueChangeEvent.getType());
     }
 
+    /**
+     * Will be raised before actual switch, so getValue() will return "old" value.
+     * <br> For getting "new" value use addValueChangeHandler().
+     * <br> If used as header widget on JQMCollapsible then manual refresh() call is needed to update checkmark.
+     */
+    public HandlerRegistration addClickHandler(ClickHandler handler) {
+        return addDomHandler(handler, ClickEvent.getType());
+    }
+
     public TextBox getInput() {
         return input;
     }
