@@ -136,6 +136,9 @@ public class JQMForm extends FlowPanel {
         addRequired(widget, msg, true);
     }
 
+    /**
+     * @param immediate - if true then validator will be called during onBlur() event
+     */
     public void addRequired(JQMFormWidget widget, String msg, boolean immediate) {
         add(widget);
         setRequired(widget, msg, immediate);
