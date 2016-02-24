@@ -24,6 +24,8 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.JQMContext;
+import com.sksamuel.jqm4gwt.JQMContext.WidgetDefaults;
 import com.sksamuel.jqm4gwt.StrUtils;
 import com.sksamuel.jqm4gwt.html.CustomFlowPanel;
 
@@ -81,6 +83,8 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
     protected void onLoad() {
         super.onLoad();
         loaded = true;
+        WidgetDefaults dflt = JQMContext.getWidgetDefaults();
+        if (dflt != null) dflt.loaded(this);
         if (tBody.getWidgetCount() == 0 && !colTitleWidgets.isEmpty()) populateBody();
     }
 
