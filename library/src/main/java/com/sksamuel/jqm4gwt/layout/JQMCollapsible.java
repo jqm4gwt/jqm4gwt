@@ -38,8 +38,6 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
 
     private CustomFlowPanel headerPanel;
 
-    private boolean created;
-
     private Element headingToggle;
     private Element collapsibleContent;
 
@@ -137,15 +135,7 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
         $wnd.$(elt).off( 'collapsiblecreate' );
     }-*/;
 
-    private void doUnbindCreated(Element elt) {
-        created = false;
-        headingToggle = null;
-        collapsibleContent = null;
-        unbindCreated(elt);
-    }
-
     private void created() {
-        created = true;
         headingToggle = JQMCommon.findFirst(header.getElement(), ".ui-collapsible-heading-toggle.ui-btn");
         collapsibleContent = JQMCommon.findFirst(getElement(), ".ui-collapsible-content");
     }
@@ -162,7 +152,7 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     protected void onUnload() {
         Element elt = getElement();
         unbindLifecycleEvents(elt);
-        doUnbindCreated(elt);
+        unbindCreated(elt);
         super.onUnload();
     }
 

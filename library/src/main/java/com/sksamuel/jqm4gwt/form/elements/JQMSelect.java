@@ -1295,7 +1295,6 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     @Override
     protected void onUnload() {
-        created = false;
         Element elt = select.getElement();
         unbindCreated(elt);
         super.onUnload();

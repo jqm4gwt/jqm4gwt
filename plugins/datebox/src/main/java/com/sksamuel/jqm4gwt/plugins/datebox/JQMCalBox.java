@@ -967,7 +967,6 @@ public class JQMCalBox extends JQMText {
     @Override
     protected void onUnload() {
         final Date d = getDate();
-        created = false;
         unbindCreated(input.getElement());
         super.onUnload();
         delayedSetDate = d;
