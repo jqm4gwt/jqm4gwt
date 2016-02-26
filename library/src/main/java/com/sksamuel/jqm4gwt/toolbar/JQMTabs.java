@@ -137,6 +137,8 @@ public class JQMTabs extends JQMWidget {
     private String mainTheme;
     private String headerTheme;
 
+    private boolean created;
+
     public JQMTabs() {
         flow = new FlowPanel();
         initWidget(flow);
@@ -157,17 +159,36 @@ public class JQMTabs extends JQMWidget {
     @UiChild(tagname = "leftHeaderWidget")
     public void addLeftHeaderWidget(Widget w) {
         if (w == null) return;
+        if (leftHeaderWidgets == null) leftHeaderWidgets = new ArrayList<Widget>();
+        leftHeaderWidgets.add(w);
         if (leftHeaderStage != null) {
             leftHeaderStage.add(w);
-        } else {
-            if (leftHeaderWidgets == null) leftHeaderWidgets = new ArrayList<Widget>();
-            leftHeaderWidgets.add(w);
+        } else if (created) {
+            checkLeftHeader();
+        }
+    }
+
+    public int getLeftHeaderWidgetCount() {
+        return leftHeaderWidgets != null ? leftHeaderWidgets.size() : 0;
+    }
+
+    public Widget getLeftHeaderWidget(int index) {
+        if (index >= 0 && index < getLeftHeaderWidgetCount()) return leftHeaderWidgets.get(index);
+        else return null;
+    }
+
+    public void removeLeftHeaderWidget(int index) {
+        if (index >= 0 && index < getLeftHeaderWidgetCount()) {
+            Widget w = leftHeaderWidgets.get(index);
+            leftHeaderWidgets.remove(index);
+            if (leftHeaderWidgets.size() == 0) leftHeaderWidgets = null;
+            if (leftHeaderStage != null) leftHeaderStage.remove(w);
         }
     }
 
     private void checkLeftHeader() {
-        if (leftHeaderWidgets == null || leftHeaderStage != null) return;
-
+        if (!created || leftHeaderWidgets == null || leftHeaderStage != null) return;
+        if (navbar == null && list == null) return;
         leftHeaderStage = new FlowPanel();
         leftHeaderStage.getElement().getStyle().setFloat(Style.Float.LEFT);
         for (Widget w : leftHeaderWidgets) leftHeaderStage.add(w);
@@ -178,23 +199,47 @@ public class JQMTabs extends JQMWidget {
     @UiChild(tagname = "rightHeaderWidget")
     public void addRightHeaderWidget(Widget w) {
         if (w == null) return;
+        if (rightHeaderWidgets == null) rightHeaderWidgets = new ArrayList<Widget>();
+        rightHeaderWidgets.add(w);
         if (rightHeaderStage != null) {
             rightHeaderStage.add(w);
-        } else {
-            if (rightHeaderWidgets == null) rightHeaderWidgets = new ArrayList<Widget>();
-            rightHeaderWidgets.add(w);
+        } else if (created) {
+            checkRightHeader();
+        }
+    }
+
+    public int getRightHeaderWidgetCount() {
+        return rightHeaderWidgets != null ? rightHeaderWidgets.size() : 0;
+    }
+
+    public Widget getRightHeaderWidget(int index) {
+        if (index >= 0 && index < getRightHeaderWidgetCount()) return rightHeaderWidgets.get(index);
+        else return null;
+    }
+
+    public void removeRightHeaderWidget(int index) {
+        if (index >= 0 && index < getRightHeaderWidgetCount()) {
+            Widget w = rightHeaderWidgets.get(index);
+            rightHeaderWidgets.remove(index);
+            if (rightHeaderWidgets.size() == 0) rightHeaderWidgets = null;
+            if (rightHeaderStage != null) rightHeaderStage.remove(w);
         }
     }
 
     private void checkRightHeader() {
-        if (rightHeaderWidgets == null || rightHeaderStage != null) return;
-
+        if (!created || rightHeaderWidgets == null || rightHeaderStage != null) return;
+        if (navbar == null && list == null) return;
         rightHeaderStage = new FlowPanel();
         rightHeaderStage.getElement().getStyle().setFloat(Style.Float.RIGHT);
         for (Widget w : rightHeaderWidgets) rightHeaderStage.add(w);
         int i = leftHeaderStage != null ? 1 : 0;
         flow.insert(rightHeaderStage, i);
         checkHeaderStyle();
+    }
+
+    private void checkLeftRightHeaders() {
+        checkRightHeader();
+        checkLeftHeader();
     }
 
     private void checkHeaderStyle() {
@@ -205,7 +250,7 @@ public class JQMTabs extends JQMWidget {
         } else if (list != null) {
             st = list.getElement().getStyle();
         }
-        if (st != null) { // See http://stackoverflow.com/a/1767270/714136
+        if (st != null) { // "remaining width", see http://stackoverflow.com/a/1767270/714136
             st.setProperty("width", "auto");
             st.setOverflow(Overflow.AUTO);
         }
@@ -227,7 +272,7 @@ public class JQMTabs extends JQMWidget {
             navbar.addStyleName("jqm4gwt-tabs-header-btn");
             String theme = getHeaderTheme();
             if (theme != null && !theme.isEmpty()) navbar.setTheme(theme);
-            checkHeaderStyle();
+            checkLeftRightHeaders();
             flow.insert(navbar, getHeaderInsertPos());
             navbar.addDomHandler(new ClickHandler() {
                 @Override
@@ -275,7 +320,7 @@ public class JQMTabs extends JQMWidget {
             list.addStyleName("jqm4gwt-tabs-header-list");
             String theme = getHeaderTheme();
             if (theme != null && !theme.isEmpty()) list.setTheme(theme);
-            checkHeaderStyle();
+            checkLeftRightHeaders();
             flow.insert(list, getHeaderInsertPos());
             list.addClickHandler(new ClickHandler() {
                 @Override
@@ -307,13 +352,18 @@ public class JQMTabs extends JQMWidget {
         initHrefs();
     }
 
+    private boolean isFlowWidgetInternal(Widget w) {
+        if (w == null) return false;
+        return w == navbar || w == list || w == leftHeaderStage || w == rightHeaderStage;
+    }
+
     private void initHrefs() {
         if (navbar == null && list == null) return;
 
         List<String> ids = new ArrayList<String>();
         for (int i = 0; i < flow.getWidgetCount(); i++) {
             Widget w = flow.getWidget(i);
-            if (w == navbar || w == list) continue;
+            if (isFlowWidgetInternal(w)) continue;
             String id = w.getElement().getId();
             if (id == null || id.isEmpty()) {
                 id = Document.get().createUniqueId();
@@ -369,11 +419,11 @@ public class JQMTabs extends JQMWidget {
     }-*/;
 
     private void created() {
+        created = true;
         // workaround for issue with listview active item resetting on initialization
         // (buttons are processed here as well just for symmetry).
         doActiveHighlight();
-        checkLeftHeader();
-        checkRightHeader();
+        checkLeftRightHeaders();
     }
 
     @Override
@@ -545,7 +595,7 @@ public class JQMTabs extends JQMWidget {
         int cnt = 0;
         for (int i = 0; i < flow.getWidgetCount(); i++) {
             Widget w = flow.getWidget(i);
-            if (w == navbar || w == list) continue;
+            if (isFlowWidgetInternal(w)) continue;
             cnt++;
         }
         return cnt;
@@ -555,7 +605,7 @@ public class JQMTabs extends JQMWidget {
         int cnt = 0;
         for (int i = 0; i < flow.getWidgetCount(); i++) {
             Widget w = flow.getWidget(i);
-            if (w == navbar || w == list) continue;
+            if (isFlowWidgetInternal(w)) continue;
             if (cnt == index) return w;
             cnt++;
         }
@@ -566,7 +616,7 @@ public class JQMTabs extends JQMWidget {
         ArrayList<Widget> rslt = null;
         for (int i = 0; i < flow.getWidgetCount(); i++) {
             Widget w = flow.getWidget(i);
-            if (w == navbar || w == list) continue;
+            if (isFlowWidgetInternal(w)) continue;
             if (rslt == null) rslt = new ArrayList<Widget>(flow.getWidgetCount());
             rslt.add(w);
         }
@@ -578,7 +628,7 @@ public class JQMTabs extends JQMWidget {
         Map<String, Widget> found = new HashMap<String, Widget>();
         for (int i = 0; i < flow.getWidgetCount(); i++) {
             Widget w = flow.getWidget(i);
-            if (w == navbar || w == list) continue;
+            if (isFlowWidgetInternal(w)) continue;
             String contentId = w.getElement().getId();
             for (String id : ids) {
                 if (id == null || id.isEmpty()) continue;
@@ -944,7 +994,7 @@ public class JQMTabs extends JQMWidget {
         JQMCommon.setThemeEx(this, rootTheme, JQMCommon.STYLE_UI_BODY);
         for (int i = 0; i < flow.getWidgetCount(); i++) {
             Widget w = flow.getWidget(i);
-            if (w == navbar || w == list) continue;
+            if (isFlowWidgetInternal(w)) continue;
             JQMCommon.setThemeEx(w, contentTheme, JQMCommon.STYLE_UI_BODY);
         }
         if (navbar != null) {

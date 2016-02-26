@@ -444,7 +444,17 @@
           <h:Paragraph />
           <h:Heading.H3 text="Tabs widget with headers as buttons"
             addStyleNames="{style.headerImportantColor}" />
-          <t:JQMTabs iconPos="RIGHT" activeIndex="1" heightStyle="AUTO"> 
+          <g:FlowPanel>
+            <b:JQMButton ui:field="addLeftBtn" text="Add Left Button" mini="true" inline="true" />
+            <b:JQMButton ui:field="addRightBtn" text="Add Right Button" mini="true" inline="true" />
+            <b:JQMButton ui:field="removeLeftBtn" text="Remove Left Button" mini="true" inline="true" />
+            <b:JQMButton ui:field="removeRightBtn" text="Remove Right Button" mini="true" inline="true" />
+            <b:JQMButton ui:field="switchStagesBtn" text="Move to another stage" mini="true" inline="true" />
+          </g:FlowPanel>
+          <h:Paragraph />
+          <g:FlowPanel ui:field="tabs2Stage1" />
+          <g:FlowPanel ui:field="tabs2Stage2">  
+          <t:JQMTabs ui:field="tabs2" iconPos="RIGHT" activeIndex="1" heightStyle="AUTO"> 
             <!-- theme="b" headerTheme="a" buttonColumns="3" -->
             <t:button>
               <b:JQMButton text="Tab1"/>
@@ -538,6 +548,7 @@
               </g:FlowPanel>
             </t:content>
           </t:JQMTabs>
+          </g:FlowPanel>
           <h:Paragraph />
           <h:Paragraph />
           <h:Heading.H3 text="Tabs widget with headers as listview"

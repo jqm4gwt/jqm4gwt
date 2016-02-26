@@ -529,6 +529,15 @@ public class TestView1 {
 
     @UiField JQMCheckbox cbHeaderWidget;
 
+    @UiField JQMTabs tabs2;
+    @UiField FlowPanel tabs2Stage1;
+    @UiField FlowPanel tabs2Stage2;
+    @UiField JQMButton addLeftBtn;
+    @UiField JQMButton addRightBtn;
+    @UiField JQMButton removeLeftBtn;
+    @UiField JQMButton removeRightBtn;
+    @UiField JQMButton switchStagesBtn;
+
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
             @Override
@@ -1097,6 +1106,46 @@ public class TestView1 {
         rb2.setValue(false);
     }
 
+    @UiHandler("addLeftBtn")
+    void addLeftBtnClick(ClickEvent e) {
+        int i = tabs2.getLeftHeaderWidgetCount();
+        JQMButton b = new JQMButton("Left" + String.valueOf(++i)).withMini(true).withInline(true);
+        tabs2.addLeftHeaderWidget(b);
+    }
+
+    @UiHandler("addRightBtn")
+    void addRightBtnClick(ClickEvent e) {
+        int i = tabs2.getRightHeaderWidgetCount();
+        JQMButton b = new JQMButton("Right" + String.valueOf(++i)).withMini(true).withInline(true);
+        tabs2.addRightHeaderWidget(b);
+    }
+
+    @UiHandler("removeLeftBtn")
+    void removeLeftBtnClick(ClickEvent e) {
+        int i = tabs2.getLeftHeaderWidgetCount();
+        if (i > 0) {
+            Widget w = tabs2.getLeftHeaderWidget(i - 1);
+            tabs2.removeLeftHeaderWidget(i - 1);
+        }
+    }
+
+    @UiHandler("removeRightBtn")
+    void removeRightBtnClick(ClickEvent e) {
+        int i = tabs2.getRightHeaderWidgetCount();
+        if (i > 0) {
+            Widget w = tabs2.getRightHeaderWidget(i - 1);
+            tabs2.removeRightHeaderWidget(i - 1);
+        }
+    }
+
+    @UiHandler("switchStagesBtn")
+    void switchStagesBtnClick(ClickEvent e) {
+        Widget p = tabs2.getParent();
+        if (p == tabs2Stage1) p = tabs2Stage2;
+        else p = tabs2Stage1;
+        tabs2.removeFromParent();
+        ((FlowPanel) p).add(tabs2);
+    }
 
     {
         form.setSubmissionHandler(new SubmissionHandler<JQMForm>() {
