@@ -962,6 +962,7 @@ public class JQMCalBox extends JQMText {
     protected void onLoad() {
         super.onLoad();
         bindCreated(input.getElement(), this);
+        if (created) setDate(delayedSetDate);
     }
 
     @Override
