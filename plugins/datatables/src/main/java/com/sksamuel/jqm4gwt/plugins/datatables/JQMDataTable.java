@@ -260,8 +260,6 @@ public class JQMDataTable extends JQMTableGrid {
 
     @Override
     protected void onUnload() {
-        enhanced = false;
-
         if (windowResizeInitialized != null) {
             windowResizeInitialized.removeHandler();
             windowResizeInitialized = null;
@@ -406,7 +404,13 @@ public class JQMDataTable extends JQMTableGrid {
     private void fireEnhanced() {
         int cnt = getHandlerCount(JQMDataTableEnhancedEvent.getType());
         if (cnt == 0) return;
-        JQMDataTableEnhancedEvent.fire(this);
+        JQMDataTableEnhancedEvent.fire(this, false/*before*/);
+    }
+
+    private void fireBeforeEnhance() {
+        int cnt = getHandlerCount(JQMDataTableEnhancedEvent.getType());
+        if (cnt == 0) return;
+        JQMDataTableEnhancedEvent.fire(this, true/*before*/);
     }
 
     private String getRowId(JavaScriptObject rowData) {
@@ -555,6 +559,7 @@ public class JQMDataTable extends JQMTableGrid {
         elt.setAttribute("width", "100%");
         elt.setAttribute("cellspacing", "0"); // obsolete in HTML5, but used in DataTables examples
 
+        fireBeforeEnhance(); // some properties can be preset for using in prepareJsEnhanceParams()
         JsEnhanceParams jsParams = prepareJsEnhanceParams();
         jsParams.setInitComplete(new JsCallback() {
             @Override

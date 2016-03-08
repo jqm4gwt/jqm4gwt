@@ -7,10 +7,14 @@ import com.google.gwt.event.shared.GwtEvent;
 public class JQMDataTableEnhancedEvent extends GwtEvent<JQMDataTableEnhancedEvent.Handler> {
 
     public interface Handler extends EventHandler {
+        void onBeforeEnhance(JQMDataTableEnhancedEvent event);
         void onEnhanced(JQMDataTableEnhancedEvent event);
     }
 
-    public JQMDataTableEnhancedEvent() {
+    private final boolean before;
+
+    public JQMDataTableEnhancedEvent(boolean before) {
+        this.before = before;
     }
 
     static Type<JQMDataTableEnhancedEvent.Handler> TYPE;
@@ -21,9 +25,9 @@ public class JQMDataTableEnhancedEvent extends GwtEvent<JQMDataTableEnhancedEven
      * @param <S> The handler source type
      * @param source - the source of the handlers
      */
-    public static <S extends HasAttachHandlers> void fire(S source) {
+    public static <S extends HasAttachHandlers> void fire(S source, boolean before) {
         if (TYPE != null) {
-            JQMDataTableEnhancedEvent event = new JQMDataTableEnhancedEvent();
+            JQMDataTableEnhancedEvent event = new JQMDataTableEnhancedEvent(before);
             source.fireEvent(event);
         }
     }
@@ -42,7 +46,8 @@ public class JQMDataTableEnhancedEvent extends GwtEvent<JQMDataTableEnhancedEven
 
     @Override
     protected void dispatch(JQMDataTableEnhancedEvent.Handler handler) {
-        handler.onEnhanced(this);
+        if (this.before) handler.onBeforeEnhance(this);
+        else handler.onEnhanced(this);
     }
 
 }

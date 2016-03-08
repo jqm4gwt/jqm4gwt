@@ -247,6 +247,16 @@ public class JsDataTable {
         }-*/;
 
         @Override
+        public final native String getEmptyTable() /*-{
+            return this.emptyTable;
+        }-*/;
+
+        @Override
+        public final native void setEmptyTable(String value) /*-{
+            this.emptyTable = value;
+        }-*/;
+
+        @Override
         public final native String getZeroRecords() /*-{
             return this.zeroRecords;
         }-*/;

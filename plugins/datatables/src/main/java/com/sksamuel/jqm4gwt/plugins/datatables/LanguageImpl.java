@@ -6,6 +6,7 @@ public class LanguageImpl implements Language {
     private String decimal;
     private String thousands;
     private String lengthMenu;
+    private String emptyTable;
     private String zeroRecords;
     private String info;
     private String infoEmpty;
@@ -45,6 +46,16 @@ public class LanguageImpl implements Language {
     @Override
     public void setLengthMenu(String lengthMenu) {
         this.lengthMenu = lengthMenu;
+    }
+
+    @Override
+    public String getEmptyTable() {
+        return emptyTable;
+    }
+
+    @Override
+    public void setEmptyTable(String value) {
+        this.emptyTable = value;
     }
 
     @Override

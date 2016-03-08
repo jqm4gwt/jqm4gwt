@@ -2,7 +2,7 @@ package com.sksamuel.jqm4gwt.plugins.datatables;
 
 import com.sksamuel.jqm4gwt.Empty;
 
-interface Language {
+public interface Language {
 
     class Builder {
 
@@ -10,6 +10,7 @@ interface Language {
             if (!nonEmpty || !Empty.is(src.getDecimal())) dst.setDecimal(src.getDecimal());
             if (!nonEmpty || !Empty.is(src.getThousands())) dst.setThousands(src.getThousands());
             if (!nonEmpty || !Empty.is(src.getLengthMenu())) dst.setLengthMenu(src.getLengthMenu());
+            if (!nonEmpty || !Empty.is(src.getEmptyTable())) dst.setEmptyTable(src.getEmptyTable());
             if (!nonEmpty || !Empty.is(src.getZeroRecords())) dst.setZeroRecords(src.getZeroRecords());
             if (!nonEmpty || !Empty.is(src.getInfo())) dst.setInfo(src.getInfo());
             if (!nonEmpty || !Empty.is(src.getInfoEmpty())) dst.setInfoEmpty(src.getInfoEmpty());
@@ -32,6 +33,10 @@ interface Language {
     String getLengthMenu();
     /** Example: Display _MENU_ records per page */
     void setLengthMenu(String value);
+
+    String getEmptyTable();
+    /** Example: No data available in table */
+    void setEmptyTable(String value);
 
     String getZeroRecords();
     /** Table empty as a result of filtering string. Example: Nothing found - sorry */
