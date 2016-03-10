@@ -216,6 +216,11 @@ public class JsDataTable {
             return {};
         }-*/;
 
+        public static native JsLanguage create(String languageJSON) /*-{
+            var l = JSON.parse(languageJSON);
+            return l;
+        }-*/;
+
         @Override
         public final native String getDecimal() /*-{
             return this.decimal;

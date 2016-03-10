@@ -170,6 +170,7 @@ public class JQMDataTable extends JQMTableGrid {
     private HandlerRegistration orientationChangeInitialized;
 
     private Language language;
+    private String languageJSON;
 
     public static enum PagingType {
 
@@ -323,11 +324,17 @@ public class JQMDataTable extends JQMTableGrid {
         else if (scrollX) p.setScrollX(true);
         if (!Empty.is(scrollY)) p.setScrollY(scrollY);
         if (scrollCollapse) p.setScrollCollapse(true);
-        if (language != null) {
-            JsLanguage l = JsLanguage.create();
-            Language.Builder.copy(language, l, true/*nonEmpty*/);
-            p.setLanguage(l);
+
+        JsLanguage l = null;
+        if (!Empty.is(languageJSON)) {
+            l = JsLanguage.create(languageJSON);
         }
+        if (language != null) {
+            if (l == null) l = JsLanguage.create();
+            Language.Builder.copy(language, l, true/*nonEmpty*/);
+        }
+        if (l != null) p.setLanguage(l);
+
         if (ajaxHandler != null) {
             p.setAjaxHandler(getElement(), ajaxHandler);
         } else if (!Empty.is(ajax)) {
@@ -877,6 +884,17 @@ public class JQMDataTable extends JQMTableGrid {
 
     public Language getLanguage() {
         return language;
+    }
+
+    public String getLanguageJSON() {
+        return languageJSON;
+    }
+
+    /** If defined will be used as starting point for language initialization.
+     *  <br> I.e. languageJSON is parsed first, then language applies/overrides on top of it.
+     **/
+    public void setLanguageJSON(String languageJSON) {
+        this.languageJSON = languageJSON;
     }
 
     @UiChild(tagname = "column")
