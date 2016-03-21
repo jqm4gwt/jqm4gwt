@@ -901,7 +901,14 @@ public class JQMDataTable extends JQMTableGrid {
     public void addColumn(ColumnDefEx col) {
         if (col == null) return;
         clearHead();
-        datacols.add(col); // head will be created later in onLoad()
+        datacols.add(col); // head will be created later in onLoad() or by refreshColumns()
+    }
+
+    /** You have to call refreshColumns() to update head and body (if widget is already loaded). */
+    public void setColumns(List<ColumnDefEx> cols) {
+        clearHead();
+        datacols.clear();
+        if (!Empty.is(cols)) datacols.addAll(cols); // head will be created later in onLoad() or by refreshColumns()
     }
 
     public ColumnDefEx findColumn(String colName) {
@@ -997,6 +1004,13 @@ public class JQMDataTable extends JQMTableGrid {
             return false;
         }
         return super.isColCellTypeTh(colIdx);
+    }
+
+    /** Refreshes head and body, needed for example after addColumn(). */
+    public void refreshColumns() {
+        clearHead();
+        tBody.clear();
+        populateAll();
     }
 
     private void populateAll() {

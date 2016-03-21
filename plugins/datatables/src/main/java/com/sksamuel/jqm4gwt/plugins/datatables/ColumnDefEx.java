@@ -66,12 +66,22 @@ public class ColumnDefEx extends ColumnDef {
         this.orderable = orderable;
     }
 
+    public ColumnDefEx withOrderable(boolean orderable) {
+        setOrderable(orderable);
+        return this;
+    }
+
     public boolean isSearchable() {
         return searchable;
     }
 
     public void setSearchable(boolean searchable) {
         this.searchable = searchable;
+    }
+
+    public ColumnDefEx withSearchable(boolean searchable) {
+        setSearchable(searchable);
+        return this;
     }
 
     public boolean isVisible() {
@@ -130,6 +140,11 @@ public class ColumnDefEx extends ColumnDef {
             searchable = false;
             orderable = false;
         }
+    }
+
+    public ColumnDefEx withDefaultContentType(DefaultContentType value) {
+        setDefaultContentType(value);
+        return this;
     }
 
     /** Combines both defaultContentType and defaultContent and generates proper content. */
@@ -205,6 +220,16 @@ public class ColumnDefEx extends ColumnDef {
      */
     public void setCustomCellRender(boolean customCellRender) {
         this.customCellRender = customCellRender;
+    }
+
+    public ColumnDefEx withTitle(String title) {
+        setTitle(title);
+        return this;
+    }
+
+    public ColumnDefEx withName(String name) {
+        setName(name);
+        return this;
     }
 
 }

@@ -118,14 +118,13 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
     public void setColNames(String colNames) {
         if (this.colNames == colNames || this.colNames != null && this.colNames.equals(colNames)) return;
         this.colNames = colNames;
-        colTitleWidgets.clear();
 
         if (Empty.is(this.colNames)) {
             populateColumns(null);
             return;
         }
         List<String> lst = StrUtils.commaSplit(this.colNames);
-        Set<ColumnDef> cols = new LinkedHashSet<ColumnDef>();
+        List<ColumnDef> cols = new ArrayList<ColumnDef>();
         for (String i : lst) {
             String s = StrUtils.replaceAllBackslashCommas(i.trim());
             cols.add(ColumnDef.create(s, false/*headGroup*/));
@@ -264,11 +263,12 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         populateBody();
     }
 
-    private void populateColumns(Set<ColumnDef> cols) {
+    private void populateColumns(List<ColumnDef> cols) {
         int cnt = columns.size();
         int newCnt = cols != null ? cols.size() : 0;
         columns.clear();
         if (cols != null) columns.addAll(cols);
+        colTitleWidgets.clear();
         removeHeadRow();
         populateHead();
         if (cnt == newCnt) {
