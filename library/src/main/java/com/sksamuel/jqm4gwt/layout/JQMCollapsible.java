@@ -41,6 +41,8 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     private Element headingToggle;
     private Element collapsibleContent;
 
+    private boolean created;
+
     /**
      * Creates a new {@link JQMCollapsible} with the no header text and
      * preset to collapsed.
@@ -136,6 +138,7 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     }-*/;
 
     private void created() {
+        created = true;
         headingToggle = JQMCommon.findFirst(header.getElement(), ".ui-collapsible-heading-toggle.ui-btn");
         collapsibleContent = JQMCommon.findFirst(getElement(), ".ui-collapsible-content");
     }
@@ -252,15 +255,26 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
      * Returns true if this {@link JQMCollapsible} is currently collapsed.
      */
     public boolean isCollapsed() {
-        return getAttributeBoolean("data-collapsed");
+        boolean v = JQMCommon.hasStyle(this, "ui-collapsible-collapsed");
+        if (v) return v;
+        if (!created) {
+            v = getAttributeBoolean("data-collapsed");
+            if (v) return v;
+        }
+        return false;
     }
 
     /**
      * Programmatically set the collapsed state of this widget.
      */
     public void setCollapsed(boolean collapsed) {
-        if (collapsed) removeAttribute("data-collapsed");
-        else setAttribute("data-collapsed", "false");
+        if (collapsed) {
+            removeAttribute("data-collapsed");
+            if (created) collapse();
+        } else {
+            setAttribute("data-collapsed", "false");
+            if (created) expand();
+        }
     }
 
     /**
