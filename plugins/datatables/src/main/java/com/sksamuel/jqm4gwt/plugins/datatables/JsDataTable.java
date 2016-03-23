@@ -24,8 +24,8 @@ public class JsDataTable {
 
         protected JsSortItem() {}
 
-        public static native JsSortItem create(int col, String jsSortKind) /*-{
-            return [col, jsSortKind];
+        public static native JsSortItem create(int col, String jsSortDir) /*-{
+            return [col, jsSortDir];
         }-*/;
 
         public final int getCol() {
@@ -36,11 +36,11 @@ public class JsDataTable {
             set(0, value);
         }
 
-        public final String getJsSortKind() {
+        public final String getJsSortDir() {
             return getString(1);
         }
 
-        public final void setJsSortKind(String value) {
+        public final void setJsSortDir(String value) {
             set(1, value);
         }
     }

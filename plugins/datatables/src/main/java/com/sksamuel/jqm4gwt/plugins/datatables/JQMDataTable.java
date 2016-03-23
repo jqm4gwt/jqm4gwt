@@ -110,12 +110,12 @@ public class JQMDataTable extends JQMTableGrid {
     // then it should be translated to: "order": [[0, "asc"], [2, "desc"], [3, "asc"]]
     private String colSorts;
 
-    protected static enum SortKind {
+    public static enum ColSortDir {
         DESC("desc"), ASC("asc");
 
         private final String jsName;
 
-        SortKind(String jsName) {
+        ColSortDir(String jsName) {
             this.jsName = jsName;
         }
 
@@ -123,36 +123,43 @@ public class JQMDataTable extends JQMTableGrid {
             return jsName;
         }
 
-        public static SortKind fromJsName(String jsName) {
+        public static ColSortDir fromJsName(String jsName) {
             if (Empty.is(jsName)) return null;
-            for (SortKind v : values()) {
+            for (ColSortDir v : values()) {
                 if (jsName.equalsIgnoreCase(v.getJsName())) return v;
             }
             return null;
         }
     }
 
-    protected static class ColSort {
+    public static class ColSort {
         public final int num;
-        public final SortKind kind;
+        public final ColSortDir sortDir;
 
-        public ColSort(int num, SortKind kind) {
-            this.num = num;
-            this.kind = kind;
+        public ColSort(int colNum, ColSortDir sortDir) {
+            this.num = colNum;
+            this.sortDir = sortDir;
         }
 
+        /** Expects something like: 1=asc or 2=desc or 3 */
         public static ColSort create(String s) {
             if (Empty.is(s)) return null;
             int j = s.lastIndexOf('=');
-            SortKind k = SortKind.ASC;
+            ColSortDir k = ColSortDir.ASC;
             if (j >= 0) {
                 String ss = s.substring(j + 1).trim();
                 s = s.substring(0, j).trim();
                 if (s.isEmpty()) return null;
-                k = SortKind.fromJsName(ss);
-                if (k == null) k = SortKind.ASC;
+                k = ColSortDir.fromJsName(ss);
+                if (k == null) k = ColSortDir.ASC;
             }
             return new ColSort(Integer.parseInt(s), k);
+        }
+
+        @Override
+        public String toString() {
+            if (sortDir == null || ColSortDir.ASC.equals(sortDir)) return String.valueOf(num);
+            else return String.valueOf(num) + "=" + sortDir.getJsName();
         }
     }
 
@@ -457,7 +464,7 @@ public class JQMDataTable extends JQMTableGrid {
         if (Empty.is(sorts)) return null;
         JsSortItems rslt = null;
         for (ColSort sort : sorts) {
-            JsSortItem jsSort = JsSortItem.create(sort.num, sort.kind.getJsName());
+            JsSortItem jsSort = JsSortItem.create(sort.num, sort.sortDir.getJsName());
             if (rslt == null) rslt = JsSortItems.create(jsSort);
             else rslt.push(jsSort);
         }
@@ -842,8 +849,8 @@ public class JQMDataTable extends JQMTableGrid {
                 JsSortItem item = jsSort.get(i);
                 if (i > 0) sb.append(", ");
                 sb.append(item.getCol());
-                SortKind sk = SortKind.fromJsName(item.getJsSortKind());
-                if (SortKind.DESC.equals(sk)) sb.append('=').append(sk.getJsName());
+                ColSortDir sk = ColSortDir.fromJsName(item.getJsSortDir());
+                if (ColSortDir.DESC.equals(sk)) sb.append('=').append(sk.getJsName());
             }
             colSorts = sb.toString();
             return colSorts;
@@ -874,6 +881,27 @@ public class JQMDataTable extends JQMTableGrid {
                 sorts.add(colSort);
             }
         }
+        if (enhanced) JsDataTable.setOrder(getElement(), prepareJsOrder());
+    }
+
+    public void setColSorts(List<ColSort> sortList) {
+        String newColSorts = "";
+        if (!Empty.is(sortList)) {
+            for (ColSort i : sortList) {
+                if (!newColSorts.isEmpty()) newColSorts += ", ";
+                newColSorts += i.toString();
+            }
+        }
+        String old = getColSorts();
+        if (newColSorts.equals(old)) return;
+        this.colSorts = newColSorts;
+        if (sorts != null) sorts.clear();
+        if (Empty.is(this.colSorts)) {
+            if (enhanced) JsDataTable.setOrder(getElement(), null);
+            return;
+        }
+        if (sorts == null) sorts = new ArrayList<>();
+        sorts.addAll(sortList);
         if (enhanced) JsDataTable.setOrder(getElement(), prepareJsOrder());
     }
 
@@ -919,6 +947,12 @@ public class JQMDataTable extends JQMTableGrid {
             }
         }
         return null;
+    }
+
+    public int findColumnIndex(ColumnDefEx col) {
+        if (col == null) return -1;
+        if (!Empty.is(datacols)) return datacols.indexOf(col);
+        else return -1;
     }
 
     /** Works dynamically after dataTable is initialized */
