@@ -256,7 +256,7 @@ public class JQMDataTable extends JQMTableGrid {
     @Override
     protected void onLoad() {
         super.onLoad();
-        populateAll();
+        populateHeadAndBody();
         if (!manualEnhance) enhance();
         else JsDataTable.setDataRoleNone(getElement()); // we don't need jQuery Mobile enhancement for DataTable parts!
 
@@ -596,6 +596,12 @@ public class JQMDataTable extends JQMTableGrid {
             }
         });
         JsDataTable.enhance(elt, jsParams);
+    }
+
+    public void unEnhance() {
+        if (!enhanced) return;
+        JsDataTable.destroy(getElement());
+        enhanced = false;
     }
 
     private void afterEnhance() {
@@ -1040,14 +1046,21 @@ public class JQMDataTable extends JQMTableGrid {
         return super.isColCellTypeTh(colIdx);
     }
 
-    /** Refreshes head and body, needed for example after addColumn(). */
+    /** Refreshes head and body, needed for example after addColumn().
+     *  <br>Currently it's slow and completely re-enhances DataTable, because there is no support
+     *  for dynamic columns in DataTable, see <a href="https://github.com/DataTables/DataTables/issues/273">
+     *  Create columns dynamically</a>
+     **/
     public void refreshColumns() {
+        boolean wasEnhanced = enhanced;
+        if (enhanced) unEnhance();
         clearHead();
         tBody.clear();
-        populateAll();
+        populateHeadAndBody();
+        if (wasEnhanced) enhance();
     }
 
-    private void populateAll() {
+    private void populateHeadAndBody() {
         if (Empty.is(datacols)) return;
         List<ColumnDefEx> row0 = null;
         List<ColumnDefEx> row1 = null;

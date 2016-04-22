@@ -911,6 +911,13 @@ public class JsDataTable {
         $wnd.$(elt).DataTable().clear();
     }-*/;
 
+    /** See <a href="https://datatables.net/reference/api/destroy()">Remove all enhancements
+     *  and return the table to its original un-enhanced state</a>
+     **/
+    static native void destroy(Element elt) /*-{
+        $wnd.$(elt).DataTable().destroy();
+    }-*/;
+
     static native void addRow(Element elt, JavaScriptObject newRow) /*-{
         $wnd.$(elt).DataTable().row.add(newRow);
     }-*/;
