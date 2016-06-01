@@ -46,6 +46,7 @@ import com.sksamuel.jqm4gwt.IconPos;
 import com.sksamuel.jqm4gwt.JQMCommon;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.events.HasTapHandlers;
 import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
 import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
@@ -903,6 +904,13 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     @Override
     public void setTheme(String themeName) {
         JQMCommon.applyTheme(select, themeName);
+        if (created) {
+            Element uiSel = JQMCommon.findChild(getElement(), "ui-select");
+            if (uiSel != null) {
+                Element btn = JQMCommon.findChild(uiSel, "ui-btn");
+                if (btn != null) JQMButton.setTheme(btn, themeName);
+            }
+        }
     }
 
     @Override
