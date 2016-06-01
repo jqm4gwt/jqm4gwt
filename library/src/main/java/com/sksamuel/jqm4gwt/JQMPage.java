@@ -70,6 +70,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     private Element transparentPrevPage;
     private boolean transparentPrevPageClearCache;
     private boolean transparentDoPrevPageLifecycle;
+    private boolean isDlgCloseable;
 
     /**
      * Create a new {@link JQMPage}. Using this constructor, the page will not be rendered
@@ -416,6 +417,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     protected void doPageBeforeHide(Element nextPage) {
         onPageBeforeHide();
         JQMPageEvent.fire(this, PageState.BEFORE_HIDE, this, findPage(nextPage));
+        if (isDialog()) isDlgCloseable = false;
     }
 
     /**
@@ -437,6 +439,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         JQMPageEvent.fire(this, PageState.BEFORE_SHOW, findPage(prevPage), this);
 
         if (isDialog()) {
+            isDlgCloseable = true;
             if (transparent && prevPage != null) {
                 transparentPrevPage = prevPage;
                 prevPage.addClassName(UI_DIALOG_BACKGROUND);
@@ -1155,14 +1158,17 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     public void closeDialog() {
         if (isDialog()) {
-            safeCloseDialog();
+            safeCloseDialog(this);
         } else if (Mobile.DATA_ROLE_DIALOG.equals(JQMCommon.getDataRole(this))) {
             internCloseDialog(getElement());
         }
     }
 
     /** Based on mobile.dialog.close method. */
-    public static native void safeCloseDialog() /*-{
+    public static native void safeCloseDialog(JQMPage p) /*-{
+        if (!p.@com.sksamuel.jqm4gwt.JQMPage::isDlgCloseable) return;
+        p.@com.sksamuel.jqm4gwt.JQMPage::isDlgCloseable = false;
+
         var hist = $wnd.$.mobile.navigate.history;
         // If the hash listening is enabled and there is at least one preceding history
         // entry it's ok to go back. Initial pages with the dialog hash state are an example
