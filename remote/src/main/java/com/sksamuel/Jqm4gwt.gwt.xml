@@ -10,7 +10,7 @@
     <stylesheet src="css/jqm-fixes.css"/>
     <stylesheet src="css/jqm4gwt.css"/-->
     
-    <!-- script src="js/jquery-2.1.4.min.js"/>
+    <!-- script src="js/jquery-2.2.4.min.js"/>
     <script src="js/jquery.mobile-1.4.5.min.js"/>
     <script src="js/jquery.actual.min.js"/>
     <script src="js/jqm-fixes.js"/-->
@@ -20,7 +20,7 @@
     <stylesheet src="http://dev.jtsage.com/cdn/datebox/1.4.5/jqm-datebox-1.4.5.min.css"/>
     <stylesheet src="https://raw.github.com/watusi/jquery-mobile-iscrollview/master/lib/jquery.mobile.iscrollview.css"/>
     
-    <script src="http://code.jquery.com/jquery-2.1.4.min.js"/>
+    <script src="http://code.jquery.com/jquery-2.2.4.min.js"/>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"/>
     <script src="http://dev.jtsage.com/cdn/datebox/1.4.5/jqm-datebox-1.4.5.comp.calbox.min.js"/>
     <script src="http://dev.jtsage.com/cdn/datebox/i18n/jquery.mobile.datebox.i18n.en_US.utf8.js"/>
