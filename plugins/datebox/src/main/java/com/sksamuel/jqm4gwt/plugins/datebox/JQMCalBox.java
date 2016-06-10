@@ -453,8 +453,8 @@ public class JQMCalBox extends JQMText {
         if (dateFormat != null) return dateFormat;
         if (input == null) return null;
         // see __fmt() in jqm-datebox.comp.calbox.js
-        JavaScriptObject fmt = internGetLangOption(input.getElement(), "dateFormat");
-        return fmt.toString();
+        String fmt = internGetLangOptionStr(input.getElement(), "dateFormat");
+        return fmt;
     }
 
     public JsArrayString getMonthNames() {
@@ -1232,6 +1232,11 @@ public class JQMCalBox extends JQMText {
     //       and http://dev.jtsage.com/jQM-DateBox2/demos/api/events.html
     //
     private static native JavaScriptObject internGetLangOption(Element elt, String val) /*-{
+        // var o = $wnd.$(elt).datebox('option');
+        return $wnd.$(elt).datebox('getOption', val);
+    }-*/;
+
+    private static native String internGetLangOptionStr(Element elt, String val) /*-{
         // var o = $wnd.$(elt).datebox('option');
         return $wnd.$(elt).datebox('getOption', val);
     }-*/;
