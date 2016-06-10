@@ -53,9 +53,10 @@
         <g:FlowPanel addStyleNames="{style.separator}" />
         
         <b:JQMButton ui:field="hideShowSalaryBtn" text="Hide/Show Salary Column" inline="true" mini="true" />
+        <b:JQMButton ui:field="hideShowTableBtn" text="Hide/Show DataTable" inline="true" mini="true" />
         
         <!-- See https://www.datatables.net/examples/ajax/deep.html -->
-        <da:JQMDataTable ui:field="dataTable2" searching="true" 
+        <da:JQMDataTable ui:field="dataTable2" searching="true"
           pagingType="FULL_NUMBERS" lengthMenu="10, 20, -1=All"
           rowSelectMode="MULTI" 
           stateSave="true" stateDuration="60"

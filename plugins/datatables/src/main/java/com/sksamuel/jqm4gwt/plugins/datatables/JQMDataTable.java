@@ -26,6 +26,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.JQMCommon;
@@ -244,6 +245,8 @@ public class JQMDataTable extends JQMTableGrid {
     private RowIdHelper rowIdHelper;
 
     private boolean individualColSearches;
+
+    private boolean visible = true;
 
     public JQMDataTable() {
     }
@@ -607,6 +610,7 @@ public class JQMDataTable extends JQMTableGrid {
     private void afterEnhance() {
         initRowSelectMode();
         initIndividualColSearches();
+        processVisible();
     }
 
     /** Called when DataTable's asynchronous initialization is complete/finished. */
@@ -1468,6 +1472,30 @@ public class JQMDataTable extends JQMTableGrid {
 
     public void clearSearch() {
         JsDataTable.clearSearch(getElement());
+    }
+
+    private void processVisible() {
+        if (!enhanced) return;
+        Element tableElt = getElement();
+        Element elt = tableElt.getParentElement();
+        while (elt != null) {
+            if (JQMCommon.hasStyle(elt, WRAPPER)) {
+                UIObject.setVisible(elt, visible);
+                return;
+            }
+            elt = elt.getParentElement();
+        }
+    }
+
+    @Override
+    public void setVisible(boolean value) {
+        visible = value;
+        processVisible();
+    }
+
+    @Override
+    public boolean isVisible() {
+        return visible;
     }
 
 }
