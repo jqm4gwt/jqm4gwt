@@ -26,7 +26,7 @@
     <script src="http://dev.jtsage.com/cdn/datebox/i18n/jquery.mobile.datebox.i18n.en_US.utf8.js"/>
     <script src="https://raw.github.com/cubiq/iscroll/master/src/iscroll.js"/>
     <script src="https://raw.github.com/watusi/jquery-mobile-iscrollview/master/lib/jquery.mobile.iscrollview-closure-min.js"/>
-    <script src="https://raw.githubusercontent.com/dreamerslab/jquery.actual/v1.0.16/jquery.actual.min.js"/-->
+    <script src="https://raw.githubusercontent.com/dreamerslab/jquery.actual/v1.0.18/jquery.actual.min.js"/-->
 
     
     <source path='jqm4gwt' />

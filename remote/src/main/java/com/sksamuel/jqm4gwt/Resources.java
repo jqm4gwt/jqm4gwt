@@ -18,7 +18,7 @@ public interface Resources {
 
         private static final String JQUERY_JS = "http://code.jquery.com/jquery-2.2.4.min.js";
         private static final String JQM_JS = "http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js";
-        private static final String JQUERY_ACTUAL = "https://raw.githubusercontent.com/dreamerslab/jquery.actual/v1.0.16/jquery.actual.min.js";
+        private static final String JQUERY_ACTUAL = "https://raw.githubusercontent.com/dreamerslab/jquery.actual/v1.0.18/jquery.actual.min.js";
         private static final String JQM_FIXES_JS = "js/jqm-fixes.js";
 
         public static void injectAll(final InjectCallback done) {
