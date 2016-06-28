@@ -901,15 +901,20 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         return JQMCommon.getTheme(select);
     }
 
+    private Element findUiSelect() {
+        // in case of manual JQMContext.render() call, created could be still false,
+        // but ui-select is already created
+        Element uiSel = JQMCommon.findChild(getElement(), "ui-select");
+        return uiSel;
+    }
+
     @Override
     public void setTheme(String themeName) {
         JQMCommon.applyTheme(select, themeName);
-        if (created) {
-            Element uiSel = JQMCommon.findChild(getElement(), "ui-select");
-            if (uiSel != null) {
-                Element btn = JQMCommon.findChild(uiSel, "ui-btn");
-                if (btn != null) JQMButton.setTheme(btn, themeName);
-            }
+        Element uiSel = findUiSelect();
+        if (uiSel != null) {
+            Element btn = JQMCommon.findChild(uiSel, "ui-btn");
+            if (btn != null) JQMButton.setTheme(btn, themeName);
         }
     }
 
@@ -1252,6 +1257,10 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      */
     public void setSelectInline(boolean value) {
         JQMCommon.setInline(select, value);
+        Element uiSel = findUiSelect();
+        if (uiSel != null) {
+            JQMCommon.setInlineEx(uiSel, value, JQMCommon.STYLE_UI_BTN_INLINE);
+        }
     }
 
     public boolean isHidePlaceholderMenuItems() {
