@@ -902,8 +902,9 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     private Element findUiSelect() {
-        // in case of manual JQMContext.render() call, created could be still false,
-        // but ui-select is already created
+        // In case of manual JQMContext.render() call, created could be still false,
+        // but ui-select is already created, so set all needed properties before render() call.
+        if (!created) return null;
         Element uiSel = JQMCommon.findChild(getElement(), "ui-select");
         return uiSel;
     }
