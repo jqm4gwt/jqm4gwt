@@ -524,13 +524,11 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         if (contentCentered || pseudoFixedToolbars || contentHeightPercent > 0
                 || hideFixedToolbarsIfContentAreaPercentBelow > 0
                 || hideFixedToolbarsIfVirtualKeyboard > 0) {
-            processFixedToolbars();
-            recalcContentHeightPercent();
             // we have to wait till CSS rules execution is completed, otherwise heights could be incorrect
             Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                 @Override
                 public void execute() {
-                    centerContent();
+                    refreshPartsPositioning();
                 }
             });
             initWindowResize();
