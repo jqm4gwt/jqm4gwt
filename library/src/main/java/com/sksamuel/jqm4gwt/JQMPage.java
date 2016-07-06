@@ -415,8 +415,20 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * @param nextPage - DOM element that we are transitioning to.
      */
     protected void doPageBeforeHide(Element nextPage) {
+        final JQMPage nextPg = findPage(nextPage);
+
+        if (nextPg != null && nextPg.isDialog() && nextPg.isDlgTransparent()
+                && nextPg.getElement() != transparentPrevPage // fix for: page1 -> dlg1 -> dlg2 -> dlg2.closeDialog()
+           ) {
+            // openDialog() -> JQMContext.changePage() calls hide for current page first, and only
+            // after that will call show for dialog itself, so we have to process transparent
+            // property immediately right here, and suppress rest of the hide logic for current page.
+            nextPg.prepareTransparentPrevPage(getElement());
+            return;
+        }
+
         onPageBeforeHide();
-        JQMPageEvent.fire(this, PageState.BEFORE_HIDE, this, findPage(nextPage));
+        JQMPageEvent.fire(this, PageState.BEFORE_HIDE, this, nextPg);
         if (isDialog()) isDlgCloseable = false;
     }
 
@@ -440,30 +452,35 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
         if (isDialog()) {
             isDlgCloseable = true;
-            if (transparent && prevPage != null) {
-                transparentPrevPage = prevPage;
-                prevPage.addClassName(UI_DIALOG_BACKGROUND);
-                String s = prevPage.getAttribute(DATA_DOM_CACHE);
-                if ("true".equals(s)) {
-                    transparentPrevPageClearCache = false;
-                } else {
-                    transparentPrevPageClearCache = true;
-                    prevPage.setAttribute(DATA_DOM_CACHE, "true");
-                }
-                if (!transparentDoPrevPageLifecycle) {
-                    JQMPage prev = findPage(transparentPrevPage);
-                    if (prev != null) JQMPage.unbindLifecycleEvents(prev.getElement());
-                }
-                if (content != null) content.addStyleName(JQMCommon.STYLE_UI_BODY_INHERIT);
-                Element dlgContain = JQMCommon.findChild(getElement(), UI_DIALOG_CONTAIN);
-                if (dlgContain != null) dlgContain.addClassName(JQMCommon.STYLE_UI_BODY_INHERIT);
-            } else {
-                transparentPrevPage = null;
+            prepareTransparentPrevPage(prevPage);
+        }
+    }
+
+    private void prepareTransparentPrevPage(Element prevPage) {
+        if (transparent && prevPage != null) {
+            if (transparentPrevPage == prevPage) return; // already prepared
+            transparentPrevPage = prevPage;
+            prevPage.addClassName(UI_DIALOG_BACKGROUND);
+            String s = prevPage.getAttribute(DATA_DOM_CACHE);
+            if ("true".equals(s)) {
                 transparentPrevPageClearCache = false;
-                if (content != null) content.removeStyleName(JQMCommon.STYLE_UI_BODY_INHERIT);
-                Element dlgContain = JQMCommon.findChild(getElement(), UI_DIALOG_CONTAIN);
-                if (dlgContain != null) dlgContain.removeClassName(JQMCommon.STYLE_UI_BODY_INHERIT);
+            } else {
+                transparentPrevPageClearCache = true;
+                prevPage.setAttribute(DATA_DOM_CACHE, "true");
             }
+            if (!transparentDoPrevPageLifecycle) {
+                JQMPage prev = findPage(transparentPrevPage);
+                if (prev != null) JQMPage.unbindLifecycleEvents(prev.getElement());
+            }
+            if (content != null) content.addStyleName(JQMCommon.STYLE_UI_BODY_INHERIT);
+            Element dlgContain = JQMCommon.findChild(getElement(), UI_DIALOG_CONTAIN);
+            if (dlgContain != null) dlgContain.addClassName(JQMCommon.STYLE_UI_BODY_INHERIT);
+        } else {
+            transparentPrevPage = null;
+            transparentPrevPageClearCache = false;
+            if (content != null) content.removeStyleName(JQMCommon.STYLE_UI_BODY_INHERIT);
+            Element dlgContain = JQMCommon.findChild(getElement(), UI_DIALOG_CONTAIN);
+            if (dlgContain != null) dlgContain.removeClassName(JQMCommon.STYLE_UI_BODY_INHERIT);
         }
     }
 
@@ -1145,6 +1162,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     public void openDialog() {
         TransitionIntf<?> t = this.getTransition();
         if (t == null) t = JQMContext.getDefaultDialogTransition();
+
+        //Element actPg = Mobile.getActivePage();
 
         if (JQMCommon.isDataDialog(getElement())) {
             // we don't need to forcefully pass "dialog=true" in that case

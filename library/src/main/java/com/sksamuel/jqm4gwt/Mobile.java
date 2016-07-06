@@ -29,6 +29,13 @@ public class Mobile {
         $wnd.$.mobile.back();
     }-*/;
 
+    public static native Element getActivePage() /*-{
+        var pageContainer = $wnd.$.mobile.pageContainer;
+        var pg = pageContainer.pagecontainer("getActivePage");
+        if (pg) return pg[0];
+        else return null;
+    }-*/;
+
     /**
      * Invokes the $.mobile.changePage method.
      *
@@ -36,15 +43,16 @@ public class Mobile {
      */
     private static native void changePage(String url, String _transition, boolean _reverse,
                                           boolean _changeHash, String _role) /*-{
+        var pageContainer = $wnd.$.mobile.pageContainer;
         if (_role !== null) {
-            $wnd.$("body").pagecontainer("change", url,
+            pageContainer.pagecontainer("change", url,
                     { transition: _transition,
                       reverse: _reverse,
                       changeHash: _changeHash,
                       role: _role
                     });
         } else {
-            $wnd.$("body").pagecontainer("change", url,
+            pageContainer.pagecontainer("change", url,
                     { transition: _transition,
                       reverse: _reverse,
                       changeHash: _changeHash
