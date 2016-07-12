@@ -48,7 +48,7 @@ public class JQMCommon {
     private static final String STYLE_UI_HIDE_LABEL = "ui-hide-label";
     private static final String STYLE_UI_SHADOW = "ui-shadow";
     private static final String STYLE_UI_CORNER_ALL = "ui-corner-all";
-    private static final String STYLE_UI_MINI = "ui-mini";
+    public  static final String STYLE_UI_MINI = "ui-mini";
 
     public static final String STYLE_UI_ICON = "ui-icon-";
     private static final String STYLE_UI_NODISC_ICON = "ui-nodisc-icon";

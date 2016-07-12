@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.HasIconPos;
+import com.sksamuel.jqm4gwt.HasInline;
 import com.sksamuel.jqm4gwt.HasInset;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasText;
@@ -32,7 +33,8 @@ import com.sksamuel.jqm4gwt.layout.JQMCollapsibleEvent.CollapsibleState;
  * <br> See <a href="http://demos.jquerymobile.com/1.4.5/collapsible/">Collapsible</a>
  */
 public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsible>,
-        HasIconPos<JQMCollapsible>, HasMini<JQMCollapsible>, HasInset<JQMCollapsible> {
+        HasIconPos<JQMCollapsible>, HasMini<JQMCollapsible>, HasInset<JQMCollapsible>,
+        HasInline<JQMCollapsible> {
 
     private final Heading header;
 
@@ -42,6 +44,7 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     private Element collapsibleContent;
 
     private boolean created;
+    private boolean inline;
 
     /**
      * Creates a new {@link JQMCollapsible} with the no header text and
@@ -141,6 +144,8 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
         created = true;
         headingToggle = JQMCommon.findFirst(header.getElement(), ".ui-collapsible-heading-toggle.ui-btn");
         collapsibleContent = JQMCommon.findFirst(getElement(), ".ui-collapsible-content");
+
+        if (inline) setInline(inline);
     }
 
     @Override
@@ -165,6 +170,32 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
         if (headingToggle != null) {
             JQMButton.setTheme(headingToggle, themeName);
         }
+    }
+
+    /** Sets the header button as inline block. */
+    @Override
+    public void setInline(boolean value) {
+        inline = value;
+        if (headingToggle != null) {
+            JQMCommon.setInlineEx(headingToggle, value, JQMCommon.STYLE_UI_BTN_INLINE);
+        }
+    }
+
+    @Override
+    public boolean isInline() {
+        if (headingToggle == null) {
+            return inline;
+        } else {
+            boolean v = JQMCommon.isInlineEx(headingToggle, JQMCommon.STYLE_UI_BTN_INLINE);
+            inline = v;
+            return inline;
+        }
+    }
+
+    @Override
+    public JQMCollapsible withInline(boolean inline) {
+        setInline(inline);
+        return this;
     }
 
     public String getContentTheme() {
@@ -437,4 +468,5 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     private static native void makeHeaderInactive(Element header) /*-{
         $wnd.$(header).find("a.ui-btn").first().removeClass($wnd.$.mobile.activeBtnClass);
     }-*/;
+
 }
