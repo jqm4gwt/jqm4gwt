@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.DataIcon;
 import com.sksamuel.jqm4gwt.HasCorners;
@@ -66,6 +67,10 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         JQMFormWidget, HasIcon<JQMSelect>, HasPreventFocusZoom, HasCorners<JQMSelect>,
         HasMini<JQMSelect>, Focusable {
 
+    /** JQMSelect non-native popup window has close button on the left side,
+     *  but it could be changed globally to the right side.
+     **/
+    public static boolean closeBtnPosRight = false;
 
     public static class Option {
         private String value;
@@ -1362,6 +1367,15 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                         lb = $wnd.$( "#" + id + "-listbox" );
                     lb.addClass( addnl );
                 }
+                if (@com.sksamuel.jqm4gwt.form.elements.JQMSelect::closeBtnPosRight) {
+                    var selectmenu = $wnd.$( event.target ),
+                        id = selectmenu.attr( "id" ),
+                        lb = $wnd.$( "#" + id + "-listbox" );
+
+                    lb.children(".ui-header").first()
+                        .children(".ui-btn.ui-btn-left.ui-icon-delete").first()
+                        .removeClass("ui-btn-left").addClass("ui-btn-right");
+                }
             })
             // The custom select list may show up as either a popup or a dialog, depending on how much
             // vertical room there is on the screen. If it shows up as a dialog, then we have to
@@ -1373,6 +1387,14 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                                 (pageId);
                 if (!isDlg) return;
                 var dialog = data.toPage;
+
+                if (@com.sksamuel.jqm4gwt.form.elements.JQMSelect::closeBtnPosRight) {
+                    dialog.children(".ui-dialog-contain").first()
+                        .children(".ui-header").first()
+                        .children(".ui-btn.ui-btn-left.ui-icon-delete").first()
+                        .removeClass("ui-btn-left").addClass("ui-btn-right");
+                }
+
                 var comboId = pageId.replace("-dialog", "");
                 var combo = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::findCombo(Lcom/google/gwt/dom/client/Element;)
                                 ($wnd.$("#" + comboId)[0]);
@@ -1506,5 +1528,19 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         this.menuStyleNames = menuStyleNames;
     }
 
+    /** Should be used in case we want to move select to another parent panel. */
+    public void moveTo(Panel panel) {
+        if (panel == null) return;
+        Widget p = getParent();
+        if (p == panel) return;
+        if (created) { // on iOS moving JQMSelect from one panel to another is making it "stuck"
+            String v = getValue();
+            panel.add(this);
+            refresh();
+            setValue(v);
+        } else {
+            panel.add(this);
+        }
+    }
 
 }
