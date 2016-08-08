@@ -92,7 +92,7 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
      * @param src
      */
     public void setSrc(String src) {
-        img.setAttribute("src", src);
+        JQMCommon.setAttribute(img, "src", src);
         refreshPositioning();
     }
 
@@ -120,7 +120,7 @@ public class ImageLink extends Widget implements HasClickHandlers, HasTapHandler
      * @param href
      */
     public void setHref(String href) {
-        a.setAttribute("href", href);
+        JQMCommon.setAttribute(a, "href", href);
         if (external == null /*only if not explicitly set*/ && !Empty.is(href)
                 && (href.startsWith("http:") || href.startsWith("https:"))) {
             setExternal(true);
