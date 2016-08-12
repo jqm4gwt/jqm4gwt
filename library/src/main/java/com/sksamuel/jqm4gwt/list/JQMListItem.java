@@ -330,7 +330,7 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
      * Remove the url from this list item changing the item into a read only
      * item.
      */
-    public JQMListItem removeUrl() {
+    public JQMListItem removeHref() {
         if (anchor == null) return this;
 
         if (anchorPanel != null) {
@@ -353,6 +353,14 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
         return this;
     }
 
+    /**
+     * @deprecated use {@link #removeHref()} directly
+     */
+    @Deprecated
+    public JQMListItem removeUrl() {
+    	return removeHref();
+    }
+
     private void cleanUpLI() {
         Element elt = getElement();
         for (int i = elt.getChildCount() - 1; i >= 0; i--) {
@@ -365,13 +373,17 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
      * Sets the content of the aside. The aside is supplemental content that
      * is positioned to the right of the main content.
      */
-    public JQMListItem setAside(String text) {
+    public void setAside(String text) {
         if (text == null)
             throw new RuntimeException("Cannot set aside to null. Call removeAside() if you wanted to remove the aside text");
 
         if (asideElem == null)
             createAndAttachAsideElem();
         asideElem.setInnerText(text);
+    }
+
+    public JQMListItem withAside(String text) {
+        setAside(text);
         return this;
     }
 
@@ -379,14 +391,17 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
      * Set the count bubble value. If null this will throw a runtime
      * exception. To remove a count bubble call removeCount()
      */
-    public JQMListItem setCount(Integer count) {
+    public void setCount(Integer count) {
         if (count == null)
             throw new RuntimeException("Cannot set count to null. Call removeCount() if you wanted to remove the bubble");
 
         if (countElem == null)
             createAndAttachCountElement();
         countElem.setInnerText(count.toString());
+    }
 
+    public JQMListItem withCount(Integer count) {
+        setCount(count);
         return this;
     }
 
@@ -561,10 +576,18 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
     }
 
     /**
+     * @deprecated use {@link #setHref(String)} directly
+     */
+    @Deprecated
+    public void setUrl(String url) {
+        setHref(url);
+    }
+
+    /**
      * Sets the url to link to for this item. If this item was a read only
      * item it automatically becomes linkable.
      */
-    public JQMListItem setUrl(String url) {
+    public void setHref(String url) {
         if (url == null)
             throw new RuntimeException("Cannot set URL to null. Call removeUrl() if you wanted to remove the URL");
         if (anchor == null) {
@@ -587,12 +610,6 @@ public class JQMListItem extends CustomFlowPanel implements HasText<JQMListItem>
             addItemActivationHandlers();
         }
         anchor.setAttribute("href", url);
-        return this;
-    }
-
-    /** Can be used in UiBinder */
-    public void setHref(String url) {
-        setUrl(url);
     }
 
     public String getHref() {
