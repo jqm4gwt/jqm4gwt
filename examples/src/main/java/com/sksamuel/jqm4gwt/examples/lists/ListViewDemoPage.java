@@ -189,7 +189,7 @@ public class ListViewDemoPage extends JQMPage {
             @Override
             public void onTap(TapEvent event) {
                 if (thisRow.getHref() != null) {
-                    thisRow.removeUrl();
+                    thisRow.removeHref();
                     //controlList.recreate();
                     controlList.refresh();
                 }
@@ -202,7 +202,7 @@ public class ListViewDemoPage extends JQMPage {
             public void onTap(TapEvent event) {
                 if (thisRow.getHref() == null) {
                     // semi-working code, it's not reconstructed item correctly
-                    thisRow.setUrl("#");
+                    thisRow.setHref("#");
                     //controlList.recreate();
                     controlList.refresh();
                 }
@@ -277,7 +277,7 @@ public class ListViewDemoPage extends JQMPage {
         }
     }
 
-    private List<String> getCountries() {
+    private static List<String> getCountries() {
         final List<String> items = new ArrayList<String>();
         items.add("United Kingdom");
         items.add("Spain");
