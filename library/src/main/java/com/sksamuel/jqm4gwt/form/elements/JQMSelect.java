@@ -11,12 +11,14 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -273,8 +275,31 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     @Override
-    public HandlerRegistration addClickHandler(ClickHandler handler) {
-        return select.addClickHandler(handler);
+    public HandlerRegistration addClickHandler(final ClickHandler handler) {
+        if (handler == null) return null;
+        return isNative() ? select.addClickHandler(handler)
+                : flow.addDomHandler(new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        EventTarget target = event.getNativeEvent().getEventTarget();
+                        if (target != null) {
+                            Element elt = target.cast();
+                            Element uiSel = findUiSelect();
+                            if (uiSel != null) {
+                                Element btn = JQMCommon.findChild(uiSel, "ui-btn");
+                                if (btn != null) {
+                                    while (elt != null) { // filter out non-button related elements (label for instance)
+                                        if (elt == btn) {
+                                            handler.onClick(event);
+                                            return;
+                                        }
+                                        elt = elt.getParentElement();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }, ClickEvent.getType());
     }
 
     @Override

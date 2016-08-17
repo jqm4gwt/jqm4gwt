@@ -1430,6 +1430,18 @@ public class TestView1 {
                 return event.filterStartWithIgnoreCase(",");
             }});
 
+        /*selectFilterable.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.alert("aaa");
+            }});
+
+        numsList.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Window.alert("bbb");
+            }});*/
+
         page.addJQMEventHandler(JQMComponentEvents.ORIENTATIONCHANGE, new JQMOrientationChangeHandler() {
             @Override
             public void onEvent(JQMEvent<?> event) {
