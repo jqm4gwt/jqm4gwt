@@ -409,7 +409,10 @@ public class JQMForm extends FlowPanel {
     }
 
     protected void scrollToFirstError() {
-        int y = getFirstErrorOffset() - ERROR_SCROLL_OFFSET;
+        int y = getFirstErrorOffset();
+        if (y == 0) return;
+        y -= ERROR_SCROLL_OFFSET;
+        if (y < 0) y = 0;
         Mobile.silentScroll(y);
     }
 
