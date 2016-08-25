@@ -205,7 +205,7 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
 
     @Override
     public boolean isMini() {
-        return "true".equals(getAttribute("data-mini"));
+        return JQMCommon.isMini(input);
     }
 
     @Override
@@ -228,7 +228,7 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
      */
     @Override
     public void setMini(boolean mini) {
-        setAttribute("data-mini", String.valueOf(mini));
+        JQMCommon.setMini(input, mini);
     }
 
     /**
@@ -288,21 +288,18 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
     }
 
     @Override
-    public void setReadOnly(boolean readOnly)
-    {
+    public void setReadOnly(boolean readOnly) {
         input.setReadOnly(readOnly);
     }
 
     @Override
-    public JQMText withReadOnly(boolean readOnly)
-    {
+    public JQMText withReadOnly(boolean readOnly) {
         setReadOnly(readOnly);
         return this;
     }
 
     @Override
-    public String getPlaceHolder()
-    {
+    public String getPlaceHolder() {
         return input.getElement().getAttribute(HasPlaceHolder.ATTRIBUTE_PLACEHOLDER);
     }
 

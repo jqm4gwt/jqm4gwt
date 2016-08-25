@@ -2,23 +2,40 @@ package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.HasBlurHandlers;
+import com.google.gwt.event.dom.client.HasChangeHandlers;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
+import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasGridDimensions;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasPlaceHolder;
 import com.sksamuel.jqm4gwt.HasReadOnly;
 import com.sksamuel.jqm4gwt.HasText;
+import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.events.HasTapHandlers;
+import com.sksamuel.jqm4gwt.events.JQMComponentEvents;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration;
+import com.sksamuel.jqm4gwt.events.JQMHandlerRegistration.WidgetHandlerCounter;
+import com.sksamuel.jqm4gwt.events.TapEvent;
+import com.sksamuel.jqm4gwt.events.TapHandler;
 import com.sksamuel.jqm4gwt.form.JQMFieldContainer;
 import com.sksamuel.jqm4gwt.html.FormLabel;
 
@@ -27,8 +44,12 @@ import com.sksamuel.jqm4gwt.html.FormLabel;
  * <br>
  * An implementation of a standard HTML Textarea
  */
-public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<JQMTextArea>, HasText<JQMTextArea>, HasValue<String>, HasReadOnly<JQMTextArea>,
-		HasPlaceHolder<JQMTextArea>,HasMini<JQMTextArea>, HasKeyDownHandlers, HasKeyUpHandlers, HasFocusHandlers, HasBlurHandlers, Focusable {
+public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<JQMTextArea>,
+        HasText<JQMTextArea>, HasValue<String>,
+        HasReadOnly<JQMTextArea>, HasMini<JQMTextArea>, HasCorners<JQMTextArea>,
+        HasPlaceHolder<JQMTextArea>, JQMFormWidget, HasBlurHandlers, Focusable,
+        HasFocusHandlers, HasClickHandlers, HasTapHandlers, HasChangeHandlers,
+        HasKeyDownHandlers, HasKeyUpHandlers, HasKeyPressHandlers {
 
     private final FormLabel label = new FormLabel();
     private final TextArea input = new TextArea();
@@ -106,7 +127,7 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
 
     @Override
     public boolean isMini() {
-        return "true".equals(getAttribute("data-mini"));
+        return JQMCommon.isMini(input);
     }
 
     @Override
@@ -129,7 +150,6 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
     public void setFocus(boolean focused) {
         input.setFocus(focused);
     }
-
 
     @Override
     public void setTabIndex(int index) {
@@ -157,7 +177,7 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
      */
     @Override
     public void setMini(boolean mini) {
-        setAttribute("data-mini", String.valueOf(mini));
+        JQMCommon.setMini(input, mini);
     }
 
     /**
@@ -178,7 +198,6 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
     public void setValue(String value) {
         setValue(value, false);
     }
-
 
     @Override
     public HandlerRegistration addBlurHandler(BlurHandler handler) {
@@ -201,43 +220,87 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
     }
 
     @Override
+    public HandlerRegistration addKeyPressHandler(KeyPressHandler handler) {
+        return input.addKeyPressHandler(handler);
+    }
+
+    @Override
     public JQMTextArea withText(String text) {
         setText(text);
         return this;
     }
 
-	@Override
-	public boolean isReadOnly() {
-		return input.isReadOnly();
-	}
+    @Override
+    public boolean isReadOnly() {
+        return input.isReadOnly();
+    }
 
-	@Override
-	public void setReadOnly(boolean readOnly)
-	{
-		input.setReadOnly(readOnly);
-	}
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        input.setReadOnly(readOnly);
+    }
 
-	@Override
-	public JQMTextArea withReadOnly(boolean readOnly)
-	{
-		setReadOnly(readOnly);
-		return this;
-	}
+    @Override
+    public JQMTextArea withReadOnly(boolean readOnly) {
+        setReadOnly(readOnly);
+        return this;
+    }
 
-	@Override
-	public String getPlaceHolder()
-	{
-		return input.getElement().getAttribute(HasPlaceHolder.ATTRIBUTE_PLACEHOLDER);
-	}
+    @Override
+    public String getPlaceHolder() {
+        return input.getElement().getAttribute(HasPlaceHolder.ATTRIBUTE_PLACEHOLDER);
+    }
 
-	@Override
-	public void setPlaceHolder(String placeHolderText) {
-		input.getElement().setAttribute(HasPlaceHolder.ATTRIBUTE_PLACEHOLDER,placeHolderText);
-	}
+    @Override
+    public void setPlaceHolder(String placeHolderText) {
+        input.getElement().setAttribute(HasPlaceHolder.ATTRIBUTE_PLACEHOLDER,placeHolderText);
+    }
 
-	@Override
-	public JQMTextArea withPlaceHolder(String placeHolderText) {
-		setPlaceHolder(placeHolderText);
-		return this;
-	}
+    @Override
+    public JQMTextArea withPlaceHolder(String placeHolderText) {
+        setPlaceHolder(placeHolderText);
+        return this;
+    }
+
+    @Override
+    public HandlerRegistration addChangeHandler(ChangeHandler handler) {
+        return input.addChangeHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addTapHandler(TapHandler handler) {
+        // this is not a native browser event so we will have to manage it via JS
+        return JQMHandlerRegistration.registerJQueryHandler(new WidgetHandlerCounter() {
+            @Override
+            public int getHandlerCountForWidget(Type<?> type) {
+                return getHandlerCount(type);
+            }
+        }, this, handler, JQMComponentEvents.TAP_EVENT, TapEvent.getType());
+    }
+
+    @Override
+    public HandlerRegistration addClickHandler(ClickHandler handler) {
+        return addDomHandler(handler, ClickEvent.getType());
+    }
+
+    @Override
+    public Label addErrorLabel() {
+        return null;
+    }
+
+    @Override
+    public boolean isCorners() {
+        return JQMCommon.isCorners(input);
+    }
+
+    @Override
+    public void setCorners(boolean corners) {
+        JQMCommon.setCorners(input, corners);
+    }
+
+    @Override
+    public JQMTextArea withCorners(boolean corners) {
+        setCorners(corners);
+        return this;
+    }
 }
