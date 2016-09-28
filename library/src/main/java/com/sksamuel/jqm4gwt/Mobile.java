@@ -23,6 +23,14 @@ public class Mobile {
 
     public static String pleaseWaitMsg = "Please Wait...";
 
+    /** Standard loading indicator could be replaced by custom one,
+     *  see <a href="http://demos.jquerymobile.com/1.4.5/loader/">Loader</a>
+     **/
+    public static String busyCustomHtml;
+
+    public static String busyTheme;
+    public static boolean busyTextOnly;
+
     private Mobile() {} // static class, should not be instantiated
 
     public static native void back() /*-{
@@ -80,7 +88,16 @@ public class Mobile {
     }-*/;
 
     public static native void showLoadingDialog(String msg) /*-{
-        $wnd.$.mobile.loading('show', {text: msg, textVisible: true});
+        $wnd.$.mobile.loading('show', { text: msg, textVisible: true });
+    }-*/;
+
+    public static native void showLoadingDialog(String msg, String customHtml, String theme, boolean textOnly) /*-{
+        var opt = { text: msg, textVisible: true };
+        if (customHtml) opt.html = customHtml;
+        if (theme) opt.theme = theme;
+        if (textOnly) opt.textonly = textOnly;
+
+        $wnd.$.mobile.loading('show', opt);
     }-*/;
 
     /**
@@ -103,7 +120,7 @@ public class Mobile {
     public static void busy(boolean value) {
         if (value) {
             disableUI();
-            showLoadingDialog(pleaseWaitMsg);
+            showLoadingDialog(pleaseWaitMsg, busyCustomHtml, busyTheme, busyTextOnly);
         } else {
             hideLoadingDialog();
             enableUI();
