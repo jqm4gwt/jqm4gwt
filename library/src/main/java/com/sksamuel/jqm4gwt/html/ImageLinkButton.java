@@ -5,6 +5,8 @@ import com.sksamuel.jqm4gwt.HasInline;
 import com.sksamuel.jqm4gwt.HasMini;
 import com.sksamuel.jqm4gwt.HasTheme;
 import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.JQMContext;
+import com.sksamuel.jqm4gwt.JQMContext.WidgetDefaults;
 import com.sksamuel.jqm4gwt.button.JQMButton;
 
 /**
@@ -17,6 +19,13 @@ public class ImageLinkButton extends ImageLink implements HasInline<ImageLink>,
         HasCorners<ImageLinkButton>, HasTheme<ImageLinkButton>, HasMini<ImageLinkButton> {
 
     private static final String COMPACT_BTN = "jqm4gwt-compact-btn";
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        WidgetDefaults dflt = JQMContext.getWidgetDefaults();
+        if (dflt != null) dflt.loaded(this);
+    }
 
     @Override
     protected void initA() {
