@@ -20,3 +20,13 @@ div.ui-slider-switch.ui-mini {
   min-height: 1em;
   padding-right: 0;  
 }
+
+/* https://github.com/jquery/jquery-mobile/issues/8527 */
+/* When issue is fixed, move jqm4gwt-icon rules to jqm4gwt.css file */
+.ui-nodisc-icon.ui-btn:after,
+.ui-nodisc-icon .ui-btn:after,
+.ui-nodisc-icon.jqm4gwt-icon:after,
+.ui-nodisc-icon .jqm4gwt-icon:after {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
