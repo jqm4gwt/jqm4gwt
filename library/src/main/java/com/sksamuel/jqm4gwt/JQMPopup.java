@@ -104,12 +104,20 @@ public class JQMPopup extends JQMContainer {
         $wnd.$(elt).popup("open");
     }-*/;
 
-    public static native void close(String selector) /*-{
-        $wnd.$(selector).popup("close");
+    private static native void _open(Element popupElt, String positionToSelector) /*-{
+        $wnd.$(popupElt).popup("open", { positionTo: positionToSelector });
     }-*/;
 
-    public static native void open(String selector) /*-{
-        $wnd.$(selector).popup("open");
+    public static native void close(String popupSelector) /*-{
+        $wnd.$(popupSelector).popup("close");
+    }-*/;
+
+    public static native void open(String popupSelector) /*-{
+        $wnd.$(popupSelector).popup("open");
+    }-*/;
+
+    public static native void open(String popupSelector, String positionToSelector) /*-{
+        $wnd.$(popupSelector).popup("open", { positionTo: positionToSelector });
     }-*/;
 
     public JQMPopup close() {
@@ -119,6 +127,11 @@ public class JQMPopup extends JQMContainer {
 
     public JQMPopup open() {
         _open(getElement());
+        return this;
+    }
+
+    public JQMPopup openPosTo(String positionToSelector) {
+        _open(getElement(), positionToSelector);
         return this;
     }
 
