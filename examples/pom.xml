@@ -216,8 +216,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 
@@ -256,17 +256,25 @@
                         </configuration>
                     </execution>
                 </executions>
+                <!-- Needed when gwt.plugin.Version is different from gwt.version
+                     See https://gwt-maven-plugin.github.io/gwt-maven-plugin/user-guide/using-different-gwt-sdk-version.html 
+                -->
                 <dependencies>
-                    <dependency>
-                        <groupId>com.google.gwt</groupId>
-                        <artifactId>gwt-user</artifactId>
-                        <version>${gwt.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.google.gwt</groupId>
-                        <artifactId>gwt-dev</artifactId>
-                        <version>${gwt.version}</version>
-                    </dependency>
+                  <dependency>
+                    <groupId>com.google.gwt</groupId>
+                    <artifactId>gwt-user</artifactId>
+                    <version>${gwt.version}</version>
+                  </dependency>
+                  <dependency>
+                    <groupId>com.google.gwt</groupId>
+                    <artifactId>gwt-dev</artifactId>
+                    <version>${gwt.version}</version>
+                  </dependency>
+                  <dependency>
+                    <groupId>com.google.gwt</groupId>
+                    <artifactId>gwt-codeserver</artifactId>
+                    <version>${gwt.version}</version>
+                  </dependency>
                 </dependencies>
             </plugin>
         </plugins>
