@@ -386,9 +386,9 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         }
     }
 
-    private void addOption(String value, String text, String filterText,
-                           boolean placeholder, boolean selected,
-                           boolean disabled, DataIcon icon, String customIcon) {
+    public void addOption(String value, String text, String filterText,
+                          boolean placeholder, boolean selected,
+                          boolean disabled, DataIcon icon, String customIcon) {
 
         if (addingOptions) {
             OptionElement opt = Document.get().createOptionElement();
@@ -485,8 +485,8 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         }
     }
 
-    private void addOption(String value, String text, String filterText,
-                           boolean placeholder, boolean selected, boolean disabled) {
+    public void addOption(String value, String text, String filterText,
+                          boolean placeholder, boolean selected, boolean disabled) {
         addOption(value, text, filterText, placeholder, selected, disabled,
                   null/*icon*/, null/*customIcon*/);
     }
