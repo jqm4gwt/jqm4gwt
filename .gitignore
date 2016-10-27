@@ -13,3 +13,9 @@
 target
 target/
 pom.xml.versionsBackup
+
+**/.classpath
+**/.project
+**/.settings
+/library/.gwt
+/examples/.gwt
