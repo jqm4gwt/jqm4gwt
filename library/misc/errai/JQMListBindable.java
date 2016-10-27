@@ -164,6 +164,13 @@ public class JQMListBindable<M> extends JQMList
             }
         }
 
+        /** @param list */
+        private void updateEmptyMsg(JQMListBindable<M> list) {
+            if (!showEmptyMsg || emptyMsg == null) return;
+            String s = getEmptyText();
+            emptyMsg.setText(s);
+        }
+
         private void removeEmptyMsg(JQMListBindable<M> list) {
             if (!showEmptyMsg || emptyMsg == null) return;
             list.removeItem(emptyMsg);
@@ -252,6 +259,11 @@ public class JQMListBindable<M> extends JQMList
         public void onBeforeRefresh(JQMListBindable<M> list) {
             addEmptyMsg(list);
             list.recreate();
+        }
+
+        @Override
+        public void onAfterRefresh(JQMListBindable<M> list) {
+            updateEmptyMsg(list);
         }
 
         public boolean isUnstableUiIndex() {
