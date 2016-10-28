@@ -1,0 +1,11 @@
+>>Obsolete: 1. https://www.google.com/settings/security/lesssecureapps
+               and choose "Turn On" otherwise update fails with ClientLoginServerConnection$ClientLoginException
+
+Make sure that "App Engine Admin API" is enabled:
+https://console.developers.google.com/apis/dashboard?project=jqm4gwt&duration=PT1H               
+               
+2. From examples folder:
+   mvn appengine:update
+   
+   obsolete: 
+   mvn gae:update

@@ -24,21 +24,19 @@
         <gwt.optimizationLevel>9</gwt.optimizationLevel>
 
         <!-- Specify AppEngine version for your project. It should match SDK version
-            pointed to by ${gae.home} property (Typically, one used by your Eclipse plug-in) -->
-        <!--gae.home>/home/sam/development/appengine-java-sdk-1.8.8</gae.home-->
-        <gae.home>C:\appengine-java-sdk-1.9.19</gae.home> 
-        <gae.version>1.9.19</gae.version>
+             pointed to by ${gae.home} property (Typically, one used by your Eclipse plug-in) -->
+        <gae.home>C:\appengine-java-sdk-1.9.44</gae.home> 
+        <gae.version>1.9.44</gae.version>
         <gae-runtime.version>1.8.8</gae-runtime.version>
+
         <gae.application.name>jqm4gwt</gae.application.name>
-        <!-- Upload to http://test.latest.<gae.application.name>.appspot.com by default -->
         <gae.application.version>test</gae.application.version>
-        <!-- port defaults to 8080 -->
         <gae.port>8080</gae.port>
-        <!-- The server entry name in user\.m2\settings.xml containing credentials to upload to AppEngine -->
         <gae.server.id>jqm4gwt-appspot</gae.server.id>
+
         <webapp.directory>${project.build.directory}/${project.artifactId}-${project.version}</webapp.directory>
     </properties>
-
+    
     <dependencies>
         <dependency>
             <artifactId>jqm4gwt-standalone</artifactId>
@@ -125,6 +123,9 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <webappDirectory>${webapp.directory}</webappDirectory>
+                    <!-- appengine supports Java7 only at the moment, but we don't have server side in examples,
+                         so it's actually just pure JS app, and we may trash all java stuff from war -->
+                    <packagingExcludes>WEB-INF/classes/**/*.class, WEB-INF/lib/*.jar</packagingExcludes>
                     <webResources>
                         <resource>
                             <directory>src/main/webapp</directory>
@@ -139,9 +140,43 @@
                     </webResources>
                 </configuration>
             </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo message="cleaning: ${webapp.directory}" />
+                                <delete>
+                                    <fileset dir="${webapp.directory}" includes="**/*.*" />
+                                </delete>
+                                <echo message="unpacking: ${webapp.directory}.war" />
+                                <unwar src="${webapp.directory}.war" dest="${webapp.directory}" />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>    
+            </plugin>    
 
-            <!-- The actual maven-gae-plugin. Type "mvn gae:run" to run project, "mvn
-                gae:deploy" to upload to GAE. -->
+            <plugin> 
+              <!-- Takes params from examples\src\main\webapp\WEB-INF\appengine-web.xml 
+                   Use it as: mvn appengine:update 
+              -->
+              <groupId>com.google.appengine</groupId>
+              <artifactId>appengine-maven-plugin</artifactId>
+              <version>${gae.version}</version>
+            </plugin>
+            
+            <!-- OBSOLETE, though still works if "\Users\you\.appcfg_oauth2_tokens_java" is valid (cannot fix it by itself)
+                 The actual maven-gae-plugin. Type "mvn gae:run" to run project, "mvn gae:update" to upload to GAE. -->
             <plugin>
                 <groupId>net.kindleit</groupId>
                 <artifactId>maven-gae-plugin</artifactId>
