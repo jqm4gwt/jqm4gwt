@@ -58,11 +58,11 @@ Read the [quick start guide](https://github.com/jqm4gwt/jqm4gwt/wiki/Getting-Sta
 Getting It
 ========
 
-Latest Release: 1.4.6.Final released 26-Apr-2015
- * [jqm4gwt Remote Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.4.6.Final/jqm4gwt-remote-1.4.6.Final.jar)
- * [jqm4gwt Library Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-library/1.4.6.Final/jqm4gwt-library-1.4.6.Final.jar)
- * [Remote Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.4.6.Final/jqm4gwt-remote-1.4.6.Final-sources.jar)
- * [Library Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-library/1.4.6.Final/jqm4gwt-library-1.4.6.Final-sources.jar)
+Latest Release: 1.4.7 released 27-Oct-2016
+ * [jqm4gwt Remote Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.4.7/jqm4gwt-remote-1.4.7.jar)
+ * [jqm4gwt Library Module] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-library/1.4.7/jqm4gwt-library-1.4.7.jar)
+ * [Remote Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-remote/1.4.7/jqm4gwt-remote-1.4.7-sources.jar)
+ * [Library Sources] (http://search.maven.org/remotecontent?filepath=com/sksamuel/jqm4gwt/jqm4gwt-library/1.4.7/jqm4gwt-library-1.4.7-sources.jar)
 
 Dependencies are available from Maven Central:
 
@@ -70,7 +70,7 @@ Dependencies are available from Maven Central:
 <dependency>
   <groupId>com.sksamuel.jqm4gwt</groupId>
   <artifactId>jqm4gwt-remote</artifactId>
-  <version>1.4.6.Final</version>
+  <version>1.4.7</version>
 </dependency>
 ```
 
