@@ -1132,9 +1132,24 @@ public class JQMDataTable extends JQMTableGrid {
     /**
      * Softer than {@link JQMDataTable#ajaxReload(boolean) }, uses already loaded client side data.
      * <br> In case of (serverSide == true) it's practically the same as ajaxReload().
+     *
+     * @param resetPaging - if <b>true(full-reset)</b> then the ordering and search will be recalculated
+     *     and the rows redrawn in their new positions. The paging will be reset back to the first page.
+     *     <br> if <b>false(full-hold)</b> then the ordering and search will be recalculated
+     *     and the rows redrawn in their new positions. The paging will not be reset - i.e. the current
+     *     page will still be shown.
      **/
     public void refreshDraw(boolean resetPaging) {
         JsDataTable.draw(getElement(), resetPaging);
+    }
+
+    /**
+     * The ordering and search will not be updated and the paging position held where is was.
+     * This is useful for paging when data has not been changed between draws.
+     * <br> See <a href="https://datatables.net/reference/api/draw()">draw()</a> documentation.
+     */
+    public void refreshPage() {
+        JsDataTable.drawPage(getElement());
     }
 
     public String getDataSrc() {
@@ -1399,28 +1414,60 @@ public class JQMDataTable extends JQMTableGrid {
         JsDataTable.clearData(getElement());
     }
 
+    /**
+     * Allows multiple additions, like addRow(); addRow(); ...; refreshDraw();
+     * <br> refreshDraw() or refreshPage() must be called after it to repaint dataTable.
+     */
     public void addRow(JavaScriptObject newRow) {
         JsDataTable.addRow(getElement(), newRow);
     }
 
+    /**
+     * Allows multiple removals, like removeRow(); removeRow(); ...; refreshDraw();
+     * <br> refreshDraw() or refreshPage() must be called after it to repaint dataTable.
+     */
     public void removeRow(int rowIndex) {
         JsDataTable.removeRow(getElement(), rowIndex);
     }
 
-    public void removeSelRows() {
+    /**
+     * refreshDraw() or refreshPage() must be called after it to repaint dataTable.
+     */
+    public boolean removeSelRows() {
         JsArrayInteger sel = JsDataTable.getSelRowIndexes(getElement());
-        if (sel.length() == 0) return;
+        if (sel.length() == 0) return false;
         int[] idxs = new int[sel.length()];
         for (int i = 0; i < idxs.length; i++) idxs[i] = sel.get(i);
         Arrays.sort(idxs);
         for (int i = idxs.length - 1; i >= 0; i--) {
             removeRow(idxs[i]);
         }
-        rowsInvalidate(true);
+        return true;
     }
 
-    public void rowsInvalidate(boolean resetPaging) {
-        JsDataTable.rowsInvalidate(getElement(), resetPaging);
+    /** Invalidate all rows. refreshDraw() or refreshPage() must be called after it to repaint dataTable. */
+    public void rowsInvalidate() {
+        JsDataTable.rowsInvalidate(getElement());
+    }
+
+    /** Just a synonym for rowsInvalidate() */
+    public void invalidateRows() {
+        rowsInvalidate();
+    }
+
+    public void invalidateRow(int rowIndex) {
+        JsDataTable.invalidateRow(getElement(), rowIndex);
+    }
+
+    /** @param cellOrRowElt - could be cellElt or rowElt */
+    public void invalidateRow(Element cellOrRowElt) {
+        JsDataTable.invalidateRow(getElement(), cellOrRowElt);
+    }
+
+    /** @param cellElt - cell or one of its children
+     */
+    public void invalidateCell(Element cellElt) {
+        JsDataTable.invalidateCell(getElement(), cellElt);
     }
 
     public RowIdHelper getRowIdHelper() {

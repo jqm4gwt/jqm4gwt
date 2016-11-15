@@ -311,13 +311,14 @@ public class DataTableExamplesPage {
                     JsArrayMixed r = createDataRow(i);
                     dataTable3.addRow(r);
                 }
-                dataTable3.rowsInvalidate(true);
+                dataTable3.refreshDraw(true);
             }
         });
         btnDeleteSelRow.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 dataTable3.removeSelRows();
+                dataTable3.refreshPage();
             }
         });
 

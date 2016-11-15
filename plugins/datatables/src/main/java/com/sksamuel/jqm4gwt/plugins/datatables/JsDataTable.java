@@ -898,9 +898,13 @@ public class JsDataTable {
         $wnd.$(elt).DataTable().draw(resetPaging);
     }-*/;
 
-    /** Invalidate all rows and redraw, useful after data changes, see addRow() */
-    static native void rowsInvalidate(Element elt, boolean resetPaging) /*-{
-        $wnd.$(elt).DataTable().rows().invalidate().draw(resetPaging);
+    static native void drawPage(Element elt) /*-{
+        $wnd.$(elt).DataTable().draw('page');
+    }-*/;
+
+    /** Invalidate all rows. draw() or drawPage() must be called after it to repaint dataTable. */
+    static native void rowsInvalidate(Element elt) /*-{
+        $wnd.$(elt).DataTable().rows().invalidate();
     }-*/;
 
     static native JavaScriptObject getData(Element elt) /*-{
@@ -918,12 +922,40 @@ public class JsDataTable {
         $wnd.$(elt).DataTable().destroy();
     }-*/;
 
+    /**
+     * Allows multiple additions, like addRow(); addRow(); ...; draw();
+     * <br> draw() or drawPage() must be called after it to repaint dataTable.
+     */
     static native void addRow(Element elt, JavaScriptObject newRow) /*-{
         $wnd.$(elt).DataTable().row.add(newRow);
     }-*/;
 
+    /**
+     * Allows multiple removals, like removeRow(); removeRow(); ...; draw();
+     * <br> draw() or drawPage() must be called after it to repaint dataTable.
+     */
     static native void removeRow(Element elt, int rowIndex) /*-{
         $wnd.$(elt).DataTable().row(rowIndex).remove();
+    }-*/;
+
+    static native void invalidateRow(Element tableElt, int rowIndex) /*-{
+        $wnd.$(elt).DataTable().row(rowIndex).invalidate();
+    }-*/;
+
+    static native void invalidateRow(Element tableElt, Element cellElt) /*-{
+        var tr = $wnd.$(cellElt).closest('tr');
+        var r = $wnd.$(tableElt).DataTable().row(tr);
+        r.invalidate();
+    }-*/;
+
+    static native void invalidateCell(Element tableElt, Element cellElt) /*-{
+        var $cell = $wnd.$(cellElt);
+        var cellSel = $cell.closest('td');
+        if (cellSel.length === 0) cellSel = $cell.closest('th');
+        if (cellSel.length !== 0) {
+            var cell = $wnd.$(tableElt).DataTable().cell(cellSel);
+            cell.invalidate();
+        }
     }-*/;
 
     public static native Element findTableElt(Element tableChildElt) /*-{
@@ -966,7 +998,7 @@ public class JsDataTable {
                 var rowData = null, rowIdx = -1;
                 if (row) {
                     if (row.data()) rowData = row.data();
-                    if (row.index()) rowIdx = row.index();
+                    rowIdx = row.index();
                 }
                 if (rowColRequired && (rowIdx === -1 || colIdx === -1)) {
                     // probably row details widget was clicked
