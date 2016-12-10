@@ -199,13 +199,14 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     protected final FormLabel label;
 
+    private Element uiSelect;
+
     private String menuStyleNames;
 
     private static boolean jsServed;
 
     private boolean valueChangeHandlerInitialized;
     private boolean blurHandlerAdded;
-    private boolean created;
 
     private boolean transparent = true;
     private Element transparentPrevPage;
@@ -256,7 +257,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         if (valueChangeHandlerInitialized) {
             ValueChangeEvent.fire(this, value);
         }
-        if (isAttached() && created && blurHandlerAdded && !isNative()) {
+        if (isAttached() && blurHandlerAdded && !isNative() && isInstance(select.getElement())) {
             // TODO: could be fixed in next versions of jqm, but in 1.4.5 this problem exists
             // For example to rerun JQMForm's validation for this dropdown
             DomEvent.fireNativeEvent(Document.get().createBlurEvent(), select);
@@ -284,9 +285,9 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                         EventTarget target = event.getNativeEvent().getEventTarget();
                         if (target != null) {
                             Element elt = target.cast();
-                            Element uiSel = findUiSelect();
-                            if (uiSel != null) {
-                                Element btn = JQMCommon.findChild(uiSel, "ui-btn");
+                            findUiSelect();
+                            if (uiSelect != null) {
+                                Element btn = JQMCommon.findChild(uiSelect, "ui-btn");
                                 if (btn != null) {
                                     while (elt != null) { // filter out non-button related elements (label for instance)
                                         if (elt == btn) {
@@ -931,20 +932,18 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         return JQMCommon.getTheme(select);
     }
 
-    private Element findUiSelect() {
-        // In case of manual JQMContext.render() call, created could be still false,
-        // but ui-select is already created, so set all needed properties before render() call.
-        if (!created) return null;
-        Element uiSel = JQMCommon.findChild(getElement(), "ui-select");
-        return uiSel;
+    private void findUiSelect() {
+        if (uiSelect == null && isInstance(select.getElement())) {
+            uiSelect = JQMCommon.findChild(getElement(), "ui-select");
+        }
     }
 
     @Override
     public void setTheme(String themeName) {
         JQMCommon.applyTheme(select, themeName);
-        Element uiSel = findUiSelect();
-        if (uiSel != null) {
-            Element btn = JQMCommon.findChild(uiSel, "ui-btn");
+        findUiSelect();
+        if (uiSelect != null) {
+            Element btn = JQMCommon.findChild(uiSelect, "ui-btn");
             if (btn != null) JQMButton.setTheme(btn, themeName);
         }
     }
@@ -1288,9 +1287,9 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      */
     public void setSelectInline(boolean value) {
         JQMCommon.setInline(select, value);
-        Element uiSel = findUiSelect();
-        if (uiSel != null) {
-            JQMCommon.setInlineEx(uiSel, value, JQMCommon.STYLE_UI_BTN_INLINE);
+        findUiSelect();
+        if (uiSelect != null) {
+            JQMCommon.setInlineEx(uiSelect, value, JQMCommon.STYLE_UI_BTN_INLINE);
         }
     }
 
@@ -1325,10 +1324,19 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         $wnd.$(elt).off( 'selectmenucreate' );
     }-*/;
 
+    /**
+     * Unfortunately it's not called in case of manual JQMContext.render(),
+     * though widget is getting created and enhanced.
+     */
     private void created() {
-        created = true;
         if (checkSelectedIndex()) refresh();
     }
+
+    private static native boolean isInstance(Element elt) /*-{
+        var i = $wnd.$(elt).selectmenu("instance");
+        if (i) return true;
+        else return false;
+    }-*/;
 
     @Override
     protected void onLoad() {
@@ -1338,6 +1346,9 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         if (!jsServed) {
             jsServed = true;
             serveSelects();
+        }
+        if (isInstance(select.getElement())) {
+            if (checkSelectedIndex()) refresh();
         }
     }
 
@@ -1558,7 +1569,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         if (panel == null) return;
         Widget p = getParent();
         if (p == panel) return;
-        if (created) { // on iOS moving JQMSelect from one panel to another is making it "stuck"
+        if (isInstance(select.getElement())) { // on iOS moving JQMSelect from one panel to another is making it "stuck"
             String v = getValue();
             panel.add(this);
             refresh();

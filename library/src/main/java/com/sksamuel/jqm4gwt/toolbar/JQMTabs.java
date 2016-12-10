@@ -137,8 +137,6 @@ public class JQMTabs extends JQMWidget {
     private String mainTheme;
     private String headerTheme;
 
-    private boolean created;
-
     public JQMTabs() {
         flow = new FlowPanel();
         initWidget(flow);
@@ -163,7 +161,7 @@ public class JQMTabs extends JQMWidget {
         leftHeaderWidgets.add(w);
         if (leftHeaderStage != null) {
             leftHeaderStage.add(w);
-        } else if (created) {
+        } else if (isInstance(getElement())) {
             checkLeftHeader();
         }
     }
@@ -187,7 +185,7 @@ public class JQMTabs extends JQMWidget {
     }
 
     private void checkLeftHeader() {
-        if (!created || leftHeaderWidgets == null || leftHeaderStage != null) return;
+        if (leftHeaderWidgets == null || leftHeaderStage != null || !isInstance(getElement())) return;
         if (navbar == null && list == null) return;
         leftHeaderStage = new FlowPanel();
         leftHeaderStage.getElement().getStyle().setFloat(Style.Float.LEFT);
@@ -203,7 +201,7 @@ public class JQMTabs extends JQMWidget {
         rightHeaderWidgets.add(w);
         if (rightHeaderStage != null) {
             rightHeaderStage.add(w);
-        } else if (created) {
+        } else if (isInstance(getElement())) {
             checkRightHeader();
         }
     }
@@ -227,7 +225,7 @@ public class JQMTabs extends JQMWidget {
     }
 
     private void checkRightHeader() {
-        if (!created || rightHeaderWidgets == null || rightHeaderStage != null) return;
+        if (rightHeaderWidgets == null || rightHeaderStage != null || !isInstance(getElement())) return;
         if (navbar == null && list == null) return;
         rightHeaderStage = new FlowPanel();
         rightHeaderStage.getElement().getStyle().setFloat(Style.Float.RIGHT);
@@ -418,13 +416,26 @@ public class JQMTabs extends JQMWidget {
         $wnd.$(elt).off( 'tabscreate' );
     }-*/;
 
+    /**
+     * Unfortunately it's not called in case of manual JQMContext.render(),
+     * though widget is getting created and enhanced.
+     */
     private void created() {
-        created = true;
+        initialFix();
+    }
+
+    private void initialFix() {
         // workaround for issue with listview active item resetting on initialization
         // (buttons are processed here as well just for symmetry).
         doActiveHighlight();
         checkLeftRightHeaders();
     }
+
+    private static native boolean isInstance(Element elt) /*-{
+        var i = $wnd.$(elt).tabs("instance");
+        if (i) return true;
+        else return false;
+    }-*/;
 
     @Override
     protected void onLoad() {
@@ -432,6 +443,7 @@ public class JQMTabs extends JQMWidget {
         Element elt = getElement();
         bindEvents(this, elt);
         bindCreated(elt, this);
+        if (isInstance(getElement())) initialFix();
     }
 
     @Override

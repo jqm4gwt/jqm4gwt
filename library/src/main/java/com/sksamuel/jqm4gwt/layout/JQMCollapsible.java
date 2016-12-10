@@ -43,7 +43,6 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     private Element headingToggle;
     private Element collapsibleContent;
 
-    private boolean created;
     private boolean inline;
 
     /**
@@ -140,16 +139,43 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
         $wnd.$(elt).off( 'collapsiblecreate' );
     }-*/;
 
+    /**
+     * Unfortunately it's not called in case of manual JQMContext.render(),
+     * though widget is getting created and enhanced.
+     */
     private void created() {
-        created = true;
-        headingToggle = JQMCommon.findFirst(header.getElement(), ".ui-collapsible-heading-toggle.ui-btn");
-        collapsibleContent = JQMCommon.findFirst(getElement(), ".ui-collapsible-content");
+        findSubParts();
+    }
 
-        if (inline) setInline(inline);
+    private static native boolean isInstance(Element elt) /*-{
+        var i = $wnd.$(elt).collapsible("instance");
+        if (i) return true;
+        else return false;
+    }-*/;
+
+    private void findSubParts() {
+        Boolean isInstance = null;
+        if (headingToggle == null) {
+            if (isInstance == null) isInstance = isInstance(getElement());
+            if (isInstance) {
+                headingToggle = JQMCommon.findFirst(header.getElement(), ".ui-collapsible-heading-toggle.ui-btn");
+                if (headingToggle != null) {
+                    JQMCommon.setInlineEx(headingToggle, inline, JQMCommon.STYLE_UI_BTN_INLINE);
+                }
+            }
+        }
+        if (collapsibleContent == null) {
+            if (isInstance == null) isInstance = isInstance(getElement());
+            if (isInstance) {
+                collapsibleContent = JQMCommon.findFirst(getElement(), ".ui-collapsible-content");
+            }
+        }
     }
 
     @Override
     protected void onLoad() {
+        findSubParts(); // should be before super.onLoad(), because for example
+                        // JQMContext.getWidgetDefaults() may start setting some properties immediately
         super.onLoad();
         Element elt = getElement();
         bindCreated(elt, this);
@@ -288,9 +314,11 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     public boolean isCollapsed() {
         boolean v = JQMCommon.hasStyle(this, "ui-collapsible-collapsed");
         if (v) return v;
-        if (!created) {
-            v = getAttributeBoolean("data-collapsed");
-            if (v) return v;
+        if (!isInstance(getElement())) {
+            String s = getAttribute("data-collapsed");
+            if (Empty.is(s)) return true; // true by default, see https://api.jquerymobile.com/collapsible/#option-collapsed
+            if ("false".equalsIgnoreCase(s)) return false;
+            else return true;
         }
         return false;
     }
@@ -301,10 +329,10 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     public void setCollapsed(boolean collapsed) {
         if (collapsed) {
             removeAttribute("data-collapsed");
-            if (created) collapse();
+            if (isInstance(getElement())) collapse();
         } else {
             setAttribute("data-collapsed", "false");
-            if (created) expand();
+            if (isInstance(getElement())) expand();
         }
     }
 
