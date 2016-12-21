@@ -778,11 +778,15 @@ public class JQMDataTable extends JQMTableGrid {
         return isUseParentHeight() || isScrollX() || !Empty.is(scrollXcss);
     }
 
-    public void adjustAllSizes() {
+    public void adjustAllSizes(boolean forceAdjustColumns) {
         boolean isScrollX = isScrollX() || !Empty.is(scrollXcss);
         boolean isParentHeight = isUseParentHeight();
         if (isParentHeight) adjustToParentHeight();
-        if (isParentHeight || isScrollX) adjustColumnSizing();
+        if (isParentHeight || isScrollX || forceAdjustColumns) adjustColumnSizing();
+    }
+
+    public void adjustAllSizes() {
+        adjustAllSizes(false/*forceAdjustColumns*/);
     }
 
     private HandlerRegistration addJQMEventHandler(String jqmEventName, EventHandler handler) {
@@ -1412,6 +1416,11 @@ public class JQMDataTable extends JQMTableGrid {
 
     public void clearData() {
         JsDataTable.clearData(getElement());
+    }
+
+    public void clearAll() {
+        clearData();
+        clearSearch();
     }
 
     /**
