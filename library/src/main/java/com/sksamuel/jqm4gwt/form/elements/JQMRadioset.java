@@ -125,14 +125,11 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
     ArrayList<HandlerRegistration> blurHandlers = new ArrayList<HandlerRegistration>();
 
     private void addRadiosBlurHandler(final BlurHandler handler) {
+        ClickHandler h = null;
         for (JQMRadio r : radios) {
             TextBox radio = r.getInput();
-            blurHandlers.add(radio.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    handler.onBlur(null);
-                }
-            }));
+            if (h == null) h = event -> handler.onBlur(null);
+            blurHandlers.add(radio.addClickHandler(h));
         }
     }
 
@@ -267,15 +264,13 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
         // Initialization code
         if (!valueChangeHandlerInitialized) {
             valueChangeHandlerInitialized = true;
+            final ClickHandler h = event -> {
+                SelectionEvent.fire(JQMRadioset.this, getValue());
+                ValueChangeEvent.fire(JQMRadioset.this, getValue());
+            };
             for (JQMRadio r : radios) {
                 TextBox radio = r.getInput();
-                radio.addClickHandler(new ClickHandler() {
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        SelectionEvent.fire(JQMRadioset.this, getValue());
-                        ValueChangeEvent.fire(JQMRadioset.this, getValue());
-                    }
-                });
+                radio.addClickHandler(h);
             }
         }
     }

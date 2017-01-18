@@ -124,14 +124,11 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
     ArrayList<HandlerRegistration> blurHandlers = new ArrayList<HandlerRegistration>();
 
     private void addLabelsBlurHandler(final BlurHandler handler) {
+        ClickHandler h = null;
         for (JQMCheckbox cb : checks) {
             FormLabel label = cb.getLabel();
-            blurHandlers.add(label.addDomHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    handler.onBlur(null);
-                }
-            }, ClickEvent.getType()));
+            if (h == null) h = event -> handler.onBlur(null);
+            blurHandlers.add(label.addDomHandler(h, ClickEvent.getType()));
         }
     }
 
@@ -216,17 +213,13 @@ public class JQMCheckset extends JQMFieldContainer implements HasText<JQMCheckse
         // Initialization code
         if (!valueChangeHandlerInitialized) {
             valueChangeHandlerInitialized = true;
-            for (JQMCheckbox cb : checks) {
-                cb.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-                    @Override
-                    public void onValueChange(ValueChangeEvent<Boolean> event) {
-                        if (!inProgressSetValue) {
-                            SelectionEvent.fire(JQMCheckset.this, getValue());
-                            ValueChangeEvent.fire(JQMCheckset.this, getValue());
-                        }
-                    }
-                });
-            }
+            final ValueChangeHandler<Boolean> h = event -> {
+                if (!inProgressSetValue) {
+                    SelectionEvent.fire(JQMCheckset.this, getValue());
+                    ValueChangeEvent.fire(JQMCheckset.this, getValue());
+                }
+            };
+            for (JQMCheckbox cb : checks) cb.addValueChangeHandler(h);
         }
     }
 
