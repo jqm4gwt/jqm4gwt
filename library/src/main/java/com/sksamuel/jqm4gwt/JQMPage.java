@@ -35,6 +35,12 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     public static final String DLG_TRANSPARENT_ZINDEX_MINUS1 = "zindex-1";
     public static final String DLG_TRANSPARENT_TOPMOST = "topmost";
 
+    /**
+     * true - Header, Footer, Content positions will NOT be adjusted according to page properties:
+     *        contentCentered, contentHeightPercent, pseudoFixedToolbars, ...
+     */
+    public static boolean stopPartsPositioning = false;
+
     private static final String STYLE_UI_DIALOG = "ui-dialog";
     private static final String UI_DIALOG_CONTAIN = "ui-dialog-contain";
 
@@ -557,6 +563,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      *  <br> contentCentered, contentHeightPercent, pseudoFixedToolbars, ...
      **/
     public void refreshPartsPositioning() {
+        if (stopPartsPositioning) return;
         processFixedToolbars();
         recalcContentHeightPercent();
         centerContent();
@@ -888,6 +895,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     private void hideFixedToolbars(int headerH, int footerH) {
+        if (stopPartsPositioning) return;
         final JQMHeader header = getHeader();
         if (header != null && (header.isFixed() || pseudoFixedToolbars)
                 && !header.getElement().hasClassName(JQM4GWT_FIXED_HIDDEN)) {
@@ -936,6 +944,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     private void processFixedToolbars() {
+        if (stopPartsPositioning) return;
         if (!isVisible() || header == null && footer == null) return;
 
         if (hideFixedToolbarsIfContentAreaPercentBelow <= 0 && hideFixedToolbarsIfVirtualKeyboard <= 0) {
@@ -983,6 +992,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * How to know when an DOM element moves or is resized</a></p>
      */
     public void centerContent() {
+        if (stopPartsPositioning) return;
         if (!isVisible()) return;
 
         boolean windowHset = false;
@@ -1038,6 +1048,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      * notification for DOM elements).
      */
     public void recalcContentHeightPercent() {
+        if (stopPartsPositioning) return;
         if (!isVisible()) return;
         Element contentElt = content.getElement();
         if (contentHeightPercent > 0) {
