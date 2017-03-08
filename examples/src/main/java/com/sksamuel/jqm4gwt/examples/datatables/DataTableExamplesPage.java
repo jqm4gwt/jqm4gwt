@@ -14,11 +14,17 @@ import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style.FontWeight;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.Empty;
@@ -413,6 +419,28 @@ public class DataTableExamplesPage {
                 for (int i = 0; i < rows.length(); i++) {
                     Element r = rows.get(i);
                     r.getStyle().setFontWeight(FontWeight.BOLD);
+                    NodeList<Node> children = r.getChildNodes();
+                    if (children != null && children.getLength() > 0) {
+                        for (int j = 0; j < children.getLength(); j++) {
+                            Node child = children.getItem(j);
+                            String n = child.getNodeName();
+                            if (TableCellElement.TAG_TD.equalsIgnoreCase(n)) {
+                                String tdContent = ((TableCellElement) child).getInnerText();
+                                Element btn = DOM.createButton();
+                                btn.setInnerText("Info");
+                                btn.getStyle().setMarginLeft(10, Unit.PX);
+                                child.appendChild(btn);
+                                Event.sinkEvents(btn, Event.ONCLICK);
+                                Event.setEventListener(btn, event -> {
+                                    if (Event.ONCLICK == event.getTypeInt()) {
+                                        event.stopPropagation();
+                                        Window.alert(tdContent);
+                                    }
+                                });
+                                break;
+                            }
+                        }
+                    }
                 }
             }
 
