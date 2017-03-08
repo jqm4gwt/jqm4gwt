@@ -43,6 +43,8 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     private Element headingToggle;
     private Element collapsibleContent;
 
+    private String contentStyleNames;
+
     private boolean inline;
 
     /**
@@ -168,6 +170,7 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
             if (isInstance == null) isInstance = isInstance(getElement());
             if (isInstance) {
                 collapsibleContent = JQMCommon.findFirst(getElement(), ".ui-collapsible-content");
+                if (collapsibleContent != null) JQMCommon.addStyleNames(collapsibleContent, contentStyleNames);
             }
         }
     }
@@ -239,6 +242,30 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     public JQMCollapsible withContentTheme(String themeName) {
         setContentTheme(themeName);
         return this;
+    }
+
+    public String getContentStyleNames() {
+        return contentStyleNames;
+    }
+
+    public void setContentStyleNames(String value) {
+        if (contentStyleNames == value || contentStyleNames != null && contentStyleNames.equals(value)) return;
+
+        if (collapsibleContent != null) JQMCommon.removeStyleNames(collapsibleContent, contentStyleNames);
+        contentStyleNames = value;
+        if (collapsibleContent != null) JQMCommon.addStyleNames(collapsibleContent, contentStyleNames);
+    }
+
+    public JQMCollapsible withContentStyleNames(String value) {
+        setContentStyleNames(value);
+        return this;
+    }
+
+    /**
+     * The same as setContentStyleNames(), mostly just for UiBinder to be able define: addContentStyleNames="..."
+     */
+    public void setAddContentStyleNames(String value) {
+        setContentStyleNames(value);
     }
 
     /**

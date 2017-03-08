@@ -257,13 +257,38 @@ public class JQMCommon {
     /**
      * @param styles - space separated style names
      */
-    public static void addStyleNames(UIObject o, String styles) {
-        if (o == null || styles == null || styles.isEmpty()) return;
+    private static void processStyleNames(Element elt, String styles, boolean add) {
+        if (elt == null || styles == null || styles.isEmpty()) return;
         String[] arr = styles.split(" ");
         for (String i : arr) {
             String s = i.trim();
-            if (!s.isEmpty()) o.addStyleName(s);
+            if (!s.isEmpty()) {
+                if (add) elt.addClassName(s);
+                else elt.removeClassName(s);
+            }
         }
+    }
+
+    /**
+     * @param styles - space separated style names
+     */
+    public static void addStyleNames(Element elt, String styles) {
+        processStyleNames(elt, styles, true/*add*/);
+    }
+
+    /**
+     * @param styles - space separated style names
+     */
+    public static void removeStyleNames(Element elt, String styles) {
+        processStyleNames(elt, styles, false/*add*/);
+    }
+
+    /**
+     * @param styles - space separated style names
+     */
+    public static void addStyleNames(UIObject o, String styles) {
+        if (o == null || styles == null || styles.isEmpty()) return;
+        processStyleNames(o.getElement(), styles, true/*add*/);
     }
 
     /**
@@ -271,11 +296,7 @@ public class JQMCommon {
      */
     public static void removeStyleNames(UIObject o, String styles) {
         if (o == null || styles == null || styles.isEmpty()) return;
-        String[] arr = styles.split(" ");
-        for (String i : arr) {
-            String s = i.trim();
-            if (!s.isEmpty()) o.removeStyleName(s);
-        }
+        processStyleNames(o.getElement(), styles, false/*add*/);
     }
 
     /**
