@@ -1,5 +1,7 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
+import com.sksamuel.jqm4gwt.JQMCommon;
+
 /**
  * @author Stephen K Samuel samspade79@gmail.com 18 May 2011 04:17:45
  *
@@ -21,6 +23,21 @@ public class JQMNumber extends JQMText {
 	public JQMNumber(String text) {
 		super(text);
 		setType("number");
+		setStep("any");
+	}
+
+	public String getStep() {
+	    return JQMCommon.getAttribute(input.getElement(), "step");
+	}
+
+    /**
+     * Some browsers (for instance Firefox) are quite strict about values entered into number widget.
+     * Default is any, which allows entering fractional values, though up/down buttons will increment/decrement by 1.
+     *
+     * @param value - any, 1, 0.1, 0.01, ...
+     */
+	public void setStep(String value) {
+	    JQMCommon.setAttribute(input.getElement(), "step", value);
 	}
 
 }
