@@ -17,13 +17,13 @@
     
     
     <!-- stylesheet src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
-    <stylesheet src="http://dev.jtsage.com/cdn/datebox/1.4.5/jqm-datebox-1.4.5.min.css"/>
+    <stylesheet src="http://cdn.jtsage.com/jtsage-datebox/4.1.1/jtsage-datebox-4.1.1.jqm.min.css"/>
     <stylesheet src="https://raw.github.com/watusi/jquery-mobile-iscrollview/master/lib/jquery.mobile.iscrollview.css"/>
     
     <script src="http://code.jquery.com/jquery-2.2.4.min.js"/>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"/>
-    <script src="http://dev.jtsage.com/cdn/datebox/1.4.5/jqm-datebox-1.4.5.comp.calbox.min.js"/>
-    <script src="http://dev.jtsage.com/cdn/datebox/i18n/jquery.mobile.datebox.i18n.en_US.utf8.js"/>
+    <script src="http://cdn.jtsage.com/jtsage-datebox/4.1.1/jtsage-datebox-4.1.1.jqm.min.js"/>
+    <script src="http://cdn.jtsage.com/jtsage-datebox/i18n/jtsage-datebox.i18n.en.utf8.min.js"/>
     <script src="https://raw.github.com/cubiq/iscroll/master/src/iscroll.js"/>
     <script src="https://raw.github.com/watusi/jquery-mobile-iscrollview/master/lib/jquery.mobile.iscrollview-closure-min.js"/>
     <script src="https://raw.githubusercontent.com/dreamerslab/jquery.actual/v1.0.18/jquery.actual.min.js"/-->

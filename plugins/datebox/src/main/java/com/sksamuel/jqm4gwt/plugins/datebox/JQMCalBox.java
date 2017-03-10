@@ -28,20 +28,20 @@ import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBoxEvent.OffsetData;
 /**
  * <p> When you add {@literal <inherits name='com.sksamuel.Jqm4gwt-datebox' />} to yourApp.gwt.xml
  * the following scripts will be included automatically to resulting war: </p>
- * <pre> jqm-datebox.comp.calbox.min.js, jqm-datebox.min.css,
- * jquery.mobile.datebox.i18n.en_US.utf8.js, and datebox.png (in case you'll want a custom icon) </pre>
+ * <pre> jtsage-datebox-calbox-nnn.min.js, jtsage-datebox-nnn.min.css,
+ * jtsage-datebox.i18n.en.utf8.min.js, and datebox.png (in case you'll want a custom icon) </pre>
  * <p> You can add additional languages by injecting something like: </p>
- * <pre> jquery.mobile.datebox.i18n.ru.utf8.js </pre>
+ * <pre> jtsage-datebox.i18n.ru.utf8.min.js </pre>
  * <p> after your application.onModuleLoad() called, see ScriptUtils.waitJqmLoaded() </p>
  *
  * See also:
- * <p><a href="http://dev.jtsage.com/jQM-DateBox/">jQueryMobile - DateBox</a></p>
- * <p><a href="http://dev.jtsage.com/jQM-DateBox/doc/2-0-installing/">Installing instructions</a></p>
+ * <p><a href="http://dev.jtsage.com/DateBox/">DateBox</a></p>
+ * <p><a href="http://dev.jtsage.com/DateBox/doc/2-0-installing/">Installing instructions</a></p>
  *
  */
 public class JQMCalBox extends JQMText {
 
-    /** <a href="http://dev.jtsage.com/jQM-DateBox/doc/3-3-output/">Date Format Options</a> */
+    /** <a href="http://dev.jtsage.com/DateBox/doc/3-3-output/">Date Format Options</a> */
     public static final String FMT_MMDDYY = "%m/%d/%y";
 
     // HasValue<String> declared in JQMText and cannot be overridden as HasValue<Date> in this class.
@@ -66,7 +66,7 @@ public class JQMCalBox extends JQMText {
     protected static final String NEXT_MONTH_ICON   = "\"calNextMonthIcon\":";
     protected static final String PREV_MONTH_ICON   = "\"calPrevMonthIcon\":";
 
-    // See http://dev.jtsage.com/jQM-DateBox/doc/5-0-control/
+    // See http://dev.jtsage.com/DateBox/doc/5-0-control/
     // CalBox Specific - Display
     protected static final String SHOW_DAYS            = "\"calShowDays\":";
     protected static final String SHOW_WEEK            = "\"calShowWeek\":";
@@ -75,7 +75,7 @@ public class JQMCalBox extends JQMText {
     protected static final String HIGHLIGHT_SELECTED   = "\"calHighPick\":";
     protected static final String COMPACT_DATE_BUTTONS = "\"calControlGroup\":";
 
-    // See http://dev.jtsage.com/jQM-DateBox/doc/5-0-control/
+    // See http://dev.jtsage.com/DateBox/doc/5-0-control/
     // CalBox Specific - Control
     protected static final String USE_TODAY_BUTTON    = "\"useTodayButton\":";
     protected static final String USE_TOMORROW_BUTTON = "\"useTomorrowButton\":";
@@ -83,12 +83,14 @@ public class JQMCalBox extends JQMText {
     protected static final String USE_PICKERS_ICONS   = "\"calUsePickersIcons\":";
     protected static final String YEAR_PICK_MIN       = "\"calYearPickMin\":";
     protected static final String YEAR_PICK_MAX       = "\"calYearPickMax\":";
+    protected static final String MIN_YEAR            = "\"minYear\":";
+    protected static final String MAX_YEAR            = "\"maxYear\":";
     protected static final String MIN_DAYS            = "\"minDays\":";
     protected static final String MAX_DAYS            = "\"maxDays\":";
     protected static final String NO_HEADER           = "\"calNoHeader\":";
     protected static final String NO_TITLE            = "\"useHeader\":"; // Refers to the header with the close button and the title
 
-    // See http://dev.jtsage.com/jQM-DateBox/doc/3-1-themes/
+    // See http://dev.jtsage.com/DateBox/doc/3-1-themes/
     protected static final String THEME              = "\"theme\":";            // false means inherited theme
     protected static final String THEME_HEADER       = "\"themeHeader\":";      // Theme for header
     protected static final String THEME_MODAL        = "\"useModalTheme\":";    // Theme for modal background of control. Shade the background with this color swatch. From the default themes, “a” is a very light grey, “b” is a slighly darker grey.
@@ -119,6 +121,8 @@ public class JQMCalBox extends JQMText {
     private Boolean usePickersIcons = null;
     private String yearPickMin = null;
     private String yearPickMax = null;
+    private Integer minYear = null;
+    private Integer maxYear = null;
     private Integer minDays = null;
     private Integer maxDays = null;
     private Boolean noHeader = null;
@@ -233,7 +237,7 @@ public class JQMCalBox extends JQMText {
 
     public JQMCalBox(String text) {
         super(text);
-        //setType("date"); // it's servicing by jqm-datebox, so type must not be set as "date"
+        //setType("date"); // it's servicing by jtsage-datebox, so type must not be set as "date"
         setInputAttribute("data-role", "datebox");
         input.addBlurHandler(new BlurHandler() {
             @Override
@@ -338,6 +342,12 @@ public class JQMCalBox extends JQMText {
             } else {
                 sb.append(',').append(YEAR_PICK_MIN).append(yearPickMin);
             }
+            if (minYear == null) {
+                Integer minYY = calcMinYear();
+                if (minYY != null && minYY.intValue() > 0) {
+                    sb.append(',').append(MIN_YEAR).append(String.valueOf(minYY));
+                }
+            }
         }
         if (yearPickMax != null && !yearPickMax.isEmpty()) {
             if (YEAR_PICK_NOW.equals(yearPickMax)) {
@@ -345,6 +355,18 @@ public class JQMCalBox extends JQMText {
             } else {
                 sb.append(',').append(YEAR_PICK_MAX).append(yearPickMax);
             }
+            if (maxYear == null) {
+                Integer maxYY = calcMaxYear();
+                if (maxYY != null && maxYY.intValue() > 0) {
+                    sb.append(',').append(MAX_YEAR).append(String.valueOf(maxYY));
+                }
+            }
+        }
+        if (minYear != null) {
+            sb.append(',').append(MIN_YEAR).append(String.valueOf(minYear));
+        }
+        if (maxYear != null) {
+            sb.append(',').append(MAX_YEAR).append(String.valueOf(maxYear));
         }
         if (minDays != null) {
             sb.append(',').append(MIN_DAYS).append(String.valueOf(minDays));
@@ -398,6 +420,42 @@ public class JQMCalBox extends JQMText {
         return sb.toString();
     }
 
+    public Integer calcMinYear() {
+        if (minYear != null) return minYear;
+
+        if (yearPickMin != null && !yearPickMin.isEmpty()) {
+            if (YEAR_PICK_NOW.equals(yearPickMin)) {
+                @SuppressWarnings("deprecation")
+                int curYY = (new Date()).getYear() + 1900;
+                return curYY;
+            } else {
+                int yy = Integer.parseInt(yearPickMin);
+                if (yy < 1800) return minYear;
+                else return yy;
+            }
+        } else {
+            return minYear;
+        }
+    }
+
+    public Integer calcMaxYear() {
+        if (maxYear != null) return maxYear;
+
+        if (yearPickMax != null && !yearPickMax.isEmpty()) {
+            if (YEAR_PICK_NOW.equals(yearPickMax)) {
+                @SuppressWarnings("deprecation")
+                int curYY = (new Date()).getYear() + 1900;
+                return curYY;
+            } else {
+                int yy = Integer.parseInt(yearPickMax);
+                if (yy < 1800) return maxYear;
+                else return yy;
+            }
+        } else {
+            return maxYear;
+        }
+    }
+
     protected void refreshDataOptions() {
         setInputAttribute("data-options", constructDataOptions());
     }
@@ -442,7 +500,7 @@ public class JQMCalBox extends JQMText {
     }
 
     /**
-     * @param dateFormat - <a href="http://dev.jtsage.com/jQM-DateBox/doc/3-3-output/">Date Format Options</a>
+     * @param dateFormat - <a href="http://dev.jtsage.com/DateBox/doc/3-3-output/">Date Format Options</a>
      */
     public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
@@ -452,7 +510,7 @@ public class JQMCalBox extends JQMText {
     public String getActiveDateFormat() {
         if (dateFormat != null) return dateFormat;
         if (input == null) return null;
-        // see __fmt() in jqm-datebox.comp.calbox.js
+        // see __fmt() in jtsage-datebox-calbox.js
         String fmt = internGetLangOptionStr(input.getElement(), "dateFormat");
         return fmt;
     }
@@ -671,7 +729,7 @@ public class JQMCalBox extends JQMText {
         return minDays;
     }
 
-    /** See <a href="http://dev.jtsage.com/jQM-DateBox/api/minDays/">Minimum amount of days before today</a> */
+    /** See <a href="http://dev.jtsage.com/DateBox/api/minDays/">Minimum amount of days before today</a> */
     public void setMinDays(Integer value) {
         minDays = value;
         refreshDataOptions();
@@ -681,9 +739,29 @@ public class JQMCalBox extends JQMText {
         return maxDays;
     }
 
-    /** See <a href="http://dev.jtsage.com/jQM-DateBox/api/maxDays/">Maximum number of days past today</a> */
+    /** See <a href="http://dev.jtsage.com/DateBox/api/maxDays/">Maximum number of days past today</a> */
     public void setMaxDays(Integer value) {
         maxDays = value;
+        refreshDataOptions();
+    }
+
+    public Integer getMinYear() {
+        return minYear;
+    }
+
+    /** See <a href="http://dev.jtsage.com/DateBox/api/minYear/">Minimum allowed year</a> */
+    public void setMinYear(Integer value) {
+        minYear = value;
+        refreshDataOptions();
+    }
+
+    public Integer getMaxYear() {
+        return maxYear;
+    }
+
+    /** See <a href="http://dev.jtsage.com/DateBox/api/maxYear/">Maximum allowed year</a> */
+    public void setMaxYear(Integer value) {
+        maxYear = value;
         refreshDataOptions();
     }
 
@@ -986,7 +1064,7 @@ public class JQMCalBox extends JQMText {
 
     private native void refresh(Element elt) /*-{
         var w = $wnd.$(elt);
-        if (w.data('mobile-datebox') !== undefined) {
+        if (w.data('jtsage-datebox') !== undefined) {
             w.datebox('refresh');
         }
     }-*/;
@@ -994,7 +1072,7 @@ public class JQMCalBox extends JQMText {
     private static native boolean isCalboxReady(Element elt) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return false; // jQuery is not loaded
         var w = $wnd.$(elt);
-        if (w.data('mobile-datebox') !== undefined) {
+        if (w.data('jtsage-datebox') !== undefined) {
             return true;
         } else {
             return false;
@@ -1073,6 +1151,11 @@ public class JQMCalBox extends JQMText {
                     else yy += 1900;
                 }
                 if (dd >= 1 && dd <= 31 && mm >= 1 && mm <= 12 && yy >= 1900 && yy <= currentYear + 100) {
+                    Integer minYY = calcMinYear();
+                    if (minYY != null && yy < minYY.intValue()) return false;
+                    Integer maxYY = calcMaxYear();
+                    if (maxYY != null && yy > maxYY.intValue()) return false;
+
                     @SuppressWarnings("deprecation")
                     Date newd = new Date(yy - 1900, mm - 1, dd);
                     isInternSetDate = true;
@@ -1222,14 +1305,15 @@ public class JQMCalBox extends JQMText {
 
     // datebox('option') gives a full options list, it's inherited from the jquery-ui widget library
     // and working because jquery.ui.widget.js has the following declaration:
-    // option: function( key, value ) { ... }, see https://github.com/jquery/jquery-mobile/blob/master/external/jquery-ui/jquery.ui.widget.js#L298
+    // option: function( key, value ) { ... }, see https://github.com/jquery/jquery-ui/blob/master/ui/widget.js
     //
     // If you need to retrieve a single option, you can also do this (see https://github.com/jtsage/jquery-mobile-datebox/issues/340#issuecomment-61712507):
     // var myOption = $wnd.$(elt).datebox('getOption', 'dateFormat');
-    // 'getOption' is jqm-datebox function with i18n knowledge, 'option' is jquery-ui function without i18n knowledge.
+    // 'getOption' is jtsage-datebox function with i18n knowledge, 'option' is jquery-ui function without i18n knowledge.
     //
     // See also: http://stackoverflow.com/a/8217857
-    //       and http://dev.jtsage.com/jQM-DateBox2/demos/api/events.html
+    //       and http://dev.jtsage.com/DateBox/api/cat-event/
+    //       and http://stackoverflow.com/a/15337587
     //
     private static native JavaScriptObject internGetLangOption(Element elt, String val) /*-{
         // var o = $wnd.$(elt).datebox('option');
@@ -1242,18 +1326,17 @@ public class JQMCalBox extends JQMText {
     }-*/;
 
     /** Gives "Global"/JsPrototype language option.
-     *  <br> Partial copy of __() function from jqm-datebox.js
-     *  <br> See for example: jquery.mobile.datebox.i18n.ru.utf8.js
+     *  <br> From jtsage-datebox.js partial copy of: __: function(val) { ... }
+     *  <br> See for example: jtsage-datebox.i18n.ru.utf8.min.js
      **/
     private static native JavaScriptObject internGetProtoLangOption(String val) /*-{
-        var o = $wnd.jQuery.mobile.datebox.prototype.options;
+        var o = $wnd.jQuery.jtsage.datebox.prototype.options;
         var lang = o.lang[o.useLang];
         if (typeof lang !== 'undefined' && typeof lang[val] !== 'undefined') {
             return lang[val];
         }
         return o.lang['default'][val];
     }-*/;
-
 
     /**
      * @param mm - month 0-11, Jan = 0 .. Dec = 11
@@ -1318,7 +1401,7 @@ public class JQMCalBox extends JQMText {
         }
     }
 
-    // See http://dev.jtsage.com/jQM-DateBox/api/calBeforeAppendFunc/
+    // See http://dev.jtsage.com/DateBox/api/calBeforeAppendFunc/
     private static native void initGridDateBoxBeforeAppend(Element elt, JQMCalBox ctrl) /*-{
         if (ctrl === null) {
             $wnd.$(elt).datebox({ 'calBeforeAppendFunc': function(t) { return t; } });
@@ -1360,7 +1443,7 @@ public class JQMCalBox extends JQMText {
 
     /** This option allows you to define a custom function that is called on the generated
      *  calbox grid box of each date.
-     *  <br> See <a href="http://dev.jtsage.com/jQM-DateBox/api/calBeforeAppendFunc/">calBeforeAppendFunc</a>
+     *  <br> See <a href="http://dev.jtsage.com/DateBox/api/calBeforeAppendFunc/">calBeforeAppendFunc</a>
      **/
     public void setGridDateBoxBeforeAppend(GridDateBox value) {
         this.gridDateBox = value;

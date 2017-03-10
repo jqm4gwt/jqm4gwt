@@ -13,9 +13,9 @@ public interface Resources {
          **/
         public static boolean manualLoading;
 
-        private static final String JQM_DATEBOX_CSS = "css/jqm-datebox-1.4.5.min.css";
-        private static final String CALBOX_JS = "js/jqm-datebox-1.4.5.comp.calbox.min.js";
-        private static final String DATEBOX_I18N_JS = "js/jquery.mobile.datebox.i18n.en.utf8.min.js";
+        private static final String JQM_DATEBOX_CSS = "css/jtsage-datebox-411.min.css";
+        private static final String CALBOX_JS = "js/jtsage-datebox-calbox-411.min.js";
+        private static final String DATEBOX_I18N_JS = "js/jtsage-datebox.i18n.en.utf8.min.js";
         //private static final String CALBOX_FIXES_JS = "js/jqm-datebox-fixes.js";
 
         public static void injectAll(final InjectCallback done) {
