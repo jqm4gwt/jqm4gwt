@@ -323,7 +323,7 @@ public class JQMDataTable extends JQMTableGrid {
         if (!info) p.setInfo(false);
         if (!ordering) p.setOrdering(false);
         if (!searching) p.setSearching(false);
-        JsSortItems order = prepareJsOrder();
+        JsSortItems order = prepareJsOrder(sorts);
         if (order == null) { // No initial order: https://datatables.net/reference/option/order
             order = JsSortItems.create(null);
         }
@@ -463,7 +463,7 @@ public class JQMDataTable extends JQMTableGrid {
         ajaxHandler = handler;
     }
 
-    private JsSortItems prepareJsOrder() {
+    private static JsSortItems prepareJsOrder(List<ColSort> sorts) {
         if (Empty.is(sorts)) return null;
         JsSortItems rslt = null;
         for (ColSort sort : sorts) {
@@ -895,7 +895,7 @@ public class JQMDataTable extends JQMTableGrid {
                 sorts.add(colSort);
             }
         }
-        if (enhanced) JsDataTable.setOrder(getElement(), prepareJsOrder());
+        if (enhanced) JsDataTable.setOrder(getElement(), prepareJsOrder(sorts));
     }
 
     public void setColSorts(List<ColSort> sortList) {
@@ -916,7 +916,7 @@ public class JQMDataTable extends JQMTableGrid {
         }
         if (sorts == null) sorts = new ArrayList<>();
         sorts.addAll(sortList);
-        if (enhanced) JsDataTable.setOrder(getElement(), prepareJsOrder());
+        if (enhanced) JsDataTable.setOrder(getElement(), prepareJsOrder(sorts));
     }
 
     @UiChild(tagname = "language", limit = 1)
@@ -1379,6 +1379,31 @@ public class JQMDataTable extends JQMTableGrid {
     public void addDrawHandler(DrawHandler handler) {
         if (handler == null) return;
         JsDataTable.addDrawHandler(getElement(), handler);
+    }
+
+    /**
+     * Creates groups bands by specified column.
+     * <br> Could be called from afterDraw() event handler, see addDrawHandler()
+     *
+     * <br> You should define group styling in CSS like this:
+     * <br> .dataTable tr.group, .dataTable tr.group:hover { background-color: #ddd !important; }
+     * <br> OR you can directly process group row elements, which are returned by this method.
+     *
+     * @param additionalSorts - optional, will be sorted by colIdx column + additionalSorts
+     *
+     * @param settings - just taken/passed-through directly from afterDraw()
+     *
+     * @return - array of group rows, can be used for additional adjustments.
+     **/
+    public static JsArray<Element> doGrouping(JavaScriptObject settings, int colIdx, ColSort... additionalSorts) {
+        if (additionalSorts != null && additionalSorts.length > 0) {
+            List<ColSort> lst = new ArrayList<>(additionalSorts.length);
+            for (int i = 0; i < additionalSorts.length; i++) lst.add(additionalSorts[i]);
+            JsSortItems jsAddnlSorts = prepareJsOrder(lst);
+            return JsDataTable.doGrouping(settings, colIdx, jsAddnlSorts);
+        } else {
+            return JsDataTable.doGrouping(settings, colIdx, null/*additionalSorts*/);
+        }
     }
 
     /** Makes no much sense when serverSide is true, use getSelRowIds() in that case. */

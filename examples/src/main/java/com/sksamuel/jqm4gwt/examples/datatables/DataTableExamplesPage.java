@@ -37,6 +37,8 @@ import com.sksamuel.jqm4gwt.button.JQMButton;
 import com.sksamuel.jqm4gwt.html.Span;
 import com.sksamuel.jqm4gwt.plugins.datatables.ColumnDefEx;
 import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable;
+import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable.ColSort;
+import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable.ColSortDir;
 import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable.RowIdHelper;
 import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable.RowSelectMode;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable;
@@ -415,7 +417,7 @@ public class DataTableExamplesPage {
         dataTable5.addDrawHandler(new DrawHandler() {
             @Override
             public void afterDraw(Element tableElt, JavaScriptObject settings) {
-                JsArray<Element> rows = JsDataTable.doGrouping(settings, 4);
+                JsArray<Element> rows = JQMDataTable.doGrouping(settings, 4, new ColSort(2, ColSortDir.ASC));
                 for (int i = 0; i < rows.length(); i++) {
                     Element r = rows.get(i);
                     r.getStyle().setFontWeight(FontWeight.BOLD);
