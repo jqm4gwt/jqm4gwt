@@ -1295,14 +1295,18 @@ public class JsDataTable {
     }
 
     /**
-     * Creates groups bands by specified column. Could be called from draw event handler.
+     * Creates groups bands by specified column.
+     * <br> Could be called from afterDraw() event handler, see addDrawHandler()
+     *
      * <br> You should define group styling in CSS like this:
      * <br> .dataTable tr.group, .dataTable tr.group:hover { background-color: #ddd !important; }
      * <br> OR you can directly process group row elements, which are returned by this method.
      *
+     * @param additionalSorts - will be sorted by colIdx column + additionalSorts
+     *
      * @return - array of group rows, can be used for additional adjustments.
      **/
-    public static native JsArray<Element> doGrouping(JavaScriptObject settings, int colIdx) /*-{
+    static native JsArray<Element> doGrouping(JavaScriptObject settings, int colIdx, JsSortItems additionalSorts) /*-{
         var api = new $wnd.$.fn.dataTable.Api(settings);
         var rows = api.rows({page:'current'}).nodes();
         var cnt = 0;
@@ -1322,12 +1326,15 @@ public class JsDataTable {
         // Order by the grouping on group band click
         $wnd.$(api.table().body()).off('click.group');
         $wnd.$(api.table().body()).on('click.group', 'tr.group', function (event) {
+            var newSorts = [];
             var currentOrder = api.order()[0];
             if (currentOrder[0] === colIdx && currentOrder[1] === 'asc') {
-                api.order([colIdx, 'desc']).draw();
+                newSorts.push([colIdx, 'desc']);
             } else if (currentOrder[0] !== colIdx || currentOrder[1] !== 'asc') {
-                api.order([colIdx, 'asc']).draw();
+                newSorts.push([colIdx, 'asc']);
             }
+            if (additionalSorts) newSorts.push.apply(newSorts, additionalSorts);
+            api.order(newSorts).draw();
         });
         return grpRows;
     }-*/;
