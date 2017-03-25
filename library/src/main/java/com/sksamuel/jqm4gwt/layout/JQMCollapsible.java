@@ -105,23 +105,31 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     protected void onCollapsed() {
     }
 
-    protected void doExpanded() {
+    /**
+     * @param eventTarget - The DOM element that initiated the event,
+     *   see <a href="http://api.jquery.com/event.target/">event.target</a>
+     */
+    protected void doExpanded(Element eventTarget) {
         onExpanded();
-        JQMCollapsibleEvent.fire(this, CollapsibleState.EXPANDED);
+        JQMCollapsibleEvent.fire(this, CollapsibleState.EXPANDED, eventTarget);
     }
 
-    protected void doCollapsed() {
+    /**
+     * @param eventTarget - The DOM element that initiated the event,
+     *   see <a href="http://api.jquery.com/event.target/">event.target</a>
+     */
+    protected void doCollapsed(Element eventTarget) {
         onCollapsed();
-        JQMCollapsibleEvent.fire(this, CollapsibleState.COLLAPSED);
+        JQMCollapsibleEvent.fire(this, CollapsibleState.COLLAPSED, eventTarget);
     }
 
     private static native void bindLifecycleEvents(JQMCollapsible collap, Element collapElt) /*-{
         var p = $wnd.$(collapElt);
         p.on("collapsibleexpand", function(event, ui) {
-            collap.@com.sksamuel.jqm4gwt.layout.JQMCollapsible::doExpanded()();
+            collap.@com.sksamuel.jqm4gwt.layout.JQMCollapsible::doExpanded(Lcom/google/gwt/dom/client/Element;)(event.target);
         });
         p.on("collapsiblecollapse", function(event, ui) {
-            collap.@com.sksamuel.jqm4gwt.layout.JQMCollapsible::doCollapsed()();
+            collap.@com.sksamuel.jqm4gwt.layout.JQMCollapsible::doCollapsed(Lcom/google/gwt/dom/client/Element;)(event.target);
         });
     }-*/;
 
