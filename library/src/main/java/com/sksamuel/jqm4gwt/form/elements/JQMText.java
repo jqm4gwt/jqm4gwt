@@ -72,6 +72,8 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
      */
     protected final TextBox input;
 
+    private static final String JQM4GWT_READONLY = "jqm4gwt-readonly";
+
     /**
      * Create a new {@link JQMText} element with no label
      */
@@ -290,6 +292,8 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
     @Override
     public void setReadOnly(boolean readOnly) {
         input.setReadOnly(readOnly);
+        if (readOnly) label.getElement().addClassName(JQM4GWT_READONLY);
+        else label.getElement().removeClassName(JQM4GWT_READONLY);
     }
 
     @Override
