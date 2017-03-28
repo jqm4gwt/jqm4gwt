@@ -70,10 +70,21 @@
   z-index: 1099; /* this dialog must be over other dialogs */
 }
 
-.jqm4gwt-non-editable input {
-  filter: Alpha(Opacity=67);
-  opacity: .67;
-  zoom: 1;
+/* Should be in sync with ui-state-disabled opacity value somehow. 
+   It's like disabled, but we can copy-paste input's content.  
+*/
+.jqm4gwt-non-editable input, .ui-input-text > input[readonly] {
+  filter: Alpha(Opacity=30);
+  opacity: .3;
+  outline: 1px solid darkgrey;
+}
+
+/* There is no good way to gray out label, because unfortunately there is no parent selector in CSS3,
+   so in code of JQMText special class is added to input's label. 
+*/
+.jqm4gwt-readonly {
+  filter: Alpha(Opacity=30);
+  opacity: .3;
 }
 
 .jqm4gwt-error {
