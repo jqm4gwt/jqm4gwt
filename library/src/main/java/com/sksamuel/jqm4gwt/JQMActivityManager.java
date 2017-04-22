@@ -8,13 +8,13 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 6 Sep 2012 01:25:22
- * 
- * When using the {@link JQMActivityManager} you must disable jQuery Mobile hash listening, 
+ *
+ * When using the {@link JQMActivityManager} you must disable jQuery Mobile hash listening,
  * otherwise jQuery Mobile will intercept hash changes, and so they will not propgate to the GWT activity manager.
- * 
- * By using this class, the default ajax listening from jquery mobile is disabled, and all hash changes will be intercepted by the GWT MVP history manager. 
- * 
- * 
+ *
+ * By using this class, the default ajax listening from jquery mobile is disabled, and all hash changes will be intercepted by the GWT MVP history manager.
+ *
+ *
  *
  */
 public class JQMActivityManager extends ActivityManager {
@@ -43,6 +43,6 @@ public class JQMActivityManager extends ActivityManager {
 	@Override
 	public void setDisplay(AcceptsOneWidget display) {
 		throw new RuntimeException(
-				"JQMActivityMapper does not support custom displays. All JQM pages must be added to the RootPanel and this will be done automatically");
+				"JQMActivityMapper does not support custom displays. All JQM pages must be added to the PageContainer and this will be done automatically");
 	}
 }

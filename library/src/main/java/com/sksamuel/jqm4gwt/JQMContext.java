@@ -62,11 +62,17 @@ public class JQMContext {
      */
     public static void attachAndEnhance(JQMContainer container) {
         if (container == null) return;
-        RootPanel p = RootPanel.get();
+        RootPanel p = getRootPanel();
         if (p == null) return;
         p.add(container);
         enhance(container);
         container.setEnhanced(true);
+    }
+
+    public static RootPanel getRootPanel() {
+        String id = Mobile.getPageContainer().getId();
+        if (id != null && id.isEmpty()) id = null;
+        return RootPanel.get(id);
     }
 
     /**
