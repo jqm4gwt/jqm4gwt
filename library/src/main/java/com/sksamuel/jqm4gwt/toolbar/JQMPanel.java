@@ -10,12 +10,13 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMCommon;
+import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.JQMWidget;
+import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.toolbar.JQMPanelEvent.PanelState;
 
 /**
@@ -267,7 +268,7 @@ public class JQMPanel extends JQMWidget {
     protected void doPanelOpen() {
         open = true;
         if (getParent() == null) {
-            RootPanel.get().add(this); // probably global panel, needed to make GWT events working
+            JQMContext.getRootPanel().add(this); // probably global panel, needed to make GWT events working
         }
         onPanelOpen();
         JQMPanelEvent.fire(this, PanelState.OPEN);
@@ -311,35 +312,39 @@ public class JQMPanel extends JQMWidget {
 
     private static native void bindLifecycleEventsExternal(JQMPanel p, String id) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
-        $wnd.$("body").on("panelbeforeclose",
+
+        var jqmRoot = $wnd.$.mobile.pageContainer;
+        if (!jqmRoot) jqmRoot = $wnd.$('body');
+
+        jqmRoot.on("panelbeforeclose",
             function(event, ui) {
                 if (event.target.id === id) {
                     p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelBeforeClose()();
                 }
             });
 
-        $wnd.$("body").on("panelbeforeopen",
+        jqmRoot.on("panelbeforeopen",
             function(event, ui) {
                 if (event.target.id === id) {
                     p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelBeforeOpen()();
                 }
             });
 
-        $wnd.$("body").on("panelclose",
+        jqmRoot.on("panelclose",
             function(event, ui) {
                 if (event.target.id === id) {
                     p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelClose()();
                 }
             });
 
-        $wnd.$("body").on("panelcreate",
+        jqmRoot.on("panelcreate",
             function(event, ui) {
                 if (event.target.id === id) {
                     p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelCreate()();
                 }
             });
 
-        $wnd.$("body").on("panelopen",
+        jqmRoot.on("panelopen",
             function(event, ui) {
                 if (event.target.id === id) {
                     p.@com.sksamuel.jqm4gwt.toolbar.JQMPanel::doPanelOpen()();
@@ -370,10 +375,11 @@ public class JQMPanel extends JQMWidget {
     }-*/;
 
     public boolean isExternal() {
-        NodeList<Node> children = Document.get().getBody().getChildNodes();
+        NodeList<Node> children = Mobile.getPageContainer().getChildNodes();
         if (children == null || children.getLength() == 0) return false;
+        final Element thisElt = getElement();
         for (int i = 0; i < children.getLength(); i++) {
-            if (children.getItem(i) == getElement()) return true;
+            if (children.getItem(i) == thisElt) return true;
         }
         return false;
     }
@@ -384,7 +390,9 @@ public class JQMPanel extends JQMWidget {
     public void setExternal(boolean value) {
         if (value == isExternal()) return;
         if (value) {
-            Document.get().getBody().appendChild(getElement());
+            Widget parent = getParent();
+            if (parent instanceof JQMPage) unbindLifecycleEvents(((JQMPage) parent).getId());
+            JQMContext.getRootPanel().add(this);
             Scheduler.get().scheduleFinally(new ScheduledCommand() {
                 @Override
                 public void execute() {
@@ -394,7 +402,7 @@ public class JQMPanel extends JQMWidget {
             });
         } else {
             // TODO (not important): implement unbindLifecycleEventsExternal() through static field & method
-            Document.get().getBody().removeChild(getElement());
+            JQMContext.getRootPanel().remove(this);
         }
     }
 

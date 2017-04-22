@@ -229,3 +229,76 @@ $.widget( "mobile.filterable", $.mobile.filterable, {
         }
     }
 });
+
+// Panel: Retain current page during closing process
+// See https://github.com/jquery/jquery-mobile/commit/827292ededd3b6b0d3fef737fda6b95774760228
+$.widget( "mobile.panel", $.mobile.panel, {
+    close: function( immediate ) {
+        if ( this._open ) {
+            var self = this,
+
+                // Record what the page is the moment the process of closing begins, because it
+                // may change by the time the process completes
+                currentPage = self._page(),
+                o = this.options,
+
+                _closePanel = function() {
+
+                    self.element.removeClass( o.classes.panelOpen );
+
+                    if ( o.display !== "overlay" ) {
+                        self._wrapper.removeClass( self._pageContentOpenClasses );
+                        self._fixedToolbars().removeClass( self._pageContentOpenClasses );
+                    }
+
+                    if ( !immediate && $.support.cssTransform3d && !!o.animate ) {
+                        ( self._wrapper || self.element )
+                            .animationComplete( complete, "transition" );
+                    } else {
+                        setTimeout( complete, 0 );
+                    }
+
+                    if ( self._modal ) {
+                        self._modal
+                            .removeClass( self._modalOpenClasses )
+                            .height( "" );
+                    }
+                },
+                complete = function() {
+                    if ( o.theme && o.display !== "overlay" ) {
+                        currentPage.parent().removeClass( o.classes.pageContainer + "-themed " +
+                            o.classes.pageContainer + "-" + o.theme );
+                    }
+
+                    self.element.addClass( o.classes.panelClosed );
+
+                    if ( o.display !== "overlay" ) {
+                        currentPage.parent().removeClass( o.classes.pageContainer );
+                        self._wrapper.removeClass( o.classes.pageContentPrefix + "-open" );
+                        self._fixedToolbars().removeClass( o.classes.pageContentPrefix + "-open" );
+                    }
+
+                    if ( $.support.cssTransform3d && !!o.animate && o.display !== "overlay" ) {
+                        self._wrapper.removeClass( o.classes.animate );
+                        self._fixedToolbars().removeClass( o.classes.animate );
+                    }
+
+                    self._fixPanel();
+                    self._unbindFixListener();
+                    $.mobile.resetActivePageHeight();
+
+                    currentPage.jqmRemoveData( "panel" );
+
+                    self._trigger( "close" );
+
+                    self._openedPage = null;
+                };
+
+            self._trigger( "beforeclose" );
+
+            _closePanel();
+
+            self._open = false;
+        }
+    }
+});

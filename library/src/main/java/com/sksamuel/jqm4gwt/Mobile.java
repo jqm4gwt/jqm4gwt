@@ -37,6 +37,12 @@ public class Mobile {
         $wnd.$.mobile.back();
     }-*/;
 
+    public static native Element getPageContainer() /*-{
+        var pageContainer = $wnd.$.mobile.pageContainer;
+        if (pageContainer) return pageContainer[0];
+        else return $doc.body;
+    }-*/;
+
     public static native Element getActivePage() /*-{
         var pageContainer = $wnd.$.mobile.pageContainer;
         var pg = pageContainer.pagecontainer("getActivePage");

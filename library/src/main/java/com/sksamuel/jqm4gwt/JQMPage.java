@@ -253,23 +253,23 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
         var page = $wnd.$(elt);
 
-        page.on("pagecreate", function(event, ui) {
+        page.on("pagecreate.jqm4gwt", function(event, ui) {
             p.@com.sksamuel.jqm4gwt.JQMPage::doPageInit()();
         });
 
-        page.on("pageshow", function(event, ui) {
+        page.on("pageshow.jqm4gwt", function(event, ui) {
             p.@com.sksamuel.jqm4gwt.JQMPage::doPageShow(Lcom/google/gwt/dom/client/Element;)(ui.prevPage.get(0));
         });
 
-        page.on("pagebeforeshow", function(event, ui) {
+        page.on("pagebeforeshow.jqm4gwt", function(event, ui) {
             p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeShow(Lcom/google/gwt/dom/client/Element;)(ui.prevPage.get(0));
         });
 
-        page.on("pagehide", function(event, ui) {
+        page.on("pagehide.jqm4gwt", function(event, ui) {
             p.@com.sksamuel.jqm4gwt.JQMPage::doPageHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
         });
 
-        page.on("pagebeforehide", function(event, ui) {
+        page.on("pagebeforehide.jqm4gwt", function(event, ui) {
             p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
         });
     }-*/;
@@ -279,11 +279,11 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
         var page = $wnd.$(elt);
 
-        page.on("pagehide", function(event, ui) {
+        page.on("pagehide.jqm4gwt", function(event, ui) {
             p.@com.sksamuel.jqm4gwt.JQMPage::doPageHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
         });
 
-        page.on("pagebeforehide", function(event, ui) {
+        page.on("pagebeforehide.jqm4gwt", function(event, ui) {
             p.@com.sksamuel.jqm4gwt.JQMPage::doPageBeforeHide(Lcom/google/gwt/dom/client/Element;)(ui.nextPage.get(0));
         });
     }-*/;
@@ -291,8 +291,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     private static native void unbindLifecycleHideEvents(Element elt) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         var page = $wnd.$(elt);
-        page.off("pagehide");
-        page.off("pagebeforehide");
+        page.off("pagehide.jqm4gwt");
+        page.off("pagebeforehide.jqm4gwt");
     }-*/;
 
     public void bindLifecycleEvents() {
@@ -302,11 +302,11 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     private static native void unbindLifecycleEvents(Element elt) /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         var page = $wnd.$(elt);
-        page.off("pagecreate");
-        page.off("pageshow");
-        page.off("pagebeforeshow");
-        page.off("pagehide");
-        page.off("pagebeforehide");
+        page.off("pagecreate.jqm4gwt");
+        page.off("pageshow.jqm4gwt");
+        page.off("pagebeforeshow.jqm4gwt");
+        page.off("pagehide.jqm4gwt");
+        page.off("pagebeforehide.jqm4gwt");
     }-*/;
 
     public void unbindLifecycleEvents() {
