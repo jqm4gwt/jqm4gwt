@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -32,6 +33,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     public static final String DATA_DOM_CACHE = "data-dom-cache";
     public static final String UI_DIALOG_BACKGROUND = "ui-dialog-background";
     public static final String JQM4GWT_DLG_TRANSPARENT = "jqm4gwt-dialog-transparent";
+    public static final String JQM4GWT_DLG_TRANSPARENT_OPENED = "jqm4gwt-dlg-transparent-opened";
     public static final String DLG_TRANSPARENT_ZINDEX_MINUS1 = "zindex-1";
     public static final String DLG_TRANSPARENT_TOPMOST = "topmost";
 
@@ -462,11 +464,30 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         }
     }
 
+    /**
+     * Needed mostly in case of page container surrounded by external panels, so these panels
+     * could be synchronously disabled/enabled when "modal" dialog shown by jqm application.
+     */
+    private static void prepareTransparentInfo(boolean add, String transparentPageId) {
+        Element p = Document.get().getBody();
+        if (p != null) {
+            String s = JQM4GWT_DLG_TRANSPARENT_OPENED + "-" + transparentPageId;
+            if (add) {
+                p.addClassName(JQM4GWT_DLG_TRANSPARENT_OPENED);
+                p.addClassName(s);
+            } else {
+                p.removeClassName(JQM4GWT_DLG_TRANSPARENT_OPENED);
+                p.removeClassName(s);
+            }
+        }
+    }
+
     private void prepareTransparentPrevPage(Element prevPage) {
         if (transparent && prevPage != null) {
             if (transparentPrevPage == prevPage) return; // already prepared
             transparentPrevPage = prevPage;
             prevPage.addClassName(UI_DIALOG_BACKGROUND);
+            prepareTransparentInfo(true/*add*/, getId());
             String s = prevPage.getAttribute(DATA_DOM_CACHE);
             if ("true".equals(s)) {
                 transparentPrevPageClearCache = false;
@@ -505,6 +526,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
         if (transparentPrevPage != null) {
             transparentPrevPage.removeClassName(UI_DIALOG_BACKGROUND);
+            prepareTransparentInfo(false/*add*/, getId());
             if (transparentPrevPageClearCache) {
                 transparentPrevPage.removeAttribute(DATA_DOM_CACHE);
             }
