@@ -5,6 +5,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.AttachDetachException;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetCollection;
 
@@ -91,5 +92,27 @@ public class CustomFlowPanel extends ComplexPanel {
         Element elt = getElement();
         insert(w, elt, beforeIndex, true);
     }
+
+    /**
+     * The same as ComplexPanel.add(child, container), but without physical DOM.appendChild() attach.
+     *
+     *  @param parentPanel - depends on externalChild placement in DOM, in most of the cases it should be RootPanel.get()
+     **/
+    public static CustomFlowPanel adoptExternal(ComplexPanel parentPanel, Element externalChild) {
+        if (parentPanel == null || externalChild == null) return null;
+        CustomFlowPanel rslt = new CustomFlowPanel(externalChild);
+        WidgetCollection children = getChildren(parentPanel);
+        children.add(rslt); // Logical attach
+        adoptChild(parentPanel, rslt); // Adopt
+        return rslt;
+    }
+
+    private static native WidgetCollection getChildren(ComplexPanel panel) /*-{
+        return panel.@com.google.gwt.user.client.ui.ComplexPanel::children;
+    }-*/;
+
+    private static native void adoptChild(Panel parent, Widget child) /*-{
+        parent.@com.google.gwt.user.client.ui.Panel::adopt(Lcom/google/gwt/user/client/ui/Widget;)(child);
+    }-*/;
 
 }
