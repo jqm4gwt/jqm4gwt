@@ -37,6 +37,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     public static final String DLG_TRANSPARENT_ZINDEX_MINUS1 = "zindex-1";
     public static final String DLG_TRANSPARENT_TOPMOST = "topmost";
 
+    private static final String JQM4GWT_DLG_TRANSPARENT_OPENED_PREFIX = JQM4GWT_DLG_TRANSPARENT_OPENED + "-";
+
     /**
      * true - Header, Footer, Content positions will NOT be adjusted according to page properties:
      *        contentCentered, contentHeightPercent, pseudoFixedToolbars, ...
@@ -471,13 +473,15 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     private static void prepareTransparentInfo(boolean add, String transparentPageId) {
         Element p = Document.get().getBody();
         if (p != null) {
-            String s = JQM4GWT_DLG_TRANSPARENT_OPENED + "-" + transparentPageId;
+            String s = JQM4GWT_DLG_TRANSPARENT_OPENED_PREFIX + transparentPageId;
             if (add) {
                 p.addClassName(JQM4GWT_DLG_TRANSPARENT_OPENED);
                 p.addClassName(s);
             } else {
-                p.removeClassName(JQM4GWT_DLG_TRANSPARENT_OPENED);
                 p.removeClassName(s);
+                String ss = JQMCommon.getStyleStartsWith(p, JQM4GWT_DLG_TRANSPARENT_OPENED_PREFIX);
+                // checking for "opened dialog chain" case
+                if (Empty.is(ss)) p.removeClassName(JQM4GWT_DLG_TRANSPARENT_OPENED);
             }
         }
     }
