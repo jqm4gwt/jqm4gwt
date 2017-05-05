@@ -31,6 +31,8 @@
   
   </ui:style>
   
+  <ui:import field="com.sksamuel.jqm4gwt.plugins.datatables.DataTableStyleClass.COMPACT" />
+  
   <jqm:JQMPage containerId="dataTableTestPage" backButton="true"
     contentCentered="true" contentHeightPercent="98.0"
     contentAddStyleNames="jqm4gwt-scrollable-page-content {style.contentBorder}">
@@ -44,10 +46,14 @@
     <g:FlowPanel addStyleNames="jqm4gwt-scrollable-main-stage">
       <g:FlowPanel addStyleNames="{style.pageContent}">
       
+        <h:Heading.H4 text="Compact DataTable with cell borders." />
         <!-- See https://www.datatables.net/examples/ajax/simple.html --> 
         <da:JQMDataTable ui:field="dataTable1" searching="true" pagingType="FULL_NUMBERS"
           colSorts="0" colNames="Name, Position, Office, Extn., Start date, Salary"
-          ajax="data/array.json">
+          colClassNames="1=CENTER NOWRAP abc, 5=RIGHT"
+          ajax="data/array.json"
+          dfltTableStylesStr="CELL_BORDER ROW_HOVER ORDER_COL_HIGHLIGHT"
+          addStyleNames="{COMPACT.getJqmValue}"> <!-- COMPACT of course could be added directly to dfltTableStylesStr -->
         </da:JQMDataTable>
         
         <g:FlowPanel addStyleNames="{style.separator}" />
@@ -76,7 +82,7 @@
             <da:ColumnDefEx title="Name" data="name" name="name" />
           </da:column>
           <da:column>
-            <da:ColumnDefEx title="Position" data="hr.position" />
+            <da:ColumnDefEx title="Position" data="hr.position" classNames="CENTER NOWRAP abc" />
           </da:column> 
           <da:column>
             <da:ColumnDefEx title="Office" data="contact.0" />
@@ -88,7 +94,7 @@
             <da:ColumnDefEx title="Start date" data="hr.start_date" />
           </da:column>
           <da:column>
-            <da:ColumnDefEx title="Salary" data="hr.salary" name="salary" />
+            <da:ColumnDefEx title="Salary" data="hr.salary" name="salary" classNames="RIGHT" />
           </da:column>
           <da:column>
             <da:ColumnDefEx defaultContent="Edit" defaultContentType="BUTTON" />

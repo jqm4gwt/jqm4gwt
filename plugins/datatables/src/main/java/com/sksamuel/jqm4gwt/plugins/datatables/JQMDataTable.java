@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt.plugins.datatables;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -248,6 +249,8 @@ public class JQMDataTable extends JQMTableGrid {
 
     private boolean visible = true;
 
+    private final EnumSet<DataTableStyleClass> dfltTableStyles = EnumSet.of(DataTableStyleClass.STD_DISPLAY);
+
     public JQMDataTable() {
     }
 
@@ -474,11 +477,24 @@ public class JQMDataTable extends JQMTableGrid {
         return rslt;
     }
 
+    private JsColumn processColClassNames(int colIdx, JsColumn jsCol) {
+        String classes = getColClassNames(colIdx);
+        if (classes != null && !classes.isEmpty()) {
+            String s = jsCol != null ? jsCol.getClassName() : null;
+            if (s != null && !s.isEmpty()) s += " " + classes;
+            else s = classes;
+            if (jsCol == null) jsCol = JsColumn.create();
+            jsCol.setClassName(classes);
+        }
+        return jsCol;
+    }
+
     private JsColumns prepareJsColumns() {
         if (Empty.is(datacols)) {
             if (Empty.is(columns)) return null;
             boolean nothing = true;
             JsColumns rslt = JsColumns.create(null);
+            int idx = 0;
             for (ColumnDef col : columns) {
                 if (col.isGroup()) continue;
                 JsColumn jsCol = null;
@@ -494,14 +510,17 @@ public class JQMDataTable extends JQMTableGrid {
                     if (jsCol == null) jsCol = JsColumn.create();
                     jsCol.setRenderFunc(getElement(), col, cellRender);
                 }
+                jsCol = processColClassNames(idx, jsCol);
                 if (jsCol != null) nothing = false;
                 rslt.push(jsCol);
+                idx++;
             }
             if (nothing) return null;
             return rslt;
         }
         boolean nothing = true;
         JsColumns rslt = JsColumns.create(null);
+        int idx = 0;
         for (ColumnDefEx col : datacols) {
             if (col.isGroup()) continue;
             JsColumn jsCol = null;
@@ -525,6 +544,7 @@ public class JQMDataTable extends JQMTableGrid {
                 if (jsCol == null) jsCol = JsColumn.create();
                 jsCol.setClassName(col.getClassNames());
             }
+            jsCol = processColClassNames(idx, jsCol);
             if (col.isCellTypeTh()) {
                 if (jsCol == null) jsCol = JsColumn.create();
                 jsCol.setCellType("th");
@@ -555,6 +575,7 @@ public class JQMDataTable extends JQMTableGrid {
 
             if (jsCol != null) nothing = false;
             rslt.push(jsCol);
+            idx++;
         }
         if (nothing) return null;
         return rslt;
@@ -568,11 +589,41 @@ public class JQMDataTable extends JQMTableGrid {
         this.manualEnhance = manualEnhance;
     }
 
+    public DataTableStyleClass[] getDfltTableStyles() {
+        return (DataTableStyleClass[]) dfltTableStyles.toArray();
+    }
+
+    public void setDfltTableStyles(DataTableStyleClass... classes) {
+        dfltTableStyles.clear();
+        if (classes != null) {
+            for (DataTableStyleClass i : classes) dfltTableStyles.add(i);
+        }
+    }
+
+    /**
+     * Expected DataTableStyleClass enum values as space separated string.
+     */
+    public void setDfltTableStylesStr(String classes) {
+        dfltTableStyles.clear();
+        if (classes == null || classes.isEmpty()) return;
+        List<String> lst = StrUtils.split(classes, " ");
+        for (int k = 0; k < lst.size(); k++) {
+            String s = lst.get(k).trim();
+            DataTableStyleClass cls;
+            try {
+                cls = DataTableStyleClass.valueOf(s);
+                dfltTableStyles.add(cls);
+            } catch (Exception ex) {
+                continue;
+            }
+        }
+    }
+
     public void enhance() {
         if (enhanced) return;
         enhanced = true;
         final Element elt = getElement();
-        elt.addClassName("display");
+        for (DataTableStyleClass cls : dfltTableStyles) elt.addClassName(cls.getJqmValue());
         elt.setAttribute("width", "100%");
         elt.setAttribute("cellspacing", "0"); // obsolete in HTML5, but used in DataTables examples
 
@@ -1577,6 +1628,11 @@ public class JQMDataTable extends JQMTableGrid {
     @Override
     public boolean isVisible() {
         return visible;
+    }
+
+    @Override
+    protected void applyColClassNames(boolean add) {
+        // nothing, we don't need super.applyColClassNames() to be called
     }
 
 }

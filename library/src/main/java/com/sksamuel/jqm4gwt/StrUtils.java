@@ -9,6 +9,10 @@ public class StrUtils {
 
     private StrUtils() {} // static class
 
+    public static boolean equals(String s1, String s2) {
+        return s1 == s2 || s1 != null && s1.equals(s2);
+    }
+
     // See http://stackoverflow.com/a/2709855
     //private static final String COMMA_SPLIT = "(?<!\\\\),";
     //private static final String BACKSLASH_COMMA = "\\\\,";

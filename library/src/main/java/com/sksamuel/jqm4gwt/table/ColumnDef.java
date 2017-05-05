@@ -12,6 +12,7 @@ public class ColumnDef {
     private boolean headGroup;
     private int colspan; // needed for 'Grouped column headers' mode
     private int rowspan;
+    private String classNames;
 
     public ColumnDef() {
     }
@@ -125,5 +126,53 @@ public class ColumnDef {
     /** @param headGroup - when true explicitly defines this ColumnDef as complex head group. */
     public void setHeadGroup(boolean headGroup) {
         this.headGroup = headGroup;
+    }
+
+    public String getClassNames() {
+        return classNames;
+    }
+
+    /**
+     * Space separated list of additional styling classes for table cells.
+     * <br> See {@link ColumnStyleClass} for example.
+     **/
+    public void setClassNames(String classNames) {
+        this.classNames = processClassNames(classNames);
+    }
+
+    /**
+     *
+     * @param classNames - expected: RIGHT NOWRAP abc
+     * @return - ColumnStyleClass values will be replaced by their corresponding jqm values.
+     */
+    public static String processClassNames(String classNames) {
+        if (classNames == null || classNames.isEmpty()) return classNames;
+        List<String> classes = StrUtils.split(classNames, " ");
+        boolean changed = false;
+        for (int k = 0; k < classes.size(); k++) {
+            String cls = classes.get(k).trim();
+            ColumnStyleClass clsEx;
+            try {
+                clsEx = ColumnStyleClass.valueOf(cls);
+                changed = true;
+                classes.set(k, clsEx.getJqmValue());
+            } catch (Exception ex) {
+                continue;
+            }
+        }
+        if (changed) {
+            String s = classes.get(0);
+            for (int k = 1; k < classes.size(); k++) s += " " + classes.get(k);
+            return s;
+        } else {
+            return classNames;
+        }
+    }
+
+    public void addClassName(ColumnStyleClass className) {
+        if (className == null) return;
+        String s = className.getJqmValue();
+        if (Empty.is(this.classNames)) this.classNames = s;
+        else this.classNames += " " + s;
     }
 }
