@@ -266,3 +266,75 @@
   -moz-box-shadow: 0 1px 0 rgba(255,255,255,.3) /*{global-icon-shadow}*/;
   box-shadow: 0 1px 0 rgba(255,255,255,.3) /*{global-icon-shadow}*/;
 }
+
+/* Ported from jQuery DataTables */
+table:not(.dataTable) th.dt-left,
+table:not(.dataTable) td.dt-left {
+  text-align: left;
+}
+table:not(.dataTable) th.dt-center,
+table:not(.dataTable) td.dt-center {
+  text-align: center;
+}
+table:not(.dataTable) th.dt-right,
+table:not(.dataTable) td.dt-right {
+  text-align: right;
+}
+table:not(.dataTable) th.dt-justify,
+table:not(.dataTable) td.dt-justify {
+  text-align: justify;
+}
+table:not(.dataTable) th.dt-nowrap,
+table:not(.dataTable) td.dt-nowrap {
+  white-space: nowrap;
+}
+table:not(.dataTable) thead th.dt-head-left,
+table:not(.dataTable) thead td.dt-head-left,
+table:not(.dataTable) tfoot th.dt-head-left,
+table:not(.dataTable) tfoot td.dt-head-left {
+  text-align: left;
+}
+table:not(.dataTable) thead th.dt-head-center,
+table:not(.dataTable) thead td.dt-head-center,
+table:not(.dataTable) tfoot th.dt-head-center,
+table:not(.dataTable) tfoot td.dt-head-center {
+  text-align: center;
+}
+table:not(.dataTable) thead th.dt-head-right,
+table:not(.dataTable) thead td.dt-head-right,
+table:not(.dataTable) tfoot th.dt-head-right,
+table:not(.dataTable) tfoot td.dt-head-right {
+  text-align: right;
+}
+table:not(.dataTable) thead th.dt-head-justify,
+table:not(.dataTable) thead td.dt-head-justify,
+table:not(.dataTable) tfoot th.dt-head-justify,
+table:not(.dataTable) tfoot td.dt-head-justify {
+  text-align: justify;
+}
+table:not(.dataTable) thead th.dt-head-nowrap,
+table:not(.dataTable) thead td.dt-head-nowrap,
+table:not(.dataTable) tfoot th.dt-head-nowrap,
+table:not(.dataTable) tfoot td.dt-head-nowrap {
+  white-space: nowrap;
+}
+table:not(.dataTable) tbody th.dt-body-left,
+table:not(.dataTable) tbody td.dt-body-left {
+  text-align: left;
+}
+table:not(.dataTable) tbody th.dt-body-center,
+table:not(.dataTable) tbody td.dt-body-center {
+  text-align: center;
+}
+table:not(.dataTable) tbody th.dt-body-right,
+table:not(.dataTable) tbody td.dt-body-right {
+  text-align: right;
+}
+table:not(.dataTable) tbody th.dt-body-justify,
+table:not(.dataTable) tbody td.dt-body-justify {
+  text-align: justify;
+}
+table:not(.dataTable) tbody th.dt-body-nowrap,
+table:not(.dataTable) tbody td.dt-body-nowrap {
+  white-space: nowrap;
+}

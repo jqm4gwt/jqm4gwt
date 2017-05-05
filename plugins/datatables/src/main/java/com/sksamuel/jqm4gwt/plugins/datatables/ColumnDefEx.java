@@ -23,7 +23,6 @@ public class ColumnDefEx extends ColumnDef {
     private boolean orderable = true;
     private boolean searchable = true;
 
-    private String classNames;
     private boolean cellTypeTh;
     private String width;
 
@@ -92,18 +91,14 @@ public class ColumnDefEx extends ColumnDef {
         this.visible = visible;
     }
 
+    @Override
     public String getClassNames() {
-        String s = classNames;
+        String s = super.getClassNames();
         if (DefaultContentType.ROW_DETAILS.equals(defaultContentType)) {
             if (Empty.is(s)) s = ROW_DETAILS_CLASS;
             else s += " " + ROW_DETAILS_CLASS;
         }
         return s;
-    }
-
-    /** Space separated list of additional styling classes for table body cells. */
-    public void setClassNames(String classNames) {
-        this.classNames = classNames;
     }
 
     public boolean isCellTypeTh() {

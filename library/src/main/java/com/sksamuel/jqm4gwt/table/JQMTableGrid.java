@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt.table;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -63,6 +64,11 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
 
     protected String footColTitles;
 
+    private String colClassNames;
+    private Map<Integer, String> colClsNames;
+    private Map<Integer, String> colClsNamesHead;
+    private Map<Integer, String> colClsNamesBody;
+
     private String cells;
 
     private Collection<String> dataStr;
@@ -85,6 +91,7 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         loaded = true;
         WidgetDefaults dflt = JQMContext.getWidgetDefaults();
         if (dflt != null) dflt.loaded(this);
+        applyColClassNames(true/*add*/);
         if (tBody.getWidgetCount() == 0 && !colTitleWidgets.isEmpty()) populateBody();
     }
 
@@ -384,6 +391,8 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         if (col == null) return null;
         setColPriority(col, priority);
         col.getElement().setInnerHTML(title);
+        String classes = calcColClassNames(index, true/*head*/);
+        if (!Empty.is(classes)) JQMCommon.addStyleNames(col, classes);
         applyImgOnly(col);
         return col;
     }
@@ -460,6 +469,8 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         col.getElement().setInnerHTML(isTitleTh ? removeTh(grp.getTitle()) : grp.getTitle());
         if (colspan > 1) JQMCommon.setAttribute(col, "colspan", String.valueOf(colspan));
         if (rowspan > 1) JQMCommon.setAttribute(col, "rowspan", String.valueOf(rowspan));
+        String classes = calcColClassNames(index, true/*head*/);
+        if (!Empty.is(classes)) JQMCommon.addStyleNames(col, classes);
         applyImgOnly(col);
         return col;
     }
@@ -527,6 +538,8 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         } else {
             c.getElement().setInnerHTML(cell);
         }
+        String classes = calcColClassNames(colIdx, false/*head*/);
+        if (!Empty.is(classes)) JQMCommon.addStyleNames(c, classes);
         applyImgOnly(c);
     }
 
@@ -552,6 +565,36 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         return tag.equalsIgnoreCase(elt.getTagName());
     }
 
+    @SuppressWarnings("unused")
+    private int getNumOfRows() {
+        return tBody.getWidgetCount();
+    }
+
+    private void forEachRow(ForEachCallback callback) {
+        if (callback == null) return;
+        int cnt = -1;
+        for (int i = 0; i < tBody.getWidgetCount(); i++) {
+            Widget child = tBody.getWidget(i);
+            if (child instanceof ComplexPanel && isTag(TableRowElement.TAG, child.getElement())) {
+                cnt++;
+                callback.process((ComplexPanel) child, cnt);
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    private ComplexPanel findRow(int row) {
+        int cnt = -1;
+        for (int i = 0; i < tBody.getWidgetCount(); i++) {
+            Widget child = tBody.getWidget(i);
+            if (child instanceof ComplexPanel && isTag(TableRowElement.TAG, child.getElement())) {
+                cnt++;
+                if (cnt == row) return (ComplexPanel) child;
+            }
+        }
+        return null;
+    }
+
     private ComplexPanel getRow(int row) {
         int cnt = -1;
         for (int i = 0; i < tBody.getWidgetCount(); i++) {
@@ -569,11 +612,45 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         return r;
     }
 
-    private static ComplexPanel getCol(ComplexPanel r, int col, boolean addTh) {
-        if (r == null || col < 0) return null;
+    private interface ForEachCallback {
+        void process(ComplexPanel item, int index);
+    }
+
+    private static void forEachCol(ComplexPanel row, ForEachCallback callback) {
+        if (row == null || callback == null) return;
         int cnt = -1;
-        for (int i = 0; i < r.getWidgetCount(); i++) {
-            Widget child = r.getWidget(i);
+        for (int i = 0; i < row.getWidgetCount(); i++) {
+            Widget child = row.getWidget(i);
+            if (child instanceof ComplexPanel
+                    && (isTag(TableCellElement.TAG_TH, child.getElement())
+                            || isTag(TableCellElement.TAG_TD, child.getElement()))) {
+                cnt++;
+                callback.process((ComplexPanel) child, cnt);
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    private static ComplexPanel findCol(ComplexPanel row, int col) {
+        if (row == null || col < 0) return null;
+        int cnt = -1;
+        for (int i = 0; i < row.getWidgetCount(); i++) {
+            Widget child = row.getWidget(i);
+            if (child instanceof ComplexPanel
+                    && (isTag(TableCellElement.TAG_TH, child.getElement())
+                            || isTag(TableCellElement.TAG_TD, child.getElement()))) {
+                cnt++;
+                if (cnt == col) return (ComplexPanel) child;
+            }
+        }
+        return null;
+    }
+
+    private static ComplexPanel getCol(ComplexPanel row, int col, boolean addTh) {
+        if (row == null || col < 0) return null;
+        int cnt = -1;
+        for (int i = 0; i < row.getWidgetCount(); i++) {
+            Widget child = row.getWidget(i);
             if (child instanceof ComplexPanel
                     && (isTag(TableCellElement.TAG_TH, child.getElement())
                             || isTag(TableCellElement.TAG_TD, child.getElement()))) {
@@ -585,7 +662,7 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         for (int i = cnt; i < col; i++) {
             c = addTh ? new CustomFlowPanel(Document.get().createTHElement())
                       : new CustomFlowPanel(Document.get().createTDElement());
-            r.add(c);
+            row.add(c);
         }
         return c;
     }
@@ -672,6 +749,117 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
             Collection<String> newValue = getValue();
             ValueChangeEvent.fireIfNotEqual(this, oldValue, newValue);
         }
+    }
+
+    public String getColClassNames() {
+        return colClassNames;
+    }
+
+    /**
+     * @param colClassNames - expected: 2=RIGHT NOWRAP abc, 3=LEFT
+     **/
+    public void setColClassNames(String colClassNames) {
+        String old = getColClassNames();
+        if (StrUtils.equals(old, colClassNames)) return;
+        if (loaded) applyColClassNames(false/*add*/);
+        this.colClassNames = colClassNames;
+        if (colClsNames != null) {
+            colClsNames.clear();
+            if (colClsNamesHead != null) colClsNamesHead.clear();
+            if (colClsNamesBody != null) colClsNamesBody.clear();
+        }
+        if (!Empty.is(this.colClassNames)) {
+            List<String> lst = StrUtils.commaSplit(this.colClassNames);
+            for (String i : lst) {
+                int j = i.indexOf("=");
+                if (j > 0 && j < i.length() - 1) {
+                    String s = i.substring(0, j).trim();
+                    int n;
+                    try {
+                        n = Integer.parseInt(s);
+                        if (n < 0) continue;
+                    } catch (Exception ex) {
+                        continue;
+                    }
+                    s = i.substring(j + 1).trim();
+                    if (s.isEmpty()) continue;
+                    s = ColumnDef.processClassNames(s);
+                    if (colClsNames == null) colClsNames = new HashMap<>();
+                    colClsNames.put(n, s);
+                }
+            }
+            if (loaded) applyColClassNames(true/*add*/);
+        }
+    }
+
+    protected String getColClassNames(int colIdx) {
+        return colClsNames != null ? colClsNames.get(colIdx) : null;
+    }
+
+    private String getColClassNamesHead(int colIdx) {
+        return colClsNamesHead != null ? colClsNamesHead.get(colIdx) : null;
+    }
+
+    private String getColClassNamesBody(int colIdx) {
+        return colClsNamesBody != null ? colClsNamesBody.get(colIdx) : null;
+    }
+
+    private void checkColClsNamesDependants() {
+        if (colClsNames == null || colClsNames.isEmpty()) {
+            if (colClsNamesHead != null) colClsNamesHead.clear();
+            if (colClsNamesBody != null) colClsNamesBody.clear();
+            return;
+        }
+        if (colClsNamesHead == null || colClsNamesHead.isEmpty()) {
+            if (colClsNamesHead == null) colClsNamesHead = new HashMap<>(colClsNames.size());
+            for (Entry<Integer, String> i : colClsNames.entrySet()) {
+                String s = i.getValue();
+                s = JQMCommon.removeStylesStartsWith(s, ColumnStyleClass.JQM_BODY_ONLY_PREFIX);
+                colClsNamesHead.put(i.getKey(), s);
+            }
+        }
+        if (colClsNamesBody == null || colClsNamesBody.isEmpty()) {
+            if (colClsNamesBody == null) colClsNamesBody = new HashMap<>(colClsNames.size());
+            for (Entry<Integer, String> i : colClsNames.entrySet()) {
+                String s = i.getValue();
+                s = JQMCommon.removeStylesStartsWith(s, ColumnStyleClass.JQM_HEAD_ONLY_PREFIX);
+                colClsNamesBody.put(i.getKey(), s);
+            }
+        }
+    }
+
+    private String calcColClassNames(int colIdx, boolean head) {
+        checkColClsNamesDependants();
+        String classes = head ? getColClassNamesHead(colIdx) : getColClassNamesBody(colIdx);
+        return classes;
+    }
+
+    /**
+     * @param add - if false then colClassNames will be removed.
+     */
+    protected void applyColClassNames(boolean add) {
+        if (colClsNames == null || colClsNames.isEmpty()) return;
+
+        ComplexPanel head = getHeadRow();
+        if (head != null) {
+            forEachCol(head, (col, i) -> {
+                String classes = calcColClassNames(i, true/*head*/);
+                if (!Empty.is(classes)) {
+                    if (add) JQMCommon.addStyleNames(col, classes);
+                    else JQMCommon.removeStyleNames(col, classes);
+                }
+            });
+        }
+
+        forEachRow((row, j) -> {
+            forEachCol(row, (col, i) -> {
+                String classes = calcColClassNames(i, false/*head*/);
+                if (!Empty.is(classes)) {
+                    if (add) JQMCommon.addStyleNames(col, classes);
+                    else JQMCommon.removeStyleNames(col, classes);
+                }
+            });
+        });
     }
 
 }

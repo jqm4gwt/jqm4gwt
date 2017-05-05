@@ -189,10 +189,8 @@ public class JQMCommon {
         return styles != null && (indexOfName(styles, style) >= 0);
     }
 
-    public static void removeStylesStartsWith(Element elt, String startsWith) {
-        if (elt == null || startsWith == null || startsWith.isEmpty()) return;
-        String styles = elt.getPropertyString("className");
-        if (styles == null || styles.isEmpty()) return;
+    public static String removeStylesStartsWith(String styles, String startsWith) {
+        if (styles == null || styles.isEmpty() || startsWith == null || startsWith.isEmpty()) return styles;
         boolean changed = false;
         int p = 0;
         do {
@@ -213,7 +211,17 @@ public class JQMCommon {
         } while (true);
 
         if (changed) {
-            elt.setPropertyString("className", styles);
+            // nothing for now
+        }
+        return styles;
+    }
+
+    public static void removeStylesStartsWith(Element elt, String startsWith) {
+        if (elt == null || startsWith == null || startsWith.isEmpty()) return;
+        String oldStyles = elt.getPropertyString("className");
+        String newStyles = removeStylesStartsWith(oldStyles, startsWith);
+        if (!StrUtils.equals(oldStyles, newStyles)) {
+            elt.setPropertyString("className", newStyles);
         }
     }
 

@@ -73,6 +73,7 @@ import com.sksamuel.jqm4gwt.list.JQMListDivider;
 import com.sksamuel.jqm4gwt.list.JQMListItem;
 import com.sksamuel.jqm4gwt.plugins.datatables.JQMDataTable;
 import com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox;
+import com.sksamuel.jqm4gwt.table.JQMColumnToggle;
 import com.sksamuel.jqm4gwt.toolbar.JQMHeader;
 import com.sksamuel.jqm4gwt.toolbar.JQMNavBar;
 import com.sksamuel.jqm4gwt.toolbar.JQMPanel;
@@ -537,6 +538,10 @@ public class TestView1 {
     @UiField JQMButton removeLeftBtn;
     @UiField JQMButton removeRightBtn;
     @UiField JQMButton switchStagesBtn;
+
+    @UiField JQMColumnToggle colToggle1;
+    @UiField JQMButton colClassNamesBtn;
+
 
     public TestView1() {
         page.addPageHandler(new JQMPageEvent.DefaultHandler() {
@@ -1145,6 +1150,11 @@ public class TestView1 {
         else p = tabs2Stage1;
         tabs2.removeFromParent();
         ((FlowPanel) p).add(tabs2);
+    }
+
+    @UiHandler("colClassNamesBtn")
+    void colClassNamesBtnClick(ClickEvent e) {
+        colToggle1.setColClassNames("1=CENTER, 2=RIGHT_BODY CENTER_HEAD abc, 3=CENTER");
     }
 
     {

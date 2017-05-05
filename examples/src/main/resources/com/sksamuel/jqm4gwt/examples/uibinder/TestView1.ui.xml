@@ -42,7 +42,7 @@
       display: inline-block;
       vertical-align: middle; /* makes more smooth/uniform line/row */
     }
-
+    
     .marginRight10 { margin-right: 10px; }
     .marginRight20 { margin-right: 20px; }
     .marginLeft10 { margin-left: 10px; }
@@ -51,6 +51,11 @@
     .marginTopBottom0 {
       margin-top: 0;
       margin-bottom: 0;
+    }
+    
+    .marginLeftRight0 {
+      margin-left: 0;
+      margin-right: 0;
     }
 
     @external .jqm4gwt-thead-groups, .ui-table-reflow .ui-table-cell-label-top;
@@ -73,6 +78,17 @@
     .wordWrap {
       white-space: normal;
     }
+    
+    .headerPanelLeft {
+      position: absolute;
+      left: 100px;
+      top: 0;
+    }
+    .headerPanelRight {
+      position: absolute;
+      right: 100px;
+      top: 0;
+    }
 
   </ui:style>
 
@@ -84,15 +100,16 @@
     <t:JQMHeader fixed="true">
       <t:widget>
         <h:Heading.H1 text="Test Page1 Header" />
-      </t:widget>
+      </t:widget>      
       <t:widget>
-        <g:FlowPanel ui:field="headerPanel1">
+        <g:FlowPanel ui:field="headerPanel1"> <!-- addStyleNames="{style.headerPanelLeft}" -->
           <b:JQMButton ui:field="headerTestBtn1" text="Btn1" inline="true" mini="true" />
           <b:JQMButton ui:field="headerTestBtn2" text="Btn2" inline="true" mini="true" />
           <b:JQMButton text="Open Panel" href="#testView1Panel" inline="true" mini="true" />
           <b:JQMButton text="Global Panel" href="#globalPanel1" inline="true" mini="true" />
         </g:FlowPanel>
       </t:widget>
+
     </t:JQMHeader>
 
     <!-- jqm:plugins.iscroll.IScrollPanel-->
@@ -885,7 +902,9 @@
 
         <h:Paragraph addStyleNames="{style.bevel}" />
 
-        <ta:JQMColumnToggle colNames="Rank=2, Movie Title, Year=3, &lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
+        <ta:JQMColumnToggle 
+          colNames="Rank=2, Movie Title, Year=3, &lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
+          colClassNames="2=RIGHT abc, 3=CENTER"
           cells="&lt;th>1&lt;/th>, The Matrix, 1999, 8.7, 784\,311, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5,  105\,111" />
 
         <h:Paragraph addStyleNames="{style.bevel}" />
@@ -893,11 +912,14 @@
         <g:Label text="Reflow Mode Example" />
         <ta:JQMColumnToggle reflow="true"
           colNames="Rank=2, Movie Title, Year=3, &lt;abbr title='Rotten Tomato Rating'>Rating&lt;/abbr>=1, Reviews=5"
+          colClassNames="2=RIGHT abc, 3=CENTER"
           cells="&lt;th>1&lt;/th>, The Matrix, 1999, 8.7, 784\,311, &lt;th>2&lt;/th>, Falling Down, 1993, 7.5,  105\,111" />
 
         <h:Paragraph addStyleNames="{style.bevel}" />
 
-        <ta:JQMColumnToggle columnBtnText="Choose columns..." columnBtnTheme="b"
+        <ta:JQMColumnToggle ui:field="colToggle1" 
+          colClassNames="2=RIGHT_BODY CENTER_HEAD abc, 3=CENTER"
+          columnBtnText="Choose columns..." columnBtnTheme="b"
           columnPopupTheme="a" backgroundTheme="a" headerTheme="a">
 
           <ta:colTitle priority="2">
@@ -923,7 +945,8 @@
             <g:Label text="The Matrix" addStyleNames="{style.inlineBlock}" />
           </ta:cell>
           <ta:cell>
-            <b:JQMButton ui:field="movieYearBtn" text="1999" inline="true" mini="true" />
+            <b:JQMButton ui:field="movieYearBtn" text="1999" inline="true" mini="true"
+              addStyleNames="{style.marginLeftRight0}" />
           </ta:cell>
           <ta:cell>
             <b:JQMButton text="8.7" inline="true" mini="true" builtInIcon="STAR" />
@@ -939,7 +962,7 @@
             <g:Label text="Falling Down" addStyleNames="{style.inlineBlock}" />
           </ta:cell>
           <ta:cell>
-            <b:JQMButton text="1993" inline="true" mini="true" />
+            <b:JQMButton text="1993" inline="true" mini="true" addStyleNames="{style.marginLeftRight0}" />
           </ta:cell>
           <ta:cell>
             <b:JQMButton text="7.5" inline="true" mini="true" builtInIcon="STAR" />
@@ -948,6 +971,11 @@
             <g:Anchor text="105,111" href="http://www.imdb.com/title/tt0106856/" />
           </ta:cell>
         </ta:JQMColumnToggle>
+        
+        <g:FlowPanel>
+          <b:JQMButton ui:field="colClassNamesBtn" text="Change 'Movie Title' align to center"
+            inline="true" mini="true" />
+        </g:FlowPanel>
 
         <h:Paragraph addStyleNames="{style.bevel}" />
 
