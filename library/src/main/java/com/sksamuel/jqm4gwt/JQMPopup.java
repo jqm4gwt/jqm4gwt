@@ -264,7 +264,13 @@ public class JQMPopup extends JQMContainer {
      */
     public void setArrows(String arrows) {
         JQMCommon.setAttribute(this, "data-arrow", arrows);
+        Element elt = getElement();
+        if (isInitialized(elt)) _setArrows(elt, arrows);
     }
+
+    private static native void _setArrows(Element elt, String arrows) /*-{
+        $wnd.$(elt).popup("option", "arrow", arrows);
+    }-*/;
 
     /** Triggered when a popup has completely closed */
     protected void onAfterClose() {
