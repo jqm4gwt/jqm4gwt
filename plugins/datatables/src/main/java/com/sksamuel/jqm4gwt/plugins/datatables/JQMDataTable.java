@@ -1457,6 +1457,10 @@ public class JQMDataTable extends JQMTableGrid {
         }
     }
 
+    public JsArray<Element> getSelRowElements() {
+        return JsDataTable.getSelRowElements(getElement());
+    }
+
     /** Makes no much sense when serverSide is true, use getSelRowIds() in that case. */
     public JsArrayInteger getSelRowIndexes() {
         return JsDataTable.getSelRowIndexes(getElement());
@@ -1484,6 +1488,30 @@ public class JQMDataTable extends JQMTableGrid {
     /** @param cellOrRowElt - could be cellElt or rowElt */
     public void selectOneRowOnly(Element cellOrRowElt) {
         JsDataTable.selectOneRowOnly(cellOrRowElt);
+    }
+
+    public JsArray<Element> getFilteredRowElements() {
+        return JsDataTable.getFilteredRowElements(getElement());
+    }
+
+    public JsArrayInteger getFilteredRowIndexes() {
+        return JsDataTable.getFilteredRowIndexes(getElement());
+    }
+
+    public JsArray<JavaScriptObject> getFilteredRowDatas() {
+        return JsDataTable.getFilteredRowDatas(getElement());
+    }
+
+    public JsArray<Element> getAllRowElements() {
+        return JsDataTable.getAllRowElements(getElement());
+    }
+
+    public JsArrayInteger getAllRowIndexes() {
+        return JsDataTable.getAllRowIndexes(getElement());
+    }
+
+    public JsArray<JavaScriptObject> getAllRowDatas() {
+        return JsDataTable.getAllRowDatas(getElement());
     }
 
     public JavaScriptObject getData() {

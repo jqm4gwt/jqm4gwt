@@ -1121,12 +1121,40 @@ public class JsDataTable {
         $wnd.dataTableChangeRows(t.DataTable().$('tr.selected'), false, tableElt);
     }-*/;
 
+    static native JsArray<Element> getSelRowElements(Element tableElt) /*-{
+        return $wnd.$(tableElt).DataTable().rows('tr.selected').nodes().toArray();
+    }-*/;
+
     static native JsArrayInteger getSelRowIndexes(Element tableElt) /*-{
         return $wnd.$(tableElt).DataTable().rows('tr.selected').indexes().toArray();
     }-*/;
 
     static native JsArray<JavaScriptObject> getSelRowDatas(Element tableElt) /*-{
         return $wnd.$(tableElt).DataTable().rows('tr.selected').data().toArray();
+    }-*/;
+
+    static native JsArray<Element> getAllRowElements(Element tableElt) /*-{
+        return $wnd.$(tableElt).DataTable().rows().nodes().toArray();
+    }-*/;
+
+    static native JsArrayInteger getAllRowIndexes(Element tableElt) /*-{
+        return $wnd.$(tableElt).DataTable().rows().indexes().toArray();
+    }-*/;
+
+    static native JsArray<JavaScriptObject> getAllRowDatas(Element tableElt) /*-{
+        return $wnd.$(tableElt).DataTable().rows().data().toArray();
+    }-*/;
+
+    static native JsArray<Element> getFilteredRowElements(Element tableElt) /*-{
+        return $wnd.$(tableElt).DataTable().rows({ filter : 'applied'}).nodes().toArray();
+    }-*/;
+
+    static native JsArrayInteger getFilteredRowIndexes(Element tableElt) /*-{
+        return $wnd.$(tableElt).DataTable().rows({ filter : 'applied'}).indexes().toArray();
+    }-*/;
+
+    static native JsArray<JavaScriptObject> getFilteredRowDatas(Element tableElt) /*-{
+        return $wnd.$(tableElt).DataTable().rows({ filter : 'applied'}).data().toArray();
     }-*/;
 
     static interface JsRowDetails {
