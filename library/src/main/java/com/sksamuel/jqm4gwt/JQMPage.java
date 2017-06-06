@@ -36,6 +36,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     public static final String JQM4GWT_DLG_TRANSPARENT_OPENED = "jqm4gwt-dlg-transparent-opened";
     public static final String DLG_TRANSPARENT_ZINDEX_MINUS1 = "zindex-1";
     public static final String DLG_TRANSPARENT_TOPMOST = "topmost";
+    public static final String DLG_TRANSPARENT_SYSTEM = "system";
 
     private static final String JQM4GWT_DLG_TRANSPARENT_OPENED_PREFIX = JQM4GWT_DLG_TRANSPARENT_OPENED + "-";
 
