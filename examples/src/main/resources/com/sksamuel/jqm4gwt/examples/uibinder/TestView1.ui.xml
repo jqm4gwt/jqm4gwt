@@ -326,7 +326,7 @@
           </g:FlowPanel>
           <h:Paragraph />
           <e:JQMSelectWithIcons ui:field="ddIcons" text="Dropdown with icons" 
-            builtInIcon="BARS" selectInline="true">
+            builtInIcon="BARS" selectInline="true" showClearButton="true">
             <e:option><e:JQMSelect.Option text="Bars" value="1" icon="BARS" /></e:option>
             <e:option><e:JQMSelect.Option text="Alert" value="2" icon="ALERT" /></e:option>
             <e:option><e:JQMSelect.Option text="Audio" value="3" icon="AUDIO" /></e:option>
@@ -340,7 +340,7 @@
           </g:FlowPanel>
           <h:Paragraph />
           <e:JQMSelect ui:field="multiSel" text="Dropdown with multiple select" multiple="true" native="false"
-            closeText="Discard" selectInline="true">
+            closeText="Discard" selectInline="true" showClearButton="true">
             <e:option><e:JQMSelect.Option text="One" value="1" /></e:option>
             <e:option><e:JQMSelect.Option text="Two" value="2" /></e:option>
             <e:option><e:JQMSelect.Option text="Three" value="3" /></e:option>

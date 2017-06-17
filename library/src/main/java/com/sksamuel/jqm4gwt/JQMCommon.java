@@ -1155,4 +1155,38 @@ public class JQMCommon {
         return d ? d[0] : null;
     }-*/;
 
+    /**
+     * @param el - text input element
+     * @param caretPos
+     * @return - true if position was set successfully
+     *
+     * <br><br><a href="https://stackoverflow.com/a/12518737/714136">See: set caret position</a>
+     */
+    public static native boolean setCaretPosition(Element el, int caretPos) /*-{
+
+        if (el === null) return false;
+
+        el.value = el.value;
+        // ^ this is used to not only get "focus", but
+        // to make sure we don't have it everything -selected-
+        // (it causes an issue in chrome, and having it doesn't hurt any other browser)
+
+        if (el.createTextRange) {
+            var range = el.createTextRange();
+            range.move('character', caretPos);
+            range.select();
+            return true;
+        } else {
+            // el.selectionStart === 0 added for Firefox bug
+            if (el.selectionStart || el.selectionStart === 0) {
+                el.focus();
+                el.setSelectionRange(caretPos, caretPos);
+                return true;
+            } else { // fail city, fortunately this never happens (as far as I've tested) :)
+                el.focus();
+                return false;
+            }
+        }
+    }-*/;
+
 }

@@ -221,6 +221,10 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     private String multiValueSeparator = ",";
 
+    public static String CLEAR_BUTTON_TEXT = "-----";
+
+    private boolean showClearButton;
+
     /**
      * Creates a new {@link JQMSelect} with no label text.
      */
@@ -1412,6 +1416,23 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                         .children(".ui-btn.ui-btn-left.ui-icon-delete").first()
                         .removeClass("ui-btn-left").addClass("ui-btn-right");
                 }
+                var isClear = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::isShowClearButton()();
+                if (isClear === true) {
+                    var selectmenu = $wnd.$( event.target ),
+                        id = selectmenu.attr( "id" ),
+                        listview = $wnd.$( "#" + id + "-menu" );
+
+                    var clearBtn = listview.jqmData( "clear-button" );
+                    if (!clearBtn) {
+                        var clearText = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::CLEAR_BUTTON_TEXT;
+                        clearBtn = $wnd.$("<button class='ui-btn ui-mini' style='margin:0;border-bottom:0;border-left:0;border-right:0;text-align:left;'>"
+                                          + clearText + "</button>");
+                        clearBtn.on('click', function() {
+                            combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::closeAndClearValue()();
+                        });
+                        listview.before( clearBtn ).jqmData( "clear-button", clearBtn );
+                    }
+                }
             })
             // The custom select list may show up as either a popup or a dialog, depending on how much
             // vertical room there is on the screen. If it shows up as a dialog, then we have to
@@ -1438,6 +1459,19 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                 var addnl = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::getMenuStyleNames()();
                 if (addnl) dialog.addClass( addnl );
 
+                var listview = dialog.find( "ul" );
+                var clearBtn = listview.jqmData( "clear-button" );
+
+                // Attach a reference to the listview as a data item to the dialog, because during the
+                // pagecontainerhide handler below the selectmenu widget will already have returned the
+                // listview to the popup, so we won't be able to find it inside the dialog with a selector.
+                dialog.jqmData( "listview", listview );
+                // Place clearBtn before the listview in the dialog.
+                if (clearBtn) {
+                    // 110% is a hack, we should just add 32px
+                    clearBtn.css("margin", "-16px 0 16px -16px").css("width", "110%");
+                    listview.before( clearBtn );
+                }
                 combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::doDlgBeforeShow(Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/dom/client/Element;)
                     (dialog[0], data.prevPage.get(0));
             })
@@ -1449,6 +1483,13 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                                 (pageId);
                 if (!isDlg) return;
                 var dialog = data.prevPage;
+
+                var listview = data.prevPage.jqmData( "listview" );
+                var clearBtn = listview.jqmData( "clear-button" );
+                if (clearBtn) {
+                    clearBtn.css("margin", "0").css("width", "100%");
+                    listview.before( clearBtn );
+                }
                 var comboId = pageId.replace("-dialog", "");
                 var combo = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::findCombo(Lcom/google/gwt/dom/client/Element;)
                                 ($wnd.$("#" + comboId)[0]);
@@ -1577,6 +1618,20 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         } else {
             panel.add(this);
         }
+    }
+
+    public boolean isShowClearButton() {
+        return showClearButton;
+    }
+
+    /** Clear button will be shown on filtering dialog with text defined by CLEAR_BUTTON_TEXT field. */
+    public void setShowClearButton(boolean showClearButton) {
+        this.showClearButton = showClearButton;
+    }
+
+    protected void closeAndClearValue() {
+        this.close();
+        this.setValue(null, true/*fireEvents*/);
     }
 
 }
