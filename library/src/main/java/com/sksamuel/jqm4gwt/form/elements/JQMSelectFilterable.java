@@ -13,8 +13,6 @@ import com.sksamuel.jqm4gwt.JQMCommon;
  */
 public class JQMSelectFilterable extends JQMSelect {
 
-    public static String CLEAR_BUTTON_TEXT = "-----";
-
     private static final String SELECT_FILTERABLE_STYLENAME = "jqm4gwt-select-filterable";
 
     private static final String FILTERABLE_SELECT = "filterable-select";
@@ -22,8 +20,6 @@ public class JQMSelectFilterable extends JQMSelect {
     private static boolean jsServed;
 
     private Element filterable;
-
-    private boolean showClearButton;
 
     public JQMSelectFilterable() {
         super();
@@ -117,6 +113,8 @@ public class JQMSelectFilterable extends JQMSelect {
     private static native void serveSelectsFilterable() /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
         var SEL = "." + @com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::FILTERABLE_SELECT;
+        var alphaNumRegex = new RegExp("^[a-zA-Z0-9]+$");
+
         $wnd.$.mobile.document
         // Upon creation of the select menu, we want to make use of the fact that the ID of the
         // listview it generates starts with the ID of the select menu itself, plus the suffix "-menu".
@@ -138,19 +136,43 @@ public class JQMSelectFilterable extends JQMSelect {
                 form = $wnd.$( "<form style='padding-top: 1px;'></form>" ).append( input );
                 form.submit( function () { return false; } ); // fix for ENTER key press
                 input.textinput();
-                listview.before( form ).jqmData( "filter-form", form ) ;
+                var clearBtn = listview.jqmData( "clear-button" );
+                if (clearBtn) clearBtn.before( form );
+                else listview.before( form );
+                listview.jqmData( "filter-form", form ) ;
                 form.jqmData( "listview", listview );
 
-                var isClear = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::isShowClearButton()();
-                if (isClear === true) {
-                    var clearText = @com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::CLEAR_BUTTON_TEXT;
-                    var clearBtn = $wnd.$("<button class='ui-btn ui-mini' style='margin:0'>"
-                                          + clearText + "</button>");
-                    clearBtn.on('click', function() {
-                         combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::closeAndClearValue()();
-                    });
-                    listview.before( clearBtn ).jqmData( "clear-button", clearBtn );
-                }
+                listview.on('keydown', function (event) {
+                    var key = !event.keyCode ? event.which : event.keyCode;
+                    if (key == 8) {
+                        var s = input.val();
+                        if (s.length > 0) {
+                            s = s.substring(0, s.length-1);
+                            input.val(s);
+                            selectmenu.filterable( "refresh" );
+                            @com.sksamuel.jqm4gwt.JQMCommon::setCaretPosition(Lcom/google/gwt/dom/client/Element;I)(input[0], s.length);
+                            var f = listview.find('a.ui-btn-active').first();
+                            if (!f[0]) f = listview.find('a.ui-btn').first();
+                            f.focus();
+                            event.preventDefault();
+                            return false;
+                        }
+                    }
+                });
+                listview.on('keypress', function (event) {
+                    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+                    if (alphaNumRegex.test(key)) {
+                        var s = input.val() + key;
+                        input.val(s);
+                        selectmenu.filterable( "refresh" );
+                        @com.sksamuel.jqm4gwt.JQMCommon::setCaretPosition(Lcom/google/gwt/dom/client/Element;I)(input[0], s.length);
+                        var f = listview.find('a.ui-btn-active').first();
+                        if (!f[0]) f = listview.find('a.ui-btn').first();
+                        f.focus();
+                        event.preventDefault();
+                        return false;
+                    }
+                });
             } else {
                 input = form.find( "input" );
             }
@@ -183,16 +205,13 @@ public class JQMSelectFilterable extends JQMSelect {
             var form = listview.jqmData( "filter-form" );
             var clearBtn = listview.jqmData( "clear-button" );
 
-            // Attach a reference to the listview as a data item to the dialog, because during the
-            // pagecontainerhide handler below the selectmenu widget will already have returned the
-            // listview to the popup, so we won't be able to find it inside the dialog with a selector.
-            dialog.jqmData( "listview", listview );
             // Place the form before the listview in the dialog.
-            listview.before( form );
             if (clearBtn) {
                 // 110% is a hack, we should just add 32px
                 clearBtn.css("margin", "0 -16px 0 -16px").css("width", "110%");
-                listview.before( clearBtn );
+                clearBtn.before( form );
+            } else {
+                listview.before( form );
             }
         })
         // After the dialog is closed, the form containing the filter input is returned to the popup.
@@ -206,27 +225,14 @@ public class JQMSelectFilterable extends JQMSelect {
             var form = listview.jqmData( "filter-form" );
             var clearBtn = listview.jqmData( "clear-button" );
             // Put the form back in the popup. It goes ahead of the listview.
-            listview.before( form );
             if (clearBtn) {
                 clearBtn.css("margin", "0").css("width", "100%");
-                listview.before( clearBtn );
+                clearBtn.before( form );
+            } else {
+                listview.before( form );
             }
         });
     }-*/;
-
-    public boolean isShowClearButton() {
-        return showClearButton;
-    }
-
-    /** Clear button will be shown on filtering dialog with text defined by CLEAR_BUTTON_TEXT field. */
-    public void setShowClearButton(boolean showClearButton) {
-        this.showClearButton = showClearButton;
-    }
-
-    protected void closeAndClearValue() {
-        this.close();
-        this.setValue(null, true/*fireEvents*/);
-    }
 
     @Override
     public void setValue(String value, boolean fireEvents) {
