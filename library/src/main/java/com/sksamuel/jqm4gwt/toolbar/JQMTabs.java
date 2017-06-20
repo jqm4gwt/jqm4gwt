@@ -134,6 +134,10 @@ public class JQMTabs extends JQMWidget {
     private List<Widget> leftHeaderWidgets;
     private List<Widget> rightHeaderWidgets;
 
+    private boolean headerWidgetsGenerateSimple;
+    private FlowPanel mutualHeaderStage;
+    private boolean headerWidgetsOnSameStageWithHeader;
+
     private String mainTheme;
     private String headerTheme;
 
@@ -188,10 +192,46 @@ public class JQMTabs extends JQMWidget {
         if (leftHeaderWidgets == null || leftHeaderStage != null || !isInstance(getElement())) return;
         if (navbar == null && list == null) return;
         leftHeaderStage = new FlowPanel();
-        leftHeaderStage.getElement().getStyle().setFloat(Style.Float.LEFT);
         for (Widget w : leftHeaderWidgets) leftHeaderStage.add(w);
-        flow.insert(leftHeaderStage, 0);
+        leftHeaderStage.getElement().addClassName("jqm4gwt-tabs-header-left");
+        if (!headerWidgetsGenerateSimple) leftHeaderStage.getElement().getStyle().setFloat(Style.Float.LEFT);
+        if (!headerWidgetsOnSameStageWithHeader) {
+            flow.insert(leftHeaderStage, 0);
+        } else {
+            checkMutualHeaderStage();
+        }
         checkHeaderStyle();
+    }
+
+    private void checkMutualHeaderStage() {
+        boolean addToFlow = false;
+        if (mutualHeaderStage == null) {
+            mutualHeaderStage = new FlowPanel();
+            mutualHeaderStage.getElement().addClassName("jqm4gwt-tabs-header-stage");
+            addToFlow = true;
+        }
+        int pos = 0;
+        int navbarListPos = -1;
+        if (leftHeaderStage != null) {
+            if (leftHeaderStage.getParent() != mutualHeaderStage) mutualHeaderStage.insert(leftHeaderStage, pos);
+            pos++;
+        }
+        if (navbar != null) {
+            if (navbar.getParent() != mutualHeaderStage) mutualHeaderStage.insert(navbar, pos);
+            navbarListPos = pos;
+            pos++;
+        } else if (list != null) {
+            if (list.getParent() != mutualHeaderStage) mutualHeaderStage.insert(list, pos);
+            navbarListPos = pos;
+            pos++;
+        }
+        if (rightHeaderStage != null) {
+            if (rightHeaderStage.getParent() != mutualHeaderStage) {
+                if (headerWidgetsGenerateSimple) mutualHeaderStage.insert(rightHeaderStage, pos);
+                else mutualHeaderStage.insert(rightHeaderStage, navbarListPos >= 0 ? navbarListPos : pos);
+            }
+        }
+        if (addToFlow) flow.insert(mutualHeaderStage, 0);
     }
 
     @UiChild(tagname = "rightHeaderWidget")
@@ -228,10 +268,20 @@ public class JQMTabs extends JQMWidget {
         if (rightHeaderWidgets == null || rightHeaderStage != null || !isInstance(getElement())) return;
         if (navbar == null && list == null) return;
         rightHeaderStage = new FlowPanel();
-        rightHeaderStage.getElement().getStyle().setFloat(Style.Float.RIGHT);
         for (Widget w : rightHeaderWidgets) rightHeaderStage.add(w);
-        int i = leftHeaderStage != null ? 1 : 0;
-        flow.insert(rightHeaderStage, i);
+        rightHeaderStage.getElement().addClassName("jqm4gwt-tabs-header-right");
+        final int i;
+        if (!headerWidgetsGenerateSimple) {
+            rightHeaderStage.getElement().getStyle().setFloat(Style.Float.RIGHT);
+            i = leftHeaderStage != null ? 1 : 0;
+        } else {
+            i = leftHeaderStage != null ? 2 : 1;
+        }
+        if (!headerWidgetsOnSameStageWithHeader) {
+            flow.insert(rightHeaderStage, i);
+        } else {
+            checkMutualHeaderStage();
+        }
         checkHeaderStyle();
     }
 
@@ -242,22 +292,28 @@ public class JQMTabs extends JQMWidget {
 
     private void checkHeaderStyle() {
         if (leftHeaderStage == null && rightHeaderStage == null) return;
-        Style st = null;
-        if (navbar != null) {
-            st = navbar.getElement().getStyle();
-        } else if (list != null) {
-            st = list.getElement().getStyle();
-        }
-        if (st != null) { // "remaining width", see http://stackoverflow.com/a/1767270/714136
-            st.setProperty("width", "auto");
-            st.setOverflow(Overflow.AUTO);
+        if (!headerWidgetsGenerateSimple) {
+            Style st = null;
+            if (navbar != null) {
+                st = navbar.getElement().getStyle();
+            } else if (list != null) {
+                st = list.getElement().getStyle();
+            }
+            if (st != null) { // "remaining width", see http://stackoverflow.com/a/1767270/714136
+                st.setProperty("width", "auto");
+                st.setOverflow(Overflow.AUTO);
+            }
         }
     }
 
     private int getHeaderInsertPos() {
         int i = 0;
-        if (leftHeaderStage != null) i++;
-        if (rightHeaderStage != null) i++;
+        if (!headerWidgetsGenerateSimple) {
+            if (leftHeaderStage != null) i++;
+            if (rightHeaderStage != null) i++;
+        } else {
+            if (leftHeaderStage != null) i++;
+        }
         return i;
     }
 
@@ -271,7 +327,11 @@ public class JQMTabs extends JQMWidget {
             String theme = getHeaderTheme();
             if (theme != null && !theme.isEmpty()) navbar.setTheme(theme);
             checkLeftRightHeaders();
-            flow.insert(navbar, getHeaderInsertPos());
+            if (!headerWidgetsOnSameStageWithHeader) {
+                flow.insert(navbar, getHeaderInsertPos());
+            } else {
+                mutualHeaderStage.insert(navbar, getHeaderInsertPos());
+            }
             navbar.addDomHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -319,7 +379,11 @@ public class JQMTabs extends JQMWidget {
             String theme = getHeaderTheme();
             if (theme != null && !theme.isEmpty()) list.setTheme(theme);
             checkLeftRightHeaders();
-            flow.insert(list, getHeaderInsertPos());
+            if (!headerWidgetsOnSameStageWithHeader) {
+                flow.insert(list, getHeaderInsertPos());
+            } else {
+                mutualHeaderStage.insert(list, getHeaderInsertPos());
+            }
             list.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -1014,6 +1078,30 @@ public class JQMTabs extends JQMWidget {
         } else if (list != null) {
             list.setTheme(headerTheme);
         }
+    }
+
+    public boolean isHeaderWidgetsGenerateSimple() {
+        return headerWidgetsGenerateSimple;
+    }
+
+    /**
+     * @param value - if true then left and right headerWidgets stages will be generated
+     *                without any embedded styling (useful in case of flexbox layout).
+     */
+    public void setHeaderWidgetsGenerateSimple(boolean value) {
+        this.headerWidgetsGenerateSimple = value;
+    }
+
+    public boolean isHeaderWidgetsOnSameStageWithHeader() {
+        return headerWidgetsOnSameStageWithHeader;
+    }
+
+    /**
+     * @param value - if true then left and right headerWidgets stages will be generated on the same
+     *                mutual stage with header, i.e. headerStage -> left, header, right
+     */
+    public void setHeaderWidgetsOnSameStageWithHeader(boolean value) {
+        this.headerWidgetsOnSameStageWithHeader = value;
     }
 
 }
