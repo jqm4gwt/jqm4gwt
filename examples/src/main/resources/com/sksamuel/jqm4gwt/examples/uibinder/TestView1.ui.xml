@@ -340,7 +340,7 @@
           </g:FlowPanel>
           <h:Paragraph />
           <e:JQMSelect ui:field="multiSel" text="Dropdown with multiple select" multiple="true" native="false"
-            closeText="Discard" selectInline="true" showClearButton="true">
+            closeText="Discard" selectInline="true" showClearButton="true" showSelectAllButton="true">
             <e:option><e:JQMSelect.Option text="One" value="1" /></e:option>
             <e:option><e:JQMSelect.Option text="Two" value="2" /></e:option>
             <e:option><e:JQMSelect.Option text="Three" value="3" /></e:option>

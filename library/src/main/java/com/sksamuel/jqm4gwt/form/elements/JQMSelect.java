@@ -222,8 +222,13 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     private String multiValueSeparator = ",";
 
     public static String CLEAR_BUTTON_TEXT = "-----";
+    public static String SELECT_ALL_BUTTON_TEXT = "All";
 
+    private String clearButtonText;
     private boolean showClearButton;
+
+    private String selectAllButtonText;
+    private boolean showSelectAllButton;
 
     /**
      * Creates a new {@link JQMSelect} with no label text.
@@ -1424,13 +1429,34 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
                     var clearBtn = listview.jqmData( "clear-button" );
                     if (!clearBtn) {
-                        var clearText = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::CLEAR_BUTTON_TEXT;
-                        clearBtn = $wnd.$("<button class='ui-btn ui-mini' style='margin:0;border-bottom:0;border-left:0;border-right:0;text-align:left;'>"
+                        var clearText = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::getClearButtonText()();
+                        if (!clearText) clearText = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::CLEAR_BUTTON_TEXT;
+
+                        clearBtn = $wnd.$("<button class='ui-btn ui-mini clear-button' style='margin:0;border-bottom:0;border-left:0;border-right:0;text-align:left;'>"
                                           + clearText + "</button>");
                         clearBtn.on('click', function() {
                             combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::closeAndClearValue()();
                         });
                         listview.before( clearBtn ).jqmData( "clear-button", clearBtn );
+                    }
+                }
+                var isSelectAll = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::isShowSelectAllButton()();
+                if (isSelectAll === true) {
+                    var selectmenu = $wnd.$( event.target ),
+                        id = selectmenu.attr( "id" ),
+                        listview = $wnd.$( "#" + id + "-menu" );
+
+                    var selectAllBtn = listview.jqmData( "select-all-button" );
+                    if (!selectAllBtn) {
+                        var selectAllText = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::getSelectAllButtonText()();
+                        if (!selectAllText) selectAllText = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::SELECT_ALL_BUTTON_TEXT;
+
+                        selectAllBtn = $wnd.$("<button class='ui-btn ui-mini select-all-button' style='margin:0;border-bottom:0;border-left:0;border-right:0;text-align:left;'>"
+                                              + selectAllText + "</button>");
+                        selectAllBtn.on('click', function() {
+                            combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::closeAndSelectAll()();
+                        });
+                        listview.before( selectAllBtn ).jqmData( "select-all-button", selectAllBtn );
                     }
                 }
             })
@@ -1461,6 +1487,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
                 var listview = dialog.find( "ul" );
                 var clearBtn = listview.jqmData( "clear-button" );
+                var selectAllBtn = listview.jqmData( "select-all-button" );
 
                 // Attach a reference to the listview as a data item to the dialog, because during the
                 // pagecontainerhide handler below the selectmenu widget will already have returned the
@@ -1471,6 +1498,11 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                     // 110% is a hack, we should just add 32px
                     clearBtn.css("margin", "-16px 0 16px -16px").css("width", "110%");
                     listview.before( clearBtn );
+                }
+                if (selectAllBtn) {
+                    // 110% is a hack, we should just add 32px
+                    selectAllBtn.css("margin", "-16px 0 16px -16px").css("width", "110%");
+                    listview.before( selectAllBtn );
                 }
                 combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::doDlgBeforeShow(Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/dom/client/Element;)
                     (dialog[0], data.prevPage.get(0));
@@ -1490,6 +1522,12 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                     clearBtn.css("margin", "0").css("width", "100%");
                     listview.before( clearBtn );
                 }
+                var selectAllBtn = listview.jqmData( "select-all-button" );
+                if (selectAllBtn) {
+                    selectAllBtn.css("margin", "0").css("width", "100%");
+                    listview.before( selectAllBtn );
+                }
+
                 var comboId = pageId.replace("-dialog", "");
                 var combo = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::findCombo(Lcom/google/gwt/dom/client/Element;)
                                 ($wnd.$("#" + comboId)[0]);
@@ -1620,11 +1658,22 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         }
     }
 
+    public String getClearButtonText() {
+        return clearButtonText;
+    }
+
+    /**
+     * @param clearButtonText - if null or empty then CLEAR_BUTTON_TEXT will be used.
+     */
+    public void setClearButtonText(String clearButtonText) {
+        this.clearButtonText = clearButtonText;
+    }
+
     public boolean isShowClearButton() {
         return showClearButton;
     }
 
-    /** Clear button will be shown on filtering dialog with text defined by CLEAR_BUTTON_TEXT field. */
+    /** Clear button will be shown on dropdown dialog with text defined by ClearButtonText. */
     public void setShowClearButton(boolean showClearButton) {
         this.showClearButton = showClearButton;
     }
@@ -1632,6 +1681,33 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     protected void closeAndClearValue() {
         this.close();
         this.setValue(null, true/*fireEvents*/);
+    }
+
+    public String getSelectAllButtonText() {
+        return selectAllButtonText;
+    }
+
+    /**
+     * @param selectAllButtonText - if null or empty then SELECT_ALL_BUTTON_TEXT will be used.
+     */
+    public void setSelectAllButtonText(String selectAllButtonText) {
+        this.selectAllButtonText = selectAllButtonText;
+    }
+
+    public boolean isShowSelectAllButton() {
+        return showSelectAllButton;
+    }
+
+    /** SelectAll button will be shown on dropdown dialog with text defined by SelectAllButtonText. */
+    public void setShowSelectAllButton(boolean showSelectAllButton) {
+        this.showSelectAllButton = showSelectAllButton;
+    }
+
+    protected void closeAndSelectAll() {
+        this.close();
+        if (isMultiple()) {
+            setNewMultiVals(selectIdx.keySet(), true/*fireEvents*/);
+        }
     }
 
 }
