@@ -1407,12 +1407,14 @@ public class TestView1 {
         });
         /*datePicker.setGridDateFormatter(new GridDateFormatterEx() {
             @Override
-            public String format(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible) {
+            public String format(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible,
+                                 int curYear, int curMonth) {
                 return '~' + String.valueOf(dd) + '~';
             }
 
             @Override
-            public String getStyleNames(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible) {
+            public String getStyleNames(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible,
+                                        int curYear, int curMonth) {
                 return dd % 2 == 0 ? "aaa bbb" : "ccc ddd";
             }
         });*/

@@ -83,12 +83,18 @@ public class JQMCalBox extends JQMText {
     protected static final String USE_PICKERS_ICONS   = "\"calUsePickersIcons\":";
     protected static final String YEAR_PICK_MIN       = "\"calYearPickMin\":";
     protected static final String YEAR_PICK_MAX       = "\"calYearPickMax\":";
-    protected static final String MIN_YEAR            = "\"minYear\":";
-    protected static final String MAX_YEAR            = "\"maxYear\":";
-    protected static final String MIN_DAYS            = "\"minDays\":";
-    protected static final String MAX_DAYS            = "\"maxDays\":";
+    protected static final String YEAR_PICK_RELATIVE  = "\"calYearPickRelative\":";
     protected static final String NO_HEADER           = "\"calNoHeader\":";
     protected static final String NO_TITLE            = "\"useHeader\":"; // Refers to the header with the close button and the title
+
+    // See http://dev.jtsage.com/DateBox/api/cat-limiting/
+    protected static final String MIN_YEAR              = "\"minYear\":";
+    protected static final String MAX_YEAR              = "\"maxYear\":";
+    protected static final String MIN_DAYS              = "\"minDays\":";
+    protected static final String MAX_DAYS              = "\"maxDays\":";
+    protected static final String AFTER_TODAY           = "\"afterToday\":";
+    protected static final String BEFORE_TODAY          = "\"beforeToday\":";
+    protected static final String TWO_DIGIT_YEAR_CUTOFF = "\"twoDigitYearCutoff\":";
 
     // See http://dev.jtsage.com/DateBox/doc/3-1-themes/
     protected static final String THEME              = "\"theme\":";            // false means inherited theme
@@ -121,12 +127,17 @@ public class JQMCalBox extends JQMText {
     private Boolean usePickersIcons = null;
     private String yearPickMin = null;
     private String yearPickMax = null;
+    private Boolean yearPickRelative = false; // false means relative to today’s real date
+    private Boolean noHeader = null;
+    private Boolean noTitle = null;
+
     private Integer minYear = null;
     private Integer maxYear = null;
     private Integer minDays = null;
     private Integer maxDays = null;
-    private Boolean noHeader = null;
-    private Boolean noTitle = null;
+    private Boolean afterToday = null;
+    private Boolean beforeToday = null;
+    private Integer twoDigitYearCutoff = null;
 
     private Boolean showDays = null;
     private Boolean showWeek = null;
@@ -165,16 +176,30 @@ public class JQMCalBox extends JQMText {
 
     private boolean invalidateUnlockedInputOnBlur = true;
 
-    /** Additional information can be added to days (1..31) buttons. */
+    /** Additional information can be added to days (1..31) buttons.
+     *  <br> Also see <a href="http://dev.jtsage.com/DateBox/api/calFormatter/">calFormatter</a>
+     */
     public static interface GridDateFormatter {
-        String format(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible);
+        /**
+         * @param yyyy
+         * @param mm - Jan = 0 .. Dec = 11
+         * @param dd
+         * @param iso8601 - YYYY-MM-DD
+         * @param selectedDateVisible - selected date is on the screen
+         * @param curYear - currently displayed year (yyyy)
+         * @param curMonth - currently displayed month (Jan = 0 .. Dec = 11)
+         * @return - html to show on the button
+         */
+        String format(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible,
+                      int curYear, int curMonth);
     }
 
     public static interface GridDateFormatterEx extends GridDateFormatter {
         /**
          * @return - additional space separated classes for CSS styling (coloring, shaping, ...)
          */
-        String getStyleNames(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible);
+        String getStyleNames(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible,
+                             int curYear, int curMonth);
     }
 
     private GridDateFormatter gridDateFormatter;
@@ -362,6 +387,9 @@ public class JQMCalBox extends JQMText {
                 }
             }
         }
+        if (yearPickRelative != null) {
+            sb.append(',').append(YEAR_PICK_RELATIVE).append(bool2Str(yearPickRelative));
+        }
         if (minYear != null) {
             sb.append(',').append(MIN_YEAR).append(String.valueOf(minYear));
         }
@@ -373,6 +401,15 @@ public class JQMCalBox extends JQMText {
         }
         if (maxDays != null) {
             sb.append(',').append(MAX_DAYS).append(String.valueOf(maxDays));
+        }
+        if (afterToday != null) {
+            sb.append(',').append(AFTER_TODAY).append(bool2Str(afterToday));
+        }
+        if (beforeToday != null) {
+            sb.append(',').append(BEFORE_TODAY).append(bool2Str(beforeToday));
+        }
+        if (twoDigitYearCutoff != null) {
+            sb.append(',').append(TWO_DIGIT_YEAR_CUTOFF).append(String.valueOf(twoDigitYearCutoff));
         }
         if (lockInput != null) {
             sb.append(',').append(LOCK_INPUT).append(bool2Str(lockInput));
@@ -725,6 +762,20 @@ public class JQMCalBox extends JQMText {
         refreshDataOptions();
     }
 
+    public Boolean getYearPickRelative() {
+        return yearPickRelative;
+    }
+
+    /**
+     * Default is false (different from js implementation, where it's true by default).
+     * <br> See <a href="http://dev.jtsage.com/DateBox/api/calYearPickRelative/">calYearPickRelative</a>
+     * <br> Also see <a href="https://github.com/jtsage/jquery-mobile-datebox/issues/407">Always changing years interval</a>
+     */
+    public void setYearPickRelative(Boolean value) {
+        this.yearPickRelative = value;
+        refreshDataOptions();
+    }
+
     public Integer getMinDays() {
         return minDays;
     }
@@ -762,6 +813,36 @@ public class JQMCalBox extends JQMText {
     /** See <a href="http://dev.jtsage.com/DateBox/api/maxYear/">Maximum allowed year</a> */
     public void setMaxYear(Integer value) {
         maxYear = value;
+        refreshDataOptions();
+    }
+
+    public Boolean getAfterToday() {
+        return afterToday;
+    }
+
+    /** See <a href="http://dev.jtsage.com/DateBox/api/afterToday/">Limit dates to after today's date</a> */
+    public void setAfterToday(Boolean afterToday) {
+        this.afterToday = afterToday;
+        refreshDataOptions();
+    }
+
+    public Boolean getBeforeToday() {
+        return beforeToday;
+    }
+
+    /** See <a href="http://dev.jtsage.com/DateBox/api/beforeToday/">Limit dates to before today's date</a> */
+    public void setBeforeToday(Boolean beforeToday) {
+        this.beforeToday = beforeToday;
+        refreshDataOptions();
+    }
+
+    public Integer twoDigitYearCutoff() {
+        return twoDigitYearCutoff;
+    }
+
+    /** See <a href="http://dev.jtsage.com/DateBox/api/twoDigitYearCutoff/">Where the cutoff between 19XX and 20XX happens</a> */
+    public void setTwoDigitYearCutoff(Integer value) {
+        twoDigitYearCutoff = value;
         refreshDataOptions();
     }
 
@@ -1342,23 +1423,24 @@ public class JQMCalBox extends JQMText {
      * @param mm - month 0-11, Jan = 0 .. Dec = 11
      * @param dd - day 1-31
      */
-    private String formatGridDate(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible) {
+    private String formatGridDate(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible,
+                                  int curYear, int curMonth) {
         if (gridDateFormatter == null) {
             return String.valueOf(dd);
         } else {
-            return gridDateFormatter.format(yyyy, mm, dd, iso8601, selectedDateVisible);
+            return gridDateFormatter.format(yyyy, mm, dd, iso8601, selectedDateVisible, curYear, curMonth);
         }
     }
 
     private void formatGridDateEx(int yyyy, int mm, int dd, String iso8601, boolean selectedDateVisible,
-            JavaScriptObject result) {
+                                  int curYear, int curMonth, JavaScriptObject result) {
         if (!(gridDateFormatter instanceof GridDateFormatterEx)) {
             JsUtils.setObjValue(result, "text", String.valueOf(dd));
             JsUtils.setObjValue(result, "class", "");
         } else {
-            String text = gridDateFormatter.format(yyyy, mm, dd, iso8601, selectedDateVisible);
+            String text = gridDateFormatter.format(yyyy, mm, dd, iso8601, selectedDateVisible, curYear, curMonth);
             String cls  = ((GridDateFormatterEx) gridDateFormatter).getStyleNames(
-                    yyyy, mm, dd, iso8601, selectedDateVisible);
+                    yyyy, mm, dd, iso8601, selectedDateVisible, curYear, curMonth);
             JsUtils.setObjValue(result, "text", text);
             JsUtils.setObjValue(result, "class", cls);
         }
@@ -1380,14 +1462,14 @@ public class JQMCalBox extends JQMText {
                 if (t === 0) return date.Date;
                 else if (t === 1) {
                     var s = ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDate(
-                        IIILjava/lang/String;Z)
-                        (date.Year, date.Month, date.Date, date.ISO, date.dateVisible);
+                        IIILjava/lang/String;ZII)
+                        (date.Year, date.Month, date.Date, date.ISO, date.dateVisible, date.curYear, date.curMonth);
                     return s;
                 } else {
                     var rslt = {};
                     ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::formatGridDateEx(
-                        IIILjava/lang/String;ZLcom/google/gwt/core/client/JavaScriptObject;)
-                        (date.Year, date.Month, date.Date, date.ISO, date.dateVisible, rslt);
+                        IIILjava/lang/String;ZIILcom/google/gwt/core/client/JavaScriptObject;)
+                        (date.Year, date.Month, date.Date, date.ISO, date.dateVisible, date.curYear, date.curMonth, rslt);
                     return rslt;
                 }
             }});
