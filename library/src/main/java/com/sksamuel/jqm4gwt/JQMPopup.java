@@ -42,11 +42,17 @@ public class JQMPopup extends JQMContainer {
         removeAttribute("data-url");
     }
 
+    @Override
+    public JQMPopup withContainerId(String containerId) {
+        setContainerId(containerId);
+        return this;
+    }
+
     /**
      * Automatically assigns an id in the form popup-xx where XX is an incrementing number.
      */
     @Override
-    public JQMContainer withContainerId() {
+    public JQMPopup withContainerId() {
         setContainerId("popup-" + (counter++));
         return this;
     }
@@ -152,6 +158,12 @@ public class JQMPopup extends JQMContainer {
         JQMCommon.setThemeEx(this, theme, JQMCommon.STYLE_UI_BODY);
     }
 
+    @Override
+    public JQMPopup withTheme(String theme) {
+        setTheme(theme);
+        return this;
+    }
+
     public String getOverlayTheme() {
         return getAttribute("data-overlay-theme");
     }
@@ -196,6 +208,11 @@ public class JQMPopup extends JQMContainer {
         JQMCommon.setPopupPos(this, pos);
     }
 
+    public JQMPopup withPosition(String pos) {
+        setPosition(pos);
+        return this;
+    }
+
     @Override
     public String toString() {
         return "JQMPopup [id=" + id + "]";
@@ -214,6 +231,11 @@ public class JQMPopup extends JQMContainer {
         JQMCommon.setAttribute(this, "data-dismissible", value ? "false" : null);
     }
 
+    public JQMPopup withDialog(boolean value) {
+        setDialog(value);
+        return this;
+    }
+
     public boolean isDismissible() {
         return !isDialog();
     }
@@ -229,6 +251,11 @@ public class JQMPopup extends JQMContainer {
         setDialog(!value);
     }
 
+    public JQMPopup withDismissible(boolean value) {
+        setDismissible(value);
+        return this;
+    }
+
     public boolean isShadow() {
         String s = JQMCommon.getAttribute(this, "data-shadow");
         boolean noShadow = "false".equals(s);
@@ -237,6 +264,11 @@ public class JQMPopup extends JQMContainer {
 
     public void setShadow(boolean value) {
         JQMCommon.setAttribute(this, "data-shadow", value ? null : "false");
+    }
+
+    public JQMPopup withShadow(boolean value) {
+        setShadow(value);
+        return this;
     }
 
     public String getArrows() {
@@ -266,6 +298,11 @@ public class JQMPopup extends JQMContainer {
         JQMCommon.setAttribute(this, "data-arrow", arrows);
         Element elt = getElement();
         if (isInitialized(elt)) _setArrows(elt, arrows);
+    }
+
+    public JQMPopup withArrows(String arrows) {
+        setArrows(arrows);
+        return this;
     }
 
     private static native void _setArrows(Element elt, String arrows) /*-{
@@ -420,6 +457,11 @@ public class JQMPopup extends JQMContainer {
         this.tolerance = tolerance;
         Element elt = getElement();
         if (isInitialized(elt)) setTolerance(elt, tolerance);
+    }
+
+    public JQMPopup withTolerance(String tolerance) {
+        setTolerance(tolerance);
+        return this;
     }
 
     /**
