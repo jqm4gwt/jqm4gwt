@@ -421,6 +421,11 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         setIconURL(icon);
     }
 
+    public JQMButton withCustomIcon(String icon) {
+        setCustomIcon(icon);
+        return this;
+    }
+
     public String getCustomIcon() {
         return getIconURL();
     }
@@ -535,6 +540,12 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     }
 
     @Override
+    public JQMButton withText(String text) {
+        setText(text);
+        return this;
+    }
+
+    @Override
     public String getText() {
         Element e = getElement();
         if (JQMCommon.childrenCount(e) == 0) {
@@ -562,9 +573,8 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         return e.getInnerHTML();
     }
 
-    @Override
-    public JQMButton withText(String text) {
-        setText(text);
+    public JQMButton withHtml(String html) {
+        setHtml(html);
         return this;
     }
 
@@ -608,6 +618,11 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         JQMCommon.setIconNoDisc(this, value);
     }
 
+    public JQMButton withIconNoDisc(boolean value) {
+        setIconNoDisc(value);
+        return this;
+    }
+
     public boolean isIconAlt() {
         return JQMCommon.isIconAlt(this);
     }
@@ -617,6 +632,11 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
      */
     public void setIconAlt(boolean value) {
         JQMCommon.setIconAlt(this, value);
+    }
+
+    public JQMButton withIconAlt(boolean value) {
+        setIconAlt(value);
+        return this;
     }
 
     public boolean isAlwaysActive() {
@@ -760,6 +780,12 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
     @Override
     public void setTheme(String themeName) {
         setTheme(this.getElement(), themeName);
+    }
+
+    @Override
+    public JQMButton withTheme(String themeName) {
+        setTheme(themeName);
+        return this;
     }
 
     public static String getTheme(Element elt) {
