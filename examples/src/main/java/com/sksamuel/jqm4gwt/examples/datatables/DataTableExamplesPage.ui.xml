@@ -28,6 +28,8 @@
     .marginLeft0 { margin-left: 0 !important; }
     
     .tableNoWrap th, .tableNoWrap td { white-space: nowrap; }
+    
+    .textAlignRight { text-align: right; }
   
   </ui:style>
   
@@ -47,6 +49,7 @@
       <g:FlowPanel addStyleNames="{style.pageContent}">
       
         <h:Heading.H4 text="Compact DataTable with cell borders." />
+        <g:Label ui:field="dataTable1SearchInfo" addStyleNames="{style.textAlignRight}" />
         <!-- See https://www.datatables.net/examples/ajax/simple.html --> 
         <da:JQMDataTable ui:field="dataTable1" searching="true" pagingType="FULL_NUMBERS"
           colSorts="0" colNames="Name, Position, Office, Extn., Start date, Salary"
