@@ -57,6 +57,7 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItem;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsSortItems;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowData;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.SearchHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableEnhancedEvent;
 import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableRowSelChangedEvent;
 import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableRowSelChangedEvent.RowSelChangedData;
@@ -1430,6 +1431,12 @@ public class JQMDataTable extends JQMTableGrid {
     public void addDrawHandler(DrawHandler handler) {
         if (handler == null) return;
         JsDataTable.addDrawHandler(getElement(), handler);
+    }
+
+    /** See <a href="https://datatables.net/reference/event/search">Search event</a> */
+    public void addSearchHandler(SearchHandler handler) {
+        if (handler == null) return;
+        JsDataTable.addSearchHandler(getElement(), handler);
     }
 
     /**

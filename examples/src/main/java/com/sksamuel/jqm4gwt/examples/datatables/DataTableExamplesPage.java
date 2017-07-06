@@ -26,6 +26,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.HttpUtils;
@@ -108,6 +109,9 @@ public class DataTableExamplesPage {
 
     @UiField
     JQMButton hideShowTableBtn;
+
+    @UiField
+    Label dataTable1SearchInfo;
 
     private static JsArray<JsArrayMixed> dataArray = null;
     private static JsArray<JavaScriptObject> dataObjs = null;
@@ -192,6 +196,11 @@ public class DataTableExamplesPage {
             public void onClick(ClickEvent event) {
                 dataTable2.setVisible(!dataTable2.isVisible());
             }
+        });
+
+        dataTable1.addSearchHandler((t, searchVal, settings) -> {
+            JsArrayInteger arr = dataTable1.getFilteredRowIndexes();
+            dataTable1SearchInfo.setText("Current search value: " + searchVal + " | Filtered rows: " + arr.length());
         });
 
         dataTable2.addCellBtnClickHandler(new CellClickHandler() {

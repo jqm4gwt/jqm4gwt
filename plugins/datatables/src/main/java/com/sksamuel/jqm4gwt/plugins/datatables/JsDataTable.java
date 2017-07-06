@@ -1250,6 +1250,25 @@ public class JsDataTable {
         });
     }-*/;
 
+    public static interface SearchHandler {
+        /**
+         * Will be fired before the table has been redrawn with the updated filtered data,
+         * although the data will internally have been filtered.
+         *
+         * @param settings - actually it's private object, can be used to obtain an API instance if required.
+         */
+        void search(Element tableElt, String searchValue, JavaScriptObject settings);
+    }
+
+    static native void addSearchHandler(final Element tableElt, final SearchHandler handler) /*-{
+        var t = $wnd.$(tableElt);
+        t.on('search.dt', function (event, settings) {
+            handler.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.SearchHandler::search(
+                Lcom/google/gwt/dom/client/Element;Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)
+                (tableElt, t.DataTable().search(), settings);
+        });
+    }-*/;
+
     static native JavaScriptObject getCellData(Element elt, int rowIndex, int colIndex) /*-{
         var v = $wnd.$(elt).DataTable().cells(rowIndex, colIndex).data();
         return v.toArray();
