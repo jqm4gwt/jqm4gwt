@@ -44,8 +44,11 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     private Element collapsibleContent;
 
     private String contentStyleNames;
+    private String headerStyleNames;
 
     private boolean inline;
+    private boolean iconNoDisc;
+    private boolean iconAlt;
 
     /**
      * Creates a new {@link JQMCollapsible} with the no header text and
@@ -171,6 +174,9 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
                 headingToggle = JQMCommon.findFirst(header.getElement(), ".ui-collapsible-heading-toggle.ui-btn");
                 if (headingToggle != null) {
                     JQMCommon.setInlineEx(headingToggle, inline, JQMCommon.STYLE_UI_BTN_INLINE);
+                    JQMCommon.setIconNoDisc(headingToggle, iconNoDisc);
+                    JQMCommon.setIconAlt(headingToggle, iconAlt);
+                    JQMCommon.addStyleNames(headingToggle, headerStyleNames);
                 }
             }
         }
@@ -235,6 +241,40 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
         return this;
     }
 
+    public boolean isIconNoDisc() {
+        if (headingToggle == null) {
+            return iconNoDisc;
+        } else {
+            boolean v = JQMCommon.isIconNoDisc(headingToggle);
+            iconNoDisc = v;
+            return iconNoDisc;
+        }
+    }
+
+    public void setIconNoDisc(boolean value) {
+        iconNoDisc = value;
+        if (headingToggle != null) {
+            JQMCommon.setIconNoDisc(headingToggle, iconNoDisc);
+        }
+    }
+
+    public boolean isIconAlt() {
+        if (headingToggle == null) {
+            return iconAlt;
+        } else {
+            boolean v = JQMCommon.isIconAlt(headingToggle);
+            iconAlt = v;
+            return iconAlt;
+        }
+    }
+
+    public void setIconAlt(boolean value) {
+        iconAlt = value;
+        if (headingToggle != null) {
+            JQMCommon.setIconAlt(headingToggle, iconAlt);
+        }
+    }
+
     public String getContentTheme() {
         return getAttribute("data-content-theme");
     }
@@ -274,6 +314,30 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
      */
     public void setAddContentStyleNames(String value) {
         setContentStyleNames(value);
+    }
+
+    public String getHeaderStyleNames() {
+        return headerStyleNames;
+    }
+
+    public void setHeaderStyleNames(String value) {
+        if (headerStyleNames == value || headerStyleNames != null && headerStyleNames.equals(value)) return;
+
+        if (headingToggle != null) JQMCommon.removeStyleNames(headingToggle, headerStyleNames);
+        headerStyleNames = value;
+        if (headingToggle != null) JQMCommon.addStyleNames(headingToggle, headerStyleNames);
+    }
+
+    public JQMCollapsible withHeaderStyleNames(String value) {
+        setHeaderStyleNames(value);
+        return this;
+    }
+
+    /**
+     * The same as setHeaderStyleNames(), mostly just for UiBinder to be able define: addHeaderStyleNames="..."
+     */
+    public void setAddHeaderStyleNames(String value) {
+        setHeaderStyleNames(value);
     }
 
     /**

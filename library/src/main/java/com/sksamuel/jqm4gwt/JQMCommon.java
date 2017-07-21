@@ -370,18 +370,36 @@ public class JQMCommon {
         return hasStyle(widget, STYLE_UI_ALT_ICON);
     }
 
+    public static boolean isIconAlt(Element elt) {
+        return hasStyle(elt, STYLE_UI_ALT_ICON);
+    }
+
     public static void setIconAlt(Widget widget, boolean value) {
         if (value) widget.addStyleName(STYLE_UI_ALT_ICON);
         else widget.removeStyleName(STYLE_UI_ALT_ICON);
+    }
+
+    public static void setIconAlt(Element elt, boolean value) {
+        if (value) elt.addClassName(STYLE_UI_ALT_ICON);
+        else elt.removeClassName(STYLE_UI_ALT_ICON);
     }
 
     public static boolean isIconNoDisc(Widget widget) {
         return hasStyle(widget, STYLE_UI_NODISC_ICON);
     }
 
+    public static boolean isIconNoDisc(Element elt) {
+        return hasStyle(elt, STYLE_UI_NODISC_ICON);
+    }
+
     public static void setIconNoDisc(Widget widget, boolean value) {
         if (value) widget.addStyleName(STYLE_UI_NODISC_ICON);
         else widget.removeStyleName(STYLE_UI_NODISC_ICON);
+    }
+
+    public static void setIconNoDisc(Element elt, boolean value) {
+        if (value) elt.addClassName(STYLE_UI_NODISC_ICON);
+        else elt.removeClassName(STYLE_UI_NODISC_ICON);
     }
 
     public static boolean isIconShadow(Widget widget) {
