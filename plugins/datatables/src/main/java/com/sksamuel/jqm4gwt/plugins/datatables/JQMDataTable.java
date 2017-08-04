@@ -991,6 +991,17 @@ public class JQMDataTable extends JQMTableGrid {
         this.languageJSON = languageJSON;
     }
 
+    public String getEmptyTableText() {
+        return JsDataTable.getEmptyTableText(getElement());
+    }
+
+    /**
+     * refreshDraw() or refreshPage() is needed after calling this method to refresh UI.
+     */
+    public void setEmptyTableText(String emptyText) {
+        JsDataTable.setEmptyTableText(getElement(), emptyText);
+    }
+
     @UiChild(tagname = "column")
     public void addColumn(ColumnDefEx col) {
         if (col == null) return;

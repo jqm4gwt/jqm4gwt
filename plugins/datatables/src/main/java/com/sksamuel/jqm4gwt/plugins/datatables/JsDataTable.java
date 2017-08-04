@@ -1404,4 +1404,19 @@ public class JsDataTable {
         }
     }-*/;
 
+    /**
+     * draw() or drawPage() is needed after calling this method to refresh UI.
+     * <br> See <a href="https://datatables.net/forums/discussion/11245/can-i-change-semptytable-after-the-table-was-initialized">
+     * Can I change sEmptyTable after the table was initialized</a>
+     */
+    static native void setEmptyTableText(Element tableElt, String emptyText) /*-{
+        var t = $wnd.$(tableElt).dataTable();
+        t.fnSettings().oLanguage.sEmptyTable = emptyText;
+    }-*/;
+
+    static native String getEmptyTableText(Element tableElt) /*-{
+        var t = $wnd.$(tableElt).dataTable();
+        return t.fnSettings().oLanguage.sEmptyTable;
+    }-*/;
+
 }
