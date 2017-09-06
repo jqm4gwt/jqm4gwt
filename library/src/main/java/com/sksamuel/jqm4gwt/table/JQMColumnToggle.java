@@ -360,4 +360,15 @@ public class JQMColumnToggle extends JQMTableGrid implements HasFilterable {
         super.onUnload();
     }
 
+    private static native void tableRefresh(Element tableElt) /*-{
+        var w = $wnd.$(tableElt);
+        if (w.data('mobile-table') !== undefined) {
+            w.table("refresh");
+        }
+    }-*/;
+
+    public void refresh() {
+        tableRefresh(getElement());
+    }
+
 }
