@@ -41,8 +41,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     private static final String JQM4GWT_DLG_TRANSPARENT_OPENED_PREFIX = JQM4GWT_DLG_TRANSPARENT_OPENED + "-";
 
     /**
-     * true - Header, Footer, Content positions will NOT be adjusted according to page properties:
-     *        contentCentered, contentHeightPercent, pseudoFixedToolbars, ...
+     * true - recalcContentHeightPercent() and centerContent() will do nothing
      */
     public static boolean stopPartsPositioning = false;
 
@@ -590,8 +589,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      *  <br> contentCentered, contentHeightPercent, pseudoFixedToolbars, ...
      **/
     public void refreshPartsPositioning() {
-        if (stopPartsPositioning) return;
         processFixedToolbars();
+        if (stopPartsPositioning) return;
         recalcContentHeightPercent();
         centerContent();
     }
@@ -922,7 +921,6 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     private void hideFixedToolbars(int headerH, int footerH) {
-        if (stopPartsPositioning) return;
         final JQMHeader header = getHeader();
         if (header != null && (header.isFixed() || pseudoFixedToolbars)
                 && !header.getElement().hasClassName(JQM4GWT_FIXED_HIDDEN)) {
@@ -971,7 +969,6 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     }
 
     private void processFixedToolbars() {
-        if (stopPartsPositioning) return;
         if (!isVisible() || header == null && footer == null) return;
 
         if (hideFixedToolbarsIfContentAreaPercentBelow <= 0 && hideFixedToolbarsIfVirtualKeyboard <= 0) {
