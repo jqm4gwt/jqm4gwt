@@ -1396,6 +1396,19 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     private static native void serveSelects() /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
+
+        $wnd.$.widget( "mobile.selectmenu", $wnd.$.mobile.selectmenu, {
+            _buildList: function() {
+                this._super();
+                if (this.isMultiple) {
+                    var combo = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::findCombo(Lcom/google/gwt/dom/client/Element;)(this.select[0]);
+                    if (!combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::isLabelHidden()()) {
+                        this.headerTitle.text(combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::getText()());
+                    }
+                }
+            }
+        });
+
         var SEL = "." + @com.sksamuel.jqm4gwt.form.elements.JQMSelect::SELECT_STYLENAME
                       + " .ui-select > select";
         $wnd.$.mobile.document
@@ -1421,6 +1434,14 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                         .children(".ui-btn.ui-btn-left.ui-icon-delete").first()
                         .removeClass("ui-btn-left").addClass("ui-btn-right");
                 }
+                if (!combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::isLabelHidden()()) {
+                    var selectmenu = $wnd.$( event.target ),
+                        id = selectmenu.attr( "id" ),
+                        lb = $wnd.$( "#" + id + "-listbox" );
+
+                    var title = lb.children(".ui-header").first().children(".ui-title").first();
+                    title.text(combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::getText()());
+                }
                 var isClear = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::isShowClearButton()();
                 if (isClear === true) {
                     var selectmenu = $wnd.$( event.target ),
@@ -1432,7 +1453,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                         var clearText = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::getClearButtonText()();
                         if (!clearText) clearText = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::CLEAR_BUTTON_TEXT;
 
-                        clearBtn = $wnd.$("<button class='ui-btn ui-mini clear-button' style='margin:0;border-bottom:0;border-left:0;border-right:0;text-align:left;'>"
+                        clearBtn = $wnd.$("<button class='ui-btn ui-mini clear-button'>" //style='margin:0;border-bottom:0;border-left:0;border-right:0;text-align:left;'
                                           + clearText + "</button>");
                         clearBtn.on('click', function() {
                             combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::closeAndClearValue()();
@@ -1451,7 +1472,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                         var selectAllText = combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::getSelectAllButtonText()();
                         if (!selectAllText) selectAllText = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::SELECT_ALL_BUTTON_TEXT;
 
-                        selectAllBtn = $wnd.$("<button class='ui-btn ui-mini select-all-button' style='margin:0;border-bottom:0;border-left:0;border-right:0;text-align:left;'>"
+                        selectAllBtn = $wnd.$("<button class='ui-btn ui-mini select-all-button'>" //style='margin:0;border-bottom:0;border-left:0;border-right:0;text-align:left;'
                                               + selectAllText + "</button>");
                         selectAllBtn.on('click', function() {
                             combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::closeAndSelectAll()();
@@ -1496,12 +1517,12 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                 // Place clearBtn before the listview in the dialog.
                 if (clearBtn) {
                     // 110% is a hack, we should just add 32px
-                    clearBtn.css("margin", "-16px 0 16px -16px").css("width", "110%");
+                    //clearBtn.css("margin", "-16px 0 16px -16px").css("width", "110%");
                     listview.before( clearBtn );
                 }
                 if (selectAllBtn) {
                     // 110% is a hack, we should just add 32px
-                    selectAllBtn.css("margin", "-16px 0 16px -16px").css("width", "110%");
+                    //selectAllBtn.css("margin", "-16px 0 16px -16px").css("width", "110%");
                     listview.before( selectAllBtn );
                 }
                 combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::doDlgBeforeShow(Lcom/google/gwt/dom/client/Element;Lcom/google/gwt/dom/client/Element;)
@@ -1519,12 +1540,12 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                 var listview = data.prevPage.jqmData( "listview" );
                 var clearBtn = listview.jqmData( "clear-button" );
                 if (clearBtn) {
-                    clearBtn.css("margin", "0").css("width", "100%");
+                    //clearBtn.css("margin", "0").css("width", "100%");
                     listview.before( clearBtn );
                 }
                 var selectAllBtn = listview.jqmData( "select-all-button" );
                 if (selectAllBtn) {
-                    selectAllBtn.css("margin", "0").css("width", "100%");
+                    //selectAllBtn.css("margin", "0").css("width", "100%");
                     listview.before( selectAllBtn );
                 }
 
