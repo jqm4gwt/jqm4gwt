@@ -208,7 +208,7 @@ public class JQMSelectFilterable extends JQMSelect {
             // Place the form before the listview in the dialog.
             if (clearBtn) {
                 // 110% is a hack, we should just add 32px
-                clearBtn.css("margin", "0 -16px 0 -16px").css("width", "110%");
+                //clearBtn.css("margin", "0 -16px 0 -16px").css("width", "110%");
                 clearBtn.before( form );
             } else {
                 listview.before( form );
@@ -226,7 +226,7 @@ public class JQMSelectFilterable extends JQMSelect {
             var clearBtn = listview.jqmData( "clear-button" );
             // Put the form back in the popup. It goes ahead of the listview.
             if (clearBtn) {
-                clearBtn.css("margin", "0").css("width", "100%");
+                //clearBtn.css("margin", "0").css("width", "100%");
                 clearBtn.before( form );
             } else {
                 listview.before( form );

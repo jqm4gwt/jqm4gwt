@@ -224,7 +224,33 @@
   vertical-align: middle;
 }
 
+.ui-selectmenu .ui-btn.clear-button,
+.ui-selectmenu .ui-btn.select-all-button {
+  border-bottom: 0;
+  border-left: 0;
+  border-right: 0;
+  text-align: left;
+}
+
+.ui-selectmenu.ui-popup .ui-btn.clear-button,
+.ui-selectmenu.ui-popup .ui-btn.select-all-button {
+  margin: 0;
+  width: 100%;
+}
+
+.ui-selectmenu.ui-page .ui-content .ui-btn.clear-button, 
+.ui-selectmenu.ui-page .ui-content .ui-btn.select-all-button {
+  margin: -16px 0 16px -16px;
+  width: 110%; /* 110% is a hack, we should just add 32px */
+}
+
 /* jqm4gwt-select-filterable */
+
+.ui-select-filterable.ui-selectmenu.ui-page .ui-content .ui-btn.clear-button {
+  margin: 0 -16px 0 -16px;
+  width: 110%; /* 110% is a hack, we should just add 32px */
+}
+
 .ui-select-filterable.ui-selectmenu.ui-popup .ui-input-search {
   margin-left: 0.5em;
   margin-right: 0.5em;
