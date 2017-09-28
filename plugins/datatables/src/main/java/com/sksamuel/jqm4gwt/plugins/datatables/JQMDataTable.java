@@ -659,6 +659,20 @@ public class JQMDataTable extends JQMTableGrid {
         enhanced = false;
     }
 
+    public boolean isEnhanced() {
+        return enhanced;
+    }
+
+    /**
+     * In case table is enhanced, this method will unEnhance() and enhance() it again.
+     * <br> Needed in case of some options, which have no dynamic changing support.
+     */
+    public void reEnhance() {
+        if (!enhanced) return;
+        unEnhance();
+        enhance();
+    }
+
     private void afterEnhance() {
         initRowSelectMode();
         initIndividualColSearches();
@@ -855,6 +869,25 @@ public class JQMDataTable extends JQMTableGrid {
 
     private static final String SCROLL_BODY = "dataTables_scrollBody";
     private static final String WRAPPER = "dataTables_wrapper";
+
+    /**
+     * For better styling, because table element is not the root element after enhance() called.
+     * <br> So we have to find the root (dataTables_wrapper) and call addClassName() for it.
+     * @return - null if not enhanced yet, otherwise the root element (dataTables_wrapper).
+     */
+    public Element getRootElement() {
+        Element tableElt = getElement();
+        Element wrapper = null;
+        Element elt = tableElt.getParentElement();
+        while (elt != null) {
+            if (JQMCommon.hasStyle(elt, WRAPPER)) {
+                wrapper = elt;
+                break;
+            }
+            elt = elt.getParentElement();
+        }
+        return wrapper;
+    }
 
     /**
      * Adjusts height to parent's height.
