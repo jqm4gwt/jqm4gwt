@@ -112,6 +112,36 @@ public class JQMSelectFilterable extends JQMSelect {
 
     private static native void serveSelectsFilterable() /*-{
         if ($wnd.$ === undefined || $wnd.$ === null) return; // jQuery is not loaded
+
+        $wnd.$.widget( "mobile.selectmenu", $wnd.$.mobile.selectmenu, {
+            _buildList: function() {
+                this._super();
+                if (!this.isMultiple) {
+                    var combo = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::findCombo(Lcom/google/gwt/dom/client/Element;)(this.select[0]);
+                    if (!combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::isLabelHidden()()) {
+                        this.headerTitle.text(combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::getText()());
+                        this.header.removeClass( "ui-screen-hidden" );
+                        this.header.addClass( "ui-mini" );
+                        if (!this.headerClose) {
+                            this.headerClose = $wnd.$( "<a>", {
+                                "role": "button",
+                                "text": this.options.closeText,
+                                "href": "#",
+                                "class": "ui-btn ui-corner-all ui-btn-icon-notext ui-icon-delete",
+                                "style": "top: 1px"
+                            }).appendTo( this.header );
+                            if (@com.sksamuel.jqm4gwt.form.elements.JQMSelect::closeBtnPosRight) {
+                                this.headerClose.addClass("ui-btn-right");
+                            } else {
+                                this.headerClose.addClass("ui-btn-left");
+                            }
+                            this._on( this.headerClose, { click: "_handleHeaderCloseClick" } );
+                        }
+                    }
+                }
+            }
+        });
+
         var SEL = "." + @com.sksamuel.jqm4gwt.form.elements.JQMSelectFilterable::FILTERABLE_SELECT;
         var alphaNumRegex = new RegExp("^[a-zA-Z0-9]+$");
 
