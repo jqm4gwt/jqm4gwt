@@ -876,17 +876,21 @@ public class JQMDataTable extends JQMTableGrid {
      * @return - null if not enhanced yet, otherwise the root element (dataTables_wrapper).
      */
     public Element getRootElement() {
+        return findUpperElement(WRAPPER);
+    }
+
+    private Element findUpperElement(String eltStyle) {
         Element tableElt = getElement();
-        Element wrapper = null;
+        Element rslt = null;
         Element elt = tableElt.getParentElement();
         while (elt != null) {
-            if (JQMCommon.hasStyle(elt, WRAPPER)) {
-                wrapper = elt;
+            if (JQMCommon.hasStyle(elt, eltStyle)) {
+                rslt = elt;
                 break;
             }
             elt = elt.getParentElement();
         }
-        return wrapper;
+        return rslt;
     }
 
     /**
@@ -934,6 +938,8 @@ public class JQMDataTable extends JQMTableGrid {
     /** Aligns header to match the columns, useful after resize or orientation changes. */
     public void adjustColumnSizing() {
         JsDataTable.adjustColumnSizing(getElement());
+        Element sb = findUpperElement(SCROLL_BODY);
+        if (sb != null) sb.setScrollLeft(0);
     }
 
     public String getColSorts() {

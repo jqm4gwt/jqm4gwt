@@ -1373,10 +1373,17 @@ public class JsDataTable {
         // Order by the grouping on group band click
         $wnd.$(api.table().body()).off('click.group');
         $wnd.$(api.table().body()).on('click.group', 'tr.group', function (event) {
+            //$wnd.alert(event.currentTarget.offsetWidth + ' | ' + event.offsetX);
+            var switchAscDesc = false;
+            if (event.offsetX && event.currentTarget) {
+                var targetW = event.currentTarget.offsetWidth;
+                switchAscDesc = targetW && (event.offsetX > targetW - 40) && (event.offsetX <= targetW);
+            }
+
             var newSorts = [];
             var currentOrder = api.order()[0];
             if (currentOrder[0] === colIdx && currentOrder[1] === 'asc') {
-                newSorts.push([colIdx, 'desc']);
+                newSorts.push([colIdx, switchAscDesc ? 'desc' : 'asc']);
             } else if (currentOrder[0] !== colIdx || currentOrder[1] !== 'asc') {
                 newSorts.push([colIdx, 'asc']);
             }
