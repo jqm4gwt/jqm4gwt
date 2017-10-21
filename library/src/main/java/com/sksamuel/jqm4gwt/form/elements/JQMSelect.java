@@ -39,6 +39,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.DataIcon;
+import com.sksamuel.jqm4gwt.Empty;
 import com.sksamuel.jqm4gwt.HasCorners;
 import com.sksamuel.jqm4gwt.HasIcon;
 import com.sksamuel.jqm4gwt.HasMini;
@@ -229,6 +230,8 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     private String selectAllButtonText;
     private boolean showSelectAllButton;
+
+    private boolean showTextOnPopup = true;
 
     /**
      * Creates a new {@link JQMSelect} with no label text.
@@ -1402,7 +1405,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                 this._super();
                 if (this.isMultiple) {
                     var combo = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::findCombo(Lcom/google/gwt/dom/client/Element;)(this.select[0]);
-                    if (!combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::isLabelHidden()()) {
+                    if (combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::doAssignPopupTitle()()) {
                         this.headerTitle.text(combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::getText()());
                     }
                 }
@@ -1434,7 +1437,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                         .children(".ui-btn.ui-btn-left.ui-icon-delete").first()
                         .removeClass("ui-btn-left").addClass("ui-btn-right");
                 }
-                if (!combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::isLabelHidden()()) {
+                if (combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::doAssignPopupTitle()()) {
                     var selectmenu = $wnd.$( event.target ),
                         id = selectmenu.attr( "id" ),
                         lb = $wnd.$( "#" + id + "-listbox" );
@@ -1729,6 +1732,23 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         if (isMultiple()) {
             setNewMultiVals(selectIdx.keySet(), true/*fireEvents*/);
         }
+    }
+
+    public boolean isShowTextOnPopup() {
+        return showTextOnPopup;
+    }
+
+    /**
+     * @param showTextOnPopup - if true (default) then non-empty text/label will be shown on popup title, even if labelHidden is true.
+     */
+    public void setShowTextOnPopup(boolean showTextOnPopup) {
+        this.showTextOnPopup = showTextOnPopup;
+    }
+
+    protected boolean doAssignPopupTitle() {
+        if (!isShowTextOnPopup()) return false;
+        if (!isLabelHidden() || !Empty.is(getText())) return true;
+        return false;
     }
 
 }
