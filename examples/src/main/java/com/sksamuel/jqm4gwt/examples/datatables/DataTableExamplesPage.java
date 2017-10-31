@@ -113,6 +113,12 @@ public class DataTableExamplesPage {
     @UiField
     Label dataTable1SearchInfo;
 
+    @UiField
+    JQMButton btnExpandAll;
+
+    @UiField
+    JQMButton btnCollapseAll;
+
     private static JsArray<JsArrayMixed> dataArray = null;
     private static JsArray<JavaScriptObject> dataObjs = null;
 
@@ -376,6 +382,8 @@ public class DataTableExamplesPage {
         });
         dataTable4.enhance();
 
+        btnExpandAll.addClickHandler(click -> dataTable5.switchAllRowDetails(true));
+        btnCollapseAll.addClickHandler(click -> dataTable5.switchAllRowDetails(false));
         dataTable5.addCellBtnClickHandler(new CellClickHandler() {
             @Override
             public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex,
@@ -394,9 +402,20 @@ public class DataTableExamplesPage {
         dataTable5.addRowDetailsRenderer(new RowDetailsRenderer() {
             @Override
             public String getHtml(Element tableElt, JavaScriptObject rowData, int rowIndex) {
-                return dataTable5.getColumnsAsTableHtml(rowIndex, "border='0' style='padding-left:50px;'");
+                String s = dataTable5.getColumnsAsTableHtml(rowIndex, "border='0' style='padding-left:50px;'");
+                s += "<button class='collapse-details-btn' style='margin-left:50px;' data-row-idx='"
+                        + String.valueOf(rowIndex) + "'>Collapse Details</button>";
+                return s;
             }
         });
+        dataTable5.addCellCustomClickHandler(new CellClickHandler() {
+            @Override
+            public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex,
+                                   int colIndex, int colVisibleIdx) {
+                dataTable5.closeRowDetails(cellElt);
+                return true;
+            }}, "td .collapse-details-btn");
+
         dataTable5.setAjaxHandler(new AjaxHandler() {
             @Override
             public void getData(final Element tableElt, final JavaScriptObject request,

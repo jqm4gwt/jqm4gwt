@@ -238,6 +238,8 @@ public class JQMDataTable extends JQMTableGrid {
     private RowSelectMode rowSelectMode;
 
     private Set<String> serverRowSelected;
+
+    /** Opened row details are preserved and will be restored after data fetch from the server. */
     private Set<String> serverRowDetails;
 
     public static interface RowIdHelper {
@@ -1475,6 +1477,10 @@ public class JQMDataTable extends JQMTableGrid {
 
     public void closeRowDetails(Element rowDetailElt) {
         JsDataTable.closeRowDetails(getElement(), rowDetailElt);
+    }
+
+    public void switchAllRowDetails(boolean doOpen) {
+        JsDataTable.switchAllRowDetails(getElement(), doOpen);
     }
 
     /** See <a href="https://datatables.net/reference/event/draw">Draw event</a> */

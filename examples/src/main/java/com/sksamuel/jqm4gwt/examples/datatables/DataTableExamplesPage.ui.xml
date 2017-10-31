@@ -134,6 +134,10 @@
         </da:JQMDataTable>
         <g:FlowPanel addStyleNames="{style.separator}" />
         
+        <g:FlowPanel>
+          <b:JQMButton ui:field="btnExpandAll" text="Expand All Row Details" inline="true" mini="true" />
+          <b:JQMButton ui:field="btnCollapseAll" text="Collapse All Row Details" inline="true" mini="true" />
+        </g:FlowPanel>
         <da:JQMDataTable ui:field="dataTable5" serverSide="true" manualEnhance="true" 
           searching="true" pagingType="FULL_NUMBERS" colSorts="2"
           footColTitles=",, Name, Position, Office, Extension, Start date, Salary,"

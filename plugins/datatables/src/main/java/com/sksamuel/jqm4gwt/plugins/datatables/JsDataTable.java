@@ -1183,7 +1183,7 @@ public class JsDataTable {
 
             var rowDetailsChanged = $wnd.$(tableElt).data('rowDetailsChanged');
             if (row.child.isShown()) {
-                // This row is already open - close it
+                // This row is already opened - close it
                 row.child.hide();
                 tr.removeClass('shown');
                 if (rowDetailsChanged) rowDetailsChanged(tr[0], false);
@@ -1201,11 +1201,43 @@ public class JsDataTable {
     }-*/;
 
     static native void openRowDetails(Element tableElt, JsArrayString rowIds) /*-{
+        var t = $wnd.$(tableElt);
         $wnd.$.each(rowIds, function ( i, id ) {
-            $wnd.$('#' + id + ' td.details-control', $wnd.$(tableElt)).trigger('click');
+            var tr = $wnd.$('#' + id, t);
+            if (tr[0]) {
+                var row = t.DataTable().row(tr);
+                if (!row.child.isShown()) {
+                    tr.children('td.details-control').trigger('click');
+                }
+            }
         });
     }-*/;
 
+    static native void openRowDetails(Element tableElt, Element rowElt) /*-{
+        var t = $wnd.$(tableElt);
+        var tr = $wnd.$(rowElt).closest('tr');
+        if (tr[0]) {
+            var row = t.DataTable().row(tr);
+            if (!row.child.isShown()) {
+                tr.children('td.details-control').trigger('click');
+            }
+        }
+    }-*/;
+
+    static native void switchAllRowDetails(Element tableElt, boolean doOpen) /*-{
+        var t = $wnd.$(tableElt);
+        t.children('tbody').first().children('tr').each(function () {
+            var row = t.DataTable().row(this);
+            var isShown = row.child.isShown();
+            if (doOpen && !isShown || !doOpen && isShown) {
+                $wnd.$(this).children('td.details-control').trigger('click');
+            }
+        });
+    }-*/;
+
+    /**
+     * @param rowDetailElt - child of row details (it's dedicated row, and its previous sibling row is the real one with expand/collapse button).
+     */
     static native void closeRowDetails(Element tableElt, Element rowDetailElt) /*-{
         var t = $wnd.$(tableElt);
         var detailsTr = $wnd.$(rowDetailElt).closest('tr');
@@ -1213,11 +1245,11 @@ public class JsDataTable {
             var tr = detailsTr.prev('tr');
             if (tr[0]) {
                 var row = t.DataTable().row(tr);
-                var rowDetailsChanged = t.data('rowDetailsChanged');
                 if (row.child.isShown()) {
-                    // This row is already open - close it
+                    // This row is opened - close it
                     row.child.hide();
                     tr.removeClass('shown');
+                    var rowDetailsChanged = t.data('rowDetailsChanged');
                     if (rowDetailsChanged) rowDetailsChanged(tr[0], false);
                 }
             }
