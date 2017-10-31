@@ -69,7 +69,7 @@
         <maven.plugin.source.version>2.2.1</maven.plugin.source.version>
 
         <gwt.version>2.8.2</gwt.version>
-        <gwt.plugin.version>2.8.1</gwt.plugin.version>
+        <gwt.plugin.version>2.8.2</gwt.plugin.version>
 
         <!-- Sets the project's default encoding. http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
