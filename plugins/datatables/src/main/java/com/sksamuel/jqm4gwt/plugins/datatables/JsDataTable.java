@@ -1236,13 +1236,17 @@ public class JsDataTable {
     }-*/;
 
     /**
-     * @param rowDetailElt - child of row details (it's dedicated row, and its previous sibling row is the real one with expand/collapse button).
+     * @param rowOrRowDetailElt - row, child of row, "row details", or child of "row details".
+     * <br> "row details" is dedicated row, and its previous sibling row is the real one with expand/collapse button.
      */
-    static native void closeRowDetails(Element tableElt, Element rowDetailElt) /*-{
+    static native void closeRowDetails(Element tableElt, Element rowOrRowDetailElt) /*-{
         var t = $wnd.$(tableElt);
-        var detailsTr = $wnd.$(rowDetailElt).closest('tr');
+        var detailsTr = $wnd.$(rowOrRowDetailElt).closest('tr');
         if (detailsTr[0]) {
-            var tr = detailsTr.prev('tr');
+            var tr;
+            var detailsBtn = detailsTr.children('td.details-control').first();
+            if (detailsBtn[0]) tr = detailsTr;
+            else tr = detailsTr.prev('tr');
             if (tr[0]) {
                 var row = t.DataTable().row(tr);
                 if (row.child.isShown()) {

@@ -1475,8 +1475,12 @@ public class JQMDataTable extends JQMTableGrid {
         }
     }
 
-    public void closeRowDetails(Element rowDetailElt) {
-        JsDataTable.closeRowDetails(getElement(), rowDetailElt);
+    /**
+     * @param rowOrRowDetailElt - row, child of row, "row details", or child of "row details".
+     * <br> "row details" is dedicated row, and its previous sibling row is the real one with expand/collapse button.
+     */
+    public void closeRowDetails(Element rowOrRowDetailElt) {
+        JsDataTable.closeRowDetails(getElement(), rowOrRowDetailElt);
     }
 
     public void switchAllRowDetails(boolean doOpen) {

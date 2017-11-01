@@ -388,14 +388,20 @@ public class DataTableExamplesPage {
             @Override
             public boolean onClick(Element cellElt, JavaScriptObject rowData, int rowIndex,
                                    int colIndex, int colVisibleIdx) {
-                String s = dataTable5.getCellData(rowIndex, "name");
-                Window.alert(s);
-                if (RowSelectMode.SINGLE.equals(dataTable5.getRowSelectMode())) {
-                    dataTable5.selectOneRowOnly(cellElt);
-                } else if (RowSelectMode.MULTI.equals(dataTable5.getRowSelectMode())) {
-                    dataTable5.changeRow(cellElt, true);
+                if (colIndex == 8) { // Edit
+                    String s = dataTable5.getCellData(rowIndex, "name");
+                    Window.alert(s);
+                    if (RowSelectMode.SINGLE.equals(dataTable5.getRowSelectMode())) {
+                        dataTable5.selectOneRowOnly(cellElt);
+                    } else if (RowSelectMode.MULTI.equals(dataTable5.getRowSelectMode())) {
+                        dataTable5.changeRow(cellElt, true);
+                    }
+                    return true;
+                } else if (colIndex == 9) { // Collapse
+                    dataTable5.closeRowDetails(cellElt);
+                    return true;
                 }
-                return true;
+                return false;
             }
         });
         dataTable5.addCellCheckboxClickHandler(checkBoxClickHandler);
@@ -457,6 +463,7 @@ public class DataTableExamplesPage {
                             if (TableCellElement.TAG_TD.equalsIgnoreCase(n)) {
                                 String tdContent = ((TableCellElement) child).getInnerText();
                                 Element btn = DOM.createButton();
+                                JQMCommon.setAttribute(btn, "data-role", "none");
                                 btn.setInnerText("Info");
                                 btn.getStyle().setMarginLeft(10, Unit.PX);
                                 child.appendChild(btn);
