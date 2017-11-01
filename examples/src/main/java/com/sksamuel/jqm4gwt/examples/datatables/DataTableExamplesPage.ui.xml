@@ -171,7 +171,9 @@
           <da:column>
             <da:ColumnDefEx defaultContent="Edit" defaultContentType="BUTTON" />
           </da:column>
-
+          <da:column>
+            <da:ColumnDefEx defaultContent="Collapse" defaultContentType="BUTTON" />
+          </da:column>
         </da:JQMDataTable>
         
         <g:FlowPanel addStyleNames="{style.separator}" />
