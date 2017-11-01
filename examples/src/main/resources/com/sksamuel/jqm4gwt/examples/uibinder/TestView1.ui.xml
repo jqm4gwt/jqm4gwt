@@ -234,6 +234,8 @@
 
           <e:JQMMonth ui:field="monthEd" text="monthText"/>
           <e:JQMNumber ui:field="numberEd" text="numberText"/>
+          <e:JQMNumber ui:field="numberEdInt" text="Integer" validateAsInt="true" min="1" max="9" />
+          <e:JQMNumber ui:field="numberEdDouble" text="Double" validateAsDouble="true" />
           <e:JQMPassword ui:field="passwordEd" text="passwordText"/>
           <e:JQMSearch ui:field="searchEd" text="searchText"/>
           <e:JQMTelephone ui:field="phoneEd" text="telephoneText"/>

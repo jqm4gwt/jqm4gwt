@@ -135,6 +135,22 @@
   -moz-box-shadow: 0 0 12px #CC3333;
   box-shadow: 0 0 12px #CC3333;
 }
+.jqm4gwt-errorcontain input:focus {
+  -webkit-box-shadow: 0 0 12px #D82020;
+  -moz-box-shadow: 0 0 12px #D82020;
+  box-shadow: 0 0 12px #D82020;
+}
+
+input[type=number]:invalid {
+  -webkit-box-shadow: 0 0 12px #CC3333;
+  -moz-box-shadow: 0 0 12px #CC3333;
+  box-shadow: 0 0 12px #CC3333;
+}
+input[type=number]:focus:invalid {
+  -webkit-box-shadow: 0 0 12px #D82020;
+  -moz-box-shadow: 0 0 12px #D82020;
+  box-shadow: 0 0 12px #D82020;
+}
 
 .jqm4gwt-scrollable-page-content {
   position: relative;
