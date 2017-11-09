@@ -1,5 +1,7 @@
 package com.sksamuel.jqm4gwt.examples.showcase;
 
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.sksamuel.jqm4gwt.JQMPage;
 import com.sksamuel.jqm4gwt.form.JQMForm;
 import com.sksamuel.jqm4gwt.form.JQMSubmit;
@@ -36,6 +38,15 @@ public class FormShowcasePage extends JQMPage {
 
 		JQMForm.globalValidationErrorStyles = "ui-icon-alert ui-btn-icon-left";
 		JQMForm form = new JQMForm();
+		form.setSubmissionHandler(frm -> {
+		    Window.alert("Validated. Ready to submit.");
+		    Timer t = new Timer() {
+                @Override
+                public void run() {
+                    form.hideFormProcessingDialog();
+                }};
+            t.schedule(2000);
+		});
 		add(form);
 
 		form.add(new JQMText("A text field"));
@@ -60,7 +71,7 @@ public class FormShowcasePage extends JQMPage {
                 textPhoneRegex, "Invalid " + phone.getText()
                 + ". Expected: " + textPhoneRegexComment), phone);
 
-		add(new JQMSubmit("Submit"));
+        form.add(new JQMSubmit("Submit"));
 		add(new JQMFooter("jqm4gwt open source project"));
 	}
 

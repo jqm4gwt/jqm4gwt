@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -14,14 +16,12 @@ import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMCommon;
-import com.sksamuel.jqm4gwt.JQMContext;
 import com.sksamuel.jqm4gwt.Mobile;
 import com.sksamuel.jqm4gwt.form.elements.JQMFormWidget;
 import com.sksamuel.jqm4gwt.form.validators.NotNullOrEmptyValidator;
@@ -29,12 +29,12 @@ import com.sksamuel.jqm4gwt.form.validators.Validator;
 
 /**
  * @author Stephen K Samuel samspade79@gmail.com 12 Jul 2011 21:36:02
- *         <br>
+ *         <br><br>
  *         A {@link JQMForm} is a standard GWT panel that offers extra
  *         functionality for quick building of input forms. The framework offers
  *         built in validation and error reporting and simplified submission
  *         processing.
- *         <br>
+ *         <br><br>
  *         Any {@link JQMSubmit} widgets that are added will be automatically
  *         wired to submit this form. Alternatively, any widget can be set to
  *         programatically submit the form by invoking submit();
@@ -57,12 +57,9 @@ public class JQMForm extends FlowPanel {
     private static final String JQM4GWT_ERROR_LABEL_STYLENAME = "jqm4gwt-error";
     private static final String JQM4GWT_GENERAL_ERROR_LABEL_STYLENAME = "jqm4gwt-general-error";
 
-    /** The amount to adjust error scroll by so the error is not right at very top */
-    private static final int ERROR_SCROLL_OFFSET = 80;
-
     private final FlowPanel generalErrors = new FlowPanel();
 
-    private final List<Label> errors = new ArrayList<Label>();
+    private final Map<Label, Widget> errors = new LinkedHashMap<>();
 
     /** A mapping between the validators and the labels they use to show errors */
     private final Map<Validator, Label> validatorLabels = new HashMap<Validator, Label>();
@@ -108,7 +105,7 @@ public class JQMForm extends FlowPanel {
      * Add the given submit button to the form and automatically have it set
      * to submit the form on a click event.
      */
-    protected void add(JQMSubmit submit) {
+    public void add(JQMSubmit submit) {
         super.add(submit);
         submit.addClickHandler(new ClickHandler() {
             @Override
@@ -180,8 +177,8 @@ public class JQMForm extends FlowPanel {
         addValidator(null, validator, true, firingWidgets);
     }
 
-    private void addErrorLabel(Validator validator, Label label) {
-        errors.add(label); // keep a list of the errors for easily iteration later
+    private void addErrorLabel(Validator validator, Label label, Widget widget) {
+        errors.put(label, widget); // keep a list of the errors for easily iteration later
         validatorLabels.put(validator, label); // connect the label and the validator
     }
 
@@ -206,7 +203,7 @@ public class JQMForm extends FlowPanel {
                 Label la = w.addErrorLabel();
                 if (la == null) continue;
                 labelAdded = true;
-                addErrorLabel(validator, la);
+                addErrorLabel(validator, la, w.asWidget());
             }
         }
         if (!labelAdded) {
@@ -216,8 +213,8 @@ public class JQMForm extends FlowPanel {
                 JQMCommon.addStyleNames(label, globalValidationErrorStyles);
             }
             label.setVisible(false);
-            addErrorLabel(validator, label);
             if (positionErrorAfter == null) {
+                addErrorLabel(validator, label, null/*widget*/);
                 // add the error label to the document as the next child of this form container
                 add(label);
             } else {
@@ -241,7 +238,12 @@ public class JQMForm extends FlowPanel {
                     }
                     w = w.getParent();
                 }
-                if (!inserted) add(label);
+                if (!inserted) {
+                    addErrorLabel(validator, label, null/*widget*/);
+                    add(label);
+                } else {
+                    addErrorLabel(validator, label, positionErrorAfter);
+                }
             }
         }
 
@@ -326,13 +328,24 @@ public class JQMForm extends FlowPanel {
         }
     }
 
-    private int getFirstErrorOffset() {
-        for (Label label : errors) {
+    public static class FormErrorWidgets {
+        public final Label label;
+        public final Widget widget;
+
+        public FormErrorWidgets(Label label, Widget widget) {
+            this.label = label;
+            this.widget = widget;
+        }
+    }
+
+    public FormErrorWidgets getFirstError() {
+        for (Entry<Label, Widget> i : errors.entrySet()) {
+            Label label = i.getKey();
             if (label.isVisible()) {
-                return JQMContext.getTop(label.getElement());
+                return new FormErrorWidgets(label, i.getValue());
             }
         }
-        return 0;
+        return null;
     }
 
     public void hideFormProcessingDialog() {
@@ -408,12 +421,12 @@ public class JQMForm extends FlowPanel {
         ui.removeStyleName(STYLE_OK_VALIDATED);
     }
 
-    protected void scrollToFirstError() {
-        int y = getFirstErrorOffset();
-        if (y == 0) return;
-        y -= ERROR_SCROLL_OFFSET;
-        if (y < 0) y = 0;
-        Mobile.silentScroll(y);
+    public void scrollToFirstError() {
+        FormErrorWidgets err = getFirstError();
+        if (err == null) return;
+        // trying to make both label and widget visible into view
+        if (err.label != null) err.label.getElement().scrollIntoView();
+        if (err.widget != null) err.widget.getElement().scrollIntoView();
     }
 
     /**
@@ -424,7 +437,7 @@ public class JQMForm extends FlowPanel {
         errorLabel.setStyleName(JQM4GWT_ERROR_LABEL_STYLENAME);
         errorLabel.addStyleName(JQM4GWT_GENERAL_ERROR_LABEL_STYLENAME);
         generalErrors.add(errorLabel);
-        Window.scrollTo(0, 0);
+        generalErrors.getElement().scrollIntoView();
     }
 
     /**
@@ -500,7 +513,7 @@ public class JQMForm extends FlowPanel {
                     "No SubmissionHandler has been set for this Form and it is in an invalid " +
                     "state for submit() until one has been defined.");
         generalErrors.clear();
-        boolean validated = validate();
+        boolean validated = validate(false/*scrollToFirstError*/);
         if (validated) {
             String s = null;
             if (submitMsgs.length > 0) s = submitMsgs[0];
@@ -517,9 +530,10 @@ public class JQMForm extends FlowPanel {
     /**
      * Perform validation for all validators, setting error messages where appropriate.
      *
+     * @param scrollToFirstError - if true then in case of unsuccessful validation first error widget will be scrolled into view.
      * @return true if validation was successful for all validators, otherwise false.
      */
-    public boolean validate() {
+    public boolean validate(boolean scrollToFirstError) {
         boolean validated = true;
 
         for (JQMFormWidget widget : widgetValidators.keySet()) {
@@ -527,7 +541,17 @@ public class JQMForm extends FlowPanel {
                 validated = false;
         }
 
+        if (!validated && scrollToFirstError) scrollToFirstError();
         return validated;
+    }
+
+    /**
+     * Perform validation for all validators, setting error messages where appropriate.
+     *
+     * @return true if validation was successful for all validators, otherwise false.
+     */
+    public boolean validate() {
+        return validate(true/*scrollToFirstError*/);
     }
 
     /**
