@@ -2,6 +2,7 @@ package com.sksamuel.jqm4gwt.examples.uibinder;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.Style.Unit;
@@ -1433,6 +1434,16 @@ public class TestView1 {
                 }
             }
         });*/
+
+        selectFilterable.addClickHandler(event -> {
+            Scheduler.get().scheduleDeferred(() -> {
+                if (selectFilterable.indexOf("PAR") == -1) {
+                    selectFilterable.addOption("PAR", "Paris");
+                    selectFilterable.refresh();
+                    selectFilterable.refreshFilter();
+                }
+            });
+        });
 
         selectFilterable.addFilterableHandler(new JQMFilterableEvent.DefaultHandler() {
             @Override

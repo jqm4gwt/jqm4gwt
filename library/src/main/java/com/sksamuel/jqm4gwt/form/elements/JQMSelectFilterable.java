@@ -139,6 +139,16 @@ public class JQMSelectFilterable extends JQMSelect {
                         }
                     }
                 }
+                if (this.isOpen) this._focusMenuItem();
+            },
+
+            safeFocusMenuItem: function() {
+                if (this.isOpen) this._focusMenuItem();
+            },
+
+            _handleListKeydown: function( event ) {
+                if (event.keyCode === 32) return; // space will be processed in keypress
+                return this._super(event);
             }
         });
 
@@ -174,16 +184,14 @@ public class JQMSelectFilterable extends JQMSelect {
 
                 listview.on('keydown', function (event) {
                     var key = !event.keyCode ? event.which : event.keyCode;
-                    if (key == 8) {
+                    if (key === 8) { // backspace
                         var s = input.val();
                         if (s.length > 0) {
                             s = s.substring(0, s.length-1);
                             input.val(s);
                             selectmenu.filterable( "refresh" );
                             @com.sksamuel.jqm4gwt.JQMCommon::setCaretPosition(Lcom/google/gwt/dom/client/Element;I)(input[0], s.length);
-                            var f = listview.find('a.ui-btn-active').first();
-                            if (!f[0]) f = listview.find('a.ui-btn').first();
-                            f.focus();
+                            selectmenu.selectmenu("safeFocusMenuItem");
                             event.preventDefault();
                             return false;
                         }
@@ -191,14 +199,12 @@ public class JQMSelectFilterable extends JQMSelect {
                 });
                 listview.on('keypress', function (event) {
                     var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-                    if (alphaNumRegex.test(key)) {
+                    if (key === ' ' || alphaNumRegex.test(key)) {
                         var s = input.val() + key;
                         input.val(s);
                         selectmenu.filterable( "refresh" );
                         @com.sksamuel.jqm4gwt.JQMCommon::setCaretPosition(Lcom/google/gwt/dom/client/Element;I)(input[0], s.length);
-                        var f = listview.find('a.ui-btn-active').first();
-                        if (!f[0]) f = listview.find('a.ui-btn').first();
-                        f.focus();
+                        selectmenu.selectmenu("safeFocusMenuItem");
                         event.preventDefault();
                         return false;
                     }
