@@ -73,6 +73,10 @@
   z-index: 1099; /* this dialog must be over ALL other dialogs, intended for system level dialogs */
 }
 
+.jqm4gwt-dialog-transparent.ui-dialog.ui-dialog-background.ui-dialog-background { /* ui-dialog-background used twice for css specificity */
+  z-index: 1095; /* must be lower than zindex-1, actually this rule makes needless all others: zindex-1, topmost, system */
+}
+
 /* Should be in sync with ui-state-disabled opacity value somehow. 
    It's like disabled, but we can copy-paste input's content.  
 */
