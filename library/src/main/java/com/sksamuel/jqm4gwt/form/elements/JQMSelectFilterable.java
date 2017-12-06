@@ -149,6 +149,50 @@ public class JQMSelectFilterable extends JQMSelect {
             _handleListKeydown: function( event ) {
                 if (event.keyCode === 32) return; // space will be processed in keypress
                 return this._super(event);
+            },
+
+            refresh: function( force ) {
+                var self, indices;
+
+                if ( this.options.nativeMenu ) {
+                    return this._super( force );
+                }
+
+                self = this;
+                if ( force || this._isRebuildRequired() ) {
+                    self._buildList();
+                }
+
+                indices = this.selectedIndices();
+
+                self.setButtonText();
+                self.setButtonCount();
+
+                self.list.find( "li:not(.ui-li-divider)" )
+                    .find( "a" ).removeClass( $wnd.$.mobile.activeBtnClass ).end()
+                    .attr( "aria-selected", false )
+                    .each(function( i ) {
+                        var item = $wnd.$( this );
+                        var itemIdx = $wnd.$.mobile.getAttribute( item, "option-index" ); // fixed, i could not be used because of filtering
+                        if ( $wnd.$.inArray( itemIdx, indices ) > -1 ) {
+
+                            // Aria selected attr
+                            item.attr( "aria-selected", true );
+
+                            // Multiple selects: add the "on" checkbox state to the icon
+                            if ( self.isMultiple ) {
+                                item.find( "a" ).removeClass( "ui-checkbox-off" ).addClass( "ui-checkbox-on" );
+                            } else {
+                                if ( item.hasClass( "ui-screen-hidden" ) ) {
+                                    item.next().find( "a" ).addClass( $wnd.$.mobile.activeBtnClass );
+                                } else {
+                                    item.find( "a" ).addClass( $wnd.$.mobile.activeBtnClass );
+                                }
+                            }
+                        } else if ( self.isMultiple ) {
+                            item.find( "a" ).removeClass( "ui-checkbox-on" ).addClass( "ui-checkbox-off" );
+                        }
+                    });
             }
         });
 

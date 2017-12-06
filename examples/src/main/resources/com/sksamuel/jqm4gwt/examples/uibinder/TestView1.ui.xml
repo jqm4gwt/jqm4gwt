@@ -384,7 +384,7 @@
           </e:JQMSelect>
           <h:Paragraph />
           <e:JQMSelectFilterable ui:field="selectFilterable" text="Select Filterable (startWith)"
-            showClearButton="true" menuStyleNames="aaa bbb ccc">
+            showClearButton="true" menuStyleNames="aaa bbb ccc" multiple="true">
             <e:option><e:JQMSelect.Option text="San Francisco" value="SFO" filterText="San Francisco, SFO" /></e:option>
             <e:option><e:JQMSelect.Option text="Los Angeles" value="LAX" filterText="Los Angeles, LAX" /></e:option>
             <e:option><e:JQMSelect.Option text="Vancouver" value="YVR" /></e:option>

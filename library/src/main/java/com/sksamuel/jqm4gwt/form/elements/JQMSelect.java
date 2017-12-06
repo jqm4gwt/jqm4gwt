@@ -253,16 +253,14 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         select = new ListBoxEx();
         select.getElement().setId(id);
         add(select);
-        addChangeHandler(new ChangeHandler() {
-            @Override
-            public void onChange(ChangeEvent event) {
-                if (!isMultiple()) mandatorySelIdx = select.getSelectedIndex();
-                fireValueChange(getValue());
-            }
-        });
-
+        addChangeHandler(event -> changed());
         setText(text);
         addStyleName(SELECT_STYLENAME);
+    }
+
+    protected void changed() {
+        if (!isMultiple()) mandatorySelIdx = select.getSelectedIndex();
+        fireValueChange(getValue());
     }
 
     private void fireValueChange(String value) {
