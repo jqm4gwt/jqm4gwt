@@ -1447,6 +1447,17 @@ public class JsDataTable {
         }
     }-*/;
 
+    static native void setColTitle(Element tableElt, String colName, String title) /*-{
+        if (colName) {
+            var t = $wnd.$(tableElt).DataTable();
+            var col = t.column(colName + ':name');
+            if (col) {
+                var h = col.header();
+                if (h) $wnd.$(h).html(title);
+            }
+        }
+    }-*/;
+
     /**
      * draw() or drawPage() is needed after calling this method to refresh UI.
      * <br> See <a href="https://datatables.net/forums/discussion/11245/can-i-change-semptytable-after-the-table-was-initialized">

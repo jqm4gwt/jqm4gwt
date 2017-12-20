@@ -1081,6 +1081,14 @@ public class JQMDataTable extends JQMTableGrid {
         JsDataTable.setColVisible(getElement(), colName, visible);
     }
 
+    /** Works dynamically after dataTable is initialized */
+    public void setColumnTitle(String colName, String title) {
+        ColumnDefEx col = findColumn(colName);
+        if (col == null) return;
+        col.setTitle(title);
+        JsDataTable.setColTitle(getElement(), colName, title);
+    }
+
     public ColumnDefEx getColumn(int index) {
         if (index < 0) return null;
         if (!Empty.is(datacols)) {
