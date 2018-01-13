@@ -76,14 +76,8 @@ public class JQMCommon {
     private static final String DATA_FILTER_CHILDREN = "data-children";
     private static final String DATA_FILTER_REVEAL = "data-filter-reveal";
 
-    public static boolean isVisible(Widget widget) {
-        if (widget == null || !widget.isAttached()) return false;
-        Element elt = widget.getElement();
-        return UIObject.isVisible(elt); // Mobile.isVisible(elt) must not be used here for performance reason
-    }
-
     /**
-     * Expensive, but gives realistic visibility (CSS rules, parent chain considered,
+     * Expensive, based on jQuery, but gives realistic visibility (CSS rules, parent chain considered,
      * width and height are explicitly set to 0, ...)
      * <br> If you need logical visibility of this particular widget,
      * use {@link UIObject#isVisible(Element elem)}
@@ -94,7 +88,10 @@ public class JQMCommon {
         return UIObject.isVisible(elt) && Mobile.isVisible(elt);
     }
 
-    public static boolean isHidden(Widget widget) {
+    /**
+     * Expensive, based on jQuery, realistic visibility check.
+     */
+    public static boolean isRealHidden(Widget widget) {
         if (widget == null || !widget.isAttached()) return true;
         Element elt = widget.getElement();
         return !UIObject.isVisible(elt) || Mobile.isHidden(elt);

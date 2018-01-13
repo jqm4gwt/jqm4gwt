@@ -169,11 +169,6 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
     }
 
     @Override
-    public boolean isVisible() {
-        return super.isVisible() && JQMCommon.isVisible(this);
-    }
-
-    @Override
     public HandlerRegistration addJQMEventHandler(String jqmEventName, EventHandler handler) {
 
         Type<EventHandler> t = JQMEventFactory.getType(jqmEventName, EventHandler.class);

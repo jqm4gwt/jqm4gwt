@@ -218,11 +218,6 @@ public abstract class JQMContainer extends ComplexPanel implements HasId<JQMCont
     }
 
     @Override
-    public boolean isVisible() {
-        return super.isVisible() && JQMCommon.isVisible(this);
-    }
-
-    @Override
     public boolean isCorners() {
         return JQMCommon.isCorners(this);
     }
