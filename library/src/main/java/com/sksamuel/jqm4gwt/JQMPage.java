@@ -166,8 +166,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
     @Override
     public boolean isVisible() {
-        return super.isVisible() && JQMCommon.isVisible(this)
-                && JQMCommon.hasStyle(getElement(), "ui-page-active");
+        return super.isVisible() && JQMCommon.hasStyle(getElement(), "ui-page-active");
         // ui-page-active works for both: pages and dialogs
     }
 
