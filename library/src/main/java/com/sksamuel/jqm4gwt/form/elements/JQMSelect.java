@@ -285,6 +285,33 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         return select.addChangeHandler(handler);
     }
 
+    private static native void repositionPopup(String id) /*-{
+        var p = $wnd.$("#" + id + "-listbox");
+        if (p.data('mobile-popup') !== undefined) {
+            var $link = $wnd.$("#" + id + "-button");
+            var offset = $link.offset();
+            var opt = {
+                x: offset.left + $link.outerWidth() / 2,
+                y: offset.top + $link.outerHeight() / 2,
+                transition: $link.jqmData("transition"),
+                positionTo: $link.jqmData("position-to")
+            };
+            p.popup("reposition", opt);
+        }
+    }-*/;
+
+    /**
+     * Should be used for proper popup positioning in case of lazy/delayed population on first click to JQMSelect, like:
+     * <pre>{@code
+     * combo.addClickHandler(event -> Scheduler.get().scheduleDeferred(() ->
+     *     fetchAndPopulateOptions(done -> combo.repositionPopup())));
+     * }</pre>
+     */
+    public void repositionPopup() {
+        String id = getSelectElt().getId();
+        if (!Empty.is(id)) repositionPopup(id);
+    }
+
     @Override
     public HandlerRegistration addClickHandler(final ClickHandler handler) {
         if (handler == null) return null;
