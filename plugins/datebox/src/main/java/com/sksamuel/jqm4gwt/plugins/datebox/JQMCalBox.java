@@ -574,6 +574,28 @@ public class JQMCalBox extends JQMText {
         return months.cast();
     }
 
+    public JsArrayString getDayNames() {
+        if (input == null) return null;
+        JavaScriptObject days = internGetLangOption(input.getElement(), "daysOfWeek");
+        return days.cast();
+    }
+
+    public JsArrayString getDayShortNames() {
+        if (input == null) return null;
+        JavaScriptObject days = internGetLangOption(input.getElement(), "daysOfWeekShort");
+        return days.cast();
+    }
+
+    public static JsArrayString getClazzDayNames() {
+        JavaScriptObject days = internGetProtoLangOption("daysOfWeek");
+        return days.cast();
+    }
+
+    public static JsArrayString getClazzDayShortNames() {
+        JavaScriptObject days = internGetProtoLangOption("daysOfWeekShort");
+        return days.cast();
+    }
+
     public Boolean getUsePickers() {
         return usePickers;
     }
