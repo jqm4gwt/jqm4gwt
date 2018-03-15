@@ -136,6 +136,7 @@ public class JQMSelectFilterable extends JQMSelect {
                                 this.headerClose.addClass("ui-btn-left");
                             }
                             this._on( this.headerClose, { click: "_handleHeaderCloseClick" } );
+                            if ($wnd.$.jqmCloseBtnPrepare) $wnd.$.jqmCloseBtnPrepare(this.headerClose);
                         }
                     }
                 }
