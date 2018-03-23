@@ -191,6 +191,33 @@ $.widget( "ui.tabs", $.ui.tabs, {
     }
 });
 
+
+function pointInRectangle( x, y, windowCoordinates ) {
+    return ( x >= windowCoordinates.x && x <= windowCoordinates.x + windowCoordinates.cx &&
+             y >= windowCoordinates.y && y <= windowCoordinates.y + windowCoordinates.cy );
+}
+
+function isOutOfSight( element, windowCoordinates ) {
+    var offset = element.offset(),
+        width = element.outerWidth( true ),
+        height = element.outerHeight( true );
+
+    return !(
+        pointInRectangle( offset.left, offset.top, windowCoordinates ) ||
+        pointInRectangle( offset.left + width, offset.top, windowCoordinates ) ||
+        pointInRectangle( offset.left + width, offset.top + height, windowCoordinates ) ||
+        pointInRectangle( offset.left, offset.top + height, windowCoordinates ) );
+}
+
+function getWindowCoordinates( theWindow ) {
+    return {
+        x: theWindow.scrollLeft(),
+        y: theWindow.scrollTop(),
+        cx: ( theWindow[ 0 ].innerWidth || theWindow.width() ),
+        cy: ( theWindow[ 0 ].innerHeight || theWindow.height() )
+    };
+}
+
 // See https://github.com/jquery/jquery-mobile/issues/7579
 $.widget( "mobile.popup", $.mobile.popup, {
     _eatEventAndClose: function( theEvent ) {
@@ -215,6 +242,61 @@ $.widget( "mobile.popup", $.mobile.popup, {
             }
         }
         return this._super( theEvent );
+    },
+
+    // See https://github.com/jquery/jquery-mobile/commit/d34c86ae14d4ea603357be5e326de1fb8c31dbf9#diff-1d5adb10249a8b87ebe274787293060e
+    // On jQuery 3.3.1 popups don't close without this fix.
+    _createPrerequisites: function( screenPrerequisite, containerPrerequisite, whenDone ) {
+        var prerequisites,
+            self = this;
+
+        prerequisites = {
+            screen: $.Deferred(),
+            container: $.Deferred()
+        };
+
+        prerequisites.screen.done( function() {
+            if ( prerequisites === self._prerequisites ) {
+                screenPrerequisite();
+            }
+        });
+
+        prerequisites.container.done( function() {
+            if ( prerequisites === self._prerequisites ) {
+                containerPrerequisite();
+            }
+        });
+
+        $.when( prerequisites.screen, prerequisites.container ).done( function() {
+            if ( prerequisites === self._prerequisites ) {
+                self._prerequisites = null;
+                whenDone();
+            }
+        });
+
+        self._prerequisites = prerequisites;
+    },
+
+    // See https://github.com/jquery/jquery-mobile/commit/a61d152a21008f3c7edc7f2415710553d625bb95#diff-1d5adb10249a8b87ebe274787293060e
+    _closePopup: function( theEvent, data ) {
+        if ( ( theEvent && theEvent.isDefaultPrevented() ) || $.mobile.popup.active !== this || !this._isOpen ) {
+            return;
+        }
+        this._super( theEvent, data );
+    },
+
+    // See https://github.com/jquery/jquery-mobile/commit/3572a655b5de1fa2bc752059b0df610b353fd67d#diff-1d5adb10249a8b87ebe274787293060e
+    _handleWindowResize: function(/* theEvent */) {
+        if ( this._isOpen && this._ignoreResizeTo === 0 ) {
+            if ( isOutOfSight( this._ui.container, getWindowCoordinates( this.window ) ) &&
+                ( this._expectResizeEvent() || this._orientationchangeInProgress ) &&
+                !this._ui.container.hasClass( "ui-popup-hidden" ) ) {
+                // effectively rapid-close the popup while leaving the screen intact
+                this._ui.container
+                    .addClass( "ui-popup-hidden ui-popup-truncate" )
+                    .removeAttr( "style" );
+            }
+        }
     }
 });
 
