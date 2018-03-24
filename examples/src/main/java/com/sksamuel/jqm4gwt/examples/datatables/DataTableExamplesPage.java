@@ -55,6 +55,7 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsOrderItems;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsRowDataMetaInfo;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowData;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer;
+import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableGroupRowEvent;
 import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableRowSelChangedEvent;
 import com.sksamuel.jqm4gwt.table.ColumnDef;
 
@@ -451,7 +452,7 @@ public class DataTableExamplesPage {
         dataTable5.addDrawHandler(new DrawHandler() {
             @Override
             public void afterDraw(Element tableElt, JavaScriptObject settings) {
-                JsArray<Element> rows = JQMDataTable.doGrouping(settings, 4, new ColSort(2, ColSortDir.ASC));
+                JsArray<Element> rows = dataTable5.doGrouping(settings, 4, new ColSort(2, ColSortDir.ASC));
                 for (int i = 0; i < rows.length(); i++) {
                     Element r = rows.get(i);
                     r.getStyle().setFontWeight(FontWeight.BOLD);
@@ -486,6 +487,15 @@ public class DataTableExamplesPage {
                 return true;
             }
         });
+
+        dataTable5.addGroupRowHandler(new JQMDataTableGroupRowEvent.Handler() {
+            @Override
+            public void onGroupRowClick(JQMDataTableGroupRowEvent event) {
+                Window.alert(event.getData().row.getInnerText()
+                        + "\nswitchAscDesc: " + event.getData().switchAscDesc);
+                //event.setStopDfltClick(true);
+            }});
+
         dataTable5.enhance();
 
         dataTable6.addCellCheckboxClickHandler(checkBoxClickHandler);

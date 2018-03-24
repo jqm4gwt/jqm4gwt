@@ -1377,6 +1377,15 @@ public class JsDataTable {
         }-*/;
     }
 
+    static interface JsGroupRow {
+        /**
+         * @param row
+         * @param switchAscDesc - if true means that user pressed on area designated for asc <-> desc switching
+         * @return - true means default processing must be suppressed/skipped.
+         */
+        boolean onClick(Element row, boolean switchAscDesc);
+    }
+
     /**
      * Creates groups bands by specified column.
      * <br> Could be called from afterDraw() event handler, see addDrawHandler()
@@ -1389,7 +1398,8 @@ public class JsDataTable {
      *
      * @return - array of group rows, can be used for additional adjustments.
      **/
-    static native JsArray<Element> doGrouping(JavaScriptObject settings, int colIdx, JsSortItems additionalSorts) /*-{
+    static native JsArray<Element> doGrouping(JavaScriptObject settings, int colIdx,
+                                              JsSortItems additionalSorts, JsGroupRow handler) /*-{
         var api = new $wnd.$.fn.dataTable.Api(settings);
         var rows = api.rows({page:'current'}).nodes();
         var cnt = 0;
@@ -1415,16 +1425,22 @@ public class JsDataTable {
                 var targetW = event.currentTarget.offsetWidth;
                 switchAscDesc = targetW && (event.offsetX > targetW - 40) && (event.offsetX <= targetW);
             }
-
-            var newSorts = [];
-            var currentOrder = api.order()[0];
-            if (currentOrder[0] === colIdx && currentOrder[1] === 'asc') {
-                newSorts.push([colIdx, switchAscDesc ? 'desc' : 'asc']);
-            } else if (currentOrder[0] !== colIdx || currentOrder[1] !== 'asc') {
-                newSorts.push([colIdx, 'asc']);
+            var skipDflt = false;
+            if (handler) {
+                skipDflt = handler.@com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsGroupRow::onClick(
+                    Lcom/google/gwt/dom/client/Element;Z)(event.currentTarget, switchAscDesc);
             }
-            if (additionalSorts) newSorts.push.apply(newSorts, additionalSorts);
-            api.order(newSorts).draw();
+            if (!skipDflt) {
+                var newSorts = [];
+                var currentOrder = api.order()[0];
+                if (currentOrder[0] === colIdx && currentOrder[1] === 'asc') {
+                    newSorts.push([colIdx, switchAscDesc ? 'desc' : 'asc']);
+                } else if (currentOrder[0] !== colIdx || currentOrder[1] !== 'asc') {
+                    newSorts.push([colIdx, 'asc']);
+                }
+                if (additionalSorts) newSorts.push.apply(newSorts, additionalSorts);
+                api.order(newSorts).draw();
+            }
         });
         return grpRows;
     }-*/;

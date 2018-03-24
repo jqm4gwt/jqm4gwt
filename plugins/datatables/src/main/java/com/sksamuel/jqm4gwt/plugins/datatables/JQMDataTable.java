@@ -48,6 +48,7 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsCallback;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsColumn;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsColumns;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsEnhanceParams;
+import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsGroupRow;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsLanguage;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsLengthMenu;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.JsRowCallback;
@@ -59,6 +60,8 @@ import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowData;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.RowDetailsRenderer;
 import com.sksamuel.jqm4gwt.plugins.datatables.JsDataTable.SearchHandler;
 import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableEnhancedEvent;
+import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableGroupRowEvent;
+import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableGroupRowEvent.GroupRowData;
 import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableRowSelChangedEvent;
 import com.sksamuel.jqm4gwt.plugins.datatables.events.JQMDataTableRowSelChangedEvent.RowSelChangedData;
 import com.sksamuel.jqm4gwt.table.ColumnDef;
@@ -417,6 +420,18 @@ public class JQMDataTable extends JQMTableGrid {
         int cnt = getHandlerCount(JQMDataTableRowSelChangedEvent.getType());
         if (cnt == 0) return;
         JQMDataTableRowSelChangedEvent.fire(this, new RowSelChangedData(row, selected, rowData));
+    }
+
+    public HandlerRegistration addGroupRowHandler(JQMDataTableGroupRowEvent.Handler handler) {
+        if (handler == null) return null;
+        return addHandler(handler, JQMDataTableGroupRowEvent.getType());
+    }
+
+    private boolean fireGroupRowClicked(Element row, boolean switchAscDesc) {
+        int cnt = getHandlerCount(JQMDataTableGroupRowEvent.getType());
+        if (cnt == 0) return false;
+        boolean stopDfltClick = JQMDataTableGroupRowEvent.fire(this, new GroupRowData(row, switchAscDesc));
+        return stopDfltClick;
     }
 
     public HandlerRegistration addEnhancedHandler(JQMDataTableEnhancedEvent.Handler handler) {
@@ -1507,6 +1522,12 @@ public class JQMDataTable extends JQMTableGrid {
         JsDataTable.addSearchHandler(getElement(), handler);
     }
 
+    private final JsGroupRow grpRowHandler = new JsGroupRow() {
+        @Override
+        public boolean onClick(Element row, boolean switchAscDesc) {
+            return fireGroupRowClicked(row, switchAscDesc);
+        }};
+
     /**
      * Creates groups bands by specified column.
      * <br> Could be called from afterDraw() event handler, see addDrawHandler()
@@ -1521,14 +1542,14 @@ public class JQMDataTable extends JQMTableGrid {
      *
      * @return - array of group rows, can be used for additional adjustments.
      **/
-    public static JsArray<Element> doGrouping(JavaScriptObject settings, int colIdx, ColSort... additionalSorts) {
+    public JsArray<Element> doGrouping(JavaScriptObject settings, int colIdx, ColSort... additionalSorts) {
         if (additionalSorts != null && additionalSorts.length > 0) {
             List<ColSort> lst = new ArrayList<>(additionalSorts.length);
             for (int i = 0; i < additionalSorts.length; i++) lst.add(additionalSorts[i]);
             JsSortItems jsAddnlSorts = prepareJsOrder(lst);
-            return JsDataTable.doGrouping(settings, colIdx, jsAddnlSorts);
+            return JsDataTable.doGrouping(settings, colIdx, jsAddnlSorts, grpRowHandler);
         } else {
-            return JsDataTable.doGrouping(settings, colIdx, null/*additionalSorts*/);
+            return JsDataTable.doGrouping(settings, colIdx, null/*additionalSorts*/, grpRowHandler);
         }
     }
 
