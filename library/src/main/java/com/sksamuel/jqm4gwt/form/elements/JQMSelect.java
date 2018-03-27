@@ -1430,7 +1430,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                 this._super();
                 if (this.isMultiple) {
                     var combo = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::findCombo(Lcom/google/gwt/dom/client/Element;)(this.select[0]);
-                    if (combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::doAssignPopupTitle()()) {
+                    if (combo && combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::doAssignPopupTitle()()) {
                         this.headerTitle.text(combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::getText()());
                     }
                 }
