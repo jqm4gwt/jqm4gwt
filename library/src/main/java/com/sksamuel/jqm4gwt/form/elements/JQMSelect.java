@@ -666,6 +666,11 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      * <br><br> Unfortunately jqm likes to change selectedIndex from -1 to 0 (for example it happens
      * on initialization, i.e. selectmenucreate). Also this behavior is browser specific, so
      * we need this guard method to make sure that null value is supported properly.
+     *
+     * <br><b>IE11 needs</b> much more attention, because even if selectedIndex set/fixed to -1,
+     * browser anyway always considers item0 as selected, so choosing first item from dropdown list is not
+     * working for empty combo. <br> The only way to <b>solve this</b> - always add {@code<option value="" text=""></option>}
+     * to JQMSelect. <br> See special logic in getValue(0) for returning null in such case.
      */
     protected boolean checkSelectedIndex() {
         if (mandatorySelIdx == null) return false;
@@ -773,7 +778,10 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
      * Returns the value at the given index
      */
     public String getValue(int index) {
-        return index == -1 ? null : select.getValue(index);
+        if (index == -1) return null;
+        String v = select.getValue(index);
+        if (index == 0 && v != null && v.isEmpty()) return null;
+        return v;
     }
 
     /**
