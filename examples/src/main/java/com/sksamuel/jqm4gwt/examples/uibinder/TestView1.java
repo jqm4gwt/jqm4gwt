@@ -1223,6 +1223,9 @@ public class TestView1 {
                 //Window.alert(event.getValue());
             }
         });
+        select1.addLabelClickHandler(click -> {
+           Window.alert("Label clicked: " + select1.getText());
+        });
 
         cityList.addFilterableHandler(new JQMFilterableEvent.DefaultHandler() {
             @Override
