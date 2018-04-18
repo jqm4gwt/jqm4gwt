@@ -12,6 +12,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
+import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
@@ -340,6 +341,20 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                 }, ClickEvent.getType());
     }
 
+    public HandlerRegistration addLabelClickHandler(final ClickHandler handler) {
+        if (handler == null) return null;
+        return flow.addDomHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                EventTarget target = event.getNativeEvent().getEventTarget();
+                if (target != null) {
+                    Element elt = target.cast();
+                    if (elt == label.getElement()) handler.onClick(event);
+                }
+            }
+        }, ClickEvent.getType());
+    }
+
     @Override
     public HandlerRegistration addTapHandler(TapHandler handler) {
         // this is not a native browser event so we will have to manage it via JS
@@ -500,6 +515,11 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         }
         addingOptionList = null;
         if (delayedValue != null) tryResolveDelayed();
+    }
+
+    /** In some cases additional styles could be needed for Label (for example when addLabelClickHandler() used). */
+    public LabelElement getLabelElt() {
+        return label.getElement().cast();
     }
 
     /** May be needed in ChangeOptionsAction.doChange() implementation */
