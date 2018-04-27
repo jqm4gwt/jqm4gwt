@@ -1635,4 +1635,19 @@ public class JQMCalBox extends JQMText {
                 changeType, changeAmount));
     }
 
+    private static native void internClose(Element elt) /*-{
+        $wnd.$(elt).datebox('close');
+    }-*/;
+
+    private static native void internOpen(Element elt) /*-{
+        $wnd.$(elt).datebox('open');
+    }-*/;
+
+    public void close() {
+        internClose(input.getElement());
+    }
+
+    public void open() {
+        internOpen(input.getElement());
+    }
 }

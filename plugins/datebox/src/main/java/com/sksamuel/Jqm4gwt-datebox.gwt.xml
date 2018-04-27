@@ -5,8 +5,8 @@
 
    <!-- For compatibility with superdev mode, library's scripts could not be included here, see entry point code for their injection -->
    
-   <!-- stylesheet src="css/jtsage-datebox-422.min.css"/>
-   <script src="js/jtsage-datebox-calbox-422.min.js"/>
+   <!-- stylesheet src="css/jtsage-datebox-431.min.css"/>
+   <script src="js/jtsage-datebox-calbox-431.min.js"/>
    <script src="js/jtsage-datebox.i18n.en.utf8.min.js"/-->
 
    <source path='jqm4gwt' />

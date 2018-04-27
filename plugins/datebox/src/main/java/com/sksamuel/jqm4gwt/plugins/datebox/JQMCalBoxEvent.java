@@ -89,7 +89,7 @@ public class JQMCalBoxEvent extends GwtEvent<JQMCalBoxEvent.Handler> {
 
         /**
          * Triggered when the datebox control is changed.
-         * <br> See <a href="http://dev.jtsage.com/jQM-DateBox/api/offset/">offset event</a>
+         * <br> See <a href="http://dev.jtsage.com/DateBox/api/offset/">offset event</a>
          */
         void onOffset(JQMCalBoxEvent event);
     }

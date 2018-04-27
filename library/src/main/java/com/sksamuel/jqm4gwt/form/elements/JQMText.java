@@ -318,6 +318,10 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
         return this;
     }
 
+    public Element getInputElt() {
+        return input.getElement();
+    }
+
     public String getInputId() {
         return input.getElement().getId();
     }
