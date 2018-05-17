@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -81,6 +82,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     private boolean transparentPrevPageClearCache;
     private boolean transparentDoPrevPageLifecycle;
     private boolean isDlgCloseable;
+
+    private Consumer<Void> delayedBindLifecycle;
 
     /**
      * Create a new {@link JQMPage}. Using this constructor, the page will not be rendered
@@ -500,7 +503,12 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
             }
             if (!transparentDoPrevPageLifecycle) {
                 JQMPage prev = findPage(transparentPrevPage);
-                if (prev != null) JQMPage.unbindLifecycleEvents(prev.getElement());
+                if (prev != null) {
+                    // Still there could be delayed restore lifecycle request,
+                    // but we don't need it anymore, because new transparent dialog is opening.
+                    prev.delayedBindLifecycle = null;
+                    JQMPage.unbindLifecycleEvents(prev.getElement());
+                }
             }
             if (content != null) content.addStyleName(JQMCommon.STYLE_UI_BODY_INHERIT);
             Element dlgContain = JQMCommon.findChild(getElement(), UI_DIALOG_CONTAIN);
@@ -537,15 +545,25 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
                 final JQMPage prev = findPage(transparentPrevPage);
                 if (prev != null) {
                     // restore hide events bindings immediately, it could be a chain hiding case,
-                    // for example: closeDialog() -> changePage(newPage) -> prevPage.onPageHide()
-                    // will not occur, scheduleFinally() is too late.
+                    // for example: closeDialog() -> changePage(newPage),
+                    // then prevPage.onPageHide() will not occur, scheduleFinally() is too late.
                     JQMPage.bindLifecycleHideEvents(prev, prev.getElement());
+
+                    prev.delayedBindLifecycle = v -> {
+                        Element prevElt = prev.getElement();
+                        JQMPage.unbindLifecycleHideEvents(prevElt);
+                        JQMPage.bindLifecycleEvents(prev, prevElt);
+                    };
+
                     Scheduler.get().scheduleFinally(new ScheduledCommand() {
                         @Override
                         public void execute() {
-                            Element prevElt = prev.getElement();
-                            JQMPage.unbindLifecycleHideEvents(prevElt);
-                            JQMPage.bindLifecycleEvents(prev, prevElt);
+                            // in some cases (especially in case of animated transitions),
+                            // new dialog opening could be already in progress and lifecycle must not be restored anymore
+                            if (prev.delayedBindLifecycle != null) {
+                                prev.delayedBindLifecycle.accept(null);
+                                prev.delayedBindLifecycle = null;
+                            }
                         }
                     });
                 }
