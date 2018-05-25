@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt.toolbar;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 import com.sksamuel.jqm4gwt.JQMWidget;
@@ -16,7 +17,7 @@ import com.sksamuel.jqm4gwt.html.Heading;
  * <br> See <a href="http://demos.jquerymobile.com/1.4.5/toolbar/">Toolbar</a>
  * <br> See also <a href="http://api.jquerymobile.com/toolbar/">Toolbar API</a>
  */
-public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedPosition {
+public abstract class JQMToolbar extends JQMWidget implements HasText, HasHTML, HasFixedPosition {
 
     private final FlowPanel flow;
 
@@ -44,15 +45,13 @@ public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedP
         flow.add(w);
     }
 
-    /** Returns the text of the Hn element */
+    /** Returns the text of the header(Hn) element */
     @Override
     public String getText() {
         return header == null ? null : header.getText();
     }
 
-    /**
-     * Sets the value of the Hn element
-     */
+    /** Sets the value of the header(Hn) element */
     @Override
     public void setText(String text) {
         if (text == null) {
@@ -63,6 +62,26 @@ public abstract class JQMToolbar extends JQMWidget implements HasText, HasFixedP
                 flow.add(header);
             }
             header.setText(text);
+        }
+    }
+
+    /** Returns the html of the header(Hn) element */
+    @Override
+    public String getHTML() {
+        return header == null ? null : header.getElement().getInnerHTML();
+    }
+
+    /** Sets the value of the header(Hn) element */
+    @Override
+    public void setHTML(String html) {
+        if (html == null) {
+            if (header != null) flow.remove(header);
+        } else {
+            if (header == null) {
+                header = new Heading(1);
+                flow.add(header);
+            }
+            header.getElement().setInnerHTML(html);
         }
     }
 

@@ -3,6 +3,7 @@ package com.sksamuel.jqm4gwt.toolbar;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.user.client.ui.Composite;
 import com.sksamuel.jqm4gwt.DataIcon;
+import com.sksamuel.jqm4gwt.HasHTML;
 import com.sksamuel.jqm4gwt.HasJqmHeader;
 import com.sksamuel.jqm4gwt.HasText;
 import com.sksamuel.jqm4gwt.JQMCommon;
@@ -19,7 +20,7 @@ import com.sksamuel.jqm4gwt.button.JQMButton.PosOnBand;
  * <br> See <a href="http://jquerymobile.com/demos/1.2.0/docs/toolbars/docs-headers.html">Header structure</a>
  *
  */
-public class JQMHeader extends JQMToolbar implements HasText<JQMHeader>, HasJqmHeader {
+public class JQMHeader extends JQMToolbar implements HasText<JQMHeader>, HasHTML<JQMHeader>, HasJqmHeader {
 
     private static final String BACK_BTN = "data-add-back-btn";
     private static final String BACK_BTN_TEXT = "data-back-btn-text";
@@ -370,6 +371,12 @@ public class JQMHeader extends JQMToolbar implements HasText<JQMHeader>, HasJqmH
     @Override
     public JQMHeader withText(String text) {
         setText(text);
+        return this;
+    }
+
+    @Override
+    public JQMHeader withHTML(String html) {
+        setHTML(html);
         return this;
     }
 
