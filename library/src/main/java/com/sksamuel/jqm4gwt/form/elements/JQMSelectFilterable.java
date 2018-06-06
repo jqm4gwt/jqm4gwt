@@ -336,6 +336,8 @@ public class JQMSelectFilterable extends JQMSelect {
             if (t.val()) {
                 t.val("");
                 t.next(".ui-input-clear").addClass("ui-input-clear-hidden");
+                // see mobile.filterable._onKeyUp()
+                t[0].setAttribute( "data-" + $wnd.$.mobile.ns + "lastval", "" );
                 fltr.filterable("refresh");
             }
         }
