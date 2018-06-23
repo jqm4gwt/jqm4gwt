@@ -1134,7 +1134,7 @@ public class JQMCalBox extends JQMText {
         created = true;
         setDate(delayedSetDate);
         initGridDateFormatter();
-        initGridDateBoxBeforeAppend();
+        initGridDateBoxBeforeAppend(true/*justCreated*/);
         initDisplayChange();
         initOffset();
     }
@@ -1506,9 +1506,11 @@ public class JQMCalBox extends JQMText {
     }
 
     // See http://dev.jtsage.com/DateBox/api/calBeforeAppendFunc/
-    private static native void initGridDateBoxBeforeAppend(Element elt, JQMCalBox ctrl) /*-{
+    private static native void initGridDateBoxBeforeAppend(Element elt, JQMCalBox ctrl, boolean justCreated) /*-{
         if (ctrl === null) {
-            $wnd.$(elt).datebox({ 'calBeforeAppendFunc': function(t) { return t; } });
+            if (!justCreated) { // cleanup(revert to default) in case it's not a new widget
+                $wnd.$(elt).datebox({ 'calBeforeAppendFunc': function(t) { return t; } });
+            }
         } else {
             $wnd.$(elt).datebox({ 'calBeforeAppendFunc': function(t) {
                 if (t) {
@@ -1526,9 +1528,9 @@ public class JQMCalBox extends JQMText {
         initGridDateFormatter(input.getElement(), gridDateFormatter != null ? this : null);
     }
 
-    private void initGridDateBoxBeforeAppend() {
+    private void initGridDateBoxBeforeAppend(boolean justCreated) {
         if (!isReady()) return;
-        initGridDateBoxBeforeAppend(input.getElement(), gridDateBox != null ? this : null);
+        initGridDateBoxBeforeAppend(input.getElement(), gridDateBox != null ? this : null, justCreated);
     }
 
     public GridDateFormatter getGridDateFormatter() {
@@ -1551,7 +1553,7 @@ public class JQMCalBox extends JQMText {
      **/
     public void setGridDateBoxBeforeAppend(GridDateBox value) {
         this.gridDateBox = value;
-        initGridDateBoxBeforeAppend();
+        initGridDateBoxBeforeAppend(false/*justCreated*/);
     }
 
     public boolean isIconNoDisc() {
