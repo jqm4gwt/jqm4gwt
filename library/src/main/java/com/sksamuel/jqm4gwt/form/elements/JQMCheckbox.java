@@ -52,18 +52,25 @@ public class JQMCheckbox extends JQMWidget implements HasText<JQMCheckbox>, HasV
         //CustomFlowPanel flow = new CustomFlowPanel(Document.get().createFormElement());
         FlowPanel flow = new FlowPanel();
         initWidget(flow);
-        CustomFlowPanel la = new CustomFlowPanel(label.getElement());
-        flow.add(la);
-        la.add(input);
 
-        // OLD code: worked OK, except of nested JQMList case.
-        // FlowPanel flow = new FlowPanel();
-        // flow.add(input);
-        // flow.add(label);
+        if (isClassicInit()) { // works OK and allows dynamic setText(), but fails in case of nested JQMList.
+            flow.add(input);
+            flow.add(label);
+        } else {
+            // See http://demos.jquerymobile.com/1.4.5/checkboxradio-checkbox/
+            // <label> <input type="checkbox" name="checkbox0">Check me</input> </label>
+            CustomFlowPanel la = new CustomFlowPanel(label.getElement());
+            flow.add(la);
+            la.add(input);
+        }
 
         setInput(input);
         setLabel(label);
         if (id != null && !id.isEmpty()) setId(id);
+    }
+
+    protected boolean isClassicInit() {
+        return false;
     }
 
     @UiConstructor
