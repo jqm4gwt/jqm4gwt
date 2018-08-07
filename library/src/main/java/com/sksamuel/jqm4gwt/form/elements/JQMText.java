@@ -376,6 +376,10 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
         setCorners(corners);
         return this;
     }
+	
+	public Element getInputElt() {
+        return input.getElement();
+    }
 
     @Override
     protected void onLoad() {
