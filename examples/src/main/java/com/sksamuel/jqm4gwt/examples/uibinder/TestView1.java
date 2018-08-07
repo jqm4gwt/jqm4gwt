@@ -63,6 +63,7 @@ import com.sksamuel.jqm4gwt.form.elements.JQMSelectWithIcons;
 import com.sksamuel.jqm4gwt.form.elements.JQMSlider;
 import com.sksamuel.jqm4gwt.form.elements.JQMTelephone;
 import com.sksamuel.jqm4gwt.form.elements.JQMText;
+import com.sksamuel.jqm4gwt.form.elements.JQMTextArea;
 import com.sksamuel.jqm4gwt.form.elements.JQMUrl;
 import com.sksamuel.jqm4gwt.html.Heading;
 import com.sksamuel.jqm4gwt.html.Paragraph;
@@ -542,6 +543,10 @@ public class TestView1 {
 
     @UiField JQMColumnToggle colToggle1;
     @UiField JQMButton colClassNamesBtn;
+
+    @UiField JQMText textDisabled;
+    @UiField JQMTextArea textAreaDisabled;
+    @UiField JQMButton switchTextDisabledBtn;
 
 
     public TestView1() {
@@ -1156,6 +1161,12 @@ public class TestView1 {
     @UiHandler("colClassNamesBtn")
     void colClassNamesBtnClick(ClickEvent e) {
         colToggle1.setColClassNames("1=CENTER, 2=RIGHT_BODY CENTER_HEAD abc, 3=CENTER");
+    }
+
+    @UiHandler("switchTextDisabledBtn")
+    void switchTextDisabledBtnClick(ClickEvent e) {
+        textDisabled.setEnabled(!textDisabled.isEnabled());
+        textAreaDisabled.setEnabled(!textAreaDisabled.isEnabled());
     }
 
     {

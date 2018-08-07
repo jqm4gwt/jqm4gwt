@@ -74,6 +74,8 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
 
     private static final String JQM4GWT_READONLY = "jqm4gwt-readonly";
 
+    private Integer savedTabIndex = null;
+
     /**
      * Create a new {@link JQMText} element with no label
      */
@@ -251,11 +253,6 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
         setAttribute("data-prevent-focus-zoom", String.valueOf(b));
     }
 
-    @Override
-    public void setTabIndex(int index) {
-        input.setTabIndex(index);
-    }
-
     /**
      * Set the text of the label to the given @param text
      */
@@ -379,4 +376,50 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
         setCorners(corners);
         return this;
     }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        if (!isEnabled()) {
+            Element inputElt = getInputElt();
+            if (savedTabIndex == null) savedTabIndex = inputElt.getTabIndex();
+            inputElt.setTabIndex(-1);
+        }
+    }
+
+    @Override
+    public void setEnabled(boolean value) {
+        boolean prevEnabled = isEnabled();
+        super.setEnabled(value);
+        if (prevEnabled == value) return;
+
+        if (isAttached()) {
+            Element inputElt = getInputElt();
+            if (value) {
+                if (savedTabIndex != null) {
+                    inputElt.setTabIndex(savedTabIndex);
+                    savedTabIndex = null;
+                }
+            } else {
+                savedTabIndex = inputElt.getTabIndex();
+                inputElt.setTabIndex(-1);
+            }
+        }
+    }
+
+    @Override
+    public void setTabIndex(int value) {
+        if (isAttached()) {
+            if (isEnabled()) {
+                getInputElt().setTabIndex(value);
+                savedTabIndex = null;
+            } else {
+                savedTabIndex = value;
+            }
+        } else {
+            input.setTabIndex(value);
+            JQMCommon.setAttribute(getInputElt(), "tabindex", String.valueOf(value));
+        }
+    }
+
 }

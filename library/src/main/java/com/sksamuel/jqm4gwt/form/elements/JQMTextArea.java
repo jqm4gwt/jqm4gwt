@@ -1,6 +1,7 @@
 package com.sksamuel.jqm4gwt.form.elements;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -53,6 +54,8 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
 
     private final FormLabel label = new FormLabel();
     private final TextArea input = new TextArea();
+
+    private Integer savedTabIndex = null;
 
     /**
      * Create a new {@link JQMTextArea} with no label text
@@ -149,11 +152,6 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
     @Override
     public void setFocus(boolean focused) {
         input.setFocus(focused);
-    }
-
-    @Override
-    public void setTabIndex(int index) {
-        input.setTabIndex(index);
     }
 
     @Override
@@ -302,5 +300,64 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
     public JQMTextArea withCorners(boolean corners) {
         setCorners(corners);
         return this;
+    }
+
+    public Element getInputElt() {
+        return input.getElement();
+    }
+
+    public String getInputId() {
+        return input.getElement().getId();
+    }
+
+    public void setInputId(String id) {
+        input.getElement().setId(id);
+        input.setName(id);
+        label.setFor(id);
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        if (!isEnabled()) {
+            Element inputElt = getInputElt();
+            if (savedTabIndex == null) savedTabIndex = inputElt.getTabIndex();
+            inputElt.setTabIndex(-1);
+        }
+    }
+
+    @Override
+    public void setEnabled(boolean value) {
+        boolean prevEnabled = isEnabled();
+        super.setEnabled(value);
+        if (prevEnabled == value) return;
+
+        if (isAttached()) {
+            Element inputElt = getInputElt();
+            if (value) {
+                if (savedTabIndex != null) {
+                    inputElt.setTabIndex(savedTabIndex);
+                    savedTabIndex = null;
+                }
+            } else {
+                savedTabIndex = inputElt.getTabIndex();
+                inputElt.setTabIndex(-1);
+            }
+        }
+    }
+
+    @Override
+    public void setTabIndex(int value) {
+        if (isAttached()) {
+            if (isEnabled()) {
+                getInputElt().setTabIndex(value);
+                savedTabIndex = null;
+            } else {
+                savedTabIndex = value;
+            }
+        } else {
+            input.setTabIndex(value);
+            JQMCommon.setAttribute(getInputElt(), "tabindex", String.valueOf(value));
+        }
     }
 }
