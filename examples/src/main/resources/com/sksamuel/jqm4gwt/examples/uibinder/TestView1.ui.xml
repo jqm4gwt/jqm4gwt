@@ -244,6 +244,10 @@
           <b:JQMButton builtInIcon="PLUS" ui:field="enableTextButton" text="Enable Text" inline="true" mini="true" />
           
           <e:JQMText ui:field="textReadOnly" text="Text (readonly)" value="qwerty uiopa" readOnly="true" />
+          
+          <e:JQMText ui:field="textDisabled" text="Text (disabled)" value="qwerty uiopa" enabled="false" />
+          <e:JQMTextArea ui:field="textAreaDisabled" text="Text area (disabled)" value="qwerty uiopa" enabled="false" />
+          <b:JQMButton ui:field="switchTextDisabledBtn" text="Switch Text Disabled/Enabled" inline="true" mini="true" />
 
           <!-- TODO fix col/rows setter <e:JQMTextArea text="textAreaText" columns="40" rows="20"/>-->
           <e:JQMTextArea text="textAreaText"/>
