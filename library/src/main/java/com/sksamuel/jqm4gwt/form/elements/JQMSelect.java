@@ -1727,6 +1727,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         if (p == panel) return;
         if (isInstance(select.getElement())) { // on iOS moving JQMSelect from one panel to another is making it "stuck"
             String v = getValue();
+            if (v == null) v = getDelayedValue();
             panel.add(this);
             refresh();
             setValue(v);
