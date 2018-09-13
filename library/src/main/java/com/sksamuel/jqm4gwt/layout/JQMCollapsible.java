@@ -50,6 +50,9 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
     private boolean iconNoDisc;
     private boolean iconAlt;
 
+    private boolean expanding;
+    private boolean collapsing;
+
     /**
      * Creates a new {@link JQMCollapsible} with the no header text and
      * preset to collapsed.
@@ -529,12 +532,32 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
         return this;
     }
 
+    /** @return - true in case expand() is called and still in progress. */
+    public boolean isExpanding() {
+        return expanding;
+    }
+
+    /** @return - true in case collapse() is called and still in progress. */
+    public boolean isCollapsing() {
+        return collapsing;
+    }
+
     public void expand() {
-        execExpand(getElement());
+        expanding = true;
+        try {
+            execExpand(getElement());
+        } finally {
+            expanding = false;
+        }
     }
 
     public void collapse() {
-        execCollapse(getElement());
+        collapsing = true;
+        try {
+            execCollapse(getElement());
+        } finally {
+            collapsing = false;
+        }
     }
 
     private static native void execExpand(Element elt) /*-{

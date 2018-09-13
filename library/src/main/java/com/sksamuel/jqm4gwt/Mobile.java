@@ -31,9 +31,24 @@ public class Mobile {
     public static String busyTheme;
     public static boolean busyTextOnly;
 
+    private static boolean changingPage;
+
     private Mobile() {} // static class, should not be instantiated
 
-    public static native void back() /*-{
+    public static boolean isChangingPage() {
+        return changingPage;
+    }
+
+    public static void back() {
+        changingPage = true;
+        try {
+            _back();
+        } finally {
+            changingPage = false;
+        }
+    }
+
+    private static native void _back() /*-{
         $wnd.$.mobile.back();
     }-*/;
 
@@ -79,7 +94,12 @@ public class Mobile {
      */
     static void changePage(String url, TransitionIntf<?> t, boolean reverse, boolean changeHash,
                            boolean dialog) {
-        changePage(url, t.getJqmValue(), reverse, changeHash, dialog ? DATA_ROLE_DIALOG : null);
+        changingPage = true;
+        try {
+            changePage(url, t.getJqmValue(), reverse, changeHash, dialog ? DATA_ROLE_DIALOG : null);
+        } finally {
+            changingPage = false;
+        }
     }
 
     static void changePage(String url, TransitionIntf<?> t, boolean reverse, boolean changeHash) {
