@@ -69,6 +69,7 @@ import com.sksamuel.jqm4gwt.html.Heading;
 import com.sksamuel.jqm4gwt.html.Paragraph;
 import com.sksamuel.jqm4gwt.html.Span;
 import com.sksamuel.jqm4gwt.layout.JQMCollapsible;
+import com.sksamuel.jqm4gwt.layout.JQMCollapsibleEvent;
 import com.sksamuel.jqm4gwt.layout.JQMTable;
 import com.sksamuel.jqm4gwt.list.JQMList;
 import com.sksamuel.jqm4gwt.list.JQMListDivider;
@@ -478,6 +479,9 @@ public class TestView1 {
 
     @UiField
     JQMCollapsible collapsibleWithBtns;
+
+    @UiField
+    JQMCollapsible collapsibleWithDiffTexts;
 
     @UiField
     JQMButton btnCollaps1;
@@ -1523,6 +1527,20 @@ public class TestView1 {
                 if (co != null) co.discardHeaderClick(event);
             }
         });
+
+        collapsibleWithDiffTexts.addCollapsibleHandler(new JQMCollapsibleEvent.Handler() {
+
+            @Override
+            public void onExpand(JQMCollapsibleEvent event) {
+                collapsibleWithDiffTexts.setText("Expanded");
+            }
+
+            @Override
+            public void onCollapse(JQMCollapsibleEvent event) {
+                collapsibleWithDiffTexts.setText("Collapsed");
+            }
+        });
+
     }
 
     public void show() {
