@@ -754,6 +754,13 @@
           <b:JQMButton ui:field="collapChangeContentThemeBtn" text="Switch content theme: null - b"
             mini="true" inline="true" />   
         </g:FlowPanel>
+        <ly:JQMCollapsible ui:field="collapsibleWithDiffTexts" text="Collapsed" mini="true" inline="true"
+          collapsed="true" collapsedIcon="RIGHTCARAT" expandedIcon="DOWNCARAT">
+          <ly:widget>
+            <h:Span text="Collapsible with dynamic header text." />
+          </ly:widget>
+        </ly:JQMCollapsible>
+        
         <ly:JQMCollapsibleSet>
           <ly:collapsible>
             <ly:JQMCollapsible text="collapsible1Text">

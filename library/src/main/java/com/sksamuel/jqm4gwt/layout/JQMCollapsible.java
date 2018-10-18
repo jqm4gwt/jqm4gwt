@@ -514,16 +514,23 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
         return this;
     }
 
-    /**
-     * Sets the text on the header element
-     */
+    /** Sets the text on the header element */
     @Override
     public void setText(String text) {
-        if (headerPanel != null) {
-            super.remove(headerPanel);
-            headerPanel = null;
+        if (headingToggle != null) {
+            if (text == null) text = "";
+            String s = headingToggle.getInnerHTML();
+            int p = s.indexOf('<');
+            if (p >= 0) s = text + s.substring(p);
+            else s = text;
+            headingToggle.setInnerHTML(s);
+        } else if (!isInstance(getElement())) {
+            if (headerPanel != null) {
+                super.remove(headerPanel);
+                headerPanel = null;
+            }
+            header.setText(text);
         }
-        header.setText(text);
     }
 
     @Override
