@@ -140,7 +140,17 @@ public class JQMSelectFilterable extends JQMSelect {
                         }
                     }
                 }
-                if (this.isOpen) this._focusMenuItem();
+                if (this.isOpen) {
+                    var selectmenu = $wnd.$( this.select[0] ),
+                        id = selectmenu.attr( "id" ),
+                        listview = $wnd.$( "#" + id + "-menu" ),
+                        form = listview.jqmData( "filter-form" );
+                    if (form) {
+                        var input = form.find( "input" );
+                        if (input && $wnd.$(input).is(":focus")) return;
+                    }
+                    this._focusMenuItem();
+                }
             },
 
             safeFocusMenuItem: function() {
