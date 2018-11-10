@@ -50,10 +50,10 @@
           transition: opacity 0.5s ease-in;
 }
 
-/* See http://stackoverflow.com/a/10449504 */
+/* See http://stackoverflow.com/a/10449504 and https://stackoverflow.com/q/32479188 */
 .jqm4gwt-dialog-transparent.ui-dialog {
   min-height: 100% !important;
-  background: rgba(0, 0, 0, 0.1) !important; /* cannot be transparent because of IE9 */
+  background: rgba(0, 0, 0, 0) !important; /* cannot be transparent because of IE9 */
 
   width: 100%;
   height: 100%;
@@ -77,8 +77,8 @@
   z-index: 1095; /* must be lower than zindex-1, actually this rule makes needless all others: zindex-1, topmost, system */
 }
 
-/* Should be in sync with ui-state-disabled opacity value somehow. 
-   It's like disabled, but we can copy-paste input's content.  
+/* Should be in sync with ui-state-disabled opacity value somehow.
+   It's like disabled, but we can copy-paste input's content.
 */
 .jqm4gwt-non-editable input, .ui-input-text > input[readonly] {
   filter: Alpha(Opacity=30);
@@ -87,7 +87,7 @@
 }
 
 /* There is no good way to gray out label, because unfortunately there is no parent selector in CSS3,
-   so in code of JQMText special class is added to input's label. 
+   so in code of JQMText special class is added to input's label.
 */
 .jqm4gwt-readonly {
   filter: Alpha(Opacity=30);
@@ -258,7 +258,7 @@ input[type=number]:focus:invalid {
   width: 100%;
 }
 
-.ui-selectmenu.ui-page .ui-content .ui-btn.clear-button, 
+.ui-selectmenu.ui-page .ui-content .ui-btn.clear-button,
 .ui-selectmenu.ui-page .ui-content .ui-btn.select-all-button {
   margin: -16px 0 16px -16px;
   width: 110%; /* 110% is a hack, we should just add 32px */
