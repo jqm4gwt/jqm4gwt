@@ -626,4 +626,14 @@ public class JQMCollapsible extends JQMContainer implements HasText<JQMCollapsib
         $wnd.$(header).find("a.ui-btn").first().removeClass($wnd.$.mobile.activeBtnClass);
     }-*/;
 
+    /** @return - may return null in case collapsible is not yet loaded and jqm enhanced/rendered. */
+    public Element getHeadingToggle() {
+        return headingToggle;
+    }
+
+    /** @return - may return null in case collapsible is not yet loaded and jqm enhanced/rendered. */
+    public Element getCollapsibleContent() {
+        return collapsibleContent;
+    }
+
 }
