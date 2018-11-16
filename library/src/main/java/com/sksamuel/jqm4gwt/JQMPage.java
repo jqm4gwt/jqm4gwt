@@ -34,11 +34,13 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     public static final String DATA_DOM_CACHE = "data-dom-cache";
     public static final String UI_DIALOG_BACKGROUND = "ui-dialog-background";
     public static final String JQM4GWT_DLG_TRANSPARENT = "jqm4gwt-dialog-transparent";
+    public static final String JQM4GWT_DLG_TRANSPARENT_GOING = "jqm4gwt-dlg-transparent-going";
     public static final String JQM4GWT_DLG_TRANSPARENT_OPENED = "jqm4gwt-dlg-transparent-opened";
     public static final String DLG_TRANSPARENT_ZINDEX_MINUS1 = "zindex-1";
     public static final String DLG_TRANSPARENT_TOPMOST = "topmost";
     public static final String DLG_TRANSPARENT_SYSTEM = "system";
 
+    private static final String JQM4GWT_DLG_TRANSPARENT_GOING_PREFIX = JQM4GWT_DLG_TRANSPARENT_GOING + "-";
     private static final String JQM4GWT_DLG_TRANSPARENT_OPENED_PREFIX = JQM4GWT_DLG_TRANSPARENT_OPENED + "-";
 
     /**
@@ -441,7 +443,10 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
         onPageBeforeHide();
         JQMPageEvent.fire(this, PageState.BEFORE_HIDE, this, nextPg);
-        if (isDialog()) isDlgCloseable = false;
+        if (isDialog()) {
+            isDlgCloseable = false;
+            if (transparent) prepareTransparentOpened(false/*add*/, getId());
+        }
     }
 
     /**
@@ -468,11 +473,29 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         }
     }
 
+    /** GOING means from beforeShow till afterHide. */
+    private static void prepareTransparentGoing(boolean add, String transparentPageId) {
+        Element p = Document.get().getBody();
+        if (p != null) {
+            String s = JQM4GWT_DLG_TRANSPARENT_GOING_PREFIX + transparentPageId;
+            if (add) {
+                p.addClassName(JQM4GWT_DLG_TRANSPARENT_GOING);
+                p.addClassName(s);
+            } else {
+                p.removeClassName(s);
+                String ss = JQMCommon.getStyleStartsWith(p, JQM4GWT_DLG_TRANSPARENT_GOING_PREFIX);
+                // checking for "opened dialog chain" case
+                if (Empty.is(ss)) p.removeClassName(JQM4GWT_DLG_TRANSPARENT_GOING);
+            }
+        }
+    }
+
     /**
      * Needed mostly in case of page container surrounded by external panels, so these panels
      * could be synchronously disabled/enabled when "modal" dialog shown by jqm application.
+     * <br> from afterShow till beforeHide.
      */
-    private static void prepareTransparentInfo(boolean add, String transparentPageId) {
+    private static void prepareTransparentOpened(boolean add, String transparentPageId) {
         Element p = Document.get().getBody();
         if (p != null) {
             String s = JQM4GWT_DLG_TRANSPARENT_OPENED_PREFIX + transparentPageId;
@@ -493,7 +516,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
             if (transparentPrevPage == prevPage) return; // already prepared
             transparentPrevPage = prevPage;
             prevPage.addClassName(UI_DIALOG_BACKGROUND);
-            prepareTransparentInfo(true/*add*/, getId());
+            prepareTransparentGoing(true/*add*/, getId());
             String s = prevPage.getAttribute(DATA_DOM_CACHE);
             if ("true".equals(s)) {
                 transparentPrevPageClearCache = false;
@@ -537,7 +560,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
 
         if (transparentPrevPage != null) {
             transparentPrevPage.removeClassName(UI_DIALOG_BACKGROUND);
-            prepareTransparentInfo(false/*add*/, getId());
+            prepareTransparentGoing(false/*add*/, getId());
             if (transparentPrevPageClearCache) {
                 transparentPrevPage.removeAttribute(DATA_DOM_CACHE);
             }
@@ -587,6 +610,11 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
         initialWindowHeight = Window.getClientHeight();
         onPageShow();
         JQMPageEvent.fire(this, PageState.SHOW, findPage(prevPage), this);
+
+        if (isDialog() && transparent && prevPage != null) {
+            prepareTransparentOpened(true/*add*/, getId());
+        }
+
         if (contentCentered || pseudoFixedToolbars || contentHeightPercent > 0
                 || hideFixedToolbarsIfContentAreaPercentBelow > 0
                 || hideFixedToolbarsIfVirtualKeyboard > 0) {
