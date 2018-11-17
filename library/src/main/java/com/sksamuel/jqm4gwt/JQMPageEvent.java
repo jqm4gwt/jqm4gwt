@@ -8,10 +8,20 @@ public class JQMPageEvent extends GwtEvent<JQMPageEvent.Handler> {
 
     public interface Handler extends EventHandler {
         void onInit(JQMPageEvent event);
+
         void onBeforeShow(JQMPageEvent event);
+
         void onBeforeHide(JQMPageEvent event);
+
         void onShow(JQMPageEvent event);
+
         void onHide(JQMPageEvent event);
+
+        /** Transparent dialog is going to be open/shown. */
+        void onBeforeTransparentDlg(JQMPageEvent event);
+
+        /** Transparent dialog is finished/hidden. */
+        void onAfterTransparentDlg(JQMPageEvent event);
     }
 
     public static class DefaultHandler implements Handler {
@@ -33,6 +43,14 @@ public class JQMPageEvent extends GwtEvent<JQMPageEvent.Handler> {
 
         @Override
         public void onHide(JQMPageEvent event) {
+        }
+
+        @Override
+        public void onBeforeTransparentDlg(JQMPageEvent event) {
+        }
+
+        @Override
+        public void onAfterTransparentDlg(JQMPageEvent event) {
         }
     }
 
@@ -59,7 +77,7 @@ public class JQMPageEvent extends GwtEvent<JQMPageEvent.Handler> {
       return TYPE;
     }
 
-    public enum PageState { INIT, BEFORE_SHOW, SHOW, BEFORE_HIDE, HIDE }
+    public enum PageState { INIT, BEFORE_SHOW, SHOW, BEFORE_HIDE, HIDE, BEFORE_TRANSPARENT, AFTER_TRANSPARENT }
 
     private final PageState pageState;
 
@@ -127,6 +145,14 @@ public class JQMPageEvent extends GwtEvent<JQMPageEvent.Handler> {
 
             case SHOW:
                 handler.onShow(this);
+                break;
+
+            case BEFORE_TRANSPARENT:
+                handler.onBeforeTransparentDlg(this);
+                break;
+
+            case AFTER_TRANSPARENT:
+                handler.onAfterTransparentDlg(this);
                 break;
         }
     }
