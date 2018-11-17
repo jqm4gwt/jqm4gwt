@@ -514,6 +514,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
     private void prepareTransparentPrevPage(Element prevPage) {
         if (transparent && prevPage != null) {
             if (transparentPrevPage == prevPage) return; // already prepared
+            final JQMPage prev = findPage(prevPage);
+            if (prev != null) JQMPageEvent.fire(prev, PageState.BEFORE_TRANSPARENT, prev, this);
             transparentPrevPage = prevPage;
             prevPage.addClassName(UI_DIALOG_BACKGROUND);
             prepareTransparentGoing(true/*add*/, getId());
@@ -525,7 +527,6 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
                 prevPage.setAttribute(DATA_DOM_CACHE, "true");
             }
             if (!transparentDoPrevPageLifecycle) {
-                JQMPage prev = findPage(transparentPrevPage);
                 if (prev != null) {
                     // Still there could be delayed restore lifecycle request,
                     // but we don't need it anymore, because new transparent dialog is opening.
@@ -556,7 +557,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
      */
     protected void doPageHide(Element nextPage) {
         onPageHide();
-        JQMPageEvent.fire(this, PageState.HIDE, this, findPage(nextPage));
+        final JQMPage next = findPage(nextPage);
+        JQMPageEvent.fire(this, PageState.HIDE, this, next);
 
         if (transparentPrevPage != null) {
             transparentPrevPage.removeClassName(UI_DIALOG_BACKGROUND);
@@ -564,8 +566,8 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
             if (transparentPrevPageClearCache) {
                 transparentPrevPage.removeAttribute(DATA_DOM_CACHE);
             }
+            final JQMPage prev = findPage(transparentPrevPage);
             if (!transparentDoPrevPageLifecycle) {
-                final JQMPage prev = findPage(transparentPrevPage);
                 if (prev != null) {
                     // restore hide events bindings immediately, it could be a chain hiding case,
                     // for example: closeDialog() -> changePage(newPage),
@@ -593,6 +595,7 @@ public class JQMPage extends JQMContainer implements HasFullScreen<JQMPage> {
             }
             transparentPrevPage = null;
             transparentPrevPageClearCache = false;
+            if (prev != null) JQMPageEvent.fire(prev, PageState.AFTER_TRANSPARENT, this, next);
         }
     }
 
