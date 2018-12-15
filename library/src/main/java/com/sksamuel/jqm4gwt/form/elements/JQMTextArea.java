@@ -360,4 +360,10 @@ public class JQMTextArea extends JQMFieldContainer implements HasGridDimensions<
             JQMCommon.setAttribute(getInputElt(), "tabindex", String.valueOf(value));
         }
     }
+
+    @Override
+    public void setTheme(String themeName) {
+        super.setTheme(themeName);
+        JQMCommon.setThemeEx(input.getElement(), themeName, JQMCommon.STYLE_UI_BODY);
+    }
 }

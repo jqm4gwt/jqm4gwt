@@ -239,9 +239,10 @@
           <e:JQMPassword ui:field="passwordEd" text="passwordText"/>
           <e:JQMSearch ui:field="searchEd" text="searchText"/>
           <e:JQMTelephone ui:field="phoneEd" text="telephoneText"/>
-          <e:JQMText ui:field="text" text="Text (no corners)" corners="false" />
+          <e:JQMText ui:field="text" text="Text (no corners)" corners="false" theme="b" />
           <b:JQMButton builtInIcon="MINUS" ui:field="disableTextButton" text="Disable Text" inline="true" mini="true" />
           <b:JQMButton builtInIcon="PLUS" ui:field="enableTextButton" text="Enable Text" inline="true" mini="true" />
+          <b:JQMButton ui:field="switchTextThemeButton" text="Switch Theme" inline="true" mini="true" />
           
           <e:JQMText ui:field="textReadOnly" text="Text (readonly)" value="qwerty uiopa" readOnly="true" />
           
@@ -250,7 +251,9 @@
           <b:JQMButton ui:field="switchTextDisabledBtn" text="Switch Text Disabled/Enabled" inline="true" mini="true" />
 
           <!-- TODO fix col/rows setter <e:JQMTextArea text="textAreaText" columns="40" rows="20"/>-->
-          <e:JQMTextArea text="textAreaText"/>
+          <e:JQMTextArea ui:field="textArea" text="textAreaText" theme="b" />
+          <b:JQMButton ui:field="switchTextAreaThemeButton" text="Switch Theme" inline="true" mini="true" />
+          
           <e:JQMUrl ui:field="urlEd" text="urlText"/>
 
           <e:JQMRadiobox ui:field="rb1" name="radiotest1" text="Radiobox1" mini="true" inline="true" />
