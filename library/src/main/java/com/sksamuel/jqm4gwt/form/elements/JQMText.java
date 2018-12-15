@@ -76,6 +76,8 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
 
     private Integer savedTabIndex = null;
 
+    private Element uiInputText;
+
     /**
      * Create a new {@link JQMText} element with no label
      */
@@ -188,6 +190,16 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
     private static native void enable(Element elt) /*-{
         $wnd.$(elt).textinput('enable');
     }-*/;
+
+    private static native boolean isInstance(Element elt) /*-{
+        var i = $wnd.$(elt).textinput("instance");
+        if (i) return true;
+        else return false;
+    }-*/;
+
+    private boolean isInstance() {
+        return isInstance(input.getElement());
+    }
 
     @Override
     public int getTabIndex() {
@@ -381,14 +393,41 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
         return this;
     }
 
+    private static native void bindCreated(Element elt, JQMText txt) /*-{
+        $wnd.$(elt).on( 'textinputcreate', function( event, ui ) {
+            txt.@com.sksamuel.jqm4gwt.form.elements.JQMText::created()();
+        });
+    }-*/;
+
+    private static native void unbindCreated(Element elt) /*-{
+        $wnd.$(elt).off( 'textinputcreate' );
+    }-*/;
+
+    /**
+     * Unfortunately it's not called in case of manual JQMContext.render(),
+     * though widget is getting created and enhanced.
+     */
+    private void created() {
+        String t = getTheme();
+        if (t != null && !t.isEmpty()) setTheme(t);
+    }
+
     @Override
     protected void onLoad() {
         super.onLoad();
+        Element inputElt = getInputElt();
+        bindCreated(inputElt, this);
         if (!isEnabled()) {
-            Element inputElt = getInputElt();
             if (savedTabIndex == null) savedTabIndex = inputElt.getTabIndex();
             inputElt.setTabIndex(-1);
         }
+    }
+
+    @Override
+    protected void onUnload() {
+        Element inputElt = getInputElt();
+        unbindCreated(inputElt);
+        super.onUnload();
     }
 
     @Override
@@ -424,6 +463,19 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
             input.setTabIndex(value);
             JQMCommon.setAttribute(getInputElt(), "tabindex", String.valueOf(value));
         }
+    }
+
+    private void findUiInputText() {
+        if (uiInputText == null && isInstance()) {
+            uiInputText = JQMCommon.findChild(getElement(), "ui-input-text");
+        }
+    }
+
+    @Override
+    public void setTheme(String themeName) {
+        super.setTheme(themeName);
+        findUiInputText();
+        if (uiInputText != null) JQMCommon.setThemeEx(uiInputText, themeName, JQMCommon.STYLE_UI_BODY);
     }
 
 }

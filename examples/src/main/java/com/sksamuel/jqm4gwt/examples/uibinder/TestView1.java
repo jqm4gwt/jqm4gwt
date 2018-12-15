@@ -142,6 +142,15 @@ public class TestView1 {
     JQMButton enableTextButton;
 
     @UiField
+    JQMButton switchTextThemeButton;
+
+    @UiField
+    JQMTextArea textArea;
+
+    @UiField
+    JQMButton switchTextAreaThemeButton;
+
+    @UiField
     JQMSlider slider;
 
     @UiField
@@ -597,6 +606,22 @@ public class TestView1 {
     @UiHandler("enableTextButton")
     void handleEnableTextButtonClick(ClickEvent e) {
         text.enable();
+    }
+
+    @UiHandler("switchTextThemeButton")
+    void handleSwitchTextThemeButtonClick(ClickEvent e) {
+        String s = text.getTheme();
+        if (s == null || s.isEmpty() || "a".equals(s)) s = "b";
+        else s = "a";
+        text.setTheme(s);
+    }
+
+    @UiHandler("switchTextAreaThemeButton")
+    void handleSwitchTextAreaThemeButtonClick(ClickEvent e) {
+        String s = textArea.getTheme();
+        if (s == null || s.isEmpty() || "a".equals(s)) s = "b";
+        else s = "a";
+        textArea.setTheme(s);
     }
 
     @UiHandler("disableSliderButton")
