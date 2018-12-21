@@ -1,5 +1,6 @@
 package com.sksamuel.jqm4gwt.examples.uibinder;
 
+import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
@@ -209,6 +210,9 @@ public class TestView1 {
 
     @UiField
     JQMButton checkboxInfoBtn;
+
+    @UiField
+    JQMButton checkboxSetTextBtn;
 
     @UiField
     JQMRadioset radio1;
@@ -710,6 +714,11 @@ public class TestView1 {
         String cb3Str = "'" + cb3.getText() + "' is " + (cb3.isChecked() ? "checked" : "unchecked");
         String cb4Str = "'" + cb4.getText() + "' is " + (cb4.isChecked() ? "checked" : "unchecked");
         Window.alert(cb1Str + "\n" + cb2Str + "\n" + cb3Str + "\n" + cb4Str);
+    }
+
+    @UiHandler("checkboxSetTextBtn")
+    void checkboxSetTextBtnClick(ClickEvent e) {
+        cb1.setText("Checkbox " + Duration.currentTimeMillis());
     }
 
     @UiHandler("radioInfoBtn")

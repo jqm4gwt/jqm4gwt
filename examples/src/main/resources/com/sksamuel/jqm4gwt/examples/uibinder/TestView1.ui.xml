@@ -170,7 +170,8 @@
             theme="b" corners="false" inline="true" />
           <e:JQMCheckbox ui:field="cb4" name="cb4" text="Right Icon and No corners"
             corners="false" iconPos="RIGHT" />
-          <b:JQMButton ui:field="checkboxInfoBtn" text="Show Checkboxes Info" />
+          <b:JQMButton ui:field="checkboxInfoBtn" text="Show Checkboxes Info" mini="true" inline="true" />
+          <b:JQMButton ui:field="checkboxSetTextBtn" text="Change Checkbox text" mini="true" inline="true" />
           <g:FlowPanel>
             <h:Span text="Checkboxes no text (mini and regular):" />
             <e:JQMCheckbox ui:field="cbNoTextMini" name="cbNoTextMini" text="" 
