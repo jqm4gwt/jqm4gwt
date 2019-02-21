@@ -1,10 +1,14 @@
 package com.sksamuel.jqm4gwt;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
@@ -43,6 +47,7 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
     private boolean boundFilterCallback;
     private boolean boundFilterCreate;
     private JavaScriptObject origFilter;
+    private HandlerManager handlerManager;
 
     public JQMWidget() {
     }
@@ -302,6 +307,24 @@ public abstract class JQMWidget extends Composite implements HasTheme<JQMWidget>
 
     public HandlerRegistration addFilterableHandler(JQMFilterableEvent.Handler handler) {
         return addHandler(handler, JQMFilterableEvent.getType());
+    }
+
+    public List<JQMFilterableEvent.Handler> getFilterableHandlers() {
+        if (handlerManager == null) return null;
+        int cnt = handlerManager.getHandlerCount(JQMFilterableEvent.getType());
+        if (cnt == 0) return null;
+        List<JQMFilterableEvent.Handler> rslt = new ArrayList<>(cnt);
+        for (int i = 0; i < cnt; i++) {
+            JQMFilterableEvent.Handler h = handlerManager.getHandler(JQMFilterableEvent.getType(), i);
+            rslt.add(h);
+        }
+        return rslt;
+    }
+
+    @Override
+    protected HandlerManager createHandlerManager() {
+        handlerManager = super.createHandlerManager();
+        return handlerManager;
     }
 
     private void bindFilterEvents() {
