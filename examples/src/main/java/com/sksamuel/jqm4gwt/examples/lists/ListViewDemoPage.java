@@ -127,12 +127,12 @@ public class ListViewDemoPage extends JQMPage {
         lst.getElement().addClassName("jqm4gwt-list-static-item-img-right");
         add(lst);
         item = lst.addItem("New California Republic");
-        item.setThumbnail("http://www.icon100.com/icon/15902/california-flag/72/png");
-        item.setSecondaryImage("http://www.icon100.com/icon/15902/california-flag/32/png");
+        item.setThumbnail("images/ncr-128.png");
+        item.setSecondaryImage("images/california.png");
 
         item = lst.addItem("Ukraine");
-        item.setThumbnail("http://www.icon100.com/icon/7983/ukraine-flag-country/48/png");
-        item.setSecondaryImage("http://www.icon100.com/icon/7983/ukraine-flag-country/32/png");
+        item.setThumbnail("images/ukraine64.png");
+        item.setSecondaryImage("images/ukraine.png");
 
         add(new Paragraph());
         add(new Paragraph("The next list is a demo of control group list item usage"));
