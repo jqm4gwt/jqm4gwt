@@ -5,18 +5,12 @@ import java.util.Collection;
 import java.util.List;
 
 import com.google.gwt.core.client.Callback;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.HeadElement;
-import com.google.gwt.dom.client.ScriptElement;
+import com.google.gwt.core.client.ScriptInjector;
 
 /**
  * Dynamically injects JS scripts into DOM, strictly one after one (sequentially).
  */
 public class SequentialScriptInjector {
-
-    private HeadElement head;
 
     private String urlPrefix;
     private Callback<Collection<String>, Throwable> injectCallback;
@@ -56,32 +50,27 @@ public class SequentialScriptInjector {
 
     private static class InjectTask {
 
-        final HeadElement head;
         final String url;
         final SequentialScriptInjector manager;
 
-        public InjectTask(HeadElement head, String url, SequentialScriptInjector manager) {
-            this.head = head;
+        public InjectTask(String url, SequentialScriptInjector manager) {
             this.url = url;
             this.manager = manager;
         }
 
         public void exec() {
-            // ScriptInjector.fromUrl(url) CANNOT be used here, because it injects scripts into $wnd namespace
-            ScriptElement script = Document.get().createScriptElement();
-            script.setSrc(url);
-            head.appendChild(script);
-            SequentialScriptInjector.attachListeners(script, new Callback<Void, Exception>() {
-                @Override
-                public void onFailure(Exception reason) {
-                    manager.failure(InjectTask.this, reason);
-                }
+            ScriptInjector.fromUrl(url).setWindow(ScriptInjector.TOP_WINDOW).setCallback(
+                    new Callback<Void, Exception>() {
+                        @Override
+                        public void onFailure(Exception reason) {
+                            manager.failure(InjectTask.this, reason);
+                        }
 
-                @Override
-                public void onSuccess(Void result) {
-                    manager.success(InjectTask.this);
-                }
-            }, false/*removeTag*/);
+                        @Override
+                        public void onSuccess(Void result) {
+                            manager.success(InjectTask.this);
+                        }
+                    }).inject();
         }
     }
 
@@ -97,7 +86,7 @@ public class SequentialScriptInjector {
         for (String url : urls) {
             if (url == null || url.isEmpty()) continue;
             if (lst == null) lst = new ArrayList<InjectTask>();
-            InjectTask t = new InjectTask(checkHead(), urlPrefixDefined ? urlPrefix + url : url, this);
+            InjectTask t = new InjectTask(urlPrefixDefined ? urlPrefix + url : url, this);
             lst.add(t);
         }
         if (lst == null) {
@@ -107,51 +96,5 @@ public class SequentialScriptInjector {
         injectList = lst;
         injectList.get(0).exec();
     }
-
-    private static HeadElement getHead() {
-        Element elt = Document.get().getElementsByTagName("head").getItem(0);
-        if (elt == null) {
-            throw new RuntimeException("The host HTML page does not have a <head> element"
-                                       + " which is required by StyleInjector");
-        }
-        return HeadElement.as(elt);
-    }
-
-    private HeadElement checkHead() {
-        if (head != null) return head;
-        head = getHead();
-        return head;
-    }
-
-    /** Exact copy from ScriptInjector */
-    private static native void attachListeners(JavaScriptObject scriptElement,
-            Callback<Void, Exception> callback, boolean removeTag) /*-{
-        function clearCallbacks() {
-          scriptElement.onerror = scriptElement.onreadystatechange = scriptElement.onload = function() {
-          };
-          if (removeTag) {
-            @com.google.gwt.core.client.ScriptInjector::nativeRemove(Lcom/google/gwt/core/client/JavaScriptObject;)(scriptElement);
-          }
-        }
-        scriptElement.onload = $entry(function() {
-          clearCallbacks();
-          if (callback) {
-            callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(null);
-          }
-        });
-        // or possibly more portable script_tag.addEventListener('error', function(){...}, true);
-        scriptElement.onerror = $entry(function() {
-          clearCallbacks();
-          if (callback) {
-            var ex = @com.google.gwt.core.client.CodeDownloadException::new(Ljava/lang/String;)("onerror() called.");
-            callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)(ex);
-          }
-        });
-        scriptElement.onreadystatechange = $entry(function() {
-          if (scriptElement.readyState == 'complete' || scriptElement.readyState == 'loaded') {
-            scriptElement.onload();
-          }
-        });
-    }-*/;
 
 }
