@@ -98,11 +98,12 @@ public class JQMCalBox extends JQMText {
 
     // See http://dev.jtsage.com/DateBox/doc/3-1-themes/
     protected static final String THEME              = "\"theme\":";            // false means inherited theme
+    protected static final String THEME_INPUT        = "\"themeInput\":";       // Theme for input element
     protected static final String THEME_HEADER       = "\"themeHeader\":";      // Theme for header
     protected static final String THEME_MODAL        = "\"useModalTheme\":";    // Theme for modal background of control. Shade the background with this color swatch. From the default themes, “a” is a very light grey, “b” is a slighly darker grey.
     protected static final String THEME_DATE         = "\"themeDate\":";        // Theme for otherwise un-specified date buttons
-    protected static final String THEME_DATETODAY    = "\"themeDateToday\":";   // Theme for “today”
-    protected static final String THEME_DATEPICK     = "\"themeDatePick\":";    // Theme for choosen date (used last after other options fail)
+    protected static final String THEME_DATETODAY    = "\"themeDateToday\":";   // Theme for "today"
+    protected static final String THEME_DATEPICK     = "\"themeDatePick\":";    // Theme for chosen date (used last after other options fail)
     protected static final String THEME_DAYHIGH      = "\"themeDayHigh\":";     // Theme for highlighted DAYS
     protected static final String THEME_DATEHIGH     = "\"themeDateHigh\":";    // Theme for highlighted DATES
     protected static final String THEME_DATEHIGH_ALT = "\"themeDateHighAlt\":"; // Theme for highlighted ALTERNATE DATES
@@ -147,6 +148,7 @@ public class JQMCalBox extends JQMText {
     private Boolean compactDateButtons = null;
 
     private String theme = null;
+    private String themeInput = null;
     private String themeHeader = null;
     private String themeModal = null;
     private String themeDate = null;
@@ -425,6 +427,9 @@ public class JQMCalBox extends JQMText {
         }
         if (theme != null && !theme.isEmpty()) {
             sb.append(',').append(THEME).append('"').append(theme).append('"');
+        }
+        if (themeInput != null && !themeInput.isEmpty()) {
+            sb.append(',').append(THEME_INPUT).append('"').append(themeInput).append('"');
         }
         if (themeHeader != null && !themeHeader.isEmpty()) {
             sb.append(',').append(THEME_HEADER).append('"').append(themeHeader).append('"');
@@ -935,6 +940,16 @@ public class JQMCalBox extends JQMText {
         refreshDataOptions();
     }
 
+    public String getThemeInput() {
+        return themeInput;
+    }
+
+    public void setThemeInput(String themeInput) {
+        this.themeInput = themeInput;
+        refreshDataOptions();
+        updateThemeInput();
+    }
+
     public String getThemeHeader() {
         return themeHeader;
     }
@@ -1120,6 +1135,7 @@ public class JQMCalBox extends JQMText {
         }
     }
 
+    // dateboxcreate is jqm event, has nothing to do with dateboxcreate/dateboxaftercreate triggered in jtsage-datebox-calbox.js
     private static native void bindCreated(Element elt, JQMCalBox cal) /*-{
         $wnd.$(elt).on( 'dateboxcreate', function( event, ui ) {
             cal.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::created()();
@@ -1137,6 +1153,7 @@ public class JQMCalBox extends JQMText {
         initGridDateBoxBeforeAppend(true/*justCreated*/);
         initDisplayChange();
         initOffset();
+        updateThemeInput();
     }
 
     @Override
@@ -1651,5 +1668,22 @@ public class JQMCalBox extends JQMText {
 
     public void open() {
         internOpen(input.getElement());
+    }
+
+    private void updateThemeInput() {
+        if (!isReady()) return;
+        Element pa = input.getElement().getParentElement();
+        if (pa == null || !JQMCommon.hasStyle(pa, "ui-input-text")) return;
+        final String s;
+        if (Empty.is(themeInput)) {
+            String th = getTheme();
+            if (Empty.is(th)) s = JQMCommon.STYLE_UI_BODY_INHERIT;
+            else s = JQMCommon.STYLE_UI_BODY + th;
+        } else {
+            s = JQMCommon.STYLE_UI_BODY + themeInput;
+        }
+        if (JQMCommon.hasStyle(pa, s)) return;
+        JQMCommon.removeStylesStartsWith(pa, JQMCommon.STYLE_UI_BODY);
+        pa.addClassName(s);
     }
 }

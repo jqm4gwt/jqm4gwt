@@ -13,8 +13,8 @@ public interface Resources {
          **/
         public static boolean manualLoading;
 
-        private static final String JQM_DATEBOX_CSS = "css/jtsage-datebox-431.min.css";
-        private static final String CALBOX_JS = "js/jtsage-datebox-calbox-431.min.js";
+        private static final String JQM_DATEBOX_CSS = "css/jtsage-datebox-442.min.css";
+        private static final String CALBOX_JS = "js/jtsage-datebox-calbox-442.min.js";
         private static final String DATEBOX_I18N_JS = "js/jtsage-datebox.i18n.en.utf8.min.js";
         //private static final String CALBOX_FIXES_JS = "js/jqm-datebox-fixes.js";
 

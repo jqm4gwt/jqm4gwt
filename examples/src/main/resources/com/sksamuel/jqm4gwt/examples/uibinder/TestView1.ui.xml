@@ -231,7 +231,13 @@
           <b:JQMButton ui:field="datePickerInfoBtn" text="Get Info"
             inline="true" mini="true" addStyleNames="{style.marginRight20}" />  
           <h:Span text="Last onValueChange:" addStyleNames="{style.marginRight10}" />
-          <h:Span ui:field="datePickerValueChanged" />  
+          <h:Span ui:field="datePickerValueChanged" />
+          
+          <dt:JQMCalBox text="ThemedDatePicker"
+            dateFormat="%d.%m.%Y" placeHolder="dd.mm.yyyy" 
+            value="2013-10-25" useClearButton="true" 
+            usePickers="true" yearPickMin="99" yearPickMax="10" lockInput="false"
+            themeInput="b" theme="a" />  
 
           <e:JQMMonth ui:field="monthEd" text="monthText"/>
           <e:JQMNumber ui:field="numberEd" text="numberText"/>
