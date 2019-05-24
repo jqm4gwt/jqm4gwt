@@ -30,3 +30,8 @@ div.ui-slider-switch.ui-mini {
   -webkit-border-radius: 0;
   border-radius: 0;
 }
+
+.ui-flipswitch .ui-btn.ui-flipswitch-on:hover {
+  color: inherit;
+  text-shadow: inherit;
+}
