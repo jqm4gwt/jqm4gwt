@@ -263,7 +263,13 @@ public class TestView1 {
     JQMCalBox datePicker;
 
     @UiField
+    JQMCalBox themedDatePicker;
+
+    @UiField
     JQMButton datePickerGetValueBtn;
+
+    @UiField
+    JQMButton themedDatePickerGetValueBtn;
 
     @UiField
     JQMButton datePickerSetNullBtn;
@@ -764,6 +770,12 @@ public class TestView1 {
     @UiHandler("datePickerGetValueBtn")
     void datePickerGetValueBtnClick(ClickEvent e) {
         Window.alert("'" + datePicker.getText() + "' value is " + datePicker.getValue());
+    }
+
+    @UiHandler("themedDatePickerGetValueBtn")
+    void themedDatePickerGetValueBtnClick(ClickEvent e) {
+        Window.alert("'" + themedDatePicker.getText() + "' value is " + themedDatePicker.getValue()
+                + "; js native calbox value: " +themedDatePicker.internGetDate());
     }
 
     @UiHandler("datePickerSetNullBtn")

@@ -1,6 +1,12 @@
 package com.sksamuel.jqm4gwt.plugins.datebox;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
@@ -9,6 +15,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.DomEvent;
@@ -52,6 +59,10 @@ public class JQMCalBox extends JQMText {
     private static DateTimeFormat valueStrFmt = VALUE_DFLT_STR_FMT;
 
     public static final String YEAR_PICK_NOW = "NOW";
+
+    /** Space separated, will be added in case of invalid typed date (only when isInvalidateUnlockedInputOnBlur() is true). */
+    public static String invalidInputTextClasses = "invalid-input-text";
+    public static final Map<String, String> invalidInputTextAttrs = new HashMap<>();
 
     protected static final String MODE_CALBOX       = "\"mode\": \"calbox\"";
     protected static final String USE_INLINE        = "\"useInline\":"; // Show control inline in the page, negating any open and close actions
@@ -161,15 +172,14 @@ public class JQMCalBox extends JQMText {
 
     /**
      * GWT Date and JsDate are both created in current browser's timezone.
-     * Calbox's setTheDate() takes date and use year/month/day from it (time and timezone are ignored).
+     * Calbox's setTheDate() takes date and literally uses year/month/day from it (time and timezone are ignored).
      * <br> Example: we are in PST (i.e. GMT-8) timezone.
      * So new JsDate(0) gives us: 12/31/1969 16:00 GMT-8
      * <br> Therefore we cannot use 0 constant, and need proper number for our timezone,
-     * which is 2.88E7 in that case.
+     * which is 2.88E7 in that case, then JsDate(28800000) will give us 01/01/1970 00:00 GMT-8
      * <br> For person in GMT timezone this constant is 0 of course.
      */
-    @SuppressWarnings("deprecation")
-    private static final double NULL_DATE = new Date(70, 0, 1).getTime();
+    private static final double NULL_DATE = JsDate.create(1970, 0, 1).getTime();
 
     private Date delayedSetDate = null; // used when not initialized yet
 
@@ -177,6 +187,8 @@ public class JQMCalBox extends JQMText {
     private Date internDateToSet; // works when isInternSetDate == true
 
     private boolean invalidateUnlockedInputOnBlur = true;
+
+    private boolean invalidInputText;
 
     /** Additional information can be added to days (1..31) buttons.
      *  <br> Also see <a href="http://dev.jtsage.com/DateBox/api/calFormatter/">calFormatter</a>
@@ -269,22 +281,72 @@ public class JQMCalBox extends JQMText {
         input.addBlurHandler(new BlurHandler() {
             @Override
             public void onBlur(BlurEvent event) {
-                if (isInternalBlur) return;
+                if (isInternalBlur) {
+                    setInvalidInputTextClass(false);
+                    return;
+                }
                 if (lockInput != null && !lockInput && invalidateUnlockedInputOnBlur) {
                     String oldText = input.getText();
                     if (oldText == null || oldText.isEmpty()) return;
                     if (oldText.trim().isEmpty()) {
-                        input.setText("");
+                        inputSetText("");
                         ValueChangeEvent.fire(input, getValue());
                         return;
                     }
-                    if (!smartConvertInputText()) updateInputText();
+                    if (!smartConvertInputText()) {
+                        // Clear value (because js calbox may have much softer restrictions),
+                        // but preserve invalid input value for correction:
+                        setValue(null, true/*fireEvents*/);
+                        inputSetText(oldText);
+                        setInvalidInputTextClass(true);
+                        EventTarget eventTarget = event.getNativeEvent().getRelatedEventTarget();
+                        if (Element.is(eventTarget)) {
+                            Element p = Element.as(eventTarget).getParentElement();
+                            findUiInputText();
+                            if (p == uiInputText) return; // no need to focus back to the input
+                        }
+                        input.setFocus(true);
+                        return;
+                    }
                     String newText = input.getText();
                     if (!oldText.equals(newText)) ValueChangeEvent.fire(input, getValue());
+                    setInvalidInputTextClass(false);
                 }
             }
         });
+
+        input.addValueChangeHandler(event -> {
+            setInvalidInputTextClass(false);
+        });
+
         refreshDataOptions();
+    }
+
+    private void inputSetText(String text) {
+        input.setText(text);
+        setInvalidInputTextClass(false);
+    }
+
+    private void setInvalidInputTextClass(boolean value) {
+        if (lockInput != null && !lockInput && invalidateUnlockedInputOnBlur) {
+            invalidInputText = value;
+            if (invalidInputTextClasses != null && !invalidInputTextClasses.isEmpty()) {
+                findUiInputText();
+                if (uiInputText != null) {
+                    if (value) JQMCommon.addStyleNames(uiInputText, invalidInputTextClasses);
+                    else JQMCommon.removeStyleNames(uiInputText, invalidInputTextClasses);
+                }
+            }
+            if (!invalidInputTextAttrs.isEmpty()) {
+                findUiInputText();
+                if (uiInputText != null) {
+                    for (Entry<String, String> i : invalidInputTextAttrs.entrySet()) {
+                        if (value) uiInputText.setAttribute(i.getKey(), i.getValue());
+                        else uiInputText.removeAttribute(i.getKey());
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -1216,7 +1278,7 @@ public class JQMCalBox extends JQMText {
         Date oldD = fireEvents ? getDate() : null;
         if (d == null) {
             internSetDate(d);
-            input.setText("");
+            inputSetText("");
         } else {
             internSetDate(d);
             // had to update text manually, because JS function 'setTheDate' didn't do that for some reason
@@ -1229,17 +1291,60 @@ public class JQMCalBox extends JQMText {
         }
     }
 
-    private void updateInputText() {
+    private String getProperInputText() {
         Element elt = input.getElement();
         JsDate jsd = internGetDate(elt);
         String fs = internFormat(elt, getActiveDateFormat(), jsd);
-        input.setText(fs);
+        return fs;
+    }
+
+    private void updateInputText() {
+        String fs = getProperInputText();
+        inputSetText(fs);
+    }
+
+    /** -1 means no restrictions */
+    public static int globalMinYear = 1900;
+    /** -1 means no restrictions */
+    public static int globalMaxYear = -1;
+
+    private static int convertYear(String year) {
+        int yy = Integer.parseInt(year);
+        Date d = new Date();
+        @SuppressWarnings("deprecation")
+        int currentYear = d.getYear();
+        int century = currentYear / 100 * 100;
+        currentYear += 1900;
+        if (yy < 100) {
+            if (yy + 1900 + century <= currentYear + 20) yy += 1900 + century;
+            else yy += 1900 + (century - 100);
+        }
+        int minYY = globalMinYear > -1 ? globalMinYear : 1900;
+        int maxYY = globalMaxYear > -1 ? globalMaxYear : currentYear + 100;
+        return (yy >= minYY && yy <= maxYY) ? yy : -1;
     }
 
     /** @return - true in case input text was successfully processed by "smart" converter. */
+    @SuppressWarnings("deprecation")
     private boolean smartConvertInputText() {
         Element elt = input.getElement();
         String v = input.getValue();
+        Date newd = smartProcessText(v);
+        if (newd == null) return false;
+        isInternSetDate = true;
+        internDateToSet = newd;
+        try {
+            // ValueChange may occur!
+            internalSetDate(elt, newd.getYear() + 1900, newd.getMonth(), newd.getDate());
+            setInvalidInputTextClass(false);
+        } finally {
+            isInternSetDate = false;
+        }
+        return true;
+    }
+
+    /** @return - true in case input text was successfully processed by "smart" converter. */
+    private Date smartConvertText(String v) {
         if (v != null && !v.isEmpty()) {
             v = v.trim();
             // supports (mmddyy or mmddyyyy) or (ddmmyy or ddmmyyyy) input without any separators
@@ -1262,35 +1367,61 @@ public class JQMCalBox extends JQMText {
                     dd = Integer.parseInt(v.substring(0, 2));
                     mm = Integer.parseInt(v.substring(2, 4));
                 }
-                int yy = Integer.parseInt(v.substring(4));
-                Date d = new Date();
-                @SuppressWarnings("deprecation")
-                int currentYear = d.getYear() + 1900;
-                if (yy < 100) {
-                    if (yy + 2000 <= currentYear + 20) yy += 2000;
-                    else yy += 1900;
-                }
-                if (dd >= 1 && dd <= 31 && mm >= 1 && mm <= 12 && yy >= 1900 && yy <= currentYear + 100) {
+                int yy = convertYear(v.substring(4));
+                if (dd >= 1 && dd <= 31 && mm >= 1 && mm <= 12 && yy >= 1900) {
                     Integer minYY = calcMinYear();
-                    if (minYY != null && yy < minYY.intValue()) return false;
+                    if (minYY != null && yy < minYY.intValue()) return null;
                     Integer maxYY = calcMaxYear();
-                    if (maxYY != null && yy > maxYY.intValue()) return false;
+                    if (maxYY != null && yy > maxYY.intValue()) return null;
 
                     @SuppressWarnings("deprecation")
                     Date newd = new Date(yy - 1900, mm - 1, dd);
-                    isInternSetDate = true;
-                    internDateToSet = newd;
-                    try {
-                        // ValueChange may occur!
-                        internalSetDate(elt, yy, mm - 1, dd);
-                    } finally {
-                        isInternSetDate = false;
-                    }
-                    return true;
+                    return newd;
                 }
             }
         }
-        return false;
+        return null;
+    }
+
+    private static final Set<Character> ALLOWED_DATE_SEPARATORS = new HashSet<>(
+            Arrays.asList('.', ':', '-', '/'));
+
+    /**
+     * @return - null in case of "invalid" text.
+     */
+    private Date smartProcessText(String text) {
+        if (text == null || text.isEmpty() || text.trim().isEmpty()) return null;
+        String s = text.trim();
+        String proper = getProperInputText();
+
+        String[] arr = new String[] { "", "", "", "" };
+        // trying to normalize to one of possible formats: (mmddyy or mmddyyyy) or (ddmmyy or ddmmyyyy)
+        // considering separators when populating date parts
+        int p = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (Character.isWhitespace(ch)) continue;
+            if (Character.isDigit(ch)) {
+                arr[p] += ch;
+                if (arr[p].length() >= (p <= 1 ? 2 : 4)) p++;
+            } else if (ALLOWED_DATE_SEPARATORS.contains(ch)) {
+                if (!arr[p].isEmpty()) p++;
+            } else { // some garbage
+                if (proper != null && proper.indexOf(ch) != -1) continue; // some valid formatting symbol
+                else return null;
+            }
+            if (p > 3) break;
+        }
+        if (!arr[3].isEmpty()) return null; // too many number sections, i.e. 11/22/33/44
+        for (int i = 0; i <= 2; i++) {
+            if (arr[i].length() == 1) arr[i] = '0' + arr[i];
+        }
+        if (arr[2].length() != 2 && arr[2].length() != 4) return null; // wrong year
+        int yy = convertYear(arr[2]);
+        if (yy == -1) return null;
+        String ss = arr[0] + arr[1] + arr[2];
+        Date d = smartConvertText(ss);
+        return d;
     }
 
     public Date getDate() {
@@ -1303,6 +1434,10 @@ public class JQMCalBox extends JQMText {
         // open/close calendar even without any selection, sets js control's date to Now,
         // but we don't want this behavior, i.e. text is empty means no date is chosen!
         if (s == null || s.isEmpty()) return null;
+
+        if (lockInput != null && !lockInput && invalidateUnlockedInputOnBlur && invalidInputText) {
+            return null; // invalid input text means no date is chosen!
+        }
 
         JsDate jsd = internGetDate(input.getElement());
         return JQMContext.jsDateToDate(jsd);
@@ -1385,6 +1520,11 @@ public class JQMCalBox extends JQMText {
         return $wnd.$(elt).datebox('getTheDate');
     }-*/;
 
+    /** Mostly for debugging purposes, returns js widget(calbox) current value. */
+    public JsDate internGetDate() {
+        return internGetDate(input.getElement());
+    }
+
     private static native boolean internIsSelDateVisible(Element elt) /*-{
         return $wnd.$(elt).datebox('dateVisible');
     }-*/;
@@ -1418,6 +1558,7 @@ public class JQMCalBox extends JQMText {
         try {
             // ValueChange may occur!
             internalSetDate(elt, v);
+            setInvalidInputTextClass(false);
         } finally {
             isInternSetDate = false;
         }

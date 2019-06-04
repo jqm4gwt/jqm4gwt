@@ -89,6 +89,12 @@
       right: 100px;
       top: 0;
     }
+    
+    @external .ui-input-text, .invalid-input-text;
+    .ui-input-text.invalid-input-text {
+      background-color: yellow;
+      color: red;
+    }
 
   </ui:style>
 
@@ -233,11 +239,13 @@
           <h:Span text="Last onValueChange:" addStyleNames="{style.marginRight10}" />
           <h:Span ui:field="datePickerValueChanged" />
           
-          <dt:JQMCalBox text="ThemedDatePicker"
-            dateFormat="%d.%m.%Y" placeHolder="dd.mm.yyyy" 
+          <dt:JQMCalBox ui:field="themedDatePicker" text="ThemedDatePicker"
+            lockInput="false" dateFormat="%d.%m.%Y" placeHolder="dd.mm.yyyy" 
             value="2013-10-25" useClearButton="true" 
-            usePickers="true" yearPickMin="99" yearPickMax="10" lockInput="false"
+            usePickers="true" yearPickMin="99" yearPickMax="10" maxYear="2025" 
             themeInput="b" theme="a" />  
+          <b:JQMButton ui:field="themedDatePickerGetValueBtn" text="Get ThemedDatePicker value"
+            inline="true" mini="true" />  
 
           <e:JQMMonth ui:field="monthEd" text="monthText"/>
           <e:JQMNumber ui:field="numberEd" text="numberText"/>

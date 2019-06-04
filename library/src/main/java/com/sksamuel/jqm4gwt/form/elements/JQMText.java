@@ -76,7 +76,7 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
 
     private Integer savedTabIndex = null;
 
-    private Element uiInputText;
+    protected Element uiInputText;
 
     /**
      * Create a new {@link JQMText} element with no label
@@ -465,7 +465,7 @@ public class JQMText extends JQMFieldContainer implements HasText<JQMText>, HasV
         }
     }
 
-    private void findUiInputText() {
+    protected void findUiInputText() {
         if (uiInputText == null && isInstance()) {
             uiInputText = JQMCommon.findChild(getElement(), "ui-input-text");
         }
