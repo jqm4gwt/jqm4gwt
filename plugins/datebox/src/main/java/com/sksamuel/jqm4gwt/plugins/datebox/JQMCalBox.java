@@ -281,10 +281,7 @@ public class JQMCalBox extends JQMText {
         input.addBlurHandler(new BlurHandler() {
             @Override
             public void onBlur(BlurEvent event) {
-                if (isInternalBlur) {
-                    setInvalidInputTextClass(false);
-                    return;
-                }
+                if (isInternalBlur) return; // no setInvalidInputTextClass(false) on artificial blur needed
                 if (lockInput != null && !lockInput && invalidateUnlockedInputOnBlur) {
                     String oldText = input.getText();
                     if (oldText == null || oldText.isEmpty()) return;
