@@ -99,13 +99,17 @@ public class JQMList extends JQMWidget implements HasClickHandlers, HasTapHandle
      */
     public JQMList(boolean ordered) {
 
-        list = new ListWidget(ordered);
+        list = createListWidget(ordered);
         initWidget(list);
 
         setStyleName("jqm4gwt-list");
         setDataRole("listview");
 
         setId();
+    }
+
+    protected ListWidget createListWidget(boolean ordered) {
+        return new ListWidget(ordered);
     }
 
     private static native void bindCreated(Element elt, JQMList list) /*-{
