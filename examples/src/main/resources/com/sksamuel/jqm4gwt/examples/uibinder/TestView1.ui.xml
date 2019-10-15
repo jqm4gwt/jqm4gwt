@@ -245,7 +245,9 @@
             usePickers="true" yearPickMin="99" yearPickMax="10" maxYear="2025" 
             themeInput="b" theme="a" />  
           <b:JQMButton ui:field="themedDatePickerGetValueBtn" text="Get ThemedDatePicker value"
-            inline="true" mini="true" />  
+            inline="true" mini="true" />
+          <b:JQMButton ui:field="themedDatePickerSetMinMaxDaysBtn" text="Set ThemedDatePicker MinMaxDays"
+            inline="true" mini="true" />    
 
           <e:JQMMonth ui:field="monthEd" text="monthText"/>
           <e:JQMNumber ui:field="numberEd" text="numberText"/>

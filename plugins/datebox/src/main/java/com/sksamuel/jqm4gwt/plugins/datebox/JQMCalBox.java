@@ -261,6 +261,7 @@ public class JQMCalBox extends JQMText {
     private boolean isInternalBlur;
 
     private boolean created;
+    private boolean dataOptionsChanged;
 
     static {
         addJsParts();
@@ -558,8 +559,18 @@ public class JQMCalBox extends JQMText {
     }
 
     protected void refreshDataOptions() {
-        setInputAttribute("data-options", constructDataOptions());
+        if (!created) setInputAttribute("data-options", constructDataOptions());
+        else {
+            setAttr(input.getElement(), "options", constructDataOptions());
+            dataOptionsChanged = true;
+        }
     }
+
+    private native void setAttr(Element elt, String name, String value) /*-{
+        var w = $wnd.$(elt);
+        w.attr("data-" + name, value);
+        w.removeData(name); // reset data cache, see https://stackoverflow.com/a/8708345
+    }-*/;
 
     private void setInputAttribute(String name, String value) {
         if (input == null) return;
@@ -1238,12 +1249,17 @@ public class JQMCalBox extends JQMText {
      * Refresh after a programmatic change has taken place.
      */
     public void refresh() {
-        refresh(input.getElement());
+        refresh(input.getElement(), created && dataOptionsChanged);
+        dataOptionsChanged = false;
     }
 
-    private native void refresh(Element elt) /*-{
+    private native void refresh(Element elt, boolean updateOptions) /*-{
         var w = $wnd.$(elt);
-        if (w.data('jtsage-datebox') !== undefined) {
+        var dtbox = w.data('jtsage-datebox');
+        if (dtbox !== undefined) {
+            if (updateOptions) { // see _create implementation
+                $wnd.$.extend(dtbox.options, dtbox._getLongOptions(dtbox.element), dtbox.element.data("options"));
+            }
             w.datebox('refresh');
         }
     }-*/;

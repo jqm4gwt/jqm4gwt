@@ -272,6 +272,9 @@ public class TestView1 {
     JQMButton themedDatePickerGetValueBtn;
 
     @UiField
+    JQMButton themedDatePickerSetMinMaxDaysBtn;
+
+    @UiField
     JQMButton datePickerSetNullBtn;
 
     @UiField
@@ -776,6 +779,13 @@ public class TestView1 {
     void themedDatePickerGetValueBtnClick(ClickEvent e) {
         Window.alert("'" + themedDatePicker.getText() + "' value is " + themedDatePicker.getValue()
                 + "; js native calbox value: " +themedDatePicker.internGetDate());
+    }
+
+    @UiHandler("themedDatePickerSetMinMaxDaysBtn")
+    void themedDatePickerSetMinMaxDaysBtnClick(ClickEvent e) {
+        themedDatePicker.setMinDays(3);
+        themedDatePicker.setMaxDays(7);
+        themedDatePicker.refresh();
     }
 
     @UiHandler("datePickerSetNullBtn")
