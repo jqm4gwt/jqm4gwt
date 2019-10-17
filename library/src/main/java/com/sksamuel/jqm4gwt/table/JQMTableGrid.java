@@ -143,6 +143,19 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         return footColTitles;
     }
 
+    private static native void setTextContent(Element elt, String text) /*-{
+        elt.textContent = text;
+    }-*/;
+
+    private static void setEltText(Element elt, String text) {
+        if (text != null && !text.isEmpty()) {
+            if (text.indexOf('<') >= 0) elt.setInnerHTML(text);
+            else setTextContent(elt, text);
+        } else {
+            elt.setInnerHTML(text);
+        }
+    }
+
     /**
      * @param footColTitles - comma separated footer column titles.
      * <br> If you need comma in title use \, to preserve it.
@@ -171,7 +184,7 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         for (String i : lst) {
             String s = StrUtils.replaceAllBackslashCommas(i.trim());
             TableCellElement th = Document.get().createTHElement();
-            th.setInnerHTML(s);
+            setEltText(th, s);
             tr.appendChild(th);
         }
         tFoot.getElement().insertFirst(tr);
@@ -390,7 +403,7 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         ComplexPanel col = getCol(getHeadRow(), index, true/*addTh*/);
         if (col == null) return null;
         setColPriority(col, priority);
-        col.getElement().setInnerHTML(title);
+        setEltText(col.getElement(), title);
         String classes = calcColClassNames(index, true/*head*/);
         if (!Empty.is(classes)) JQMCommon.addStyleNames(col, classes);
         applyImgOnly(col);
@@ -466,7 +479,7 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         ComplexPanel col = getCol(getHeadGroupsRow(), index, addTh);
         if (col == null) return null;
         setColPriority(col, grp.getPriority());
-        col.getElement().setInnerHTML(isTitleTh ? removeTh(grp.getTitle()) : grp.getTitle());
+        setEltText(col.getElement(), isTitleTh ? removeTh(grp.getTitle()) : grp.getTitle());
         if (colspan > 1) JQMCommon.setAttribute(col, "colspan", String.valueOf(colspan));
         if (rowspan > 1) JQMCommon.setAttribute(col, "rowspan", String.valueOf(rowspan));
         String classes = calcColClassNames(index, true/*head*/);
@@ -536,7 +549,7 @@ public class JQMTableGrid extends CustomFlowPanel implements HasValue<Collection
         if (widgets != null && widgets.length > 0) {
             for (Widget w : widgets) c.add(w);
         } else {
-            c.getElement().setInnerHTML(cell);
+            setEltText(c.getElement(), cell);
         }
         String classes = calcColClassNames(colIdx, false/*head*/);
         if (!Empty.is(classes)) JQMCommon.addStyleNames(c, classes);

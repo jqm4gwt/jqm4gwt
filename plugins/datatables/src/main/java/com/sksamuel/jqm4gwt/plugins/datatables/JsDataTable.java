@@ -1455,11 +1455,28 @@ public class JsDataTable {
         t.fnAdjustColumnSizing(false); // no redraw
     }-*/;
 
+    /** See <a href="https://datatables.net/reference/api/column().visible()">column().visible()</a> */
+    static native void setColVisible(Element tableElt, String colName, boolean visible, boolean redraw) /*-{
+        if (colName) {
+            var t = $wnd.$(tableElt).DataTable();
+            var col = t.column(colName + ':name');
+            if (col) col.visible(visible, redraw);
+        }
+    }-*/;
+
     static native void setColVisible(Element tableElt, String colName, boolean visible) /*-{
         if (colName) {
             var t = $wnd.$(tableElt).DataTable();
             var col = t.column(colName + ':name');
-            if (col) col.visible(visible);
+            if (col) {
+                col.visible(visible, false); // no immediate redraw
+                var timer = t.data('redrawTimer');
+                if (timer) clearTimeout(timer);
+                timer = setTimeout(function() {
+                    t.columns.adjust().draw(false); // adjust column sizing and redraw
+                }, 50);
+                t.data('redrawTimer', timer);
+            }
         }
     }-*/;
 
