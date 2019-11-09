@@ -9,6 +9,8 @@ import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -92,6 +94,13 @@ public class JQMRadioset extends JQMFieldContainer implements HasText<JQMRadiose
      */
     public JQMRadioset(String text) {
         setupFieldset(text);
+        flow.addDomHandler(event -> {
+            int k = event.getNativeKeyCode();
+            if ((k == KeyCodes.KEY_LEFT || k == KeyCodes.KEY_RIGHT || k == KeyCodes.KEY_UP || k == KeyCodes.KEY_DOWN)
+                    && !isEnabled()) {
+                event.preventDefault();
+            }
+        }, KeyDownEvent.getType());
     }
 
     private void setupFieldset(String labelText) {

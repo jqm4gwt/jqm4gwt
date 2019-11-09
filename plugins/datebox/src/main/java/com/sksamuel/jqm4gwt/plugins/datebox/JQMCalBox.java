@@ -19,6 +19,8 @@ import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.DomEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -318,6 +320,12 @@ public class JQMCalBox extends JQMText {
         });
 
         refreshDataOptions();
+
+        flow.addDomHandler(event -> {
+            if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER && !isEnabled()) {
+                event.preventDefault();
+            }
+        }, KeyDownEvent.getType());
     }
 
     private void inputSetText(String text) {

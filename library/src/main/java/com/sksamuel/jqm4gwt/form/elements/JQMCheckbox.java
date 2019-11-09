@@ -5,6 +5,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -67,6 +69,13 @@ public class JQMCheckbox extends JQMWidget implements HasText<JQMCheckbox>, HasV
         setInput(input);
         setLabel(label);
         if (id != null && !id.isEmpty()) setId(id);
+
+        flow.addDomHandler(event -> {
+            int k = event.getNativeKeyCode();
+            if (k == KeyCodes.KEY_SPACE && !isEnabled()) {
+                event.preventDefault();
+            }
+        }, KeyDownEvent.getType());
     }
 
     protected boolean isClassicInit() {

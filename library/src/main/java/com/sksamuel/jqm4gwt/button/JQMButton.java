@@ -15,6 +15,8 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiConstructor;
@@ -212,6 +214,12 @@ public class JQMButton extends JQMWidget implements HasText<JQMButton>, HasRel<J
         setStyleName("jqm4gwt-button");
         initEltAsButton(getElement());
         setId();
+        addDomHandler(event -> {
+            int k = event.getNativeKeyCode();
+            if (k == KeyCodes.KEY_ENTER && !isEnabled()) {
+                event.preventDefault();
+            }
+        }, KeyDownEvent.getType());
     }
 
     @Override

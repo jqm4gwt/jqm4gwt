@@ -27,6 +27,8 @@ import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -257,6 +259,11 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         addChangeHandler(event -> changed());
         setText(text);
         addStyleName(SELECT_STYLENAME);
+        flow.addDomHandler(event -> {
+            if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER && !isEnabled()) {
+                event.preventDefault();
+            }
+        }, KeyDownEvent.getType());
     }
 
     protected void changed() {
