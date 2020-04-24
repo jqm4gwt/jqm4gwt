@@ -1433,10 +1433,12 @@ public class JsDataTable {
             if (!skipDflt) {
                 var newSorts = [];
                 var currentOrder = api.order()[0];
-                if (currentOrder[0] === colIdx && currentOrder[1] === 'asc') {
-                    newSorts.push([colIdx, switchAscDesc ? 'desc' : 'asc']);
-                } else if (currentOrder[0] !== colIdx || currentOrder[1] !== 'asc') {
-                    newSorts.push([colIdx, 'asc']);
+                if (currentOrder) {
+                    if (currentOrder[0] === colIdx && currentOrder[1] === 'asc') {
+                        newSorts.push([colIdx, switchAscDesc ? 'desc' : 'asc']);
+                    } else if (currentOrder[0] !== colIdx || currentOrder[1] !== 'asc') {
+                        newSorts.push([colIdx, 'asc']);
+                    }
                 }
                 if (additionalSorts) newSorts.push.apply(newSorts, additionalSorts);
                 api.order(newSorts).draw();
