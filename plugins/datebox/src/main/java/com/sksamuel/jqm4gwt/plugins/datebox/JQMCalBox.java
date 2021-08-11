@@ -679,6 +679,17 @@ public class JQMCalBox extends JQMText {
         return days.cast();
     }
 
+    public static int getClazzCalStartDay() {
+        JavaScriptObject startDay = internGetProtoLangOption("calStartDay");
+        double n = asNumber(startDay);
+        return (int) n;
+    }
+
+    private static final native double asNumber(JavaScriptObject obj) /*-{
+        if (obj) return obj;
+        else return 0;
+    }-*/;
+
     public Boolean getUsePickers() {
         return usePickers;
     }
