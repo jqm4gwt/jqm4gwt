@@ -28,6 +28,10 @@ public class JQMFilterable extends SimplePanel implements HasPlaceHolder<JQMFilt
         add(filter);
     }
 
+    public void clearFilter() {
+        filter.setText("");
+    }
+
     public String getFilterId() {
         return filter.getElement().getId();
     }
