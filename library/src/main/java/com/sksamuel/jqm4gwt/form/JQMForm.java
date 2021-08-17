@@ -558,7 +558,7 @@ public class JQMForm extends FlowPanel {
      * Performs validation for a single widget, first resetting all validation
      * messages on that widget.
      */
-    protected boolean validate(JQMFormWidget widget) {
+    public boolean validate(JQMFormWidget widget) {
 
         boolean validated = true;
         Collection<Validator> validators = widgetValidators.get(widget);
