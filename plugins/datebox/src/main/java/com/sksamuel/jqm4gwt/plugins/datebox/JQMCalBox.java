@@ -305,7 +305,12 @@ public class JQMCalBox extends JQMText {
                             findUiInputText();
                             if (p == uiInputText) return; // no need to focus back to the input
                         }
-                        input.setFocus(true);
+                        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                            @Override
+                            public void execute() {
+                                input.setFocus(true);
+                            }
+                        });
                         return;
                     }
                     String newText = input.getText();
