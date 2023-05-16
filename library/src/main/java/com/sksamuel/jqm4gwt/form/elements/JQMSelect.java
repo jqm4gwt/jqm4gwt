@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
@@ -268,7 +269,9 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
 
     protected void changed() {
         if (!isMultiple()) mandatorySelIdx = select.getSelectedIndex();
-        fireValueChange(getValue());
+        else if (isOpened()) return; // multiselect will send change notification later, see onClose
+        String v = getValue();
+        fireValueChange(v);
     }
 
     private void fireValueChange(String value) {
@@ -921,6 +924,17 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         JQMCommon.setAttribute(select, "data-shadow", value ? null : "false");
     }
 
+    private boolean isCloseInternal;
+
+    private void closeInternal() {
+        isCloseInternal = true;
+        try {
+            close();
+        } finally {
+            isCloseInternal = false;
+        }
+    }
+
     /** Programmatically close an open select menu */
     public void close() {
         close(select.getElement());
@@ -951,6 +965,14 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         if (w.data('mobile-selectmenu') !== undefined) {
             w.selectmenu('refresh');
         }
+    }-*/;
+
+    public boolean isOpened() {
+        return isOpened(select.getElement());
+    }
+
+    private static native boolean isOpened(Element elt) /*-{
+        return $wnd.$(elt).selectmenu('isOpened');
     }-*/;
 
     /**
@@ -1469,6 +1491,31 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
                         this.headerTitle.text(combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::getText()());
                     }
                 }
+            },
+
+            close: function() {
+              if (!this.options.disabled && this.isOpen) {
+                var combo = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::findCombo(Lcom/google/gwt/dom/client/Element;)(this.select[0]);
+                if (combo) {
+                  combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::onClose()();
+                }
+              }
+              this._super();
+            },
+
+            _handleButtonVclickKeydown: function(event) {
+              var wasOpen = this.isOpen;
+              this._super(event);
+              if (!wasOpen && this.isOpen) {
+                var combo = @com.sksamuel.jqm4gwt.form.elements.JQMSelect::findCombo(Lcom/google/gwt/dom/client/Element;)(this.select[0]);
+                if (combo) {
+                  combo.@com.sksamuel.jqm4gwt.form.elements.JQMSelect::onOpen()();
+                }
+              }
+            },
+
+            isOpened: function() {
+              return this.isOpen ? true : false;
             }
         });
 
@@ -1764,7 +1811,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     protected void closeAndClearValue() {
-        this.close();
+        this.closeInternal();
         this.setValue(null, true/*fireEvents*/);
     }
 
@@ -1789,7 +1836,7 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
     }
 
     protected void closeAndSelectAll() {
-        this.close();
+        this.closeInternal();
         if (isMultiple()) {
             setNewMultiVals(selectIdx.keySet(), true/*fireEvents*/);
         }
@@ -1810,6 +1857,21 @@ public class JQMSelect extends JQMFieldContainer implements HasNative<JQMSelect>
         if (!isShowTextOnPopup()) return false;
         if (!isLabelHidden() || !Empty.is(getText())) return true;
         return false;
+    }
+
+    private String onOpenValue;
+
+    protected void onOpen() {
+        onOpenValue = getValue();
+    }
+
+    protected void onClose() {
+        if (!isCloseInternal && isMultiple()) {
+            String v = getValue();
+            if (!Objects.equals(onOpenValue, v)) {
+                fireValueChange(v);
+            }
+        }
     }
 
 }
