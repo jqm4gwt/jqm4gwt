@@ -672,6 +672,7 @@ public class JQMDataTable extends JQMTableGrid {
 
     public void unEnhance() {
         if (!enhanced) return;
+        doneRowSelectMode();
         JsDataTable.destroy(getElement());
         enhanced = false;
     }
