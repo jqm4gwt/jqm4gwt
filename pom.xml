@@ -57,7 +57,7 @@
     </modules>
 
     <properties>
-        <maven.plugin.war.version>2.6</maven.plugin.war.version>
+        <maven.plugin.war.version>3.4.0</maven.plugin.war.version>
         <maven.plugin.resources.version>2.6</maven.plugin.resources.version>
         <maven.plugin.compiler.version>3.1</maven.plugin.compiler.version>
         <maven.plugin.dependency.version>2.7</maven.plugin.dependency.version>
