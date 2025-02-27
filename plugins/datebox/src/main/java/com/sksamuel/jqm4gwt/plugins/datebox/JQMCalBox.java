@@ -1864,4 +1864,47 @@ public class JQMCalBox extends JQMText {
         JQMCommon.removeStylesStartsWith(pa, JQMCommon.STYLE_UI_BODY);
         pa.addClassName(s);
     }
+
+    private static native void setOnOpenHandler(Element elt, Element inputElt, JQMCalBox ctrl) /*-{
+        $wnd.$(elt).on('datebox', function(event, ui) {
+            if (ui.method === 'open') {
+                var value = inputElt.value;
+                // If Input has empty or null
+                if (!value) {
+                    var dfltDate = ctrl.@com.sksamuel.jqm4gwt.plugins.datebox.JQMCalBox::getOnOpenDfltDate()();
+                    if (dfltDate == null) return;
+                    // Get Year Only
+                    var dfltYear = dfltDate.getFullYear();
+
+                    // Get Month Number
+                    var dfltMonthNum = dfltDate.getMonth();
+
+                    // .ui-popup-container.fade.in means opened one, closed one is just .ui-popup-container.fade
+                    // Get Month DropDown
+                    var monthDD = $wnd.$(".ui-popup-container.fade.in > .ui-datebox-container > span > div.ui-datebox-cal-pickers > fieldset > div.ui-controlgroup-controls > div.ui-select:nth-child(1) > div > select");
+                    if (monthDD) monthDD.val(dfltMonthNum).change();
+
+                    // Get Year DropDown
+                    var yearDD = $wnd.$(".ui-popup-container.fade.in > .ui-datebox-container > span > div.ui-datebox-cal-pickers > fieldset > div.ui-controlgroup-controls > div.ui-select:nth-child(2) > div > select");
+                    if (yearDD) yearDD.val(dfltYear).change();
+                }
+            }
+        });
+    }-*/;
+
+    private Date onOpenDfltDate;
+    private boolean uiOpenHandlerAdded = false;
+
+    private JsDate getOnOpenDfltDate() {
+        if (onOpenDfltDate == null) return null;
+        return JsDate.create(onOpenDfltDate.getTime());
+    }
+
+    public void setOnOpenDfltDate(Date dfltDate) {
+        onOpenDfltDate = dfltDate;
+        if (!uiOpenHandlerAdded) {
+            setOnOpenHandler(getElement(), getInputElt(), this);
+            uiOpenHandlerAdded = true;
+        }
+    }
 }
