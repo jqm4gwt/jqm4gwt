@@ -1380,31 +1380,16 @@ public class JQMCalBox extends JQMText {
         return true;
     }
 
-    /** @return - true in case input text was successfully processed by "smart" converter. */
+    /** @return - parsed date or null if value is incorrect. Supported formats: ddmmyy, ddmmyyyy */
     private Date smartConvertText(String v) {
         if (v != null && !v.isEmpty()) {
             v = v.trim();
-            // supports (mmddyy or mmddyyyy) or (ddmmyy or ddmmyyyy) input without any separators
+
             if (!v.isEmpty() && StrUtils.isDigitsOnly(v) && (v.length() == 6 || v.length() == 8)) {
-                boolean mmFirst = true;
-                String fmt = getDateFormat();
-                if (!Empty.is(fmt)) {
-                    int ddPos = fmt.indexOf("%d");
-                    int mmPos = fmt.indexOf("%m");
-                    if (ddPos >= 0 && mmPos >= 0) {
-                        mmFirst = mmPos < ddPos;
-                    }
-                }
-                final int mm;
-                final int dd;
-                if (mmFirst) {
-                    mm = Integer.parseInt(v.substring(0, 2));
-                    dd = Integer.parseInt(v.substring(2, 4));
-                } else {
-                    dd = Integer.parseInt(v.substring(0, 2));
-                    mm = Integer.parseInt(v.substring(2, 4));
-                }
-                int yy = convertYear(v.substring(4));
+                final int dd = Integer.parseInt(v.substring(0, 2));
+                final int mm = Integer.parseInt(v.substring(2, 4));
+                final int yy = convertYear(v.substring(4));
+
                 if (dd >= 1 && dd <= 31 && mm >= 1 && mm <= 12 && yy >= 1900) {
                     Integer minYY = calcMinYear();
                     if (minYY != null && yy < minYY.intValue()) return null;
@@ -1420,8 +1405,7 @@ public class JQMCalBox extends JQMText {
         return null;
     }
 
-    private static final Set<Character> ALLOWED_DATE_SEPARATORS = new HashSet<>(
-            Arrays.asList('.', ':', '-', '/'));
+    private static final Set<Character> ALLOWED_DATE_SEPARATORS = new HashSet<>(Arrays.asList('.', ':', '-', '/'));
 
     /**
      * @return - null in case of "invalid" text.
@@ -1430,17 +1414,53 @@ public class JQMCalBox extends JQMText {
         if (text == null || text.isEmpty() || text.trim().isEmpty()) return null;
         String s = text.trim();
         String proper = getProperInputText();
+        String format = getActiveDateFormat();
+
+        int dayPos = 1;
+        int monthPos = 0;
+        int yearPos = 2;
+        //Parse format and get date parts order
+        if (!Empty.is(format)) {
+            int pos = 0;
+            int fLength = format.length();
+            for (int i = 0; i < fLength; i++) {
+                if (format.charAt(i) == '%') {
+                    if (++i == fLength) break;
+                    char op = format.charAt(i);
+                    //Ignore '0' and '-' modifiers, we need format operator
+                    if (op == '-' || op == '0') {
+                        if (++i == fLength) break;
+                        op = format.charAt(i);
+                    }
+                    if (op == 'd') {
+                        dayPos = pos;
+                        pos++;
+                    } else if (op == 'm') {
+                        monthPos = pos;
+                        pos++;
+                    } else if (op == 'y' || op == 'Y') {
+                        yearPos = pos;
+                        pos++;
+                    }
+                }
+            }
+            //If format is incorrect, try to use default one
+            if (pos != 3) {
+                dayPos = 1;
+                monthPos = 0;
+                yearPos = 2;
+            }
+        }
 
         String[] arr = new String[] { "", "", "", "" };
-        // trying to normalize to one of possible formats: (mmddyy or mmddyyyy) or (ddmmyy or ddmmyyyy)
-        // considering separators when populating date parts
+        // trying to get date parts considering possible separators and format parts order
         int p = 0;
         for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
             if (Character.isWhitespace(ch)) continue;
             if (Character.isDigit(ch)) {
                 arr[p] += ch;
-                if (arr[p].length() >= (p <= 1 ? 2 : 4)) p++;
+                if (arr[p].length() >= (p != yearPos ? 2 : 4)) p++;
             } else if (ALLOWED_DATE_SEPARATORS.contains(ch)) {
                 if (!arr[p].isEmpty()) p++;
             } else { // some garbage
@@ -1453,12 +1473,11 @@ public class JQMCalBox extends JQMText {
         for (int i = 0; i <= 2; i++) {
             if (arr[i].length() == 1) arr[i] = '0' + arr[i];
         }
-        if (arr[2].length() != 2 && arr[2].length() != 4) return null; // wrong year
-        int yy = convertYear(arr[2]);
-        if (yy == -1) return null;
-        String ss = arr[0] + arr[1] + arr[2];
-        Date d = smartConvertText(ss);
-        return d;
+        if (arr[yearPos].length() != 2 && arr[yearPos].length() != 4) return null; // wrong year
+
+        //normalize to ddmmyy or ddmmyyyy format, parse and check date
+        String ss = arr[dayPos] + arr[monthPos] + arr[yearPos];
+        return smartConvertText(ss);
     }
 
     public Date getDate() {
